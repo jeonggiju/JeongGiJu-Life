@@ -3,188 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Record Input</title>
+    <title>Admin</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: white;
-            color: black;
             padding: 20px;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid black;
-            padding-bottom: 10px;
-        }
-
-        .section {
+        .tab {
+            display: inline-block;
+            padding: 5px 15px;
             border: 1px solid black;
-            padding: 20px;
+            background: white;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background: black;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-section {
+            border: 1px solid black;
+            padding: 10px;
             margin-bottom: 20px;
         }
 
-        h2 {
-            margin-bottom: 15px;
-            border-bottom: 1px solid black;
-            padding-bottom: 5px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
         label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
+            display: inline-block;
+            margin-right: 10px;
         }
 
-        input[type="date"],
-        input[type="time"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid black;
-            font-size: 14px;
-        }
-
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        input {
+            margin-right: 10px;
         }
 
         button {
-            width: 100%;
-            padding: 12px;
-            background: black;
-            color: white;
-            border: 1px solid black;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
+            padding: 5px 15px;
+            margin-right: 5px;
         }
 
-        button:hover {
-            background: white;
-            color: black;
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+            min-width: 90px;
+            cursor: pointer;
+        }
+
+        td:hover {
+            background: #f0f0f0;
+        }
+
+        .date-cell {
+            font-weight: bold;
+        }
+
+        .red-cell {
+            color: red;
         }
 
         .message {
-            padding: 10px;
-            border: 1px solid black;
-            margin-bottom: 15px;
-            text-align: center;
             display: none;
+            margin: 10px 0;
+            padding: 5px;
+            border: 1px solid black;
         }
 
         .message.show {
             display: block;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 2px solid black;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        .btn-delete {
+            background: red;
+            color: white;
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Health Record Input</h1>
+<h1>Admin</h1>
+<p>99.06.08</p>
 
-    <div class="section">
-        <h2>Smoking</h2>
+<div>
+    <div class="tab active" onclick="switchTab('smoking')">Smoking</div>
+    <div class="tab" onclick="switchTab('sleep')">Sleep</div>
+    <div class="tab" onclick="switchTab('caffeine')">Caffeine</div>
+    <div class="tab" onclick="switchTab('diet')">Diet</div>
+</div>
+
+<div id="smoking" class="tab-content active">
+    <div class="form-section">
         <div id="smokingMessage" class="message"></div>
-        <form onsubmit="saveSmoking(event)">
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="smokingDate" required>
-            </div>
-            <div class="form-group">
-                <label>Smoking</label>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="smokingSmoke">
-                    <span>Smoked</span>
-                </div>
-            </div>
-            <button type="submit">Save</button>
-        </form>
+        <label>Date <input type="date" id="smokingDate"></label>
+        <label><input type="checkbox" id="smokingSmoke"> Smoked</label>
+        <button onclick="saveSmoking()">Save</button>
     </div>
+    <div id="smokingTable"></div>
+</div>
 
-    <div class="section">
-        <h2>Sleep</h2>
+<div id="sleep" class="tab-content">
+    <div class="form-section">
         <div id="sleepMessage" class="message"></div>
-        <form onsubmit="saveSleep(event)">
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="sleepDate" required>
-            </div>
-            <div class="form-group">
-                <label>Sleep Time</label>
-                <input type="time" id="sleepTime" required>
-            </div>
-            <div class="form-group">
-                <label>Wake Time</label>
-                <input type="time" id="wakeTime" required>
-            </div>
-            <button type="submit">Save</button>
-        </form>
+        <label>Date <input type="date" id="sleepDate"></label>
+        <label>Sleep <input type="time" id="sleepTime"></label>
+        <label>Wake <input type="time" id="wakeTime"></label>
+        <button onclick="saveSleep()">Save</button>
     </div>
+    <div id="sleepTable"></div>
+</div>
 
-    <div class="section">
-        <h2>Caffeine</h2>
+<div id="caffeine" class="tab-content">
+    <div class="form-section">
         <div id="caffeineMessage" class="message"></div>
-        <form onsubmit="saveCaffeine(event)">
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="caffeineDate" required>
-            </div>
-            <div class="form-group">
-                <label>Caffeine</label>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="caffeineDrink">
-                    <span>Consumed</span>
-                </div>
-            </div>
-            <button type="submit">Save</button>
-        </form>
+        <label>Date <input type="date" id="caffeineDate"></label>
+        <label><input type="checkbox" id="caffeineDrink"> Consumed</label>
+        <button onclick="saveCaffeine()">Save</button>
     </div>
+    <div id="caffeineTable"></div>
+</div>
 
-    <div class="section">
-        <h2>Diet</h2>
+<div id="diet" class="tab-content">
+    <div class="form-section">
         <div id="dietMessage" class="message"></div>
-        <form onsubmit="saveDiet(event)">
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="dietDate" required>
-            </div>
-            <div class="form-group">
-                <label>Diet</label>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="dietDrink">
-                    <span>Consumed</span>
-                </div>
-            </div>
-            <button type="submit">Save</button>
-        </form>
+        <label>Date <input type="date" id="dietDate"></label>
+        <label><input type="checkbox" id="dietDrink"> Consumed</label>
+        <button onclick="saveDiet()">Save</button>
     </div>
+    <div id="dietTable"></div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeModal()"></div>
+<div class="modal" id="editModal">
+    <h3>Edit / Delete</h3>
+    <p id="modalDate"></p>
+    <div id="modalContent"></div>
+    <button onclick="updateRecord()">Update</button>
+    <button class="btn-delete" onclick="deleteRecord()">Delete</button>
+    <button onclick="closeModal()">Cancel</button>
 </div>
 
 <script>
     const API_BASE_URL = '';
+
+    function formatTime(timeObj) {
+        if (!timeObj) return '--:--';
+
+        if (typeof timeObj === 'string') {
+            return timeObj;
+        }
+
+        // If it's an array [hour, minute, second, nano]
+        if (Array.isArray(timeObj)) {
+            const hour = timeObj[0] || 0;
+            const minute = timeObj[1] || 0;
+            return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+        }
+
+        // If it's an object {hour, minute, second, nano}
+        let hour = 0;
+        let minute = 0;
+
+        if (timeObj.hour !== undefined && timeObj.hour !== null) {
+            hour = timeObj.hour;
+        }
+        if (timeObj.minute !== undefined && timeObj.minute !== null) {
+            minute = timeObj.minute;
+        }
+
+        return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    }
+
+    let currentEditType = '';
+    let currentEditDate = '';
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        document.getElementById(tabName).classList.add('active');
+        event.target.classList.add('active');
+    }
 
     function showMessage(elementId, message) {
         const element = document.getElementById(elementId);
@@ -195,9 +242,87 @@
         }, 3000);
     }
 
-    async function saveSmoking(event) {
-        event.preventDefault();
+    function openModal(type, date, data) {
+        currentEditType = type;
+        currentEditDate = date;
 
+        document.getElementById('modalDate').textContent = `Date: ${date}`;
+        const modalContent = document.getElementById('modalContent');
+
+        if (type === 'smoking') {
+            modalContent.innerHTML = `<label><input type="checkbox" id="editSmoke" ${data.smoke ? 'checked' : ''}> Smoked</label>`;
+        } else if (type === 'sleep') {
+            modalContent.innerHTML = `
+                    <label>Sleep <input type="time" id="editSleepTime" value="${data.sleepTime}"></label><br>
+                    <label>Wake <input type="time" id="editWakeTime" value="${data.wakeTime}"></label>
+                `;
+        } else if (type === 'caffeine') {
+            modalContent.innerHTML = `<label><input type="checkbox" id="editDrink" ${data.drink ? 'checked' : ''}> Consumed</label>`;
+        } else if (type === 'diet') {
+            modalContent.innerHTML = `<label><input type="checkbox" id="editDrink" ${data.drink ? 'checked' : ''}> Consumed</label>`;
+        }
+
+        document.getElementById('overlay').classList.add('show');
+        document.getElementById('editModal').classList.add('show');
+    }
+
+    function closeModal() {
+        document.getElementById('overlay').classList.remove('show');
+        document.getElementById('editModal').classList.remove('show');
+    }
+
+    async function updateRecord() {
+        try {
+            let url = `${API_BASE_URL}/${currentEditType}?date=${currentEditDate}`;
+
+            if (currentEditType === 'smoking') {
+                const smoke = document.getElementById('editSmoke').checked;
+                url += `&smoke=${smoke}`;
+            } else if (currentEditType === 'sleep') {
+                const sleepTime = document.getElementById('editSleepTime').value;
+                const wakeTime = document.getElementById('editWakeTime').value;
+                url += `&sleepTime=${sleepTime}&wakeTime=${wakeTime}`;
+            } else if (currentEditType === 'caffeine' || currentEditType === 'diet') {
+                const drink = document.getElementById('editDrink').checked;
+                url += `&drink=${drink}`;
+            }
+
+            const response = await fetch(url, { method: 'PUT' });
+
+            if (response.ok) {
+                showMessage(`${currentEditType}Message`, 'Updated');
+                closeModal();
+                loadData(currentEditType);
+            } else {
+                showMessage(`${currentEditType}Message`, 'Failed');
+            }
+        } catch (error) {
+            showMessage(`${currentEditType}Message`, 'Error: ' + error.message);
+        }
+    }
+
+    async function deleteRecord() {
+        if (!confirm('Delete this record?')) return;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/${currentEditType}?date=${currentEditDate}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                showMessage(`${currentEditType}Message`, 'Deleted');
+                closeModal();
+                loadData(currentEditType);
+            } else {
+                showMessage(`${currentEditType}Message`, 'Failed');
+            }
+        } catch (error) {
+            showMessage(`${currentEditType}Message`, 'Error: ' + error.message);
+        }
+    }
+
+    // Smoking
+    async function saveSmoking() {
         const date = document.getElementById('smokingDate').value;
         const smoke = document.getElementById('smokingSmoke').checked;
 
@@ -207,19 +332,90 @@
             });
 
             if (response.ok) {
-                showMessage('smokingMessage', 'Saved successfully');
+                showMessage('smokingMessage', 'Saved');
                 document.getElementById('smokingSmoke').checked = false;
+                loadData('smoking');
             } else {
-                showMessage('smokingMessage', 'Save failed');
+                showMessage('smokingMessage', 'Failed');
             }
         } catch (error) {
             showMessage('smokingMessage', 'Error: ' + error.message);
         }
     }
 
-    async function saveSleep(event) {
-        event.preventDefault();
+    async function loadData(type) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/${type}/all`);
+            const data = await response.json();
 
+            if (data.length === 0) {
+                document.getElementById(`${type}Table`).innerHTML = '<p>No data</p>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            let html = '<table>';
+            const chunkSize = 15;
+
+            for (let i = 0; i < data.length; i += chunkSize) {
+                const chunk = data.slice(i, i + chunkSize);
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td class="date-cell" onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${item.date}</td>`;
+                });
+                html += '</tr>';
+
+                if (type === 'sleep') {
+                    html += '<tr>';
+                    chunk.forEach(item => {
+                        const sleepTime = formatTime(item.sleepTime);
+                        html += `<td onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${sleepTime}</td>`;
+                    });
+                    html += '</tr>';
+
+                    html += '<tr>';
+                    chunk.forEach(item => {
+                        const wakeTime = formatTime(item.wakeTime);
+                        html += `<td onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${wakeTime}</td>`;
+                    });
+                    html += '</tr>';
+                } else {
+                    html += '<tr>';
+                    chunk.forEach(item => {
+                        const value = (type === 'smoking' ? item.smoke : item.drink) ? 'O' : 'X';
+                        const cellClass = value === 'O' ? 'red-cell' : '';
+                        html += `<td class="${cellClass}" onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${value}</td>`;
+                    });
+                    html += '</tr>';
+                }
+            }
+
+            html += '</table>';
+            document.getElementById(`${type}Table`).innerHTML = html;
+        } catch (error) {
+            document.getElementById(`${type}Table`).innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+    }
+
+    function openEditModal(type, date, item) {
+        let data = {};
+        if (type === 'smoking') {
+            data = { smoke: item.smoke };
+        } else if (type === 'sleep') {
+            data = {
+                sleepTime: formatTime(item.sleepTime),
+                wakeTime: formatTime(item.wakeTime)
+            };
+        } else {
+            data = { drink: item.drink };
+        }
+        openModal(type, date, data);
+    }
+
+    // Sleep
+    async function saveSleep() {
         const date = document.getElementById('sleepDate').value;
         const sleepTime = document.getElementById('sleepTime').value;
         const wakeTime = document.getElementById('wakeTime').value;
@@ -230,20 +426,20 @@
             });
 
             if (response.ok) {
-                showMessage('sleepMessage', 'Saved successfully');
+                showMessage('sleepMessage', 'Saved');
                 document.getElementById('sleepTime').value = '';
                 document.getElementById('wakeTime').value = '';
+                loadData('sleep');
             } else {
-                showMessage('sleepMessage', 'Save failed');
+                showMessage('sleepMessage', 'Failed');
             }
         } catch (error) {
             showMessage('sleepMessage', 'Error: ' + error.message);
         }
     }
 
-    async function saveCaffeine(event) {
-        event.preventDefault();
-
+    // Caffeine
+    async function saveCaffeine() {
         const date = document.getElementById('caffeineDate').value;
         const drink = document.getElementById('caffeineDrink').checked;
 
@@ -253,19 +449,19 @@
             });
 
             if (response.ok) {
-                showMessage('caffeineMessage', 'Saved successfully');
+                showMessage('caffeineMessage', 'Saved');
                 document.getElementById('caffeineDrink').checked = false;
+                loadData('caffeine');
             } else {
-                showMessage('caffeineMessage', 'Save failed');
+                showMessage('caffeineMessage', 'Failed');
             }
         } catch (error) {
             showMessage('caffeineMessage', 'Error: ' + error.message);
         }
     }
 
-    async function saveDiet(event) {
-        event.preventDefault();
-
+    // Diet
+    async function saveDiet() {
         const date = document.getElementById('dietDate').value;
         const drink = document.getElementById('dietDrink').checked;
 
@@ -275,23 +471,28 @@
             });
 
             if (response.ok) {
-                showMessage('dietMessage', 'Saved successfully');
+                showMessage('dietMessage', 'Saved');
                 document.getElementById('dietDrink').checked = false;
+                loadData('diet');
             } else {
-                showMessage('dietMessage', 'Save failed');
+                showMessage('dietMessage', 'Failed');
             }
         } catch (error) {
             showMessage('dietMessage', 'Error: ' + error.message);
         }
     }
 
-    // Set today's date on page load
     window.addEventListener('DOMContentLoaded', () => {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('smokingDate').value = today;
         document.getElementById('sleepDate').value = today;
         document.getElementById('caffeineDate').value = today;
         document.getElementById('dietDate').value = today;
+
+        loadData('smoking');
+        loadData('sleep');
+        loadData('caffeine');
+        loadData('diet');
     });
 </script>
 </body>
