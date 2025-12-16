@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: jeonggiju
+  profiles:
+    active: dev
+
+

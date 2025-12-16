@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Records</title>
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .tab {
+            display: inline-block;
+            padding: 5px 15px;
+            border: 1px solid black;
+            background: white;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background: black;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        button {
+            padding: 5px 15px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+            min-width: 90px;
+        }
+
+        .date-cell {
+            font-weight: bold;
+        }
+
+        .red-cell {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>Hi.</h1>
+<p>99.06.08</p>
+
+<div>
+    <div class="tab active" onclick="switchTab('smoking')">Smoking</div>
+    <div class="tab" onclick="switchTab('sleep')">Sleep</div>
+    <div class="tab" onclick="switchTab('caffeine')">Caffeine</div>
+    <div class="tab" onclick="switchTab('diet')">Diet</div>
+</div>
+
+<div id="smoking" class="tab-content active">
+    <div id="smokingTable"></div>
+</div>
+
+<div id="sleep" class="tab-content">
+    <div id="sleepTable"></div>
+</div>
+
+<div id="caffeine" class="tab-content">
+    <div id="caffeineTable"></div>
+</div>
+
+<div id="diet" class="tab-content">
+    <div id="dietTable"></div>
+</div>
+
+<script>
+    const API_BASE_URL = 'http://localhost:8080';
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        document.getElementById(tabName).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    function calculateStats(data, getValueFunc) {
+        if (data.length === 0) return { rate: 0, longestStreak: 0 };
+
+        // Calculate O rate
+        const oCount = data.filter(item => getValueFunc(item)).length;
+        const rate = Math.round((oCount / data.length) * 100);
+
+        // Calculate longest streak of O
+        let currentStreak = 0;
+        let longestStreak = 0;
+
+        data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        for (let i = 0; i < data.length; i++) {
+            if (getValueFunc(data[i])) {
+                currentStreak++;
+                longestStreak = Math.max(longestStreak, currentStreak);
+            } else {
+                currentStreak = 0;
+            }
+        }
+
+        return { rate, longestStreak };
+    }
+
+    function formatTime(timeObj) {
+        console.log('Time object:', timeObj);
+
+        if (!timeObj) return '--:--';
+
+        if (typeof timeObj === 'string') {
+            return timeObj;
+        }
+
+        if (Array.isArray(timeObj)) {
+            const hour = timeObj[0] || 0;
+            const minute = timeObj[1] || 0;
+            return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+        }
+
+        let hour = 0;
+        let minute = 0;
+
+        if (timeObj.hour !== undefined && timeObj.hour !== null) {
+            hour = timeObj.hour;
+        }
+        if (timeObj.minute !== undefined && timeObj.minute !== null) {
+            minute = timeObj.minute;
+        }
+
+        return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    }
+
+    async function loadSmoking() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/smoking/all`);
+            const data = await response.json();
+
+            if (data.length === 0) {
+                document.getElementById('smokingTable').innerHTML = '<p>No data</p>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // Calculate statistics
+            const stats = calculateStats(data, item => item.smoke);
+
+            let html = '<div style="margin-bottom: 15px;">';
+            html += `<span><b>O Rate:</b> ${stats.rate}%</span> `;
+            html += `<span style="margin-left: 20px;"><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
+            html += '</div>';
+
+            html += '<table>';
+            const chunkSize = 15;
+
+            for (let i = 0; i < data.length; i += chunkSize) {
+                const chunk = data.slice(i, i + chunkSize);
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td class="date-cell">${item.date}</td>`;
+                });
+                html += '</tr>';
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    const value = item.smoke ? 'O' : 'X';
+                    const cellClass = value === 'O' ? 'red-cell' : '';
+                    html += `<td class="${cellClass}">${value}</td>`;
+                });
+                html += '</tr>';
+            }
+
+            html += '</table>';
+            document.getElementById('smokingTable').innerHTML = html;
+        } catch (error) {
+            document.getElementById('smokingTable').innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+    }
+
+    async function loadSleep() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/sleep/all`);
+            const data = await response.json();
+
+            console.log('Sleep data:', data);
+
+            if (data.length === 0) {
+                document.getElementById('sleepTable').innerHTML = '<p>No data</p>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            let html = '<div style="margin-bottom: 15px;">';
+            html += '<p>I try to wake up at 06:00 and go to bed at 22:00, and I try to sleep 8 hours every day.</p>';
+            html += '</div>';
+
+            html += '<table>';
+            const chunkSize = 15;
+
+            for (let i = 0; i < data.length; i += chunkSize) {
+                const chunk = data.slice(i, i + chunkSize);
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td class="date-cell">${item.date}</td>`;
+                });
+                html += '</tr>';
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td>${formatTime(item.sleepTime)}</td>`;
+                });
+                html += '</tr>';
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td>${formatTime(item.wakeTime)}</td>`;
+                });
+                html += '</tr>';
+            }
+
+            html += '</table>';
+            document.getElementById('sleepTable').innerHTML = html;
+        } catch (error) {
+            console.error('Sleep loading error:', error);
+            document.getElementById('sleepTable').innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+    }
+
+    async function loadCaffeine() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/caffeine/all`);
+            const data = await response.json();
+
+            if (data.length === 0) {
+                document.getElementById('caffeineTable').innerHTML = '<p>No data</p>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // Calculate statistics
+            const stats = calculateStats(data, item => item.drink);
+
+            let html = '<div style="margin-bottom: 15px;">';
+            html += `<span><b>O Rate:</b> ${stats.rate}%</span> `;
+            html += `<span style="margin-left: 20px;"><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
+            html += '</div>';
+
+            html += '<table>';
+            const chunkSize = 15;
+
+            for (let i = 0; i < data.length; i += chunkSize) {
+                const chunk = data.slice(i, i + chunkSize);
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td class="date-cell">${item.date}</td>`;
+                });
+                html += '</tr>';
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    const value = item.drink ? 'O' : 'X';
+                    const cellClass = value === 'O' ? 'red-cell' : '';
+                    html += `<td class="${cellClass}">${value}</td>`;
+                });
+                html += '</tr>';
+            }
+
+            html += '</table>';
+            document.getElementById('caffeineTable').innerHTML = html;
+        } catch (error) {
+            document.getElementById('caffeineTable').innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+    }
+
+    async function loadDiet() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/diet/all`);
+            const data = await response.json();
+
+            if (data.length === 0) {
+                document.getElementById('dietTable').innerHTML = '<p>No data</p>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // Calculate statistics
+            const stats = calculateStats(data, item => item.drink);
+
+            let html = '<div style="margin-bottom: 15px;">';
+            html += `<span><b>O Rate:</b> ${stats.rate}%</span> `;
+            html += `<span style="margin-left: 20px;"><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
+            html += '</div>';
+
+            html += '<table>';
+            const chunkSize = 15;
+
+            for (let i = 0; i < data.length; i += chunkSize) {
+                const chunk = data.slice(i, i + chunkSize);
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td class="date-cell">${item.date}</td>`;
+                });
+                html += '</tr>';
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    const value = item.drink ? 'O' : 'X';
+                    const cellClass = value === 'O' ? 'red-cell' : '';
+                    html += `<td class="${cellClass}">${value}</td>`;
+                });
+                html += '</tr>';
+            }
+
+            html += '</table>';
+            document.getElementById('dietTable').innerHTML = html;
+        } catch (error) {
+            document.getElementById('dietTable').innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        loadSmoking();
+        loadSleep();
+        loadCaffeine();
+        loadDiet();
+    });
+</script>
+</body>
+</html>
