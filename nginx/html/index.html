@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Health Records</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         body {
             padding: 20px;
@@ -29,12 +30,36 @@
         }
 
         .tab-content.active {
-            display: block;
+            display: flex;
+            gap: 20px;
         }
 
-        button {
-            padding: 5px 15px;
-            margin-bottom: 10px;
+        .view-toggle {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 40px;
+        }
+
+        .view-toggle button {
+            padding: 20px 8px;
+            background: white;
+            border: 1px solid black;
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 3px;
+        }
+
+        .view-toggle button.active {
+            background: black;
+            color: white;
+        }
+
+        .content-area {
+            flex: 1;
         }
 
         table {
@@ -56,6 +81,28 @@
         .red-cell {
             color: red;
         }
+
+        .stats {
+            margin-bottom: 15px;
+        }
+
+        .stats span {
+            margin-right: 20px;
+        }
+
+        .table-view, .graph-view {
+            display: none;
+        }
+
+        .table-view.active, .graph-view.active {
+            display: block;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 500px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -65,28 +112,88 @@
 <div>
     <div class="tab active" onclick="switchTab('smoking')">Smoking</div>
     <div class="tab" onclick="switchTab('sleep')">Sleep</div>
-    <div class="tab" onclick="switchTab('caffeine')">Caffeine</div>
+    <div class="tab" onclick="switchTab('sex')">Sex</div>
+    <div class="tab" onclick="switchTab('exercise')">Exercise</div>
     <div class="tab" onclick="switchTab('diet')">Diet</div>
+    <div class="tab" onclick="switchTab('caffeine')">Caffeine</div>
+    <div class="tab" onclick="switchTab('alcohol')">Alcohol</div>
 </div>
 
+<!-- Smoking: 테이블만 -->
 <div id="smoking" class="tab-content active">
-    <div id="smokingTable"></div>
+    <div class="content-area">
+        <div id="smokingTable"></div>
+    </div>
 </div>
 
+<!-- Sleep: 테이블 + 그래프 옵션 -->
 <div id="sleep" class="tab-content">
-    <div id="sleepTable"></div>
+    <div class="view-toggle">
+        <button class="active" onclick="switchView('sleep', 'table')">TABLE</button>
+        <button onclick="switchView('sleep', 'graph')">GRAPH</button>
+    </div>
+    <div class="content-area">
+        <div class="table-view active" id="sleep-table-view">
+            <div id="sleepTable"></div>
+        </div>
+        <div class="graph-view" id="sleep-graph-view">
+            <div class="chart-container">
+                <canvas id="sleepChart"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="caffeine" class="tab-content">
-    <div id="caffeineTable"></div>
+<!-- Sex: 테이블만 -->
+<div id="sex" class="tab-content">
+    <div class="content-area">
+        <div id="sexTable"></div>
+    </div>
 </div>
 
+<!-- Exercise: 테이블 + 그래프 옵션 -->
+<div id="exercise" class="tab-content">
+    <div class="view-toggle">
+        <button class="active" onclick="switchView('exercise', 'table')">TABLE</button>
+        <button onclick="switchView('exercise', 'graph')">GRAPH</button>
+    </div>
+    <div class="content-area">
+        <div class="table-view active" id="exercise-table-view">
+            <div id="exerciseTable"></div>
+        </div>
+        <div class="graph-view" id="exercise-graph-view">
+            <div class="chart-container">
+                <canvas id="exerciseChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Diet: 테이블만 -->
 <div id="diet" class="tab-content">
-    <div id="dietTable"></div>
+    <div class="content-area">
+        <div id="dietTable"></div>
+    </div>
+</div>
+
+<!-- Caffeine: 테이블만 -->
+<div id="caffeine" class="tab-content">
+    <div class="content-area">
+        <div id="caffeineTable"></div>
+    </div>
+</div>
+
+<!-- Alcohol: 테이블만 -->
+<div id="alcohol" class="tab-content">
+    <div class="content-area">
+        <div id="alcoholTable"></div>
+    </div>
 </div>
 
 <script>
     const API_BASE_URL = '';
+    let charts = {};
+    let cachedData = {};
 
     function switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(content => {
@@ -100,14 +207,34 @@
         event.target.classList.add('active');
     }
 
+    function switchView(type, view) {
+        const tableView = document.getElementById(`${type}-table-view`);
+        const graphView = document.getElementById(`${type}-graph-view`);
+        const buttons = document.querySelectorAll(`#${type} .view-toggle button`);
+
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        if (view === 'table') {
+            tableView.classList.add('active');
+            graphView.classList.remove('active');
+            event.target.classList.add('active');
+        } else {
+            tableView.classList.remove('active');
+            graphView.classList.add('active');
+            event.target.classList.add('active');
+
+            if (!charts[type] && cachedData[type]) {
+                createChart(type, cachedData[type]);
+            }
+        }
+    }
+
     function calculateStats(data, getValueFunc) {
         if (data.length === 0) return { rate: 0, longestStreak: 0 };
 
-        // Calculate O rate
         const oCount = data.filter(item => getValueFunc(item)).length;
         const rate = Math.round((oCount / data.length) * 100);
 
-        // Calculate longest streak of O
         let currentStreak = 0;
         let longestStreak = 0;
 
@@ -126,8 +253,6 @@
     }
 
     function formatTime(timeObj) {
-        console.log('Time object:', timeObj);
-
         if (!timeObj) return '--:--';
 
         if (typeof timeObj === 'string') {
@@ -153,6 +278,151 @@
         return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
     }
 
+    function timeToMinutes(timeObj) {
+        if (!timeObj) return null;
+
+        if (typeof timeObj === 'string') {
+            const parts = timeObj.split(':');
+            const hour = parseInt(parts[0]) || 0;
+            const minute = parseInt(parts[1]) || 0;
+            return hour * 60 + minute;
+        }
+
+        let hour = 0;
+        let minute = 0;
+
+        if (Array.isArray(timeObj)) {
+            hour = timeObj[0] || 0;
+            minute = timeObj[1] || 0;
+        } else if (typeof timeObj === 'object') {
+            hour = timeObj.hour || 0;
+            minute = timeObj.minute || 0;
+        }
+
+        return hour * 60 + minute;
+    }
+
+    function createChart(type, data) {
+        const canvas = document.getElementById(`${type}Chart`);
+        const ctx = canvas.getContext('2d');
+
+        if (charts[type]) {
+            charts[type].destroy();
+        }
+
+        const displayData = data.slice(-100);
+        const labels = displayData.map(item => item.date);
+
+        let chartConfig;
+
+        if (type === 'sleep') {
+            chartConfig = {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sleep Time',
+                        data: displayData.map(item => timeToMinutes(item.sleepTime)),
+                        borderColor: 'rgb(54, 162, 235)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        tension: 0.3
+                    }, {
+                        label: 'Wake Time',
+                        data: displayData.map(item => timeToMinutes(item.wakeTime)),
+                        borderColor: 'rgb(255, 206, 86)',
+                        backgroundColor: 'rgba(255, 206, 86, 0.1)',
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed.y;
+                                    const hours = Math.floor(value / 60);
+                                    const minutes = value % 60;
+                                    return `${context.dataset.label}: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    const hours = Math.floor(value / 60);
+                                    const minutes = value % 60;
+                                    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        } else if (type === 'exercise') {
+            chartConfig = {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Exercise Time',
+                        data: displayData.map(item => {
+                            if (!item.work) return null;
+                            const minutes = timeToMinutes(item.time);
+                            return minutes !== null ? minutes : 0;
+                        }),
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                        tension: 0.3,
+                        spanGaps: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.parsed.y === null) return 'No Exercise';
+                                    const value = context.parsed.y;
+                                    const hours = Math.floor(value / 60);
+                                    const minutes = value % 60;
+                                    return `Exercise Time: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    const hours = Math.floor(value / 60);
+                                    const minutes = value % 60;
+                                    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        charts[type] = new Chart(ctx, chartConfig);
+    }
+
     async function loadSmoking() {
         try {
             const response = await fetch(`${API_BASE_URL}/smoking/all`);
@@ -165,12 +435,11 @@
 
             data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            // Calculate statistics
             const stats = calculateStats(data, item => item.smoke);
 
-            let html = '<div style="margin-bottom: 15px;">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span> `;
-            html += `<span style="margin-left: 20px;"><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
+            let html = '<div class="stats">';
+            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
+            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
             html += '</div>';
 
             html += '<table>';
@@ -205,8 +474,7 @@
         try {
             const response = await fetch(`${API_BASE_URL}/sleep/all`);
             const data = await response.json();
-
-            console.log('Sleep data:', data);
+            cachedData['sleep'] = data;
 
             if (data.length === 0) {
                 document.getElementById('sleepTable').innerHTML = '<p>No data</p>';
@@ -215,8 +483,12 @@
 
             data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            let html = '<div style="margin-bottom: 15px;">';
+            const phoneStats = calculateStats(data, item => !item.viewPhone);
+
+            let html = '<div class="stats">';
             html += '<p>I try to wake up at 06:00 and go to bed at 22:00, and I try to sleep 8 hours every day.</p>';
+            html += `<span><b>No Phone Rate:</b> ${phoneStats.rate}%</span>`;
+            html += `<span><b>Longest No Phone Streak:</b> ${phoneStats.longestStreak} days</span>`;
             html += '</div>';
 
             html += '<table>';
@@ -242,6 +514,14 @@
                     html += `<td>${formatTime(item.wakeTime)}</td>`;
                 });
                 html += '</tr>';
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    const value = item.viewPhone ? 'O' : 'X';
+                    const cellClass = value === 'O' ? 'red-cell' : '';
+                    html += `<td class="${cellClass}" title="View Phone">${value}</td>`;
+                });
+                html += '</tr>';
             }
 
             html += '</table>';
@@ -252,24 +532,23 @@
         }
     }
 
-    async function loadCaffeine() {
+    async function loadSex() {
         try {
-            const response = await fetch(`${API_BASE_URL}/caffeine/all`);
+            const response = await fetch(`${API_BASE_URL}/sex/all`);
             const data = await response.json();
 
             if (data.length === 0) {
-                document.getElementById('caffeineTable').innerHTML = '<p>No data</p>';
+                document.getElementById('sexTable').innerHTML = '<p>No data</p>';
                 return;
             }
 
             data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            // Calculate statistics
-            const stats = calculateStats(data, item => item.drink);
+            const stats = calculateStats(data, item => item.sex);
 
-            let html = '<div style="margin-bottom: 15px;">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span> `;
-            html += `<span style="margin-left: 20px;"><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
+            let html = '<div class="stats">';
+            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
+            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
             html += '</div>';
 
             html += '<table>';
@@ -286,7 +565,7 @@
 
                 html += '<tr>';
                 chunk.forEach(item => {
-                    const value = item.drink ? 'O' : 'X';
+                    const value = item.sex ? 'O' : 'X';
                     const cellClass = value === 'O' ? 'red-cell' : '';
                     html += `<td class="${cellClass}">${value}</td>`;
                 });
@@ -294,9 +573,63 @@
             }
 
             html += '</table>';
-            document.getElementById('caffeineTable').innerHTML = html;
+            document.getElementById('sexTable').innerHTML = html;
         } catch (error) {
-            document.getElementById('caffeineTable').innerHTML = `<p>Error: ${error.message}</p>`;
+            document.getElementById('sexTable').innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+    }
+
+    async function loadExercise() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/exercise/all`);
+            const data = await response.json();
+            cachedData['exercise'] = data;
+
+            if (data.length === 0) {
+                document.getElementById('exerciseTable').innerHTML = '<p>No data</p>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const stats = calculateStats(data, item => item.work);
+
+            let html = '<div class="stats">';
+            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
+            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
+            html += '</div>';
+
+            html += '<table>';
+            const chunkSize = 15;
+
+            for (let i = 0; i < data.length; i += chunkSize) {
+                const chunk = data.slice(i, i + chunkSize);
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td class="date-cell">${item.date}</td>`;
+                });
+                html += '</tr>';
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    const value = item.work ? 'O' : 'X';
+                    const cellClass = value === 'O' ? 'red-cell' : '';
+                    html += `<td class="${cellClass}">${value}</td>`;
+                });
+                html += '</tr>';
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td>${formatTime(item.time)}</td>`;
+                });
+                html += '</tr>';
+            }
+
+            html += '</table>';
+            document.getElementById('exerciseTable').innerHTML = html;
+        } catch (error) {
+            document.getElementById('exerciseTable').innerHTML = `<p>Error: ${error.message}</p>`;
         }
     }
 
@@ -312,12 +645,11 @@
 
             data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            // Calculate statistics
             const stats = calculateStats(data, item => item.drink);
 
-            let html = '<div style="margin-bottom: 15px;">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span> `;
-            html += `<span style="margin-left: 20px;"><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
+            let html = '<div class="stats">';
+            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
+            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
             html += '</div>';
 
             html += '<table>';
@@ -348,11 +680,108 @@
         }
     }
 
+    async function loadCaffeine() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/caffeine/all`);
+            const data = await response.json();
+
+            if (data.length === 0) {
+                document.getElementById('caffeineTable').innerHTML = '<p>No data</p>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const stats = calculateStats(data, item => item.drink);
+
+            let html = '<div class="stats">';
+            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
+            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
+            html += '</div>';
+
+            html += '<table>';
+            const chunkSize = 15;
+
+            for (let i = 0; i < data.length; i += chunkSize) {
+                const chunk = data.slice(i, i + chunkSize);
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td class="date-cell">${item.date}</td>`;
+                });
+                html += '</tr>';
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    const value = item.drink ? 'O' : 'X';
+                    const cellClass = value === 'O' ? 'red-cell' : '';
+                    html += `<td class="${cellClass}">${value}</td>`;
+                });
+                html += '</tr>';
+            }
+
+            html += '</table>';
+            document.getElementById('caffeineTable').innerHTML = html;
+        } catch (error) {
+            document.getElementById('caffeineTable').innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+    }
+
+    async function loadAlcohol() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/alcohol/all`);
+            const data = await response.json();
+
+            if (data.length === 0) {
+                document.getElementById('alcoholTable').innerHTML = '<p>No data</p>';
+                return;
+            }
+
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const stats = calculateStats(data, item => item.drink);
+
+            let html = '<div class="stats">';
+            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
+            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
+            html += '</div>';
+
+            html += '<table>';
+            const chunkSize = 15;
+
+            for (let i = 0; i < data.length; i += chunkSize) {
+                const chunk = data.slice(i, i + chunkSize);
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    html += `<td class="date-cell">${item.date}</td>`;
+                });
+                html += '</tr>';
+
+                html += '<tr>';
+                chunk.forEach(item => {
+                    const value = item.drink ? 'O' : 'X';
+                    const cellClass = value === 'O' ? 'red-cell' : '';
+                    html += `<td class="${cellClass}">${value}</td>`;
+                });
+                html += '</tr>';
+            }
+
+            html += '</table>';
+            document.getElementById('alcoholTable').innerHTML = html;
+        } catch (error) {
+            document.getElementById('alcoholTable').innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
         loadSmoking();
         loadSleep();
-        loadCaffeine();
+        loadSex();
+        loadExercise();
         loadDiet();
+        loadCaffeine();
+        loadAlcohol();
     });
 </script>
 </body>
