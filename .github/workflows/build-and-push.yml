@@ -6,7 +6,8 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: myapp
+  ECR_REGISTRY: 624545858643.dkr.ecr.ap-northeast-2.amazonaws.com
+  ECR_REPOSITORY: jeonggiju/life
 
 jobs:
   build_push:
