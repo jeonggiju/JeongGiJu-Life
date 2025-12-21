@@ -132,8 +132,11 @@
 <div>
     <div class="tab active" onclick="switchTab('smoking')">Smoking</div>
     <div class="tab" onclick="switchTab('sleep')">Sleep</div>
-    <div class="tab" onclick="switchTab('caffeine')">Caffeine</div>
+    <div class="tab" onclick="switchTab('sex')">Sex</div>
+    <div class="tab" onclick="switchTab('exercise')">Exercise</div>
     <div class="tab" onclick="switchTab('diet')">Diet</div>
+    <div class="tab" onclick="switchTab('caffeine')">Caffeine</div>
+    <div class="tab" onclick="switchTab('alcohol')">Alcohol</div>
 </div>
 
 <div id="smoking" class="tab-content active">
@@ -152,9 +155,41 @@
         <label>Date <input type="date" id="sleepDate"></label>
         <label>Sleep <input type="time" id="sleepTime"></label>
         <label>Wake <input type="time" id="wakeTime"></label>
+        <label><input type="checkbox" id="sleepViewPhone"> View Phone</label>
         <button onclick="saveSleep()">Save</button>
     </div>
     <div id="sleepTable"></div>
+</div>
+
+<div id="sex" class="tab-content">
+    <div class="form-section">
+        <div id="sexMessage" class="message"></div>
+        <label>Date <input type="date" id="sexDate"></label>
+        <label><input type="checkbox" id="sexSex"> Did it</label>
+        <button onclick="saveSex()">Save</button>
+    </div>
+    <div id="sexTable"></div>
+</div>
+
+<div id="exercise" class="tab-content">
+    <div class="form-section">
+        <div id="exerciseMessage" class="message"></div>
+        <label>Date <input type="date" id="exerciseDate"></label>
+        <label><input type="checkbox" id="exerciseWork"> Worked out</label>
+        <label>Time <input type="time" id="exerciseTime"></label>
+        <button onclick="saveExercise()">Save</button>
+    </div>
+    <div id="exerciseTable"></div>
+</div>
+
+<div id="diet" class="tab-content">
+    <div class="form-section">
+        <div id="dietMessage" class="message"></div>
+        <label>Date <input type="date" id="dietDate"></label>
+        <label><input type="checkbox" id="dietDrink"> Consumed</label>
+        <button onclick="saveDiet()">Save</button>
+    </div>
+    <div id="dietTable"></div>
 </div>
 
 <div id="caffeine" class="tab-content">
@@ -167,14 +202,14 @@
     <div id="caffeineTable"></div>
 </div>
 
-<div id="diet" class="tab-content">
+<div id="alcohol" class="tab-content">
     <div class="form-section">
-        <div id="dietMessage" class="message"></div>
-        <label>Date <input type="date" id="dietDate"></label>
-        <label><input type="checkbox" id="dietDrink"> Consumed</label>
-        <button onclick="saveDiet()">Save</button>
+        <div id="alcoholMessage" class="message"></div>
+        <label>Date <input type="date" id="alcoholDate"></label>
+        <label><input type="checkbox" id="alcoholDrink"> Consumed</label>
+        <button onclick="saveAlcohol()">Save</button>
     </div>
-    <div id="dietTable"></div>
+    <div id="alcoholTable"></div>
 </div>
 
 <div class="overlay" id="overlay" onclick="closeModal()"></div>
@@ -197,14 +232,12 @@
             return timeObj;
         }
 
-        // If it's an array [hour, minute, second, nano]
         if (Array.isArray(timeObj)) {
             const hour = timeObj[0] || 0;
             const minute = timeObj[1] || 0;
             return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
         }
 
-        // If it's an object {hour, minute, second, nano}
         let hour = 0;
         let minute = 0;
 
@@ -246,21 +279,26 @@
     function openModal(type, date, data) {
         currentEditType = type;
         currentEditDate = date;
-        currentEditId = data.id;  // Store id for deletion
-
-        document.getElementById('modalDate').textContent = `Date: ${date}`;
+        currentEditId = data.id;
+        document.getElementById('modalDate').textContent = date;
         const modalContent = document.getElementById('modalContent');
 
         if (type === 'smoking') {
             modalContent.innerHTML = `<label><input type="checkbox" id="editSmoke" ${data.smoke ? 'checked' : ''}> Smoked</label>`;
         } else if (type === 'sleep') {
             modalContent.innerHTML = `
-                    <label>Sleep <input type="time" id="editSleepTime" value="${data.sleepTime}"></label><br>
-                    <label>Wake <input type="time" id="editWakeTime" value="${data.wakeTime}"></label>
-                `;
-        } else if (type === 'caffeine') {
-            modalContent.innerHTML = `<label><input type="checkbox" id="editDrink" ${data.drink ? 'checked' : ''}> Consumed</label>`;
-        } else if (type === 'diet') {
+                <label>Sleep <input type="time" id="editSleepTime" value="${data.sleepTime}"></label><br>
+                <label>Wake <input type="time" id="editWakeTime" value="${data.wakeTime}"></label><br>
+                <label><input type="checkbox" id="editViewPhone" ${data.viewPhone ? 'checked' : ''}> View Phone</label>
+            `;
+        } else if (type === 'sex') {
+            modalContent.innerHTML = `<label><input type="checkbox" id="editSex" ${data.sex ? 'checked' : ''}> Did it</label>`;
+        } else if (type === 'exercise') {
+            modalContent.innerHTML = `
+                <label><input type="checkbox" id="editWork" ${data.work ? 'checked' : ''}> Worked out</label><br>
+                <label>Time <input type="time" id="editTime" value="${data.time}"></label>
+            `;
+        } else if (type === 'caffeine' || type === 'diet' || type === 'alcohol') {
             modalContent.innerHTML = `<label><input type="checkbox" id="editDrink" ${data.drink ? 'checked' : ''}> Consumed</label>`;
         }
 
@@ -283,8 +321,16 @@
             } else if (currentEditType === 'sleep') {
                 const sleepTime = document.getElementById('editSleepTime').value;
                 const wakeTime = document.getElementById('editWakeTime').value;
-                url += `&sleepTime=${sleepTime}&wakeTime=${wakeTime}`;
-            } else if (currentEditType === 'caffeine' || currentEditType === 'diet') {
+                const viewPhone = document.getElementById('editViewPhone').checked;
+                url += `&sleepTime=${sleepTime}&wakeTime=${wakeTime}&viewPhone=${viewPhone}`;
+            } else if (currentEditType === 'sex') {
+                const sex = document.getElementById('editSex').checked;
+                url += `&sex=${sex}`;
+            } else if (currentEditType === 'exercise') {
+                const work = document.getElementById('editWork').checked;
+                const time = document.getElementById('editTime').value;
+                url += `&work=${work}&time=${time}`;
+            } else if (currentEditType === 'caffeine' || currentEditType === 'diet' || currentEditType === 'alcohol') {
                 const drink = document.getElementById('editDrink').checked;
                 url += `&drink=${drink}`;
             }
@@ -323,7 +369,6 @@
         }
     }
 
-    // Smoking
     async function saveSmoking() {
         const date = document.getElementById('smokingDate').value;
         const smoke = document.getElementById('smokingSmoke').checked;
@@ -342,6 +387,138 @@
             }
         } catch (error) {
             showMessage('smokingMessage', 'Error: ' + error.message);
+        }
+    }
+
+    async function saveSleep() {
+        const date = document.getElementById('sleepDate').value;
+        const sleepTime = document.getElementById('sleepTime').value;
+        const wakeTime = document.getElementById('wakeTime').value;
+        const viewPhone = document.getElementById('sleepViewPhone').checked;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/sleep?date=${date}&sleepTime=${sleepTime}&wakeTime=${wakeTime}&viewPhone=${viewPhone}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                showMessage('sleepMessage', 'Saved');
+                document.getElementById('sleepTime').value = '';
+                document.getElementById('wakeTime').value = '';
+                document.getElementById('sleepViewPhone').checked = false;
+                loadData('sleep');
+            } else {
+                showMessage('sleepMessage', 'Failed');
+            }
+        } catch (error) {
+            showMessage('sleepMessage', 'Error: ' + error.message);
+        }
+    }
+
+    async function saveSex() {
+        const date = document.getElementById('sexDate').value;
+        const sex = document.getElementById('sexSex').checked;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/sex?sex=${sex}&date=${date}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                showMessage('sexMessage', 'Saved');
+                document.getElementById('sexSex').checked = false;
+                loadData('sex');
+            } else {
+                showMessage('sexMessage', 'Failed');
+            }
+        } catch (error) {
+            showMessage('sexMessage', 'Error: ' + error.message);
+        }
+    }
+
+    async function saveExercise() {
+        const date = document.getElementById('exerciseDate').value;
+        const work = document.getElementById('exerciseWork').checked;
+        const time = document.getElementById('exerciseTime').value;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/exercise?work=${work}&time=${time}&date=${date}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                showMessage('exerciseMessage', 'Saved');
+                document.getElementById('exerciseWork').checked = false;
+                document.getElementById('exerciseTime').value = '';
+                loadData('exercise');
+            } else {
+                showMessage('exerciseMessage', 'Failed');
+            }
+        } catch (error) {
+            showMessage('exerciseMessage', 'Error: ' + error.message);
+        }
+    }
+
+    async function saveDiet() {
+        const date = document.getElementById('dietDate').value;
+        const drink = document.getElementById('dietDrink').checked;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/diet?drink=${drink}&date=${date}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                showMessage('dietMessage', 'Saved');
+                document.getElementById('dietDrink').checked = false;
+                loadData('diet');
+            } else {
+                showMessage('dietMessage', 'Failed');
+            }
+        } catch (error) {
+            showMessage('dietMessage', 'Error: ' + error.message);
+        }
+    }
+
+    async function saveCaffeine() {
+        const date = document.getElementById('caffeineDate').value;
+        const drink = document.getElementById('caffeineDrink').checked;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/caffeine?drink=${drink}&date=${date}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                showMessage('caffeineMessage', 'Saved');
+                document.getElementById('caffeineDrink').checked = false;
+                loadData('caffeine');
+            } else {
+                showMessage('caffeineMessage', 'Failed');
+            }
+        } catch (error) {
+            showMessage('caffeineMessage', 'Error: ' + error.message);
+        }
+    }
+
+    async function saveAlcohol() {
+        const date = document.getElementById('alcoholDate').value;
+        const drink = document.getElementById('alcoholDrink').checked;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/alcohol?drink=${drink}&date=${date}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                showMessage('alcoholMessage', 'Saved');
+                document.getElementById('alcoholDrink').checked = false;
+                loadData('alcohol');
+            } else {
+                showMessage('alcoholMessage', 'Failed');
+            }
+        } catch (error) {
+            showMessage('alcoholMessage', 'Error: ' + error.message);
         }
     }
 
@@ -383,10 +560,40 @@
                         html += `<td onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${wakeTime}</td>`;
                     });
                     html += '</tr>';
+
+                    html += '<tr>';
+                    chunk.forEach(item => {
+                        const value = item.viewPhone ? 'O' : 'X';
+                        const cellClass = value === 'O' ? 'red-cell' : '';
+                        html += `<td class="${cellClass}" onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})' title="View Phone">${value}</td>`;
+                    });
+                    html += '</tr>';
+                } else if (type === 'exercise') {
+                    html += '<tr>';
+                    chunk.forEach(item => {
+                        const value = item.work ? 'O' : 'X';
+                        const cellClass = value === 'O' ? 'red-cell' : '';
+                        html += `<td class="${cellClass}" onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${value}</td>`;
+                    });
+                    html += '</tr>';
+
+                    html += '<tr>';
+                    chunk.forEach(item => {
+                        const time = formatTime(item.time);
+                        html += `<td onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${time}</td>`;
+                    });
+                    html += '</tr>';
                 } else {
                     html += '<tr>';
                     chunk.forEach(item => {
-                        const value = (type === 'smoking' ? item.smoke : item.drink) ? 'O' : 'X';
+                        let value;
+                        if (type === 'smoking') {
+                            value = item.smoke ? 'O' : 'X';
+                        } else if (type === 'sex') {
+                            value = item.sex ? 'O' : 'X';
+                        } else {
+                            value = item.drink ? 'O' : 'X';
+                        }
                         const cellClass = value === 'O' ? 'red-cell' : '';
                         html += `<td class="${cellClass}" onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${value}</td>`;
                     });
@@ -408,91 +615,35 @@
         } else if (type === 'sleep') {
             data.sleepTime = formatTime(item.sleepTime);
             data.wakeTime = formatTime(item.wakeTime);
+            data.viewPhone = item.viewPhone;
+        } else if (type === 'sex') {
+            data.sex = item.sex;
+        } else if (type === 'exercise') {
+            data.work = item.work;
+            data.time = formatTime(item.time);
         } else {
             data.drink = item.drink;
         }
         openModal(type, date, data);
     }
 
-    // Sleep
-    async function saveSleep() {
-        const date = document.getElementById('sleepDate').value;
-        const sleepTime = document.getElementById('sleepTime').value;
-        const wakeTime = document.getElementById('wakeTime').value;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/sleep?date=${date}&sleepTime=${sleepTime}&wakeTime=${wakeTime}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                showMessage('sleepMessage', 'Saved');
-                document.getElementById('sleepTime').value = '';
-                document.getElementById('wakeTime').value = '';
-                loadData('sleep');
-            } else {
-                showMessage('sleepMessage', 'Failed');
-            }
-        } catch (error) {
-            showMessage('sleepMessage', 'Error: ' + error.message);
-        }
-    }
-
-    // Caffeine
-    async function saveCaffeine() {
-        const date = document.getElementById('caffeineDate').value;
-        const drink = document.getElementById('caffeineDrink').checked;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/caffeine?drink=${drink}&date=${date}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                showMessage('caffeineMessage', 'Saved');
-                document.getElementById('caffeineDrink').checked = false;
-                loadData('caffeine');
-            } else {
-                showMessage('caffeineMessage', 'Failed');
-            }
-        } catch (error) {
-            showMessage('caffeineMessage', 'Error: ' + error.message);
-        }
-    }
-
-    // Diet
-    async function saveDiet() {
-        const date = document.getElementById('dietDate').value;
-        const drink = document.getElementById('dietDrink').checked;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/diet?drink=${drink}&date=${date}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                showMessage('dietMessage', 'Saved');
-                document.getElementById('dietDrink').checked = false;
-                loadData('diet');
-            } else {
-                showMessage('dietMessage', 'Failed');
-            }
-        } catch (error) {
-            showMessage('dietMessage', 'Error: ' + error.message);
-        }
-    }
-
     window.addEventListener('DOMContentLoaded', () => {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('smokingDate').value = today;
         document.getElementById('sleepDate').value = today;
-        document.getElementById('caffeineDate').value = today;
+        document.getElementById('sexDate').value = today;
+        document.getElementById('exerciseDate').value = today;
         document.getElementById('dietDate').value = today;
+        document.getElementById('caffeineDate').value = today;
+        document.getElementById('alcoholDate').value = today;
 
         loadData('smoking');
         loadData('sleep');
-        loadData('caffeine');
+        loadData('sex');
+        loadData('exercise');
         loadData('diet');
+        loadData('caffeine');
+        loadData('alcohol');
     });
 </script>
 </body>
