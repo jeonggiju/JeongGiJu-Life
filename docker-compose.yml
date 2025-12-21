@@ -18,7 +18,10 @@ services:
       - app-network
 
   app:
-    image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:${APP_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: my-spring-app:latest  # 로컬 이미지 이름
     depends_on:
       db:
         condition: service_healthy
@@ -31,6 +34,7 @@ services:
       - "8080"
     networks:
       - app-network
+    restart: unless-stopped
 
   nginx:
     image: nginx:alpine
