@@ -41,8 +41,8 @@ public class SleepController {
 	}
 
 	@DeleteMapping
-	public void delete(LocalDate date){
-		sleepService.delete(date);
+	public void delete(Long id){
+		sleepService.delete(id);
 	}
 
 }

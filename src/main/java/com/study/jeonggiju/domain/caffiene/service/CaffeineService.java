@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.study.jeonggiju.domain.caffiene.dto.CaffeineDto;
@@ -19,8 +20,12 @@ public class CaffeineService {
 	private final CaffeineRepository repository;
 
 	public Caffeine save(CaffeineDto dto) {
-		Caffeine caffeine = Caffeine.from(dto);
-		return repository.save(caffeine);
+		try{
+			Caffeine caffeine = Caffeine.from(dto);
+			return repository.save(caffeine);
+		}catch (DataIntegrityViolationException e) {
+			throw new IllegalArgumentException("이미 존재하는 날짜");
+		}
 	}
 
 	public List<Caffeine> findAll() {
@@ -34,7 +39,7 @@ public class CaffeineService {
 		return repository.save(caffeine);
 	}
 
-	public void delete(LocalDate date) {
-		repository.deleteByDate(date);
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }

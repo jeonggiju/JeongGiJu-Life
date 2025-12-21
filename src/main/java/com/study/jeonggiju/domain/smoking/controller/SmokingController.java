@@ -35,8 +35,8 @@ public class SmokingController {
 	}
 
 	@DeleteMapping
-	public void delete(LocalDate date) {
-		smokingService.delete(date);
+	public void delete(Long id) {
+		smokingService.delete(id);
 	}
 
 	@PostMapping

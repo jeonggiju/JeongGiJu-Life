@@ -3,6 +3,7 @@ package com.study.jeonggiju.domain.smoking.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.study.jeonggiju.domain.smoking.dto.SmokingDto;
@@ -18,8 +19,12 @@ public class SmokingService {
 	private final SmokingRepository smokingRepository;
 
 	public Smoking save(SmokingDto dto) {
-		Smoking smoking = Smoking.from(dto);
-		return smokingRepository.save(smoking);
+		try{
+			Smoking smoking = Smoking.from(dto);
+			return smokingRepository.save(smoking);
+		}catch (DataIntegrityViolationException e) {
+			throw new IllegalArgumentException("이미 존재하는 날짜");
+		}
 	}
 
 	public Smoking update(SmokingDto dto) {
@@ -29,8 +34,8 @@ public class SmokingService {
 		return smokingRepository.save(smoking);
 	}
 
-	public void delete(LocalDate date) {
-		smokingRepository.deleteByDate(date);
+	public void delete(Long id) {
+		smokingRepository.deleteById(id);
 	}
 
 	public List<Smoking> findAll(){

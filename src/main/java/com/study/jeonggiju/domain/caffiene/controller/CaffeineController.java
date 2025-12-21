@@ -41,7 +41,7 @@ public class CaffeineController {
 	}
 
 	@DeleteMapping
-	public void delete(LocalDate date) {
-		service.delete(date);
+	public void delete(Long id) {
+		service.delete(id);
 	}
 }

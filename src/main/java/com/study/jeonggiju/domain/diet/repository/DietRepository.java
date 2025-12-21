@@ -13,5 +13,4 @@ public interface DietRepository extends JpaRepository<Diet, Long> {
 
 	Optional<Diet> findByDate(LocalDate date);
 
-	void deleteByDate(LocalDate date);
 }

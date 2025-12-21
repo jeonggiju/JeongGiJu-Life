@@ -12,5 +12,4 @@ public interface SmokingRepository extends JpaRepository<Smoking, Long> {
 
 
 	Optional<Smoking> findByDate(LocalDate date);
-	void deleteByDate(LocalDate date);
 }

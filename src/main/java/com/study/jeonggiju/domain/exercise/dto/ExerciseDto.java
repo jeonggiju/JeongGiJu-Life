@@ -1,4 +1,5 @@
-package com.study.jeonggiju.domain.sleep.dto;
+package com.study.jeonggiju.domain.exercise.dto;
+
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,12 +9,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data @Builder
+@Data
+@Builder
 @NoArgsConstructor @AllArgsConstructor
-public class SleepDto {
-
-	private LocalTime sleepTime;
-	private LocalTime wakeTime;
+public class ExerciseDto {
+	private boolean work;
+	private LocalTime time;
 	private LocalDate date;
-	private boolean viewPhone;
 }

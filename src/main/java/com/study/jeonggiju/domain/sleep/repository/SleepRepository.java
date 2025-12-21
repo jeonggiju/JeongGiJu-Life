@@ -13,6 +13,5 @@ import com.study.jeonggiju.domain.sleep.entity.Sleep;
 public interface SleepRepository extends JpaRepository<Sleep, Long> {
 
 	Optional<Sleep> findByDate(LocalDate date);
-	void deleteByDate(LocalDate date);
 
 }

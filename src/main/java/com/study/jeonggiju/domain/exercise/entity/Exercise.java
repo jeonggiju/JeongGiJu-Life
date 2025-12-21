@@ -1,11 +1,11 @@
-package com.study.jeonggiju.domain.sleep.entity;
+package com.study.jeonggiju.domain.exercise.entity;
 
 import static jakarta.persistence.GenerationType.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import com.study.jeonggiju.domain.sleep.dto.SleepDto;
+import com.study.jeonggiju.domain.exercise.dto.ExerciseDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,30 +19,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "sleep", uniqueConstraints = {
+@Table(name = "exercise", uniqueConstraints = {
 	@UniqueConstraint(columnNames = "date")
 })
 @Data @Builder
 @NoArgsConstructor @AllArgsConstructor
-public class Sleep {
+public class Exercise {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
-
-	private LocalTime sleepTime;
-	private LocalTime wakeTime;
-	private boolean viewPhone;
+	private boolean work;
+	private LocalTime time;
 
 	@Column(nullable = false, unique = true)
 	private LocalDate date;
 
-	public static Sleep from(SleepDto dto) {
-		return Sleep.builder().sleepTime(dto.getSleepTime()).wakeTime(dto.getWakeTime()).date(dto.getDate()).build();
+	public static Exercise from(ExerciseDto dto) {
+		return Exercise.builder().work(dto.isWork()).date(dto.getDate()).time(dto.getTime()).build();
 	}
 
-	public void update(SleepDto dto) {
-		this.sleepTime = dto.getSleepTime();
-		this.wakeTime = dto.getWakeTime();
+	public void update(ExerciseDto dto) {
+		this.work = dto.isWork();
+		this.time =  dto.getTime();
 	}
 }

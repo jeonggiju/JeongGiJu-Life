@@ -6,10 +6,12 @@ import java.time.LocalDate;
 
 import com.study.jeonggiju.domain.caffiene.dto.CaffeineDto;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,8 +19,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table
 @Entity
+@Table(name = "caffeine", uniqueConstraints = {
+	@UniqueConstraint(columnNames = "date")
+})
 @Data @Builder
 @NoArgsConstructor @AllArgsConstructor
 public class Caffeine {
@@ -27,6 +31,7 @@ public class Caffeine {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	private boolean drink;
+	@Column(nullable = false, unique = true)
 	private LocalDate date;
 
 	public static Caffeine from(CaffeineDto dto) {

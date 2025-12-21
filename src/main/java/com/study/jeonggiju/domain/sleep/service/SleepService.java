@@ -3,6 +3,7 @@ package com.study.jeonggiju.domain.sleep.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.study.jeonggiju.domain.sleep.dto.SleepDto;
@@ -18,8 +19,12 @@ public class SleepService {
 	private final SleepRepository sleepRepository;
 
 	public Sleep save(SleepDto dto) {
-		Sleep sleep = Sleep.from(dto);
-		return sleepRepository.save(sleep);
+		try{
+			Sleep sleep = Sleep.from(dto);
+			return sleepRepository.save(sleep);
+		}catch (DataIntegrityViolationException e) {
+			throw new IllegalArgumentException("이미 존재하는 날짜");
+		}
 	}
 
 	public Sleep update(SleepDto dto) {
@@ -30,8 +35,8 @@ public class SleepService {
 		return sleepRepository.save(sleep);
 	}
 
-	public void delete(LocalDate date) {
-		sleepRepository.deleteByDate(date);
+	public void delete(Long id) {
+		sleepRepository.deleteById(id);
 	}
 
 	public List<Sleep> findAll() {

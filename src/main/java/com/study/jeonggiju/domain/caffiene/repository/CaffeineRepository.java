@@ -13,5 +13,4 @@ public interface CaffeineRepository extends JpaRepository<Caffeine, Long> {
 
 	Optional<Caffeine> findByDate(LocalDate date);
 
-	void deleteByDate(LocalDate date);
 }

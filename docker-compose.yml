@@ -27,7 +27,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-    # 포트를 외부에 노출하지 않음 (Nginx를 통해서만 접근)
     expose:
       - "8080"
     networks:

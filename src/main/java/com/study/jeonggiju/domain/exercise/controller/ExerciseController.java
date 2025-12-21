@@ -1,6 +1,5 @@
-package com.study.jeonggiju.domain.diet.controller;
+package com.study.jeonggiju.domain.exercise.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,31 +9,31 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.study.jeonggiju.domain.diet.dto.DietDto;
-import com.study.jeonggiju.domain.diet.entity.Diet;
-import com.study.jeonggiju.domain.diet.service.DietService;
+import com.study.jeonggiju.domain.exercise.dto.ExerciseDto;
+import com.study.jeonggiju.domain.exercise.entity.Exercise;
+import com.study.jeonggiju.domain.exercise.service.ExerciseService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/diet")
+@RequestMapping("/exercise")
 @RestController
 @RequiredArgsConstructor
-public class DietController {
+public class ExerciseController {
 
-	private final DietService service;
+	private final ExerciseService service;
 
 	@GetMapping("/all")
-	public List<Diet> findAll() {
+	public List<Exercise> findAll() {
 		return service.findAll();
 	}
 
 	@PostMapping
-	public Diet save(DietDto dto) {
+	public Exercise save(ExerciseDto dto) {
 		return service.save(dto);
 	}
 
 	@PutMapping
-	public Diet update(DietDto dto) {
+	public Exercise update(ExerciseDto dto) {
 		return service.update(dto);
 	}
 

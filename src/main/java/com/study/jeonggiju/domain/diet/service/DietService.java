@@ -3,6 +3,7 @@ package com.study.jeonggiju.domain.diet.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.study.jeonggiju.domain.diet.dto.DietDto;
@@ -18,10 +19,14 @@ public class DietService {
 	private final DietRepository repository;
 
 	public Diet save(DietDto dto) {
-		Diet caffeine = Diet.from(dto);
-		return repository.save(caffeine);
-	}
+		try{
+			Diet caffeine = Diet.from(dto);
+			return repository.save(caffeine);
+		}catch (DataIntegrityViolationException e) {
+			throw new IllegalArgumentException("이미 존재하는 날짜임");
+		}
 
+	}
 	public List<Diet> findAll() {
 		return repository.findAll();
 	}
@@ -33,7 +38,7 @@ public class DietService {
 		return repository.save(caffeine);
 	}
 
-	public void delete(LocalDate date) {
-		repository.deleteByDate(date);
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }
