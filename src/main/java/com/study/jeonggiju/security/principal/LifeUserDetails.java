@@ -2,6 +2,7 @@ package com.study.jeonggiju.security.principal;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -57,5 +58,9 @@ public class LifeUserDetails implements UserDetails {
 
 	public String getEmail(){
 		return user.getEmail();
+	}
+
+	public UUID getId(){
+		return user.getId();
 	}
 }
