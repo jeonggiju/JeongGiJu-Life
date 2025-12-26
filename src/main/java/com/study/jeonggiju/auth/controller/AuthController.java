@@ -1,4 +1,4 @@
-package com.study.jeonggiju.auth.domain;
+package com.study.jeonggiju.auth.controller;
 
 
 import org.springframework.http.HttpStatus;
@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.study.jeonggiju.security.principal.LifeUserDetails;
 import com.study.jeonggiju.domain.user.dto.ErrorResponse;
 import com.study.jeonggiju.domain.user.dto.LoginRequest;
 import com.study.jeonggiju.domain.user.dto.LoginResponse;
 import com.study.jeonggiju.domain.user.dto.LogoutResponse;
+import com.study.jeonggiju.domain.user.dto.MeResponse;
 import com.study.jeonggiju.domain.user.dto.SignUpRequest;
 import com.study.jeonggiju.domain.user.dto.SignUpResponse;
 import com.study.jeonggiju.domain.user.service.UserService;
@@ -79,15 +81,18 @@ public class AuthController {
 
 	@GetMapping("/me")
 	public ResponseEntity<?> getCurrentUser() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		if (authentication == null || !authentication.isAuthenticated()
-			|| authentication instanceof AnonymousAuthenticationToken) {
+		Authentication authentication =
+			SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(new ErrorResponse("로그인이 필요합니다") {
-				});
+				.body(new ErrorResponse("로그인이 필요합니다"));
 		}
 
-		return ResponseEntity.ok(authentication.getName());
+		LifeUserDetails userDetails = (LifeUserDetails) authentication.getPrincipal();
+
+		return ResponseEntity.ok(new MeResponse(userDetails.getEmail()));
 	}
+
 }

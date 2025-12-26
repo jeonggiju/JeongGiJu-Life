@@ -7,11 +7,13 @@ import com.study.jeonggiju.domain.user.entity.Authority;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class LoginRequest {
 	private String email;
 	private String password;

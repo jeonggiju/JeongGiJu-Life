@@ -1,4 +1,4 @@
-package com.study.jeonggiju.auth.domain;
+package com.study.jeonggiju.domain.user.repository;
 
 import java.util.Optional;
 import java.util.UUID;

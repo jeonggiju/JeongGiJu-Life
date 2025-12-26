@@ -3,7 +3,7 @@ package com.study.jeonggiju.domain.user.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.study.jeonggiju.auth.domain.UserRepository;
+import com.study.jeonggiju.domain.user.repository.UserRepository;
 import com.study.jeonggiju.domain.user.dto.SignUpRequest;
 import com.study.jeonggiju.domain.user.entity.Authority;
 import com.study.jeonggiju.domain.user.entity.User;

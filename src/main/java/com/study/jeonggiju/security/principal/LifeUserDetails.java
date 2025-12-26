@@ -1,4 +1,4 @@
-package com.study.jeonggiju.auth.domain;
+package com.study.jeonggiju.security.principal;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class CustomUserDetails implements UserDetails {
+public class LifeUserDetails implements UserDetails {
 
 	private final User user;
 
@@ -52,6 +52,10 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public String getUsername() {
+		return user.getEmail();
+	}
+
+	public String getEmail(){
 		return user.getEmail();
 	}
 }

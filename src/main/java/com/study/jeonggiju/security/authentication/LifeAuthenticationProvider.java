@@ -1,4 +1,4 @@
-package com.study.jeonggiju.auth.domain;
+package com.study.jeonggiju.security.authentication;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,9 +14,9 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class CustomAuthenticationProvider implements AuthenticationProvider {
+public class LifeAuthenticationProvider implements AuthenticationProvider {
 
-	private final CustomUserDetailService userDetailService;
+	private final LifeUserDetailService userDetailService;
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
