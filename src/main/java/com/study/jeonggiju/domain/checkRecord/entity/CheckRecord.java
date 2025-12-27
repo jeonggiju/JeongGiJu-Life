@@ -34,12 +34,19 @@ public class CheckRecord {
 	@JoinColumn(name="category_id")
 	private Category category;
 
-	private String text;
+	private boolean success;
 
 	@CreatedDate
 	private LocalDate createdAt;
 
 	protected CheckRecord() {}
 
+	public static CheckRecord of(Category category, boolean success) {
+		return CheckRecord.builder().category(category).success(success).build();
+	}
+
+	public void update(boolean success){
+		this.success = success;
+	}
 }
 

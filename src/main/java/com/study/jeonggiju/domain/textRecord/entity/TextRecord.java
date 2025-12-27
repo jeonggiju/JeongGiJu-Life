@@ -33,6 +33,8 @@ public class TextRecord {
 	@JoinColumn(name="category_id", nullable = false)
 	private Category category;
 
+	private String title;
+
 	@Column(columnDefinition = "TEXT")
 	private String text;
 
