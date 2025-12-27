@@ -28,7 +28,11 @@ public class UserService {
 			.description(dto.getDescription())
 			.email(dto.getEmail())
 			.authority(Authority.ROLE_USER)
+			.birthYear(dto.getBirthYear())
+			.birthMonth(dto.getBirthMonth())
+			.birthDay(dto.getBirthDay())
 			.password(passwordEncoder.encode(dto.getPassword())).build();
+
 		userRepository.save(user);
 	}
 

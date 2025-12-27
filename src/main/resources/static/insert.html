@@ -458,9 +458,12 @@
 
                     if (userResponse.ok) {
                         const userData = await userResponse.json();
-                        // title과 description 업데이트
+                        // title, description, birthYear, birthMonth, birthDay 업데이트
                         currentUser.title = userData.title;
                         currentUser.description = userData.description;
+                        currentUser.birthYear = userData.birthYear;
+                        currentUser.birthMonth = userData.birthMonth;
+                        currentUser.birthDay = userData.birthDay;
                     }
                 } catch (error) {
                     console.error('User 정보 로드 실패:', error);

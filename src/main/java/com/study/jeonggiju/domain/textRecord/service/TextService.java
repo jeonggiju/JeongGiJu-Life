@@ -1,5 +1,6 @@
 package com.study.jeonggiju.domain.textRecord.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +27,10 @@ public class TextService {
 
 	public TextRecord find(UUID textId){
 		return textRepository.findById(textId).orElseThrow();
+	}
+
+	public List<TextRecord> findByDate(UUID categoryId ,LocalDate date){
+		return textRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
 	}
 
 	public List<TextRecord> findAll(UUID categoryId){

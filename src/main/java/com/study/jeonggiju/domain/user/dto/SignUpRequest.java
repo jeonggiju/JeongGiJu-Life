@@ -11,4 +11,8 @@ public class SignUpRequest {
 	private String password;
 	private String title;
 	private String description;
+	private int birthYear;
+	private int birthMonth;
+	private int birthDay;
+
 }

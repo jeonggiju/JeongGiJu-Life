@@ -1,5 +1,6 @@
 package com.study.jeonggiju.domain.checkRecord.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,10 @@ public class CheckService {
 
 	public List<CheckRecord> findAll(UUID categoryId){
 		return checkRepository.findAllByCategory_Id(categoryId);
+	}
+
+	public CheckRecord findByDate(UUID categoryId ,LocalDate date){
+		return checkRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
 	}
 
 	@Transactional

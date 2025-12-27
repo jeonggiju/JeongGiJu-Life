@@ -77,8 +77,10 @@
 
         .view-toggle {
             display: none;
-            gap: 10px;
+            flex-direction: column;
+            gap: 8px;
             margin-bottom: 30px;
+            align-items: flex-start;
         }
 
         .view-toggle.active {
@@ -93,6 +95,7 @@
             font-size: 14px;
             font-weight: 500;
             transition: all 0.2s;
+            min-width: 120px;
         }
 
         .toggle-btn:hover {
@@ -102,6 +105,17 @@
         .toggle-btn.active {
             background: #000;
             color: #fff;
+        }
+
+        .success-rate {
+            margin: 15px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            padding: 12px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            text-align: center;
         }
 
         .category-btn {
@@ -361,6 +375,141 @@
             background: #555;
         }
 
+        /* CHECK 달력 스타일 */
+        .calendar-day.has-data-success {
+            background: #dcfce7;
+            color: #16a34a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-day.has-data-success:hover {
+            background: #bbf7d0;
+        }
+
+        .calendar-day.has-data-fail {
+            background: #fee2e2;
+            color: #dc2626;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-day.has-data-fail:hover {
+            background: #fecaca;
+        }
+
+        /* TIME 달력 스타일 */
+        .calendar-day.has-data-time {
+            background: #333;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-day.has-data-time:hover {
+            background: #555;
+        }
+
+        /* 히트맵 스타일 (100년 뷰) */
+        .heatmap-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 20px;
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 80vh;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+        }
+
+        .heatmap-header {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 5px;
+            position: sticky;
+            top: 0;
+            background: #f9f9f9;
+            z-index: 2;
+        }
+
+        .heatmap-months {
+            display: flex;
+            gap: 2px;
+        }
+
+        .heatmap-month-label {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .heatmap-row {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+        }
+
+        .heatmap-year-label {
+            width: 60px;
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+            padding-right: 10px;
+            flex-shrink: 0;
+            font-weight: 500;
+        }
+
+        .heatmap-days {
+            display: flex;
+            gap: 2px;
+        }
+
+        .heatmap-cell {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(2);
+            z-index: 10;
+            border: 2px solid #000;
+            box-shadow: 0 0 8px rgba(0,0,0,0.4);
+        }
+
+        /* CHECK 히트맵 */
+        .heatmap-success {
+            background: #22c55e;
+        }
+
+        .heatmap-fail {
+            background: #ef4444;
+        }
+
+        /* TIME/TEXT 히트맵 */
+        .heatmap-data {
+            background: #60a5fa;
+        }
+
+        /* 과거 + 데이터 없음 */
+        .heatmap-past-empty {
+            background: #333;
+        }
+
+        /* 미래 + 데이터 없음 */
+        .heatmap-future-empty {
+            background: #fff;
+            border: 1px solid #ddd;
+        }
+
         /* TEXT 그룹 스타일 (이전 버전 - 제거) */
         .year-group {
             margin-bottom: 40px;
@@ -466,6 +615,16 @@
         .form-group textarea {
             resize: vertical;
             min-height: 80px;
+        }
+
+        .birth-date-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .birth-date-inputs input {
+            flex: 1;
+            width: auto;
         }
 
         .submit-btn {
@@ -662,6 +821,17 @@
                 width: 100% !important;
                 height: auto !important;
             }
+
+            .heatmap-cell {
+                width: 8px;
+                height: 8px;
+            }
+
+            .heatmap-year-label {
+                width: 40px;
+                font-size: 10px;
+                padding-right: 5px;
+            }
         }
     </style>
 </head>
@@ -714,6 +884,14 @@
                 <label for="signupDescription">설명 (선택)</label>
                 <textarea id="signupDescription" placeholder="간단한 소개"></textarea>
             </div>
+            <div class="form-group">
+                <label>생년월일 (선택)</label>
+                <div class="birth-date-inputs">
+                    <input type="number" id="signupBirthYear" placeholder="년 (YYYY)" min="1900" max="2100" style="width: 120px;">
+                    <input type="number" id="signupBirthMonth" placeholder="월 (1-12)" min="1" max="12" style="width: 100px;">
+                    <input type="number" id="signupBirthDay" placeholder="일 (1-31)" min="1" max="31" style="width: 100px;">
+                </div>
+            </div>
             <button type="submit" class="submit-btn">회원가입</button>
             <button type="button" id="cancelSignup" class="btn" style="width: 100%; margin-top: 10px;">취소</button>
         </form>
@@ -734,6 +912,8 @@
     </div>
 
     <div class="categories" id="categoryButtons"></div>
+
+    <div class="success-rate" id="successRate" style="display: none;"></div>
 
     <div class="view-toggle" id="viewToggle">
         <button class="toggle-btn active" id="graphViewBtn">그래프</button>
@@ -781,6 +961,14 @@
                 <label for="profileDescription">설명</label>
                 <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요"></textarea>
             </div>
+            <div class="form-group">
+                <label>생년월일</label>
+                <div class="birth-date-inputs">
+                    <input type="number" id="profileBirthYear" placeholder="년 (YYYY)" min="1900" max="2100" style="width: 120px;">
+                    <input type="number" id="profileBirthMonth" placeholder="월 (1-12)" min="1" max="12" style="width: 100px;">
+                    <input type="number" id="profileBirthDay" placeholder="일 (1-31)" min="1" max="31" style="width: 100px;">
+                </div>
+            </div>
             <div class="modal-actions">
                 <button type="submit" class="btn btn-primary">저장</button>
                 <button type="button" class="btn" onclick="closeProfileModal()">취소</button>
@@ -807,28 +995,77 @@
     let allRecords = [];
     let currentView = 'graph'; // 'graph' or 'table'
 
+    // 뷰 토글 이벤트 설정
+    function setupViewToggleEvents() {
+        const graphBtn = document.getElementById('graphViewBtn');
+        const tableBtn = document.getElementById('tableViewBtn');
+        const calendarBtn = document.getElementById('calendarViewBtn');
+        const listBtn = document.getElementById('listViewBtn');
+        const heatmapBtn = document.getElementById('heatmapViewBtn');
+
+        if (graphBtn) {
+            graphBtn.addEventListener('click', () => {
+                currentView = 'graph';
+                setActiveButton(graphBtn);
+                if (currentCategory) {
+                    displayRecords(allRecords, currentCategory);
+                }
+            });
+        }
+
+        if (tableBtn) {
+            tableBtn.addEventListener('click', () => {
+                currentView = 'table';
+                setActiveButton(tableBtn);
+                if (currentCategory) {
+                    displayRecords(allRecords, currentCategory);
+                }
+            });
+        }
+
+        if (calendarBtn) {
+            calendarBtn.addEventListener('click', () => {
+                currentView = 'calendar';
+                setActiveButton(calendarBtn);
+                if (currentCategory) {
+                    displayRecords(allRecords, currentCategory);
+                }
+            });
+        }
+
+        if (listBtn) {
+            listBtn.addEventListener('click', () => {
+                currentView = 'list';
+                setActiveButton(listBtn);
+                if (currentCategory) {
+                    displayRecords(allRecords, currentCategory);
+                }
+            });
+        }
+
+        if (heatmapBtn) {
+            heatmapBtn.addEventListener('click', () => {
+                currentView = 'heatmap';
+                setActiveButton(heatmapBtn);
+                if (currentCategory) {
+                    displayRecords(allRecords, currentCategory);
+                }
+            });
+        }
+    }
+
+    // 활성 버튼 설정
+    function setActiveButton(activeBtn) {
+        const viewToggle = document.getElementById('viewToggle');
+        viewToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        activeBtn.classList.add('active');
+    }
+
     // 페이지 로드
     window.addEventListener('DOMContentLoaded', async () => {
         await checkAuth();
-
-        // 그래프/테이블 토글 버튼 이벤트
-        document.getElementById('graphViewBtn').addEventListener('click', () => {
-            currentView = 'graph';
-            document.getElementById('graphViewBtn').classList.add('active');
-            document.getElementById('tableViewBtn').classList.remove('active');
-            if (currentCategory && currentCategory.type === 'TIME') {
-                displayRecords(allRecords, currentCategory);
-            }
-        });
-
-        document.getElementById('tableViewBtn').addEventListener('click', () => {
-            currentView = 'table';
-            document.getElementById('tableViewBtn').classList.add('active');
-            document.getElementById('graphViewBtn').classList.remove('active');
-            if (currentCategory && currentCategory.type === 'TIME') {
-                displayRecords(allRecords, currentCategory);
-            }
-        });
     });
 
     // 인증 확인
@@ -849,9 +1086,12 @@
 
                     if (userResponse.ok) {
                         const userData = await userResponse.json();
-                        // title과 description 업데이트
+                        // title, description, birthYear, birthMonth, birthDay 업데이트
                         currentUser.title = userData.title;
                         currentUser.description = userData.description;
+                        currentUser.birthYear = userData.birthYear;
+                        currentUser.birthMonth = userData.birthMonth;
+                        currentUser.birthDay = userData.birthDay;
                     }
                 } catch (error) {
                     console.error('User 정보 로드 실패:', error);
@@ -909,6 +1149,10 @@
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        const birthYear = document.getElementById('signupBirthYear').value;
+        const birthMonth = document.getElementById('signupBirthMonth').value;
+        const birthDay = document.getElementById('signupBirthDay').value;
+
         const signupData = {
             username: document.getElementById('signupUsername').value,
             email: document.getElementById('signupEmail').value,
@@ -916,6 +1160,11 @@
             title: document.getElementById('signupTitle').value || '',
             description: document.getElementById('signupDescription').value || ''
         };
+
+        // 생년월일 추가 (입력된 경우만)
+        if (birthYear) signupData.birthYear = parseInt(birthYear);
+        if (birthMonth) signupData.birthMonth = parseInt(birthMonth);
+        if (birthDay) signupData.birthDay = parseInt(birthDay);
 
         try {
             const response = await fetch(`${API_BASE}/auth/signup`, {
@@ -996,11 +1245,13 @@
                     title: btn.textContent.trim()
                 };
 
-                // TIME 타입일 때 뷰를 그래프로 리셋
-                if (currentCategory.type === 'TIME') {
+                // 타입별 기본 뷰 설정
+                if (currentCategory.type === 'CHECK') {
+                    currentView = 'table';
+                } else if (currentCategory.type === 'TIME') {
                     currentView = 'graph';
-                    document.getElementById('graphViewBtn').classList.add('active');
-                    document.getElementById('tableViewBtn').classList.remove('active');
+                } else if (currentCategory.type === 'TEXT') {
+                    currentView = 'calendar';
                 }
 
                 loadRecords(currentCategory);
@@ -1052,24 +1303,81 @@
             return;
         }
 
-        // TIME 타입일 때만 토글 버튼 표시
-        if (category.type === 'TIME') {
-            viewToggle.classList.add('active');
-        } else {
-            viewToggle.classList.remove('active');
+        // 모든 타입에 토글 버튼 표시
+        viewToggle.classList.add('active');
+
+        // 타입별 버튼 구성
+        if (category.type === 'CHECK') {
+            viewToggle.innerHTML = `
+                    <button class="toggle-btn ${currentView === 'table' ? 'active' : ''}" id="tableViewBtn">테이블</button>
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn">달력</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn">100년</button>
+                `;
+        } else if (category.type === 'TIME') {
+            viewToggle.innerHTML = `
+                    <button class="toggle-btn ${currentView === 'graph' ? 'active' : ''}" id="graphViewBtn">그래프</button>
+                    <button class="toggle-btn ${currentView === 'table' ? 'active' : ''}" id="tableViewBtn">테이블</button>
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn">달력</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn">100년</button>
+                `;
+        } else if (category.type === 'TEXT') {
+            viewToggle.innerHTML = `
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn">달력</button>
+                    <button class="toggle-btn ${currentView === 'list' ? 'active' : ''}" id="listViewBtn">리스트</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn">100년</button>
+                `;
         }
+
+        // 이벤트 재등록
+        setupViewToggleEvents();
 
         if (category.type === 'CHECK') {
             displayCheckRecords(records);
         } else if (category.type === 'TIME') {
+            // TIME 타입은 성공률 숨김
+            document.getElementById('successRate').style.display = 'none';
             displayTimeRecords(records);
         } else if (category.type === 'TEXT') {
+            // TEXT 타입은 성공률 숨김
+            document.getElementById('successRate').style.display = 'none';
             displayTextRecords(records);
         }
     }
 
     // CHECK: 전체를 하나의 테이블로 표시 (심플)
+    // CHECK: 테이블, 달력 또는 히트맵 표시
     function displayCheckRecords(records) {
+        // 성공률 계산
+        let successCount = 0;
+        let totalCount = records.length;
+        records.forEach(record => {
+            if (record.success) {
+                successCount++;
+            }
+        });
+
+        const successRate = totalCount > 0 ? Math.round((successCount / totalCount) * 100) : 0;
+
+        // 성공률 표시
+        const successRateElement = document.getElementById('successRate');
+        if (totalCount > 0) {
+            successRateElement.innerHTML = `성공률: ${successRate}% (${successCount}/${totalCount})`;
+            successRateElement.style.display = 'block';
+        } else {
+            successRateElement.style.display = 'none';
+        }
+
+        if (currentView === 'calendar') {
+            displayCheckCalendar(records);
+        } else if (currentView === 'heatmap') {
+            displayCheckHeatmap(records);
+        } else {
+            displayCheckTable(records);
+        }
+    }
+
+    // CHECK 테이블 뷰
+    function displayCheckTable(records) {
         const recordsSection = document.getElementById('recordsSection');
 
         // 날짜별로 정리
@@ -1124,8 +1432,214 @@
         recordsSection.innerHTML = html;
     }
 
-    // TIME: 그래프 또는 테이블 표시
+    // CHECK 달력 뷰
+    function displayCheckCalendar(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 레코드 맵핑
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordsByDate[record.date] = record;
+            }
+        });
+
+        // 연도별로 그룹화
+        const yearMap = {};
+        Object.keys(recordsByDate).forEach(date => {
+            const year = date.split('-')[0];
+            if (!yearMap[year]) {
+                yearMap[year] = {};
+            }
+            const month = date.split('-')[1];
+            if (!yearMap[year][month]) {
+                yearMap[year][month] = {};
+            }
+            yearMap[year][month][date] = recordsByDate[date];
+        });
+
+        // 년도 정렬 (최신순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => b.localeCompare(a));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        let html = '';
+
+        sortedYears.forEach(year => {
+            html += `<div class="calendar-year">`;
+            html += `<div class="calendar-year-title">${year}년</div>`;
+
+            // 월별 달력 (1~12월)
+            html += `<div class="calendar-months">`;
+            for (let month = 1; month <= 12; month++) {
+                const monthStr = String(month).padStart(2, '0');
+                const monthData = yearMap[year][monthStr] || {};
+
+                html += generateCheckMonthCalendar(year, month, monthData);
+            }
+            html += `</div>`;
+            html += `</div>`;
+        });
+
+        recordsSection.innerHTML = html;
+    }
+
+    // CHECK 월별 달력 생성
+    function generateCheckMonthCalendar(year, month, monthData) {
+        const monthStr = String(month).padStart(2, '0');
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        let html = `<div class="calendar-month">`;
+        html += `<div class="calendar-month-title">${month}월</div>`;
+        html += `<div class="calendar-grid">`;
+
+        // 요일 헤더
+        const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+        weekDays.forEach(day => {
+            html += `<div class="calendar-weekday">${day}</div>`;
+        });
+
+        // 첫 주 빈 칸
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += `<div class="calendar-day empty"></div>`;
+        }
+
+        // 날짜들
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayStr = String(day).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
+            const record = monthData[dateStr];
+
+            if (record) {
+                const className = record.success ? 'has-data-success' : 'has-data-fail';
+                html += `<div class="calendar-day ${className}" onclick='openEditModal("${record.id}", "CHECK", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${day}</div>`;
+            } else {
+                html += `<div class="calendar-day">${day}</div>`;
+            }
+        }
+
+        html += `</div>`;
+        html += `</div>`;
+
+        return html;
+    }
+
+    // CHECK 히트맵 뷰 (100년)
+    function displayCheckHeatmap(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 데이터를 날짜별 맵으로 변환
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 시작일 계산 (생년월일이 있으면 태어난 날 + 1년, 없으면 100년 전)
+        let startDate;
+        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+            startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
+            startDate.setFullYear(startDate.getFullYear() + 1); // 1살부터 시작
+            startDate.setHours(0, 0, 0, 0);
+        } else {
+            startDate = new Date(today);
+            startDate.setFullYear(startDate.getFullYear() - 100);
+        }
+
+        // 총 일수 계산
+        const totalDays = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)) + 365; // 오늘 + 미래 1년
+        const totalYears = Math.ceil(totalDays / 365);
+
+        let html = '<div class="heatmap-container">';
+
+        // 월 헤더 추가
+        html += '<div class="heatmap-header">';
+        html += '<div class="heatmap-year-label"></div>'; // 년도 라벨 공간
+        html += '<div class="heatmap-months">';
+        const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // 각 월의 일수
+        for (let m = 0; m < 12; m++) {
+            const monthName = `${m + 1}월`;
+            html += `<div class="heatmap-month-label" style="width: ${monthDays[m] * 18}px;">${monthName}</div>`;
+        }
+        html += '</div>';
+        html += '</div>';
+
+        // 년도별로 표시
+        for (let year = 0; year < totalYears; year++) {
+            const yearDate = new Date(startDate);
+            yearDate.setFullYear(yearDate.getFullYear() + year);
+            const yearLabel = yearDate.getFullYear();
+
+            html += '<div class="heatmap-row">';
+            html += `<div class="heatmap-year-label">${yearLabel}</div>`;
+            html += '<div class="heatmap-days">';
+
+            for (let day = 0; day < 365; day++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + (year * 365 + day));
+
+                // 미래 1년까지만 표시
+                if (date > new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)) {
+                    html += `<div class="heatmap-cell heatmap-future-empty" title="미래"></div>`;
+                    continue;
+                }
+
+                const dateStr = date.toISOString().split('T')[0];
+                const record = recordMap[dateStr];
+                const isPast = date < today;
+
+                let className = 'heatmap-cell';
+
+                if (record) {
+                    className += record.success ? ' heatmap-success' : ' heatmap-fail';
+                } else if (isPast) {
+                    className += ' heatmap-past-empty';
+                } else {
+                    className += ' heatmap-future-empty';
+                }
+
+                const title = `${dateStr}${record ? (record.success ? ' (성공)' : ' (실패)') : ''}`;
+
+                if (record) {
+                    html += `<div class="${className}" title="${title}" onclick='openEditModal("${record.id}", "CHECK", ${JSON.stringify(record).replace(/"/g, '&quot;')})'></div>`;
+                } else {
+                    html += `<div class="${className}" title="${title}"></div>`;
+                }
+            }
+
+            html += '</div>'; // heatmap-days
+            html += '</div>'; // heatmap-row
+        }
+
+        html += '</div>'; // heatmap-container
+        recordsSection.innerHTML = html;
+    }
+
+    // TIME: 그래프, 테이블, 달력 또는 히트맵 표시
     function displayTimeRecords(records) {
+        if (currentView === 'graph') {
+            displayTimeGraph(records);
+        } else if (currentView === 'calendar') {
+            displayTimeCalendar(records);
+        } else if (currentView === 'heatmap') {
+            displayTimeHeatmap(records);
+        } else {
+            displayTimeTable(records);
+        }
+    }
+
+    // TIME 그래프 뷰
+    function displayTimeGraph(records) {
         const recordsSection = document.getElementById('recordsSection');
 
         // 날짜별로 정리 (각 날짜당 첫 번째 레코드만 사용)
@@ -1164,7 +1678,14 @@
         let html = '';
 
         if (currentView === 'graph') {
-            // 그래프 컨트롤 추가
+            // 그래프만 표시 (더 크게) - 먼저 표시
+            if (graphData.length > 0) {
+                html += `<div class="time-graph-large">`;
+                html += `<canvas id="timeGraph" width="1200" height="500"></canvas>`;
+                html += `</div>`;
+            }
+
+            // 그래프 컨트롤 추가 - 아래에 표시
             html += `<div class="graph-controls">`;
             html += `<div class="control-group">`;
             html += `<label>날짜 범위 (최근 <span id="dateRangeValue">전체</span>일)</label>`;
@@ -1185,13 +1706,6 @@
             html += `</div>`;
             html += `</div>`;
             html += `</div>`;
-
-            // 그래프만 표시 (더 크게)
-            if (graphData.length > 0) {
-                html += `<div class="time-graph-large">`;
-                html += `<canvas id="timeGraph" width="1200" height="500"></canvas>`;
-                html += `</div>`;
-            }
         } else {
             // 테이블만 표시
             html += `<table class="time-table">`;
@@ -1290,6 +1804,248 @@
                 });
             }
         }
+    }
+
+    // TIME 테이블 뷰
+    function displayTimeTable(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 정리
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date && !recordMap[record.date]) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        // 날짜 정렬 (오름차순)
+        const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedDates.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        // 테이블만 표시
+        let html = `<table class="time-table">`;
+
+        for (let i = 0; i < sortedDates.length; i += 10) {
+            const chunk = sortedDates.slice(i, i + 10);
+
+            // 날짜 행
+            html += `<tr>`;
+            chunk.forEach(date => {
+                html += `<td class="date-cell">${date}</td>`;
+            });
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
+            html += `</tr>`;
+
+            // 시간 행
+            html += `<tr>`;
+            chunk.forEach(date => {
+                const record = recordMap[date];
+                const timeStr = formatTime(record.time);
+                html += `<td class="time-cell" onclick='openEditModal("${record.id}", "TIME", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${timeStr}</td>`;
+            });
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
+            html += `</tr>`;
+        }
+
+        html += `</table>`;
+        recordsSection.innerHTML = html;
+    }
+
+    // TIME 달력 뷰
+    function displayTimeCalendar(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 레코드 맵핑
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordsByDate[record.date] = record;
+            }
+        });
+
+        // 연도별로 그룹화
+        const yearMap = {};
+        Object.keys(recordsByDate).forEach(date => {
+            const year = date.split('-')[0];
+            if (!yearMap[year]) {
+                yearMap[year] = {};
+            }
+            const month = date.split('-')[1];
+            if (!yearMap[year][month]) {
+                yearMap[year][month] = {};
+            }
+            yearMap[year][month][date] = recordsByDate[date];
+        });
+
+        // 년도 정렬 (최신순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => b.localeCompare(a));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        let html = '';
+
+        sortedYears.forEach(year => {
+            html += `<div class="calendar-year">`;
+            html += `<div class="calendar-year-title">${year}년</div>`;
+
+            // 월별 달력 (1~12월)
+            html += `<div class="calendar-months">`;
+            for (let month = 1; month <= 12; month++) {
+                const monthStr = String(month).padStart(2, '0');
+                const monthData = yearMap[year][monthStr] || {};
+
+                html += generateTimeMonthCalendar(year, month, monthData);
+            }
+            html += `</div>`;
+            html += `</div>`;
+        });
+
+        recordsSection.innerHTML = html;
+    }
+
+    // TIME 월별 달력 생성
+    function generateTimeMonthCalendar(year, month, monthData) {
+        const monthStr = String(month).padStart(2, '0');
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        let html = `<div class="calendar-month">`;
+        html += `<div class="calendar-month-title">${month}월</div>`;
+        html += `<div class="calendar-grid">`;
+
+        // 요일 헤더
+        const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+        weekDays.forEach(day => {
+            html += `<div class="calendar-weekday">${day}</div>`;
+        });
+
+        // 첫 주 빈 칸
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += `<div class="calendar-day empty"></div>`;
+        }
+
+        // 날짜들
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayStr = String(day).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
+            const record = monthData[dateStr];
+
+            if (record) {
+                html += `<div class="calendar-day has-data-time" onclick='openEditModal("${record.id}", "TIME", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${day}</div>`;
+            } else {
+                html += `<div class="calendar-day">${day}</div>`;
+            }
+        }
+
+        html += `</div>`;
+        html += `</div>`;
+
+        return html;
+    }
+
+    // TIME 히트맵 뷰 (100년)
+    function displayTimeHeatmap(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 데이터를 날짜별 맵으로 변환
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 시작일 계산
+        let startDate;
+        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+            startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
+            startDate.setFullYear(startDate.getFullYear() + 1); // 1살부터 시작
+            startDate.setHours(0, 0, 0, 0);
+        } else {
+            startDate = new Date(today);
+            startDate.setFullYear(startDate.getFullYear() - 100);
+        }
+
+        const totalDays = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)) + 365;
+        const totalYears = Math.ceil(totalDays / 365);
+
+        let html = '<div class="heatmap-container">';
+
+        // 월 헤더 추가
+        html += '<div class="heatmap-header">';
+        html += '<div class="heatmap-year-label"></div>';
+        html += '<div class="heatmap-months">';
+        const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        for (let m = 0; m < 12; m++) {
+            const monthName = `${m + 1}월`;
+            html += `<div class="heatmap-month-label" style="width: ${monthDays[m] * 18}px;">${monthName}</div>`;
+        }
+        html += '</div>';
+        html += '</div>';
+
+        for (let year = 0; year < totalYears; year++) {
+            const yearDate = new Date(startDate);
+            yearDate.setFullYear(yearDate.getFullYear() + year);
+            const yearLabel = yearDate.getFullYear();
+
+            html += '<div class="heatmap-row">';
+            html += `<div class="heatmap-year-label">${yearLabel}</div>`;
+            html += '<div class="heatmap-days">';
+
+            for (let day = 0; day < 365; day++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + (year * 365 + day));
+
+                if (date > new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)) {
+                    html += `<div class="heatmap-cell heatmap-future-empty" title="미래"></div>`;
+                    continue;
+                }
+
+                const dateStr = date.toISOString().split('T')[0];
+                const record = recordMap[dateStr];
+                const isPast = date < today;
+
+                let className = 'heatmap-cell';
+
+                if (record) {
+                    className += ' heatmap-data';
+                } else if (isPast) {
+                    className += ' heatmap-past-empty';
+                } else {
+                    className += ' heatmap-future-empty';
+                }
+
+                const title = `${dateStr}${record ? ` (${formatTime(record.time)})` : ''}`;
+
+                if (record) {
+                    html += `<div class="${className}" title="${title}" onclick='openEditModal("${record.id}", "TIME", ${JSON.stringify(record).replace(/"/g, '&quot;')})'></div>`;
+                } else {
+                    html += `<div class="${className}" title="${title}"></div>`;
+                }
+            }
+
+            html += '</div>'; // heatmap-days
+            html += '</div>'; // heatmap-row
+        }
+
+        html += '</div>'; // heatmap-container
+        recordsSection.innerHTML = html;
     }
 
     // 시간 그래프 그리기 (심플 버전)
@@ -1464,8 +2220,24 @@
         });
     }
 
-    // TEXT: 연도별 달력 형태
+    // TEXT: 달력, 리스트 또는 히트맵 형태
     function displayTextRecords(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        if (currentView === 'calendar') {
+            // 달력 뷰
+            displayTextCalendar(records);
+        } else if (currentView === 'heatmap') {
+            // 히트맵 뷰
+            displayTextHeatmap(records);
+        } else {
+            // 리스트 뷰
+            displayTextList(records);
+        }
+    }
+
+    // TEXT 달력 뷰
+    function displayTextCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
         // 날짜별로 레코드 맵핑
@@ -1522,6 +2294,172 @@
         recordsSection.innerHTML = html;
     }
 
+    // TEXT 리스트 뷰
+    function displayTextList(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 년월별로 그룹화
+        const yearMonthMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                const [year, month] = record.date.split('-');
+                const yearKey = year;
+                const monthKey = `${year}-${month}`;
+
+                if (!yearMonthMap[yearKey]) {
+                    yearMonthMap[yearKey] = {};
+                }
+                if (!yearMonthMap[yearKey][monthKey]) {
+                    yearMonthMap[yearKey][monthKey] = [];
+                }
+                yearMonthMap[yearKey][monthKey].push(record);
+            }
+        });
+
+        // 년도 정렬 (최신순)
+        const sortedYears = Object.keys(yearMonthMap).sort((a, b) => b.localeCompare(a));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        let html = '';
+
+        sortedYears.forEach(year => {
+            html += `<div class="year-group">`;
+            html += `<div class="year-header">${year}년</div>`;
+
+            // 월 정렬 (최신순)
+            const months = Object.keys(yearMonthMap[year]).sort((a, b) => b.localeCompare(a));
+
+            months.forEach(monthKey => {
+                const monthRecords = yearMonthMap[year][monthKey];
+                const monthNum = monthKey.split('-')[1];
+
+                html += `<div class="month-group">`;
+                html += `<div class="month-header">${parseInt(monthNum)}월</div>`;
+
+                // 날짜순 정렬 (최신순)
+                monthRecords.sort((a, b) => b.date.localeCompare(a.date));
+
+                monthRecords.forEach(record => {
+                    const recordData = JSON.stringify(record).replace(/"/g, '&quot;');
+                    html += `
+                            <div class="text-record-item" onclick='openEditModal("${record.id}", "TEXT", ${recordData})'>
+                                <div class="text-record-header">
+                                    <span class="text-record-title">${record.title}</span>
+                                    <span class="text-record-date">${record.date}</span>
+                                </div>
+                                <div class="text-record-content">${record.text}</div>
+                            </div>
+                        `;
+                });
+
+                html += `</div>`; // month-group
+            });
+
+            html += `</div>`; // year-group
+        });
+
+        recordsSection.innerHTML = html;
+    }
+
+    // TEXT 히트맵 뷰 (100년)
+    function displayTextHeatmap(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 데이터를 날짜별 맵으로 변환 (하나의 날짜에 여러 개 있을 수 있음)
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                if (!recordMap[record.date]) {
+                    recordMap[record.date] = [];
+                }
+                recordMap[record.date].push(record);
+            }
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 시작일 계산
+        let startDate;
+        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+            startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
+            startDate.setFullYear(startDate.getFullYear() + 1); // 1살부터 시작
+            startDate.setHours(0, 0, 0, 0);
+        } else {
+            startDate = new Date(today);
+            startDate.setFullYear(startDate.getFullYear() - 100);
+        }
+
+        const totalDays = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)) + 365;
+        const totalYears = Math.ceil(totalDays / 365);
+
+        let html = '<div class="heatmap-container">';
+
+        // 월 헤더 추가
+        html += '<div class="heatmap-header">';
+        html += '<div class="heatmap-year-label"></div>';
+        html += '<div class="heatmap-months">';
+        const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        for (let m = 0; m < 12; m++) {
+            const monthName = `${m + 1}월`;
+            html += `<div class="heatmap-month-label" style="width: ${monthDays[m] * 18}px;">${monthName}</div>`;
+        }
+        html += '</div>';
+        html += '</div>';
+
+        for (let year = 0; year < totalYears; year++) {
+            const yearDate = new Date(startDate);
+            yearDate.setFullYear(yearDate.getFullYear() + year);
+            const yearLabel = yearDate.getFullYear();
+
+            html += '<div class="heatmap-row">';
+            html += `<div class="heatmap-year-label">${yearLabel}</div>`;
+            html += '<div class="heatmap-days">';
+
+            for (let day = 0; day < 365; day++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + (year * 365 + day));
+
+                if (date > new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)) {
+                    html += `<div class="heatmap-cell heatmap-future-empty" title="미래"></div>`;
+                    continue;
+                }
+
+                const dateStr = date.toISOString().split('T')[0];
+                const recordList = recordMap[dateStr];
+                const isPast = date < today;
+
+                let className = 'heatmap-cell';
+
+                if (recordList && recordList.length > 0) {
+                    className += ' heatmap-data';
+                } else if (isPast) {
+                    className += ' heatmap-past-empty';
+                } else {
+                    className += ' heatmap-future-empty';
+                }
+
+                const title = `${dateStr}${recordList ? ` (${recordList.length}개)` : ''}`;
+
+                if (recordList && recordList.length > 0) {
+                    html += `<div class="${className}" title="${title}" onclick='showTextPopup(null, "${dateStr}")'></div>`;
+                } else {
+                    html += `<div class="${className}" title="${title}"></div>`;
+                }
+            }
+
+            html += '</div>'; // heatmap-days
+            html += '</div>'; // heatmap-row
+        }
+
+        html += '</div>'; // heatmap-container
+        recordsSection.innerHTML = html;
+    }
+
     // 월별 달력 생성
     function generateMonthCalendar(year, month, monthData) {
         const monthStr = String(month).padStart(2, '0');
@@ -1552,8 +2490,7 @@
             const hasData = monthData[dateStr] && monthData[dateStr].length > 0;
 
             if (hasData) {
-                const recordsJson = JSON.stringify(monthData[dateStr]).replace(/"/g, '&quot;');
-                html += `<div class="calendar-day has-data" onclick='showTextPopup(${recordsJson}, "${dateStr}")'>${day}</div>`;
+                html += `<div class="calendar-day has-data" onclick='showTextPopup(null, "${dateStr}")'>${day}</div>`;
             } else {
                 html += `<div class="calendar-day">${day}</div>`;
             }
@@ -1566,29 +2503,51 @@
     }
 
     // 텍스트 팝업 표시
-    function showTextPopup(records, date) {
+    async function showTextPopup(records, date) {
         const modal = document.getElementById('textPopupModal');
         const content = document.getElementById('textPopupContent');
         const title = document.getElementById('textPopupTitle');
 
         title.textContent = date;
-
-        let html = '';
-        records.forEach((record, index) => {
-            html += `<div class="text-popup-item">`;
-            html += `<div class="text-popup-item-header">`;
-            html += `<span class="text-popup-item-title">${record.title}</span>`;
-            html += `<button class="btn-small" onclick='openEditModal("${record.id}", "TEXT", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>수정</button>`;
-            html += `</div>`;
-            html += `<div class="text-popup-item-content">${record.text}</div>`;
-            html += `</div>`;
-            if (index < records.length - 1) {
-                html += `<div class="text-popup-divider"></div>`;
-            }
-        });
-
-        content.innerHTML = html;
+        content.innerHTML = '<div style="text-align: center; padding: 20px;">데이터를 불러오는 중...</div>';
         modal.classList.add('active');
+
+        // API로 해당 날짜의 최신 데이터 가져오기
+        try {
+            const response = await fetch(`${API_BASE}/text/date?categoryId=${currentCategory.id}&date=${date}`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                if (!data || data.length === 0) {
+                    content.innerHTML = '<div style="text-align: center; padding: 20px; color: #999;">데이터가 없습니다.</div>';
+                    return;
+                }
+
+                let html = '';
+                data.forEach((record, index) => {
+                    html += `<div class="text-popup-item">`;
+                    html += `<div class="text-popup-item-header">`;
+                    html += `<span class="text-popup-item-title">${record.title}</span>`;
+                    html += `<button class="btn-small" onclick='openEditModal("${record.id}", "TEXT", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>수정</button>`;
+                    html += `</div>`;
+                    html += `<div class="text-popup-item-content">${record.text}</div>`;
+                    html += `</div>`;
+                    if (index < data.length - 1) {
+                        html += `<div class="text-popup-divider"></div>`;
+                    }
+                });
+
+                content.innerHTML = html;
+            } else {
+                content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">데이터를 불러올 수 없습니다.</div>';
+            }
+        } catch (error) {
+            console.error('텍스트 데이터 로드 오류:', error);
+            content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">오류가 발생했습니다.</div>';
+        }
     }
 
     // 텍스트 팝업 닫기
@@ -1674,6 +2633,15 @@
         currentEditRecord = null;
     }
 
+    // 수정 후 데이터 새로고침
+    function refreshAfterEdit() {
+        closeEditModal();
+        closeTextPopup(); // 텍스트 팝업도 닫기
+        if (currentCategory) {
+            loadRecords(currentCategory);
+        }
+    }
+
     // 수정 폼 제출
     document.getElementById('editForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1707,8 +2675,7 @@
             });
 
             if (response.ok) {
-                closeEditModal();
-                loadRecords(currentCategory);
+                refreshAfterEdit();
             } else {
                 showModalError('수정에 실패했습니다.');
             }
@@ -1738,8 +2705,7 @@
             });
 
             if (response.ok) {
-                closeEditModal();
-                loadRecords(currentCategory);
+                refreshAfterEdit();
             } else {
                 showModalError('삭제에 실패했습니다.');
             }
@@ -1794,6 +2760,9 @@
         if (currentUser) {
             document.getElementById('profileTitle').value = currentUser.title || '';
             document.getElementById('profileDescription').value = currentUser.description || '';
+            document.getElementById('profileBirthYear').value = currentUser.birthYear || '';
+            document.getElementById('profileBirthMonth').value = currentUser.birthMonth || '';
+            document.getElementById('profileBirthDay').value = currentUser.birthDay || '';
             document.getElementById('profileModal').classList.add('active');
         }
     });
@@ -1812,10 +2781,16 @@
 
         const title = document.getElementById('profileTitle').value;
         const description = document.getElementById('profileDescription').value;
+        const birthYear = document.getElementById('profileBirthYear').value;
+        const birthMonth = document.getElementById('profileBirthMonth').value;
+        const birthDay = document.getElementById('profileBirthDay').value;
 
         const params = new URLSearchParams();
         params.append('title', title);
         params.append('description', description);
+        if (birthYear) params.append('birthYear', birthYear);
+        if (birthMonth) params.append('birthMonth', birthMonth);
+        if (birthDay) params.append('birthDay', birthDay);
 
         try {
             const response = await fetch(`${API_BASE}/user?${params.toString()}`, {
@@ -1827,6 +2802,9 @@
                 // 업데이트된 user 정보 반영
                 currentUser.title = title;
                 currentUser.description = description;
+                currentUser.birthYear = birthYear ? parseInt(birthYear) : null;
+                currentUser.birthMonth = birthMonth ? parseInt(birthMonth) : null;
+                currentUser.birthDay = birthDay ? parseInt(birthDay) : null;
 
                 // UI 업데이트
                 document.getElementById('userGreeting').textContent = title || 'Hi.';

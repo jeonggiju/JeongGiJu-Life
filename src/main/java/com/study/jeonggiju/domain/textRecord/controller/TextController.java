@@ -1,5 +1,6 @@
 package com.study.jeonggiju.domain.textRecord.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +34,15 @@ public class TextController {
 		UUID textId
 	){
 		return ResponseEntity.ok(textService.find(textId));
+	}
+
+	@GetMapping( "/date")
+	public ResponseEntity<?> findByDate(
+		UUID categoryId,
+		LocalDate date
+	){
+		List<TextRecord> byDate = textService.findByDate(categoryId, date);
+		return ResponseEntity.ok(byDate);
 	}
 
 	@GetMapping("/all")

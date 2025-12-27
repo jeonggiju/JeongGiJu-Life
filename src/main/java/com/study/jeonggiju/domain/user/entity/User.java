@@ -37,10 +37,21 @@ public class User {
 
 	@Column
 	private String title;
+
 	@Column
 	private String description;
+
 	@Column
 	private Authority authority;
+
+	@Column
+	private int birthYear;
+
+	@Column
+	private int birthMonth;
+
+	@Column
+	private int birthDay;
 
 	@OneToMany(
 		mappedBy = "user",

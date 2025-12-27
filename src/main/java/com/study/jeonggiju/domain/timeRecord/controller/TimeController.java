@@ -1,5 +1,6 @@
 package com.study.jeonggiju.domain.timeRecord.controller;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,10 @@ public class TimeController {
 		return ResponseEntity.ok(timeService.findAll(categoryId));
 	}
 
+	@GetMapping("/date")
+	public ResponseEntity<?> findByDate(UUID categoryId, LocalDate date){
+		return ResponseEntity.ok(timeService.findByDate(categoryId, date));
+	}
 	@PostMapping
 	public ResponseEntity<?> save(
 		SaveTime dto

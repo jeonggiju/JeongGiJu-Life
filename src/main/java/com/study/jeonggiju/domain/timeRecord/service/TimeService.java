@@ -1,5 +1,6 @@
 package com.study.jeonggiju.domain.timeRecord.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,10 @@ public class TimeService {
 
 	public List<TimeRecord> findAll(UUID categoryId){
 		return timeRepository.findAllByCategory_Id(categoryId);
+	}
+
+	public TimeRecord findByDate(UUID categoryId , LocalDate date){
+		return timeRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
 	}
 
 	@Transactional

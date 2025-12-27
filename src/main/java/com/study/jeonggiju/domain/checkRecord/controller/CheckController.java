@@ -1,5 +1,6 @@
 package com.study.jeonggiju.domain.checkRecord.controller;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CheckController {
 	private final CheckService checkService;
+
+	@GetMapping("/date")
+	public ResponseEntity<?> findByDate(
+		UUID categoryId,
+		LocalDate date
+	){
+		return ResponseEntity.ok(checkService.findByDate(categoryId,date));
+	}
 
 	@GetMapping
 	public ResponseEntity<?> find(
