@@ -1,788 +1,3521 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Records</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <title>JeongGiJu</title>
     <style>
-        body {
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .tab {
-            display: inline-block;
-            padding: 5px 15px;
-            border: 1px solid black;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #ffffff;
+            color: #000000;
+            padding: 40px 60px;
+            min-height: 100vh;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .greeting {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .user-desc {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .top-actions {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #000;
             background: white;
             cursor: pointer;
-            margin-right: 5px;
+            font-size: 14px;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: #000;
+            display: inline-block;
         }
 
-        .tab.active {
-            background: black;
-            color: white;
+        .btn:hover {
+            background: #f5f5f5;
         }
 
-        .tab-content {
-            display: none;
-            margin-top: 20px;
+        .btn-primary {
+            background: #000;
+            color: #fff;
         }
 
-        .tab-content.active {
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .language-toggle {
+            padding: 8px 16px;
+            border: 1px solid #000;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+            min-width: 50px;
+        }
+
+        .language-toggle:hover {
+            background: #f5f5f5;
+        }
+
+        .categories {
             display: flex;
-            gap: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
 
         .view-toggle {
-            display: flex;
+            display: none;
             flex-direction: column;
-            gap: 10px;
-            min-width: 40px;
+            gap: 4px;
+            flex-shrink: 0;
+            min-width: 80px;
         }
 
-        .view-toggle button {
-            padding: 20px 8px;
+        .view-toggle.active {
+            display: flex;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            border: 1px solid #000;
             background: white;
-            border: 1px solid black;
             cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
             text-align: center;
-            font-size: 12px;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            letter-spacing: 3px;
+            white-space: nowrap;
         }
 
-        .view-toggle button.active {
-            background: black;
-            color: white;
+        .toggle-btn:hover {
+            background: #f5f5f5;
         }
 
-        .content-area {
+        .toggle-btn.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .category-description {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #000;
+            padding: 0;
+        }
+
+        .content-with-sidebar {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .right-content {
             flex: 1;
+            min-width: 0;
         }
 
-        table {
+        .records-section {
+            width: 100%;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: 1px solid #000;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .category-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .category-btn.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .date-group {
+            margin-bottom: 40px;
+        }
+
+        .date-group-header {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* CHECK 테이블 스타일 */
+        .check-table {
+            width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
 
-        td {
-            border: 1px solid black;
-            padding: 5px;
+        .check-table td {
+            padding: 8px;
             text-align: center;
-            min-width: 90px;
+            border: 1px solid #e0e0e0;
         }
 
         .date-cell {
-            font-weight: bold;
+            font-weight: 500;
+            font-size: 14px;
+            color: #000;
         }
 
-        .red-cell {
-            color: red;
+        .result-cell {
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .stats {
+        .result-success {
+            color: #ef4444;
+        }
+
+        .result-fail {
+            color: #000;
+        }
+
+        .result-cell:hover {
+            background: #f5f5f5;
+        }
+
+        .empty-cell {
+            border: none;
+        }
+
+        /* TIME 테이블 스타일 */
+        .time-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .time-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .time-cell {
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .time-cell:hover {
+            background: #f5f5f5;
+        }
+
+        .time-graph-container {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .time-graph-title {
+            font-size: 16px;
+            font-weight: 600;
             margin-bottom: 15px;
         }
 
-        .stats span {
-            margin-right: 20px;
+        .time-graph-large {
+            margin-bottom: 40px;
+            padding: 30px 0;
         }
 
-        .table-view, .graph-view {
-            display: none;
-        }
-
-        .table-view.active, .graph-view.active {
+        .time-graph-large canvas {
             display: block;
+            margin: 0 auto;
         }
 
-        .chart-container {
-            position: relative;
-            height: 500px;
+        /* NUMBER 테이블 스타일 */
+        .number-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-bottom: 20px;
+        }
+
+        .number-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .number-cell {
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #3b82f6;
+        }
+
+        .number-cell:hover {
+            background: #f5f5f5;
+        }
+
+        .number-graph-large {
+            margin-bottom: 40px;
+            padding: 30px 0;
+        }
+
+        .number-graph-large canvas {
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* 달력에서 NUMBER 데이터가 있는 날 */
+        .has-data-number {
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: 600;
+        }
+
+        .graph-controls {
+            background: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: #ddd;
+            outline: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #333;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #333;
+            cursor: pointer;
+            border-radius: 50%;
+            border: none;
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .time-range-sliders {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .time-slider label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        /* TEXT 달력 스타일 */
+        .calendar-year {
+            margin-bottom: 50px;
+        }
+
+        .calendar-year-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .calendar-months {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .calendar-month {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        .calendar-month-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 500;
+            color: #999;
+            padding: 5px 0;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            background: white;
+            border: 1px solid #f0f0f0;
+        }
+
+        .calendar-day.empty {
+            background: transparent;
+            border: none;
+        }
+
+        .calendar-day.has-data {
+            background: #333;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-day.has-data:hover {
+            background: #555;
+        }
+
+        /* CHECK 달력 스타일 */
+        .calendar-day.has-data-success {
+            background: #dcfce7;
+            color: #16a34a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-day.has-data-success:hover {
+            background: #bbf7d0;
+        }
+
+        .calendar-day.has-data-fail {
+            background: #fee2e2;
+            color: #dc2626;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-day.has-data-fail:hover {
+            background: #fecaca;
+        }
+
+        /* TIME 달력 스타일 */
+        .calendar-day.has-data-time {
+            background: #333;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-day.has-data-time:hover {
+            background: #555;
+        }
+
+        /* 히트맵 스타일 (100년 뷰) */
+        .heatmap-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 20px;
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 80vh;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+        }
+
+        .heatmap-header {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 5px;
+        }
+
+        .heatmap-months {
+            display: flex;
+            gap: 2px;
+        }
+
+        .heatmap-month-label {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .heatmap-row {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+        }
+
+        .heatmap-year-label {
+            width: 60px;
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+            padding-right: 10px;
+            flex-shrink: 0;
+            font-weight: 500;
+        }
+
+        .heatmap-days {
+            display: flex;
+            gap: 2px;
+        }
+
+        .heatmap-cell {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(2);
+            z-index: 10;
+            border: 2px solid #000;
+            box-shadow: 0 0 8px rgba(0,0,0,0.4);
+        }
+
+        /* CHECK 히트맵 */
+        .heatmap-success {
+            background: #22c55e;
+        }
+
+        .heatmap-fail {
+            background: #ef4444;
+        }
+
+        /* TIME/TEXT 히트맵 */
+        .heatmap-data {
+            background: #22c55e;
+        }
+
+        /* 과거 + 데이터 없음 */
+        .heatmap-past-empty {
+            background: #333;
+        }
+
+        /* 미래 + 데이터 없음 */
+        .heatmap-future-empty {
+            background: #fff;
+            border: 1px solid #ddd;
+        }
+
+        /* TEXT 그룹 스타일 (이전 버전 - 제거) */
+        .year-group {
+            margin-bottom: 40px;
+        }
+
+        .year-header {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .month-group {
+            margin-bottom: 30px;
+            padding-left: 20px;
+        }
+
+        .month-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .text-record-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .text-record-item:hover {
+            background: #fafafa;
+            padding-left: 10px;
+        }
+
+        .text-record-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .text-record-title {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .text-record-date {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .text-record-content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        /* 로그인 */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+        }
+
+        .login-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .birth-date-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .birth-date-inputs input {
+            flex: 1;
+            width: auto;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #333;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content.modal-large {
+            max-width: 700px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #000;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
+        /* 텍스트 팝업 스타일 */
+        .text-popup-item {
+            margin-bottom: 20px;
+        }
+
+        .text-popup-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .text-popup-item-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .text-popup-item-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-wrap;
+        }
+
+        .text-popup-divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-small:hover {
+            background: #f5f5f5;
+        }
+
+        .checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-field input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            .top-actions {
+                position: static;
+                margin-bottom: 20px;
+                flex-direction: column;
+            }
+
+            .greeting {
+                font-size: 36px;
+            }
+
+            .check-table td,
+            .time-table td {
+                padding: 8px 4px;
+                font-size: 12px;
+            }
+
+            .calendar-months {
+                grid-template-columns: 1fr;
+            }
+
+            .time-graph-large canvas {
+                width: 100% !important;
+                height: auto !important;
+            }
+
+            .heatmap-cell {
+                width: 8px;
+                height: 8px;
+            }
+
+            .heatmap-year-label {
+                width: 40px;
+                font-size: 10px;
+                padding-right: 5px;
+            }
+
+            .content-with-sidebar {
+                flex-direction: column;
+            }
+
+            .view-toggle {
+                flex-direction: row;
+                flex-wrap: wrap;
+                min-width: 100%;
+            }
+
+            .right-content {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-<h1>Hi.</h1>
-<p>99.06.08</p>
-
-<div>
-    <div class="tab active" onclick="switchTab('smoking')">Smoking</div>
-    <div class="tab" onclick="switchTab('sleep')">Sleep</div>
-    <div class="tab" onclick="switchTab('sex')">Sex</div>
-    <div class="tab" onclick="switchTab('exercise')">Exercise</div>
-    <div class="tab" onclick="switchTab('diet')">Diet</div>
-    <div class="tab" onclick="switchTab('caffeine')">Caffeine</div>
-    <div class="tab" onclick="switchTab('alcohol')">Alcohol</div>
-</div>
-
-<!-- Smoking: 테이블만 -->
-<div id="smoking" class="tab-content active">
-    <div class="content-area">
-        <div id="smokingTable"></div>
-    </div>
-</div>
-
-<!-- Sleep: 테이블 + 그래프 옵션 -->
-<div id="sleep" class="tab-content">
-    <div class="view-toggle">
-        <button class="active" onclick="switchView('sleep', 'table')">TABLE</button>
-        <button onclick="switchView('sleep', 'graph')">GRAPH</button>
-    </div>
-    <div class="content-area">
-        <div class="table-view active" id="sleep-table-view">
-            <div id="sleepTable"></div>
+<!-- 로그인 섹션 -->
+<div id="loginSection">
+    <div class="login-container">
+        <div class="login-title">로그인</div>
+        <div id="loginError"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="submit-btn">로그인</button>
+        </form>
+        <div class="form-footer">
+            계정이 없으신가요? <a href="#" id="showSignup">회원가입</a>
         </div>
-        <div class="graph-view" id="sleep-graph-view">
-            <div class="chart-container">
-                <canvas id="sleepChart"></canvas>
+    </div>
+</div>
+
+<!-- 회원가입 섹션 -->
+<div id="signupSection" style="display: none;">
+    <div class="login-container">
+        <div class="login-title">회원가입</div>
+        <div id="signupError"></div>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="signupUsername">사용자명</label>
+                <input type="text" id="signupUsername" required>
+            </div>
+            <div class="form-group">
+                <label for="signupEmail">이메일</label>
+                <input type="email" id="signupEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="signupPassword">비밀번호</label>
+                <input type="password" id="signupPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="signupTitle">타이틀 (선택)</label>
+                <input type="text" id="signupTitle" placeholder="예: Hi.">
+            </div>
+            <div class="form-group">
+                <label for="signupDescription">설명 (선택)</label>
+                <textarea id="signupDescription" placeholder="간단한 소개"></textarea>
+            </div>
+            <div class="form-group">
+                <label>생년월일</label>
+                <div class="birth-date-inputs">
+                    <input type="number" id="signupBirthYear" placeholder="년 (YYYY)" min="1900" max="2100" style="width: 120px;">
+                    <input type="number" id="signupBirthMonth" placeholder="월 (1-12)" min="1" max="12" style="width: 100px;">
+                    <input type="number" id="signupBirthDay" placeholder="일 (1-31)" min="1" max="31" style="width: 100px;">
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">회원가입</button>
+            <button type="button" id="cancelSignup" class="btn" style="width: 100%; margin-top: 10px;">취소</button>
+        </form>
+    </div>
+</div>
+
+<!-- 메인 섹션 -->
+<div id="mainSection" style="display: none;">
+    <div class="top-actions">
+        <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
+        <a href="insert.html" class="btn" data-lang-ko="데이터 입력" data-lang-en="Add Data">데이터 입력</a>
+        <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
+        <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
+    </div>
+
+    <div class="header">
+        <div class="greeting" id="userGreeting">Hi.</div>
+        <div class="user-desc" id="userDesc"></div>
+    </div>
+
+    <div class="categories" id="categoryButtons"></div>
+
+    <div class="content-with-sidebar">
+        <div class="view-toggle" id="viewToggle"></div>
+
+        <div class="right-content">
+            <div class="category-description" id="categoryDescription" style="display: none;"></div>
+
+            <div class="records-section" id="recordsSection">
+                <div class="empty-state">카테고리를 선택하세요</div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Sex: 테이블만 -->
-<div id="sex" class="tab-content">
-    <div class="content-area">
-        <div id="sexTable"></div>
-    </div>
-</div>
-
-<!-- Exercise: 테이블 + 그래프 옵션 -->
-<div id="exercise" class="tab-content">
-    <div class="view-toggle">
-        <button class="active" onclick="switchView('exercise', 'table')">TABLE</button>
-        <button onclick="switchView('exercise', 'graph')">GRAPH</button>
-    </div>
-    <div class="content-area">
-        <div class="table-view active" id="exercise-table-view">
-            <div id="exerciseTable"></div>
+<!-- 수정 모달 -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title" data-lang-ko="레코드 수정" data-lang-en="Edit Record">레코드 수정</div>
+            <button class="modal-close" onclick="closeEditModal()">×</button>
         </div>
-        <div class="graph-view" id="exercise-graph-view">
-            <div class="chart-container">
-                <canvas id="exerciseChart"></canvas>
+        <div id="editModalError"></div>
+        <form id="editForm">
+            <div id="editFormContent"></div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary" data-lang-ko="수정" data-lang-en="Save">수정</button>
+                <button type="button" class="btn" onclick="deleteRecord()" data-lang-ko="삭제" data-lang-en="Delete">삭제</button>
+                <button type="button" class="btn" onclick="closeEditModal()" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
             </div>
+        </form>
+    </div>
+</div>
+
+<!-- 프로필 수정 모달 -->
+<div id="profileModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</div>
+            <button class="modal-close" onclick="closeProfileModal()">×</button>
         </div>
+        <div id="profileModalError"></div>
+        <form id="profileForm">
+            <div class="form-group">
+                <label for="profileTitle" data-lang-ko="타이틀" data-lang-en="Title">타이틀</label>
+                <input type="text" id="profileTitle" placeholder="예: Hi.">
+            </div>
+            <div class="form-group">
+                <label for="profileDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
+                <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary" data-lang-ko="저장" data-lang-en="Save">저장</button>
+                <button type="button" class="btn" onclick="closeProfileModal()" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
+            </div>
+        </form>
     </div>
 </div>
 
-<!-- Diet: 테이블만 -->
-<div id="diet" class="tab-content">
-    <div class="content-area">
-        <div id="dietTable"></div>
+<!-- 텍스트 팝업 모달 -->
+<div id="textPopupModal" class="modal">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <div class="modal-title" id="textPopupTitle"></div>
+            <button class="modal-close" onclick="closeTextPopup()">×</button>
+        </div>
+        <div id="textPopupContent"></div>
     </div>
 </div>
 
-<!-- Caffeine: 테이블만 -->
-<div id="caffeine" class="tab-content">
-    <div class="content-area">
-        <div id="caffeineTable"></div>
-    </div>
-</div>
-
-<!-- Alcohol: 테이블만 -->
-<div id="alcohol" class="tab-content">
-    <div class="content-area">
-        <div id="alcoholTable"></div>
-    </div>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
-    const API_BASE_URL = '';
-    let charts = {};
-    let cachedData = {};
+    const API_BASE = '/api';
+    let currentUser = null;
+    let currentCategory = null;
+    let allRecords = [];
+    let currentView = 'graph'; // 'graph' or 'table'
+    let numberChart = null;
+    let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
 
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.classList.remove('active');
-        });
+    // 번역 데이터
+    const translations = {
+        // 뷰 토글
+        'graph': { ko: '그래프', en: 'Graph' },
+        'table': { ko: '테이블', en: 'Table' },
+        'calendar': { ko: '달력', en: 'Calendar' },
+        'list': { ko: '리스트', en: 'List' },
+        'heatmap': { ko: '100년', en: '100Y' },
 
-        document.getElementById(tabName).classList.add('active');
-        event.target.classList.add('active');
+        // 빈 상태
+        'selectCategory': { ko: '카테고리를 선택하세요', en: 'Select a category' },
+        'noData': { ko: '등록된 데이터가 없습니다.', en: 'No data available.' },
+        'loading': { ko: '데이터를 불러오는 중...', en: 'Loading...' },
+        'loadError': { ko: '데이터를 불러올 수 없습니다.', en: 'Failed to load data.' },
+
+        // 모달
+        'editProfile': { ko: '프로필 수정', en: 'Edit Profile' },
+        'editRecord': { ko: '레코드 수정', en: 'Edit Record' },
+        'deleteRecord': { ko: '레코드 삭제', en: 'Delete Record' },
+        'deleteConfirm': { ko: '정말 삭제하시겠습니까?', en: 'Are you sure you want to delete?' },
+
+        // 버튼
+        'save': { ko: '저장', en: 'Save' },
+        'cancel': { ko: '취소', en: 'Cancel' },
+        'edit': { ko: '수정', en: 'Edit' },
+        'delete': { ko: '삭제', en: 'Delete' },
+        'close': { ko: '닫기', en: 'Close' },
+
+        // 폼 라벨
+        'date': { ko: '날짜', en: 'Date' },
+        'title': { ko: '타이틀', en: 'Title' },
+        'titleLabel': { ko: '제목', en: 'Title' },
+        'description': { ko: '설명', en: 'Description' },
+        'content': { ko: '내용', en: 'Content' },
+        'time': { ko: '시간', en: 'Time' },
+        'success': { ko: '성공 여부', en: 'Success' },
+
+        // 달력/그래프
+        'year': { ko: '년', en: '' },
+        'month': { ko: '월', en: '' },
+        'dateRange': { ko: '날짜 범위 (최근 전체월)', en: 'Date Range (All Recent Months)' },
+        'timeRange': { ko: '시간 범위', en: 'Time Range' },
+        'valueRange': { ko: '값 범위', en: 'Value Range' },
+        'min': { ko: '최소', en: 'Min' },
+        'max': { ko: '최대', en: 'Max' },
+        'hour': { ko: '시', en: 'h' },
+
+        // 요일
+        'sun': { ko: '일', en: 'Sun' },
+        'mon': { ko: '월', en: 'Mon' },
+        'tue': { ko: '화', en: 'Tue' },
+        'wed': { ko: '수', en: 'Wed' },
+        'thu': { ko: '목', en: 'Thu' },
+        'fri': { ko: '금', en: 'Fri' },
+        'sat': { ko: '토', en: 'Sat' }
+    };
+
+    // 언어 전환 함수
+    function toggleLanguage() {
+        currentLang = currentLang === 'ko' ? 'en' : 'ko';
+        localStorage.setItem('language', currentLang);
+        applyLanguage();
     }
 
-    function switchView(type, view) {
-        const tableView = document.getElementById(`${type}-table-view`);
-        const graphView = document.getElementById(`${type}-graph-view`);
-        const buttons = document.querySelectorAll(`#${type} .view-toggle button`);
+    // 언어 적용 함수
+    function applyLanguage() {
+        // 언어 토글 버튼 텍스트 변경
+        document.getElementById('languageToggle').textContent = currentLang === 'ko' ? 'EN' : 'KO';
 
-        buttons.forEach(btn => btn.classList.remove('active'));
+        // data-lang 속성이 있는 모든 요소 업데이트
+        document.querySelectorAll('[data-lang-ko]').forEach(element => {
+            const ko = element.getAttribute('data-lang-ko');
+            const en = element.getAttribute('data-lang-en');
+            element.textContent = currentLang === 'ko' ? ko : en;
+        });
+    }
 
-        if (view === 'table') {
-            tableView.classList.add('active');
-            graphView.classList.remove('active');
-            event.target.classList.add('active');
-        } else {
-            tableView.classList.remove('active');
-            graphView.classList.add('active');
-            event.target.classList.add('active');
+    // 페이지 로드 시 언어 적용
+    document.addEventListener('DOMContentLoaded', () => {
+        applyLanguage();
+    });
 
-            if (!charts[type] && cachedData[type]) {
-                createChart(type, cachedData[type]);
-            }
+    // 뷰 토글 이벤트 설정
+    function setupViewToggleEvents() {
+        const graphBtn = document.getElementById('graphViewBtn');
+        const tableBtn = document.getElementById('tableViewBtn');
+        const calendarBtn = document.getElementById('calendarViewBtn');
+        const listBtn = document.getElementById('listViewBtn');
+        const heatmapBtn = document.getElementById('heatmapViewBtn');
+
+        if (graphBtn) {
+            graphBtn.addEventListener('click', () => {
+                currentView = 'graph';
+                setActiveButton(graphBtn);
+                if (currentCategory) {
+                    displayRecords(allRecords, currentCategory);
+                }
+            });
+        }
+
+        if (tableBtn) {
+            tableBtn.addEventListener('click', () => {
+                currentView = 'table';
+                setActiveButton(tableBtn);
+                if (currentCategory) {
+                    displayRecords(allRecords, currentCategory);
+                }
+            });
+        }
+
+        if (calendarBtn) {
+            calendarBtn.addEventListener('click', () => {
+                currentView = 'calendar';
+                setActiveButton(calendarBtn);
+                if (currentCategory) {
+                    displayRecords(allRecords, currentCategory);
+                }
+            });
+        }
+
+        if (listBtn) {
+            listBtn.addEventListener('click', () => {
+                currentView = 'list';
+                setActiveButton(listBtn);
+                if (currentCategory) {
+                    displayRecords(allRecords, currentCategory);
+                }
+            });
+        }
+
+        if (heatmapBtn) {
+            heatmapBtn.addEventListener('click', () => {
+                currentView = 'heatmap';
+                setActiveButton(heatmapBtn);
+                if (currentCategory) {
+                    displayRecords(allRecords, currentCategory);
+                }
+            });
         }
     }
 
-    function calculateStats(data, getValueFunc) {
-        if (data.length === 0) return { rate: 0, longestStreak: 0 };
+    // 활성 버튼 설정
+    function setActiveButton(activeBtn) {
+        const viewToggle = document.getElementById('viewToggle');
+        viewToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        activeBtn.classList.add('active');
+    }
 
-        const oCount = data.filter(item => getValueFunc(item)).length;
-        const rate = Math.round((oCount / data.length) * 100);
+    // 페이지 로드
+    window.addEventListener('DOMContentLoaded', async () => {
+        await checkAuth();
+    });
 
-        let currentStreak = 0;
-        let longestStreak = 0;
+    // 인증 확인
+    async function checkAuth() {
+        try {
+            const response = await fetch(`${API_BASE}/auth/me`, {
+                credentials: 'include'
+            });
 
-        data.sort((a, b) => new Date(a.date) - new Date(b.date));
+            if (response.ok) {
+                currentUser = await response.json();
 
-        for (let i = 0; i < data.length; i++) {
-            if (getValueFunc(data[i])) {
-                currentStreak++;
-                longestStreak = Math.max(longestStreak, currentStreak);
+                // /api/user 호출하여 title, description 가져오기
+                try {
+                    const userResponse = await fetch(`${API_BASE}/user`, {
+                        credentials: 'include'
+                    });
+
+                    if (userResponse.ok) {
+                        const userData = await userResponse.json();
+                        // title, description, birthYear, birthMonth, birthDay 업데이트
+                        currentUser.title = userData.title;
+                        currentUser.description = userData.description;
+                        currentUser.birthYear = userData.birthYear;
+                        currentUser.birthMonth = userData.birthMonth;
+                        currentUser.birthDay = userData.birthDay;
+                    }
+                } catch (error) {
+                    console.error('User 정보 로드 실패:', error);
+                }
+
+                showMainSection();
+                loadCategories();
             } else {
-                currentStreak = 0;
+                showLoginSection();
+            }
+        } catch (error) {
+            console.error('인증 확인 실패:', error);
+            showLoginSection();
+        }
+    }
+
+    // 로그인
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch(`${API_BASE}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email, password })
+            });
+
+            if (response.ok) {
+                await checkAuth();
+            } else {
+                showError('loginError', '로그인에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('로그인 오류:', error);
+            showError('loginError', '로그인 중 오류가 발생했습니다.');
+        }
+    });
+
+    // 회원가입
+    document.getElementById('showSignup').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'block';
+    });
+
+    document.getElementById('cancelSignup').addEventListener('click', () => {
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const birthYear = document.getElementById('signupBirthYear').value;
+        const birthMonth = document.getElementById('signupBirthMonth').value;
+        const birthDay = document.getElementById('signupBirthDay').value;
+
+        const signupData = {
+            username: document.getElementById('signupUsername').value,
+            email: document.getElementById('signupEmail').value,
+            password: document.getElementById('signupPassword').value,
+            title: document.getElementById('signupTitle').value || '',
+            description: document.getElementById('signupDescription').value || ''
+        };
+
+        // 생년월일 추가 (입력된 경우만)
+        if (birthYear) signupData.birthYear = parseInt(birthYear);
+        if (birthMonth) signupData.birthMonth = parseInt(birthMonth);
+        if (birthDay) signupData.birthDay = parseInt(birthDay);
+
+        try {
+            const response = await fetch(`${API_BASE}/auth/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(signupData)
+            });
+
+            if (response.ok) {
+                showSuccess('signupError', '회원가입이 완료되었습니다.');
+                setTimeout(() => {
+                    document.getElementById('signupSection').style.display = 'none';
+                    document.getElementById('loginSection').style.display = 'block';
+                }, 1500);
+            } else {
+                showError('signupError', '회원가입에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('회원가입 오류:', error);
+            showError('signupError', '회원가입 중 오류가 발생했습니다.');
+        }
+    });
+
+    // 로그아웃
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        try {
+            await fetch(`${API_BASE}/auth/logout`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            currentUser = null;
+            showLoginSection();
+        } catch (error) {
+            console.error('로그아웃 오류:', error);
+        }
+    });
+
+    // 카테고리 로드
+    async function loadCategories() {
+        try {
+            const response = await fetch(`${API_BASE}/category/all`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const categories = await response.json();
+                displayCategories(categories);
+            }
+        } catch (error) {
+            console.error('카테고리 로드 오류:', error);
+        }
+    }
+
+    // 카테고리 표시
+    function displayCategories(categories) {
+        const container = document.getElementById('categoryButtons');
+
+        if (!categories || categories.length === 0) {
+            container.innerHTML = '<div style="color: #999;">등록된 카테고리가 없습니다.</div>';
+            return;
+        }
+
+        container.innerHTML = categories.map(category => `
+                <button class="category-btn" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}">
+                    ${category.title}
+                </button>
+            `).join('');
+
+        // 카테고리 클릭 이벤트
+        container.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                container.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                currentCategory = {
+                    id: btn.dataset.id,
+                    type: btn.dataset.type,
+                    title: btn.textContent.trim(),
+                    description: btn.dataset.description
+                };
+
+                // 타입별 기본 뷰 설정
+                if (currentCategory.type === 'CHECK') {
+                    currentView = 'table';
+                } else if (currentCategory.type === 'TIME') {
+                    currentView = 'graph';
+                } else if (currentCategory.type === 'TEXT') {
+                    currentView = 'calendar';
+                }
+
+                loadRecords(currentCategory);
+            });
+        });
+    }
+
+    // 레코드 로드
+    async function loadRecords(category) {
+        const recordsSection = document.getElementById('recordsSection');
+        recordsSection.innerHTML = '<div class="empty-state">데이터를 불러오는 중...</div>';
+
+        try {
+            let endpoint = '';
+            switch (category.type) {
+                case 'CHECK':
+                    endpoint = `${API_BASE}/check/all?categoryId=${category.id}`;
+                    break;
+                case 'TEXT':
+                    endpoint = `${API_BASE}/text/all?categoryId=${category.id}`;
+                    break;
+                case 'TIME':
+                    endpoint = `${API_BASE}/time/all?categoryId=${category.id}`;
+                    break;
+                case 'NUMBER':
+                    endpoint = `${API_BASE}/number/all?categoryId=${category.id}`;
+                    break;
+            }
+
+            const response = await fetch(endpoint, { credentials: 'include' });
+
+            if (response.ok) {
+                allRecords = await response.json();
+                displayRecords(allRecords, category);
+            } else {
+                recordsSection.innerHTML = '<div class="empty-state">데이터를 불러올 수 없습니다.</div>';
+            }
+        } catch (error) {
+            console.error('레코드 로드 오류:', error);
+            recordsSection.innerHTML = '<div class="empty-state">오류가 발생했습니다.</div>';
+        }
+    }
+
+    // 레코드 표시 (타입별로 다른 레이아웃)
+    function displayRecords(records, category) {
+        const recordsSection = document.getElementById('recordsSection');
+        const viewToggle = document.getElementById('viewToggle');
+        const categoryDescription = document.getElementById('categoryDescription');
+
+        // 카테고리 설명 표시
+        if (category && category.description) {
+            categoryDescription.textContent = category.description;
+            categoryDescription.style.display = 'block';
+        } else {
+            categoryDescription.style.display = 'none';
+        }
+
+        if (!records || records.length === 0) {
+            viewToggle.classList.remove('active');
+            recordsSection.innerHTML = `<div class="empty-state" data-lang-ko="등록된 데이터가 없습니다." data-lang-en="No data available.">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        // 모든 타입에 토글 버튼 표시
+        viewToggle.classList.add('active');
+
+        // 타입별 버튼 구성
+        if (category.type === 'CHECK') {
+            viewToggle.innerHTML = `
+                    <button class="toggle-btn ${currentView === 'table' ? 'active' : ''}" id="tableViewBtn" data-lang-ko="테이블" data-lang-en="Table">${translations.table[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn" data-lang-ko="달력" data-lang-en="Calendar">${translations.calendar[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn" data-lang-ko="100년" data-lang-en="100Y">${translations.heatmap[currentLang]}</button>
+                `;
+        } else if (category.type === 'TIME') {
+            viewToggle.innerHTML = `
+                    <button class="toggle-btn ${currentView === 'graph' ? 'active' : ''}" id="graphViewBtn" data-lang-ko="그래프" data-lang-en="Graph">${translations.graph[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'table' ? 'active' : ''}" id="tableViewBtn" data-lang-ko="테이블" data-lang-en="Table">${translations.table[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn" data-lang-ko="달력" data-lang-en="Calendar">${translations.calendar[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn" data-lang-ko="100년" data-lang-en="100Y">${translations.heatmap[currentLang]}</button>
+                `;
+        } else if (category.type === 'NUMBER') {
+            viewToggle.innerHTML = `
+                    <button class="toggle-btn ${currentView === 'graph' ? 'active' : ''}" id="graphViewBtn" data-lang-ko="그래프" data-lang-en="Graph">${translations.graph[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'table' ? 'active' : ''}" id="tableViewBtn" data-lang-ko="테이블" data-lang-en="Table">${translations.table[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn" data-lang-ko="달력" data-lang-en="Calendar">${translations.calendar[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn" data-lang-ko="100년" data-lang-en="100Y">${translations.heatmap[currentLang]}</button>
+                `;
+        } else if (category.type === 'TEXT') {
+            viewToggle.innerHTML = `
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn" data-lang-ko="달력" data-lang-en="Calendar">${translations.calendar[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'list' ? 'active' : ''}" id="listViewBtn" data-lang-ko="리스트" data-lang-en="List">${translations.list[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn" data-lang-ko="100년" data-lang-en="100Y">${translations.heatmap[currentLang]}</button>
+                `;
+        }
+
+        // 이벤트 재등록
+        setupViewToggleEvents();
+
+        if (category.type === 'CHECK') {
+            displayCheckRecords(records);
+        } else if (category.type === 'TIME') {
+            displayTimeRecords(records);
+        } else if (category.type === 'NUMBER') {
+            displayNumberRecords(records);
+        } else if (category.type === 'TEXT') {
+            displayTextRecords(records);
+        }
+    }
+
+    // CHECK: 전체를 하나의 테이블로 표시 (심플)
+    // CHECK: 테이블, 달력 또는 히트맵 표시
+    function displayCheckRecords(records) {
+        if (currentView === 'calendar') {
+            displayCheckCalendar(records);
+        } else if (currentView === 'heatmap') {
+            displayCheckHeatmap(records);
+        } else {
+            displayCheckTable(records);
+        }
+    }
+
+    // CHECK 테이블 뷰
+    function displayCheckTable(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 정리
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        // 날짜 정렬 (오름차순)
+        const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedDates.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        // 10개씩 행으로 나누기
+        let html = '';
+        html += `<table class="check-table">`;
+
+        for (let i = 0; i < sortedDates.length; i += 10) {
+            const chunk = sortedDates.slice(i, i + 10);
+
+            // 날짜 행
+            html += `<tr>`;
+            chunk.forEach(date => {
+                html += `<td class="date-cell">${date}</td>`;
+            });
+            // 10개 미만일 경우 빈 셀 추가
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
+            html += `</tr>`;
+
+            // O/X 행
+            html += `<tr>`;
+            chunk.forEach(date => {
+                const record = recordMap[date];
+                const symbol = record.success ? 'O' : 'X';
+                const resultClass = record.success ? 'result-success' : 'result-fail';
+                html += `<td class="result-cell ${resultClass}" onclick='openEditModal("${record.id}", "CHECK", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${symbol}</td>`;
+            });
+            // 10개 미만일 경우 빈 셀 추가
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
+            html += `</tr>`;
+        }
+
+        html += `</table>`;
+        recordsSection.innerHTML = html;
+    }
+
+    // CHECK 달력 뷰
+    function displayCheckCalendar(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 레코드 맵핑
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordsByDate[record.date] = record;
+            }
+        });
+
+        // 연도별로 그룹화
+        const yearMap = {};
+        Object.keys(recordsByDate).forEach(date => {
+            const year = date.split('-')[0];
+            if (!yearMap[year]) {
+                yearMap[year] = {};
+            }
+            const month = date.split('-')[1];
+            if (!yearMap[year][month]) {
+                yearMap[year][month] = {};
+            }
+            yearMap[year][month][date] = recordsByDate[date];
+        });
+
+        // 년도 정렬 (오래된 순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        let html = '';
+
+        sortedYears.forEach(year => {
+            html += `<div class="calendar-year">`;
+            html += `<div class="calendar-year-title">${year}${translations.year[currentLang]}</div>`;
+
+            // 월별 달력 (1~12월)
+            html += `<div class="calendar-months">`;
+            for (let month = 1; month <= 12; month++) {
+                const monthStr = String(month).padStart(2, '0');
+                const monthData = yearMap[year][monthStr] || {};
+
+                html += generateCheckMonthCalendar(year, month, monthData);
+            }
+            html += `</div>`;
+            html += `</div>`;
+        });
+
+        recordsSection.innerHTML = html;
+    }
+
+    // CHECK 월별 달력 생성
+    function generateCheckMonthCalendar(year, month, monthData) {
+        const monthStr = String(month).padStart(2, '0');
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        let html = `<div class="calendar-month">`;
+        html += `<div class="calendar-month-title">${month}${translations.month[currentLang]}</div>`;
+        html += `<div class="calendar-grid">`;
+
+        // 요일 헤더
+        const weekDays = [
+            translations.sun[currentLang],
+            translations.mon[currentLang],
+            translations.tue[currentLang],
+            translations.wed[currentLang],
+            translations.thu[currentLang],
+            translations.fri[currentLang],
+            translations.sat[currentLang]
+        ];
+        weekDays.forEach(day => {
+            html += `<div class="calendar-weekday">${day}</div>`;
+        });
+
+        // 첫 주 빈 칸
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += `<div class="calendar-day empty"></div>`;
+        }
+
+        // 날짜들
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayStr = String(day).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
+            const record = monthData[dateStr];
+
+            if (record) {
+                const className = record.success ? 'has-data-success' : 'has-data-fail';
+                html += `<div class="calendar-day ${className}" onclick='openEditModal("${record.id}", "CHECK", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${day}</div>`;
+            } else {
+                html += `<div class="calendar-day">${day}</div>`;
             }
         }
 
-        return { rate, longestStreak };
+        html += `</div>`;
+        html += `</div>`;
+
+        return html;
     }
 
-    function formatTime(timeObj) {
-        if (!timeObj) return '--:--';
+    // CHECK 히트맵 뷰 (100년)
+    function displayCheckHeatmap(records) {
+        const recordsSection = document.getElementById('recordsSection');
 
-        if (typeof timeObj === 'string') {
-            return timeObj;
+        // 데이터를 날짜별 맵으로 변환
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 시작일 계산 (생년월일이 있으면 태어난 날, 없으면 100년 전)
+        let startDate;
+        let birthYear = null;
+        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+            startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = currentUser.birthYear;
+        } else {
+            startDate = new Date(today);
+            startDate.setFullYear(startDate.getFullYear() - 100);
+            birthYear = startDate.getFullYear();
         }
 
-        if (Array.isArray(timeObj)) {
-            const hour = timeObj[0] || 0;
-            const minute = timeObj[1] || 0;
-            return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+        // 100년 표시
+        const totalYears = 100;
+
+        let html = '<div class="heatmap-container">';
+
+        // 월 헤더 추가
+        html += '<div class="heatmap-header">';
+        html += '<div class="heatmap-year-label"></div>'; // 년도 라벨 공간
+        html += '<div class="heatmap-months">';
+        const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // 각 월의 일수
+        for (let m = 0; m < 12; m++) {
+            const monthName = `${m + 1}${translations.month[currentLang]}`;
+            const width = (monthDays[m] * 18) - 2; // (셀 16px + gap 2px) * 일수 - 마지막 gap
+            html += `<div class="heatmap-month-label" style="width: ${width}px;">${monthName}</div>`;
+        }
+        html += '</div>';
+        html += '</div>';
+
+        // 년도별로 표시
+        for (let year = 0; year < totalYears; year++) {
+            const yearLabel = birthYear + year;
+
+            html += '<div class="heatmap-row">';
+            html += `<div class="heatmap-year-label">${yearLabel}</div>`;
+            html += '<div class="heatmap-days">';
+
+            for (let day = 0; day < 365; day++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + (year * 365 + day));
+
+                // 미래 1년까지만 표시
+                if (date > new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)) {
+                    html += `<div class="heatmap-cell heatmap-future-empty" title="미래"></div>`;
+                    continue;
+                }
+
+                const dateStr = date.toISOString().split('T')[0];
+                const record = recordMap[dateStr];
+                const isPast = date < today;
+
+                let className = 'heatmap-cell';
+
+                if (record) {
+                    className += record.success ? ' heatmap-success' : ' heatmap-fail';
+                } else if (isPast) {
+                    className += ' heatmap-past-empty';
+                } else {
+                    className += ' heatmap-future-empty';
+                }
+
+                const title = `${dateStr}${record ? (record.success ? ' (성공)' : ' (실패)') : ''}`;
+
+                if (record) {
+                    html += `<div class="${className}" title="${title}" onclick='openEditModal("${record.id}", "CHECK", ${JSON.stringify(record).replace(/"/g, '&quot;')})'></div>`;
+                } else {
+                    html += `<div class="${className}" title="${title}"></div>`;
+                }
+            }
+
+            html += '</div>'; // heatmap-days
+            html += '</div>'; // heatmap-row
         }
 
-        let hour = 0;
-        let minute = 0;
-
-        if (timeObj.hour !== undefined && timeObj.hour !== null) {
-            hour = timeObj.hour;
-        }
-        if (timeObj.minute !== undefined && timeObj.minute !== null) {
-            minute = timeObj.minute;
-        }
-
-        return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+        html += '</div>'; // heatmap-container
+        recordsSection.innerHTML = html;
     }
 
-    function timeToMinutes(timeObj) {
-        if (!timeObj) return null;
-
-        if (typeof timeObj === 'string') {
-            const parts = timeObj.split(':');
-            const hour = parseInt(parts[0]) || 0;
-            const minute = parseInt(parts[1]) || 0;
-            return hour * 60 + minute;
+    // TIME: 그래프, 테이블, 달력 또는 히트맵 표시
+    function displayTimeRecords(records) {
+        if (currentView === 'graph') {
+            displayTimeGraph(records);
+        } else if (currentView === 'calendar') {
+            displayTimeCalendar(records);
+        } else if (currentView === 'heatmap') {
+            displayTimeHeatmap(records);
+        } else {
+            displayTimeTable(records);
         }
-
-        let hour = 0;
-        let minute = 0;
-
-        if (Array.isArray(timeObj)) {
-            hour = timeObj[0] || 0;
-            minute = timeObj[1] || 0;
-        } else if (typeof timeObj === 'object') {
-            hour = timeObj.hour || 0;
-            minute = timeObj.minute || 0;
-        }
-
-        return hour * 60 + minute;
     }
 
-    function createChart(type, data) {
-        const canvas = document.getElementById(`${type}Chart`);
+    // TIME 그래프 뷰
+    function displayTimeGraph(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 정리 (각 날짜당 첫 번째 레코드만 사용)
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date && !recordMap[record.date]) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        // 날짜 정렬 (오름차순)
+        const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedDates.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        // 그래프용 데이터 준비
+        const graphData = [];
+        sortedDates.forEach(date => {
+            const record = recordMap[date];
+            if (record.time) {
+                const timeStr = formatTime(record.time);
+                const [hours, minutes] = timeStr.split(':');
+                const timeValue = parseInt(hours) + parseInt(minutes) / 60;
+                graphData.push({
+                    date: date,
+                    time: timeStr,
+                    value: timeValue,
+                    record: record
+                });
+            }
+        });
+
+        let html = '';
+
+        if (currentView === 'graph') {
+            // 그래프만 표시 (더 크게) - 먼저 표시
+            if (graphData.length > 0) {
+                html += `<div class="time-graph-large">`;
+                html += `<canvas id="timeGraph" width="1200" height="500"></canvas>`;
+                html += `</div>`;
+            }
+
+            // 그래프 컨트롤 추가 - 아래에 표시
+            html += `<div class="graph-controls">`;
+            html += `<div class="control-group">`;
+            html += `<label>${translations.dateRange[currentLang]} (<span id="dateRangeValue">${currentLang === 'ko' ? '전체' : 'All'}</span>${currentLang === 'ko' ? '일' : ' days'})</label>`;
+            html += `<input type="range" id="dateRangeSlider" min="7" max="${sortedDates.length}" value="${sortedDates.length}" step="1">`;
+            html += `<div class="range-labels"><span>7${currentLang === 'ko' ? '일' : ' days'}</span><span>${currentLang === 'ko' ? '전체' : 'All'}</span></div>`;
+            html += `</div>`;
+            html += `<div class="control-group">`;
+            html += `<label>${translations.timeRange[currentLang]}: <span id="timeRangeValue">0${translations.hour[currentLang]} ~ 24${translations.hour[currentLang]}</span></label>`;
+            html += `<div class="time-range-sliders">`;
+            html += `<div class="time-slider">`;
+            html += `<label>${translations.min[currentLang]}</label>`;
+            html += `<input type="range" id="minTimeSlider" min="0" max="23" value="0" step="1">`;
+            html += `</div>`;
+            html += `<div class="time-slider">`;
+            html += `<label>${translations.max[currentLang]}</label>`;
+            html += `<input type="range" id="maxTimeSlider" min="1" max="24" value="24" step="1">`;
+            html += `</div>`;
+            html += `</div>`;
+            html += `</div>`;
+            html += `</div>`;
+        } else {
+            // 테이블만 표시
+            html += `<table class="time-table">`;
+
+            for (let i = 0; i < sortedDates.length; i += 10) {
+                const chunk = sortedDates.slice(i, i + 10);
+
+                // 날짜 행
+                html += `<tr>`;
+                chunk.forEach(date => {
+                    html += `<td class="date-cell">${date}</td>`;
+                });
+                for (let j = chunk.length; j < 10; j++) {
+                    html += `<td class="empty-cell"></td>`;
+                }
+                html += `</tr>`;
+
+                // 시간 행
+                html += `<tr>`;
+                chunk.forEach(date => {
+                    const record = recordMap[date];
+                    const timeStr = formatTime(record.time);
+                    html += `<td class="time-cell" onclick='openEditModal("${record.id}", "TIME", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${timeStr}</td>`;
+                });
+                for (let j = chunk.length; j < 10; j++) {
+                    html += `<td class="empty-cell"></td>`;
+                }
+                html += `</tr>`;
+            }
+
+            html += `</table>`;
+        }
+
+        recordsSection.innerHTML = html;
+
+        // 그래프 뷰일 때 그래프 그리기 및 슬라이더 이벤트 설정
+        if (currentView === 'graph' && graphData.length > 0) {
+            // 초기 그래프 그리기
+            drawTimeGraphLarge(graphData, sortedDates.length, 0, 24);
+
+            // 날짜 범위 슬라이더 이벤트
+            const dateRangeSlider = document.getElementById('dateRangeSlider');
+            const dateRangeValue = document.getElementById('dateRangeValue');
+            const minTimeSlider = document.getElementById('minTimeSlider');
+            const maxTimeSlider = document.getElementById('maxTimeSlider');
+            const timeRangeValue = document.getElementById('timeRangeValue');
+
+            if (dateRangeSlider) {
+                dateRangeSlider.addEventListener('input', (e) => {
+                    const days = parseInt(e.target.value);
+                    if (days === sortedDates.length) {
+                        dateRangeValue.textContent = '전체';
+                    } else {
+                        dateRangeValue.textContent = days;
+                    }
+
+                    const minTime = parseInt(minTimeSlider.value);
+                    const maxTime = parseInt(maxTimeSlider.value);
+                    drawTimeGraphLarge(graphData, days, minTime, maxTime);
+                });
+            }
+
+            if (minTimeSlider) {
+                minTimeSlider.addEventListener('input', (e) => {
+                    let minTime = parseInt(e.target.value);
+                    let maxTime = parseInt(maxTimeSlider.value);
+
+                    // 최소가 최대보다 크면 조정
+                    if (minTime >= maxTime) {
+                        minTime = maxTime - 1;
+                        minTimeSlider.value = minTime;
+                    }
+
+                    timeRangeValue.textContent = `${minTime}시 ~ ${maxTime}시`;
+
+                    const days = parseInt(dateRangeSlider.value);
+                    drawTimeGraphLarge(graphData, days, minTime, maxTime);
+                });
+            }
+
+            if (maxTimeSlider) {
+                maxTimeSlider.addEventListener('input', (e) => {
+                    let maxTime = parseInt(e.target.value);
+                    let minTime = parseInt(minTimeSlider.value);
+
+                    // 최대가 최소보다 작으면 조정
+                    if (maxTime <= minTime) {
+                        maxTime = minTime + 1;
+                        maxTimeSlider.value = maxTime;
+                    }
+
+                    timeRangeValue.textContent = `${minTime}시 ~ ${maxTime}시`;
+
+                    const days = parseInt(dateRangeSlider.value);
+                    drawTimeGraphLarge(graphData, days, minTime, maxTime);
+                });
+            }
+        }
+    }
+
+    // TIME 테이블 뷰
+    function displayTimeTable(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 정리
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date && !recordMap[record.date]) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        // 날짜 정렬 (오름차순)
+        const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedDates.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        // 테이블만 표시
+        let html = `<table class="time-table">`;
+
+        for (let i = 0; i < sortedDates.length; i += 10) {
+            const chunk = sortedDates.slice(i, i + 10);
+
+            // 날짜 행
+            html += `<tr>`;
+            chunk.forEach(date => {
+                html += `<td class="date-cell">${date}</td>`;
+            });
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
+            html += `</tr>`;
+
+            // 시간 행
+            html += `<tr>`;
+            chunk.forEach(date => {
+                const record = recordMap[date];
+                const timeStr = formatTime(record.time);
+                html += `<td class="time-cell" onclick='openEditModal("${record.id}", "TIME", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${timeStr}</td>`;
+            });
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
+            html += `</tr>`;
+        }
+
+        html += `</table>`;
+        recordsSection.innerHTML = html;
+    }
+
+    // TIME 달력 뷰
+    function displayTimeCalendar(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 레코드 맵핑
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordsByDate[record.date] = record;
+            }
+        });
+
+        // 연도별로 그룹화
+        const yearMap = {};
+        Object.keys(recordsByDate).forEach(date => {
+            const year = date.split('-')[0];
+            if (!yearMap[year]) {
+                yearMap[year] = {};
+            }
+            const month = date.split('-')[1];
+            if (!yearMap[year][month]) {
+                yearMap[year][month] = {};
+            }
+            yearMap[year][month][date] = recordsByDate[date];
+        });
+
+        // 년도 정렬 (오래된 순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        let html = '';
+
+        sortedYears.forEach(year => {
+            html += `<div class="calendar-year">`;
+            html += `<div class="calendar-year-title">${year}${translations.year[currentLang]}</div>`;
+
+            // 월별 달력 (1~12월)
+            html += `<div class="calendar-months">`;
+            for (let month = 1; month <= 12; month++) {
+                const monthStr = String(month).padStart(2, '0');
+                const monthData = yearMap[year][monthStr] || {};
+
+                html += generateTimeMonthCalendar(year, month, monthData);
+            }
+            html += `</div>`;
+            html += `</div>`;
+        });
+
+        recordsSection.innerHTML = html;
+    }
+
+    // TIME 월별 달력 생성
+    function generateTimeMonthCalendar(year, month, monthData) {
+        const monthStr = String(month).padStart(2, '0');
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        let html = `<div class="calendar-month">`;
+        html += `<div class="calendar-month-title">${month}${translations.month[currentLang]}</div>`;
+        html += `<div class="calendar-grid">`;
+
+        // 요일 헤더
+        const weekDays = [
+            translations.sun[currentLang],
+            translations.mon[currentLang],
+            translations.tue[currentLang],
+            translations.wed[currentLang],
+            translations.thu[currentLang],
+            translations.fri[currentLang],
+            translations.sat[currentLang]
+        ];
+        weekDays.forEach(day => {
+            html += `<div class="calendar-weekday">${day}</div>`;
+        });
+
+        // 첫 주 빈 칸
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += `<div class="calendar-day empty"></div>`;
+        }
+
+        // 날짜들
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayStr = String(day).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
+            const record = monthData[dateStr];
+
+            if (record) {
+                html += `<div class="calendar-day has-data-time" onclick='openEditModal("${record.id}", "TIME", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${day}</div>`;
+            } else {
+                html += `<div class="calendar-day">${day}</div>`;
+            }
+        }
+
+        html += `</div>`;
+        html += `</div>`;
+
+        return html;
+    }
+
+    // TIME 히트맵 뷰 (100년)
+    function displayTimeHeatmap(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 데이터를 날짜별 맵으로 변환
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 시작일 계산
+        let startDate;
+        let birthYear = null;
+        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+            startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = currentUser.birthYear;
+        } else {
+            startDate = new Date(today);
+            startDate.setFullYear(startDate.getFullYear() - 100);
+            birthYear = startDate.getFullYear();
+        }
+
+        // 100년 표시
+        const totalYears = 100;
+
+        let html = '<div class="heatmap-container">';
+
+        // 월 헤더 추가
+        html += '<div class="heatmap-header">';
+        html += '<div class="heatmap-year-label"></div>';
+        html += '<div class="heatmap-months">';
+        const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        for (let m = 0; m < 12; m++) {
+            const monthName = `${m + 1}${translations.month[currentLang]}`;
+            const width = (monthDays[m] * 18) - 2;
+            html += `<div class="heatmap-month-label" style="width: ${width}px;">${monthName}</div>`;
+        }
+        html += '</div>';
+        html += '</div>';
+
+        for (let year = 0; year < totalYears; year++) {
+            const yearLabel = birthYear + year;
+
+            html += '<div class="heatmap-row">';
+            html += `<div class="heatmap-year-label">${yearLabel}</div>`;
+            html += '<div class="heatmap-days">';
+
+            for (let day = 0; day < 365; day++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + (year * 365 + day));
+
+                if (date > new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)) {
+                    html += `<div class="heatmap-cell heatmap-future-empty" title="미래"></div>`;
+                    continue;
+                }
+
+                const dateStr = date.toISOString().split('T')[0];
+                const record = recordMap[dateStr];
+                const isPast = date < today;
+
+                let className = 'heatmap-cell';
+
+                if (record) {
+                    className += ' heatmap-data';
+                } else if (isPast) {
+                    className += ' heatmap-past-empty';
+                } else {
+                    className += ' heatmap-future-empty';
+                }
+
+                const title = `${dateStr}${record ? ` (${formatTime(record.time)})` : ''}`;
+
+                if (record) {
+                    html += `<div class="${className}" title="${title}" onclick='openEditModal("${record.id}", "TIME", ${JSON.stringify(record).replace(/"/g, '&quot;')})'></div>`;
+                } else {
+                    html += `<div class="${className}" title="${title}"></div>`;
+                }
+            }
+
+            html += '</div>'; // heatmap-days
+            html += '</div>'; // heatmap-row
+        }
+
+        html += '</div>'; // heatmap-container
+        recordsSection.innerHTML = html;
+    }
+
+    // 시간 그래프 그리기 (심플 버전)
+    function drawTimeGraphLarge(data, dateRange, minTime, maxTime) {
+        const canvas = document.getElementById('timeGraph');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 60;
+
+        // 캔버스 초기화
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, width, height);
+
+        if (data.length === 0) return;
+
+        // 날짜 범위 필터링 (최근 N일)
+        const filteredData = data.slice(-dateRange);
+
+        if (filteredData.length === 0) return;
+
+        const xStep = (width - padding * 2) / (filteredData.length - 1 || 1);
+
+        // Y축 격자선 (범위 내에서만)
+        ctx.strokeStyle = '#e5e5e5';
+        ctx.lineWidth = 1;
+
+        const timeStep = Math.max(1, Math.ceil((maxTime - minTime) / 6));
+        for (let h = minTime; h <= maxTime; h += timeStep) {
+            const y = padding + (height - padding * 2) * (1 - (h - minTime) / (maxTime - minTime));
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.stroke();
+
+            // Y축 레이블
+            ctx.fillStyle = '#999';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(`${h}시`, padding - 10, y + 4);
+        }
+
+        // 선 그래프 그리기 (시간 범위 내의 점만)
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        let firstPoint = true;
+        filteredData.forEach((point, index) => {
+            // 시간 범위 체크
+            if (point.value >= minTime && point.value <= maxTime) {
+                const x = padding + index * xStep;
+                const y = padding + (height - padding * 2) * (1 - (point.value - minTime) / (maxTime - minTime));
+
+                if (firstPoint) {
+                    ctx.moveTo(x, y);
+                    firstPoint = false;
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+        });
+        ctx.stroke();
+
+        // 점 그리기
+        filteredData.forEach((point, index) => {
+            // 시간 범위 체크
+            if (point.value >= minTime && point.value <= maxTime) {
+                const x = padding + index * xStep;
+                const y = padding + (height - padding * 2) * (1 - (point.value - minTime) / (maxTime - minTime));
+
+                ctx.fillStyle = '#333';
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        });
+
+        // X축 레이블 (날짜 - 최대 10개)
+        ctx.fillStyle = '#999';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'center';
+        const labelStep = Math.max(1, Math.ceil(filteredData.length / 10));
+
+        filteredData.forEach((point, index) => {
+            if (index % labelStep === 0 || index === filteredData.length - 1) {
+                const x = padding + index * xStep;
+                ctx.fillText(point.date, x, height - 25);
+            }
+        });
+    }
+
+    // 시간 그래프 그리기 (작은 버전 - 제거 예정이지만 호환성을 위해 유지)
+    function drawTimeGraph(data) {
+        const canvas = document.getElementById('timeGraph');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 40;
+
+        // 캔버스 초기화
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, width, height);
+
+        if (data.length === 0) return;
+
+        // 데이터 범위 계산
+        const minValue = 0; // 0시
+        const maxValue = 24; // 24시
+        const xStep = (width - padding * 2) / (data.length - 1 || 1);
+
+        // 격자선 그리기
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth = 1;
+        for (let h = 0; h <= 24; h += 6) {
+            const y = padding + (height - padding * 2) * (1 - h / 24);
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.stroke();
+
+            // Y축 레이블
+            ctx.fillStyle = '#666';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(`${h}시`, padding - 5, y + 4);
+        }
+
+        // 선 그래프 그리기
+        ctx.strokeStyle = '#667eea';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        data.forEach((point, index) => {
+            const x = padding + index * xStep;
+            const y = padding + (height - padding * 2) * (1 - point.value / 24);
+
+            if (index === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        });
+        ctx.stroke();
+
+        // 점 그리기
+        data.forEach((point, index) => {
+            const x = padding + index * xStep;
+            const y = padding + (height - padding * 2) * (1 - point.value / 24);
+
+            ctx.fillStyle = '#667eea';
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // X축 레이블 (날짜) - 일부만 표시
+        ctx.fillStyle = '#666';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        const labelStep = Math.ceil(data.length / 10);
+        data.forEach((point, index) => {
+            if (index % labelStep === 0 || index === data.length - 1) {
+                const x = padding + index * xStep;
+                const shortDate = point.date.slice(5);
+                ctx.fillText(shortDate, x, height - 10);
+            }
+        });
+    }
+
+    // TEXT: 달력, 리스트 또는 히트맵 형태
+    function displayTextRecords(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        if (currentView === 'calendar') {
+            // 달력 뷰
+            displayTextCalendar(records);
+        } else if (currentView === 'heatmap') {
+            // 히트맵 뷰
+            displayTextHeatmap(records);
+        } else {
+            // 리스트 뷰
+            displayTextList(records);
+        }
+    }
+
+    // TEXT 달력 뷰
+    function displayTextCalendar(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 레코드 맵핑
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                if (!recordsByDate[record.date]) {
+                    recordsByDate[record.date] = [];
+                }
+                recordsByDate[record.date].push(record);
+            }
+        });
+
+        // 연도별로 그룹화
+        const yearMap = {};
+        Object.keys(recordsByDate).forEach(date => {
+            const year = date.split('-')[0];
+            if (!yearMap[year]) {
+                yearMap[year] = {};
+            }
+            const month = date.split('-')[1];
+            if (!yearMap[year][month]) {
+                yearMap[year][month] = {};
+            }
+            yearMap[year][month][date] = recordsByDate[date];
+        });
+
+        // 년도 정렬 (오래된 순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        let html = '';
+
+        sortedYears.forEach(year => {
+            html += `<div class="calendar-year">`;
+            html += `<div class="calendar-year-title">${year}${translations.year[currentLang]}</div>`;
+
+            // 월별 달력 (1~12월)
+            html += `<div class="calendar-months">`;
+            for (let month = 1; month <= 12; month++) {
+                const monthStr = String(month).padStart(2, '0');
+                const monthData = yearMap[year][monthStr] || {};
+
+                html += generateMonthCalendar(year, month, monthData);
+            }
+            html += `</div>`;
+            html += `</div>`;
+        });
+
+        recordsSection.innerHTML = html;
+    }
+
+    // TEXT 리스트 뷰
+    function displayTextList(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 년월별로 그룹화
+        const yearMonthMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                const [year, month] = record.date.split('-');
+                const yearKey = year;
+                const monthKey = `${year}-${month}`;
+
+                if (!yearMonthMap[yearKey]) {
+                    yearMonthMap[yearKey] = {};
+                }
+                if (!yearMonthMap[yearKey][monthKey]) {
+                    yearMonthMap[yearKey][monthKey] = [];
+                }
+                yearMonthMap[yearKey][monthKey].push(record);
+            }
+        });
+
+        // 년도 정렬 (최신순)
+        const sortedYears = Object.keys(yearMonthMap).sort((a, b) => b.localeCompare(a));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            return;
+        }
+
+        let html = '';
+
+        sortedYears.forEach(year => {
+            html += `<div class="year-group">`;
+            html += `<div class="year-header">${year}년</div>`;
+
+            // 월 정렬 (최신순)
+            const months = Object.keys(yearMonthMap[year]).sort((a, b) => b.localeCompare(a));
+
+            months.forEach(monthKey => {
+                const monthRecords = yearMonthMap[year][monthKey];
+                const monthNum = monthKey.split('-')[1];
+
+                html += `<div class="month-group">`;
+                html += `<div class="month-header">${parseInt(monthNum)}월</div>`;
+
+                // 날짜순 정렬 (최신순)
+                monthRecords.sort((a, b) => b.date.localeCompare(a.date));
+
+                monthRecords.forEach(record => {
+                    const recordData = JSON.stringify(record).replace(/"/g, '&quot;');
+                    html += `
+                            <div class="text-record-item" onclick='openEditModal("${record.id}", "TEXT", ${recordData})'>
+                                <div class="text-record-header">
+                                    <span class="text-record-title">${record.title}</span>
+                                    <span class="text-record-date">${record.date}</span>
+                                </div>
+                                <div class="text-record-content">${record.text}</div>
+                            </div>
+                        `;
+                });
+
+                html += `</div>`; // month-group
+            });
+
+            html += `</div>`; // year-group
+        });
+
+        recordsSection.innerHTML = html;
+    }
+
+    // TEXT 히트맵 뷰 (100년)
+    function displayTextHeatmap(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 데이터를 날짜별 맵으로 변환 (하나의 날짜에 여러 개 있을 수 있음)
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                if (!recordMap[record.date]) {
+                    recordMap[record.date] = [];
+                }
+                recordMap[record.date].push(record);
+            }
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 시작일 계산
+        let startDate;
+        let birthYear = null;
+        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+            startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = currentUser.birthYear;
+        } else {
+            startDate = new Date(today);
+            startDate.setFullYear(startDate.getFullYear() - 100);
+            birthYear = startDate.getFullYear();
+        }
+
+        // 100년 표시
+        const totalYears = 100;
+
+        let html = '<div class="heatmap-container">';
+
+        // 월 헤더 추가
+        html += '<div class="heatmap-header">';
+        html += '<div class="heatmap-year-label"></div>';
+        html += '<div class="heatmap-months">';
+        const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        for (let m = 0; m < 12; m++) {
+            const monthName = `${m + 1}${translations.month[currentLang]}`;
+            const width = (monthDays[m] * 18) - 2;
+            html += `<div class="heatmap-month-label" style="width: ${width}px;">${monthName}</div>`;
+        }
+        html += '</div>';
+        html += '</div>';
+
+        for (let year = 0; year < totalYears; year++) {
+            const yearLabel = birthYear + year;
+
+            html += '<div class="heatmap-row">';
+            html += `<div class="heatmap-year-label">${yearLabel}</div>`;
+            html += '<div class="heatmap-days">';
+
+            for (let day = 0; day < 365; day++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + (year * 365 + day));
+
+                if (date > new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)) {
+                    html += `<div class="heatmap-cell heatmap-future-empty" title="미래"></div>`;
+                    continue;
+                }
+
+                const dateStr = date.toISOString().split('T')[0];
+                const recordList = recordMap[dateStr];
+                const isPast = date < today;
+
+                let className = 'heatmap-cell';
+
+                if (recordList && recordList.length > 0) {
+                    className += ' heatmap-data';
+                } else if (isPast) {
+                    className += ' heatmap-past-empty';
+                } else {
+                    className += ' heatmap-future-empty';
+                }
+
+                const title = `${dateStr}${recordList ? ` (${recordList.length}개)` : ''}`;
+
+                if (recordList && recordList.length > 0) {
+                    html += `<div class="${className}" title="${title}" onclick='showTextPopup(null, "${dateStr}")'></div>`;
+                } else {
+                    html += `<div class="${className}" title="${title}"></div>`;
+                }
+            }
+
+            html += '</div>'; // heatmap-days
+            html += '</div>'; // heatmap-row
+        }
+
+        html += '</div>'; // heatmap-container
+        recordsSection.innerHTML = html;
+    }
+
+    // ========== NUMBER 타입 함수들 ==========
+
+    // NUMBER: 그래프, 테이블, 달력, 히트맵 표시
+    function displayNumberRecords(records) {
+        if (currentView === 'graph') {
+            displayNumberGraph(records);
+        } else if (currentView === 'calendar') {
+            displayNumberCalendar(records);
+        } else if (currentView === 'heatmap') {
+            displayNumberHeatmap(records);
+        } else {
+            displayNumberTable(records);
+        }
+    }
+
+    // NUMBER 그래프 뷰
+    function displayNumberGraph(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 정리 및 정렬 (각 날짜당 1개만 사용)
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedDates.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        // 전체 데이터
+        const allLabels = sortedDates;
+        const allValues = sortedDates.map(d => Number(recordMap[d].number));
+        const numericValues = allValues.filter(v => Number.isFinite(v));
+
+        if (numericValues.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        const rawMin = Math.min(...numericValues);
+        const rawMax = Math.max(...numericValues);
+
+        // 안전 범위 (슬라이더/스케일 보호)
+        const safeMin = Number.isFinite(rawMin) ? rawMin : 0;
+        const safeMax = Number.isFinite(rawMax) ? rawMax : (safeMin + 1);
+        const valueRange = safeMax - safeMin;
+
+        // step: 값 폭에 따라 보기 좋은 단위
+        let step = 1;
+        if (valueRange <= 1) step = 0.01;
+        else if (valueRange <= 10) step = 0.1;
+        else step = 1;
+
+        const formatNum = (v) => {
+            if (!Number.isFinite(v)) return '0';
+            // 소수점 step일 때 과도한 자리수 방지
+            if (step < 1) return String(Math.round(v / step) * step);
+            return String(Math.round(v));
+        };
+
+        const minDays = (sortedDates.length < 7) ? 1 : 7;
+
+        // 그래프 + 컨트롤 (TIME 그래프와 동일한 위치/구조로 하단에 배치)
+        let html = '';
+        html += `<div class="number-graph-large">`;
+        html += `<canvas id="numberLineChart" width="1200" height="500"></canvas>`;
+        html += `</div>`;
+
+        html += `<div class="graph-controls">`;
+
+        // 날짜 범위
+        html += `<div class="control-group">`;
+        html += `<label>${translations.dateRange[currentLang]} (<span id="dateRangeValue">${currentLang === 'ko' ? '전체' : 'All'}</span>${currentLang === 'ko' ? '일' : ' days'})</label>`;
+        html += `<input type="range" id="dateRangeSlider" min="${minDays}" max="${sortedDates.length}" value="${sortedDates.length}" step="1">`;
+        html += `<div class="range-labels"><span>${minDays}${currentLang === 'ko' ? '일' : ' days'}</span><span>${currentLang === 'ko' ? '전체' : 'All'}</span></div>`;
+        html += `</div>`;
+
+        // 값 범위 (min/max)
+        html += `<div class="control-group">`;
+        html += `<label>${translations.valueRange[currentLang]}: <span id="numberRangeValue">${formatNum(safeMin)} ~ ${formatNum(safeMax)}</span></label>`;
+        html += `<div class="time-range-sliders">`;
+        html += `<div class="time-slider">`;
+        html += `<label>${translations.min[currentLang]}</label>`;
+        html += `<input type="range" id="minNumberSlider" min="${safeMin}" max="${safeMax}" value="${safeMin}" step="${step}">`;
+        html += `</div>`;
+        html += `<div class="time-slider">`;
+        html += `<label>${translations.max[currentLang]}</label>`;
+        html += `<input type="range" id="maxNumberSlider" min="${safeMin}" max="${safeMax}" value="${safeMax}" step="${step}">`;
+        html += `</div>`;
+        html += `</div>`;
+        html += `</div>`;
+
+        html += `</div>`;
+
+        recordsSection.innerHTML = html;
+
+        const canvas = document.getElementById('numberLineChart');
         const ctx = canvas.getContext('2d');
 
-        if (charts[type]) {
-            charts[type].destroy();
+        // 기존 차트 제거 (뷰 전환/재렌더 시 중복 방지)
+        if (numberChart) {
+            numberChart.destroy();
+            numberChart = null;
         }
 
-        const displayData = data.slice(-100);
-        const labels = displayData.map(item => item.date);
+        // 상태
+        let currentDays = sortedDates.length;
+        let currentMin = safeMin;
+        let currentMax = safeMax;
 
-        let chartConfig;
-
-        if (type === 'sleep') {
-            chartConfig = {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Sleep Time',
-                        data: displayData.map(item => timeToMinutes(item.sleepTime)),
-                        borderColor: 'rgb(54, 162, 235)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
-                        tension: 0.3
-                    }, {
-                        label: 'Wake Time',
-                        data: displayData.map(item => timeToMinutes(item.wakeTime)),
-                        borderColor: 'rgb(255, 206, 86)',
-                        backgroundColor: 'rgba(255, 206, 86, 0.1)',
-                        tension: 0.3
-                    }]
+        // 차트 생성
+        numberChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: allLabels,
+                datasets: [{
+                    label: 'Number',
+                    data: allValues,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.1,
+                    pointRadius: 3,
+                    spanGaps: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.parsed.y;
-                                    const hours = Math.floor(value / 60);
-                                    const minutes = value % 60;
-                                    return `${context.dataset.label}: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            ticks: {
-                                callback: function(value) {
-                                    const hours = Math.floor(value / 60);
-                                    const minutes = value % 60;
-                                    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-                                }
-                            }
-                        }
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: safeMin,
+                        max: safeMax
                     }
                 }
-            };
-        } else if (type === 'exercise') {
-            chartConfig = {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Exercise Time',
-                        data: displayData.map(item => {
-                            if (!item.work) return null;
-                            const minutes = timeToMinutes(item.time);
-                            return minutes !== null ? minutes : 0;
-                        }),
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                        tension: 0.3,
-                        spanGaps: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    if (context.parsed.y === null) return 'No Exercise';
-                                    const value = context.parsed.y;
-                                    const hours = Math.floor(value / 60);
-                                    const minutes = value % 60;
-                                    return `Exercise Time: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    const hours = Math.floor(value / 60);
-                                    const minutes = value % 60;
-                                    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-                                }
-                            }
-                        }
-                    }
+            }
+        });
+
+        const dateRangeSlider = document.getElementById('dateRangeSlider');
+        const dateRangeValue = document.getElementById('dateRangeValue');
+        const minNumberSlider = document.getElementById('minNumberSlider');
+        const maxNumberSlider = document.getElementById('maxNumberSlider');
+        const numberRangeValue = document.getElementById('numberRangeValue');
+
+        const syncNumberLabel = () => {
+            numberRangeValue.textContent = `${formatNum(currentMin)} ~ ${formatNum(currentMax)}`;
+        };
+
+        const updateChart = () => {
+            const startIdx = Math.max(0, sortedDates.length - currentDays);
+            const nextLabels = sortedDates.slice(startIdx);
+            const nextData = nextLabels.map(d => Number(recordMap[d].number));
+
+            numberChart.data.labels = nextLabels;
+            numberChart.data.datasets[0].data = nextData;
+
+            numberChart.options.scales.y.min = currentMin;
+            numberChart.options.scales.y.max = currentMax;
+
+            numberChart.update('none');
+        };
+
+        // 날짜 범위 슬라이더
+        if (dateRangeSlider) {
+            dateRangeSlider.addEventListener('input', (e) => {
+                const days = parseInt(e.target.value);
+                currentDays = days;
+
+                if (days === sortedDates.length) {
+                    dateRangeValue.textContent = (currentLang === 'ko') ? '전체' : 'All';
+                } else {
+                    dateRangeValue.textContent = String(days);
                 }
-            };
+
+                updateChart();
+            });
         }
 
-        charts[type] = new Chart(ctx, chartConfig);
+        // 값 범위 슬라이더 (min/max 보정)
+        if (minNumberSlider && maxNumberSlider) {
+            minNumberSlider.addEventListener('input', (e) => {
+                const v = Number(e.target.value);
+                if (v > currentMax) {
+                    currentMax = v;
+                    maxNumberSlider.value = String(v);
+                }
+                currentMin = v;
+                syncNumberLabel();
+                updateChart();
+            });
+
+            maxNumberSlider.addEventListener('input', (e) => {
+                const v = Number(e.target.value);
+                if (v < currentMin) {
+                    currentMin = v;
+                    minNumberSlider.value = String(v);
+                }
+                currentMax = v;
+                syncNumberLabel();
+                updateChart();
+            });
+        }
+
+        // 최초 1회 반영
+        syncNumberLabel();
+        updateChart();
     }
 
-    async function loadSmoking() {
+    // NUMBER 테이블 뷰
+
+    function displayNumberTable(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 정리
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        // 날짜 정렬 (오름차순)
+        const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedDates.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        // 10개씩 행으로 나누기
+        let html = '';
+        html += `<table class="number-table">`;
+
+        for (let i = 0; i < sortedDates.length; i += 10) {
+            const chunk = sortedDates.slice(i, i + 10);
+
+            // 날짜 행
+            html += `<tr>`;
+            chunk.forEach(date => {
+                html += `<td class="date-cell">${date}</td>`;
+            });
+            // 10개 미만일 경우 빈 셀 추가
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
+            html += `</tr>`;
+
+            // 숫자 행
+            html += `<tr>`;
+            chunk.forEach(date => {
+                const record = recordMap[date];
+                html += `<td class="number-cell" onclick='openEditModal("${record.id}", "NUMBER", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${record.number}</td>`;
+            });
+            // 10개 미만일 경우 빈 셀 추가
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
+            html += `</tr>`;
+        }
+
+        html += `</table>`;
+        recordsSection.innerHTML = html;
+    }
+
+    // NUMBER 달력 뷰
+    function displayNumberCalendar(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 레코드 맵핑
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordsByDate[record.date] = record;
+            }
+        });
+
+        // 연도별로 그룹화
+        const yearMap = {};
+        Object.keys(recordsByDate).forEach(date => {
+            const year = date.split('-')[0];
+            if (!yearMap[year]) {
+                yearMap[year] = {};
+            }
+            const month = date.split('-')[1];
+            if (!yearMap[year][month]) {
+                yearMap[year][month] = {};
+            }
+            yearMap[year][month][date] = recordsByDate[date];
+        });
+
+        // 년도 정렬 (오래된 순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        let html = '';
+
+        sortedYears.forEach(year => {
+            html += `<div class="calendar-year">`;
+            html += `<div class="calendar-year-title">${year}${translations.year[currentLang]}</div>`;
+
+            // 월별 달력 (1~12월)
+            html += `<div class="calendar-months">`;
+            for (let month = 1; month <= 12; month++) {
+                const monthStr = String(month).padStart(2, '0');
+                const monthData = yearMap[year][monthStr] || {};
+
+                html += generateNumberMonthCalendar(year, month, monthData);
+            }
+            html += `</div>`;
+            html += `</div>`;
+        });
+
+        recordsSection.innerHTML = html;
+    }
+
+    // NUMBER 월별 달력 생성
+    function generateNumberMonthCalendar(year, month, monthData) {
+        const monthStr = String(month).padStart(2, '0');
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        let html = `<div class="calendar-month">`;
+        html += `<div class="calendar-month-title">${month}${translations.month[currentLang]}</div>`;
+        html += `<div class="calendar-grid">`;
+
+        // 요일 헤더
+        const weekDays = [
+            translations.sun[currentLang],
+            translations.mon[currentLang],
+            translations.tue[currentLang],
+            translations.wed[currentLang],
+            translations.thu[currentLang],
+            translations.fri[currentLang],
+            translations.sat[currentLang]
+        ];
+        weekDays.forEach(day => {
+            html += `<div class="calendar-weekday">${day}</div>`;
+        });
+
+        // 첫 주 빈 칸
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += `<div class="calendar-day empty"></div>`;
+        }
+
+        // 날짜들
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayStr = String(day).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
+            const record = monthData[dateStr];
+
+            if (record) {
+                html += `<div class="calendar-day has-data-number" onclick='openEditModal("${record.id}", "NUMBER", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${day}</div>`;
+            } else {
+                html += `<div class="calendar-day">${day}</div>`;
+            }
+        }
+
+        html += `</div>`;
+        html += `</div>`;
+
+        return html;
+    }
+
+    // NUMBER 히트맵 뷰 (100년)
+    function displayNumberHeatmap(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 데이터를 날짜별 맵으로 변환
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 시작일 계산
+        let startDate;
+        let birthYear = null;
+        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+            startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = currentUser.birthYear;
+        } else {
+            startDate = new Date(today);
+            startDate.setFullYear(startDate.getFullYear() - 100);
+            birthYear = startDate.getFullYear();
+        }
+
+        // 100년 표시
+        const totalYears = 100;
+
+        let html = '<div class="heatmap-container">';
+
+        // 월 헤더 추가
+        html += '<div class="heatmap-header">';
+        html += '<div class="heatmap-year-label"></div>';
+        html += '<div class="heatmap-months">';
+        const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        for (let m = 0; m < 12; m++) {
+            const monthName = `${m + 1}${translations.month[currentLang]}`;
+            const width = (monthDays[m] * 18) - 2;
+            html += `<div class="heatmap-month-label" style="width: ${width}px;">${monthName}</div>`;
+        }
+        html += '</div>';
+        html += '</div>';
+
+        for (let year = 0; year < totalYears; year++) {
+            const yearLabel = birthYear + year;
+
+            html += '<div class="heatmap-row">';
+            html += `<div class="heatmap-year-label">${yearLabel}</div>`;
+            html += '<div class="heatmap-days">';
+
+            for (let day = 0; day < 365; day++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + (year * 365 + day));
+
+                if (date > new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)) {
+                    html += `<div class="heatmap-cell heatmap-future-empty" title="미래"></div>`;
+                    continue;
+                }
+
+                const dateStr = date.toISOString().split('T')[0];
+                const record = recordMap[dateStr];
+                const isPast = date < today;
+
+                let className = 'heatmap-cell';
+
+                if (record) {
+                    className += ' heatmap-data';
+                } else if (isPast) {
+                    className += ' heatmap-past-empty';
+                } else {
+                    className += ' heatmap-future-empty';
+                }
+
+                const title = `${dateStr}${record ? ` (${record.number})` : ''}`;
+
+                if (record) {
+                    html += `<div class="${className}" title="${title}" onclick='openEditModal("${record.id}", "NUMBER", ${JSON.stringify(record).replace(/"/g, '&quot;')})'></div>`;
+                } else {
+                    html += `<div class="${className}" title="${title}"></div>`;
+                }
+            }
+
+            html += '</div>'; // heatmap-days
+            html += '</div>'; // heatmap-row
+        }
+
+        html += '</div>'; // heatmap-container
+        recordsSection.innerHTML = html;
+    }
+
+    // 월별 달력 생성
+    function generateMonthCalendar(year, month, monthData) {
+        const monthStr = String(month).padStart(2, '0');
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay(); // 0(일) ~ 6(토)
+
+        let html = `<div class="calendar-month">`;
+        html += `<div class="calendar-month-title">${month}${translations.month[currentLang]}</div>`;
+        html += `<div class="calendar-grid">`;
+
+        // 요일 헤더
+        const weekDays = [
+            translations.sun[currentLang],
+            translations.mon[currentLang],
+            translations.tue[currentLang],
+            translations.wed[currentLang],
+            translations.thu[currentLang],
+            translations.fri[currentLang],
+            translations.sat[currentLang]
+        ];
+        weekDays.forEach(day => {
+            html += `<div class="calendar-weekday">${day}</div>`;
+        });
+
+        // 첫 주 빈 칸
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += `<div class="calendar-day empty"></div>`;
+        }
+
+        // 날짜들
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayStr = String(day).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
+            const hasData = monthData[dateStr] && monthData[dateStr].length > 0;
+
+            if (hasData) {
+                html += `<div class="calendar-day has-data" onclick='showTextPopup(null, "${dateStr}")'>${day}</div>`;
+            } else {
+                html += `<div class="calendar-day">${day}</div>`;
+            }
+        }
+
+        html += `</div>`;
+        html += `</div>`;
+
+        return html;
+    }
+
+    // 텍스트 팝업 표시
+    async function showTextPopup(records, date) {
+        const modal = document.getElementById('textPopupModal');
+        const content = document.getElementById('textPopupContent');
+        const title = document.getElementById('textPopupTitle');
+
+        title.textContent = date;
+        content.innerHTML = '<div style="text-align: center; padding: 20px;">데이터를 불러오는 중...</div>';
+        modal.classList.add('active');
+
+        // API로 해당 날짜의 최신 데이터 가져오기
         try {
-            const response = await fetch(`${API_BASE_URL}/smoking/all`);
-            const data = await response.json();
+            const response = await fetch(`${API_BASE}/text/date?categoryId=${currentCategory.id}&date=${date}`, {
+                credentials: 'include'
+            });
 
-            if (data.length === 0) {
-                document.getElementById('smokingTable').innerHTML = '<p>No data</p>';
-                return;
-            }
+            if (response.ok) {
+                const data = await response.json();
 
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+                if (!data || data.length === 0) {
+                    content.innerHTML = `<div style="text-align: center; padding: 20px; color: #999;">${translations.noData[currentLang]}</div>`;
+                    return;
+                }
 
-            const stats = calculateStats(data, item => item.smoke);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
+                let html = '';
+                data.forEach((record, index) => {
+                    html += `<div class="text-popup-item">`;
+                    html += `<div class="text-popup-item-header">`;
+                    html += `<span class="text-popup-item-title">${record.title}</span>`;
+                    html += `<button class="btn-small" onclick='openEditModal("${record.id}", "TEXT", ${JSON.stringify(record).replace(/"/g, '&quot;')})' data-lang-ko="수정" data-lang-en="Edit">${translations.edit[currentLang]}</button>`;
+                    html += `</div>`;
+                    html += `<div class="text-popup-item-content">${record.text}</div>`;
+                    html += `</div>`;
+                    if (index < data.length - 1) {
+                        html += `<div class="text-popup-divider"></div>`;
+                    }
                 });
-                html += '</tr>';
 
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.smoke ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
+                content.innerHTML = html;
+            } else {
+                content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">데이터를 불러올 수 없습니다.</div>';
             }
-
-            html += '</table>';
-            document.getElementById('smokingTable').innerHTML = html;
         } catch (error) {
-            document.getElementById('smokingTable').innerHTML = `<p>Error: ${error.message}</p>`;
+            console.error('텍스트 데이터 로드 오류:', error);
+            content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">오류가 발생했습니다.</div>';
         }
     }
 
-    async function loadSleep() {
+    // 텍스트 팝업 닫기
+    function closeTextPopup() {
+        document.getElementById('textPopupModal').classList.remove('active');
+    }
+
+    // 시간 포맷
+    function formatTime(timeObj) {
+        if (!timeObj) return '';
+        if (typeof timeObj === 'object') {
+            const hour = String(timeObj.hour || 0).padStart(2, '0');
+            const minute = String(timeObj.minute || 0).padStart(2, '0');
+            const second = String(timeObj.second || 0).padStart(2, '0');
+            return `${hour}:${minute}:${second}`;
+        }
+        return timeObj;
+    }
+
+    // 전역 변수
+    let currentEditRecord = null;
+
+    // 수정 모달 열기
+    function openEditModal(id, type, record) {
+        // TEXT 타입일 때는 텍스트 팝업 먼저 닫기
+        if (type === 'TEXT') {
+            closeTextPopup();
+        }
+
+        currentEditRecord = { id, type, record };
+        const modal = document.getElementById('editModal');
+        const formContent = document.getElementById('editFormContent');
+
+        let html = '';
+
+        if (type === 'CHECK') {
+            html = `
+                    <div class="form-group">
+                        <label for="editDate" data-lang-ko="날짜" data-lang-en="Date">${translations.date[currentLang]} *</label>
+                        <input type="date" id="editDate" required value="${record.date || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-field">
+                            <input type="checkbox" id="editSuccess" ${record.success ? 'checked' : ''}>
+                            <span data-lang-ko="성공 여부" data-lang-en="Success">${translations.success[currentLang]}</span>
+                        </label>
+                    </div>
+                `;
+        } else if (type === 'TEXT') {
+            html = `
+                    <div class="form-group">
+                        <label for="editDate" data-lang-ko="날짜" data-lang-en="Date">${translations.date[currentLang]} *</label>
+                        <input type="date" id="editDate" required value="${record.date || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label for="editTitle" data-lang-ko="제목" data-lang-en="Title">${translations.titleLabel[currentLang]} *</label>
+                        <input type="text" id="editTitle" required value="${record.title || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label for="editText" data-lang-ko="내용" data-lang-en="Content">${translations.content[currentLang]} *</label>
+                        <textarea id="editText" required>${record.text || ''}</textarea>
+                    </div>
+                `;
+        } else if (type === 'TIME') {
+            const timeValue = record.time ? (typeof record.time === 'object' ?
+                `${String(record.time.hour || 0).padStart(2, '0')}:${String(record.time.minute || 0).padStart(2, '0')}:${String(record.time.second || 0).padStart(2, '0')}`
+                : record.time) : '';
+            html = `
+                    <div class="form-group">
+                        <label for="editDate" data-lang-ko="날짜" data-lang-en="Date">${translations.date[currentLang]} *</label>
+                        <input type="date" id="editDate" required value="${record.date || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label for="editTime" data-lang-ko="시간" data-lang-en="Time">${translations.time[currentLang]} *</label>
+                        <input type="time" id="editTime" required step="1" value="${timeValue}">
+                    </div>
+                `;
+        } else if (type === 'NUMBER') {
+            html = `
+                    <div class="form-group">
+                        <label for="editDate" data-lang-ko="날짜" data-lang-en="Date">${translations.date[currentLang]} *</label>
+                        <input type="date" id="editDate" required value="${record.date || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label for="editNumber" data-lang-ko="숫자" data-lang-en="Number">${currentLang === 'ko' ? '숫자' : 'Number'} *</label>
+                        <input type="number" id="editNumber" required step="any" value="${record.number || ''}">
+                    </div>
+                `;
+        }
+
+        formContent.innerHTML = html;
+        modal.classList.add('active');
+    }
+
+    // 수정 모달 닫기
+    function closeEditModal() {
+        document.getElementById('editModal').classList.remove('active');
+        document.getElementById('editModalError').innerHTML = '';
+        currentEditRecord = null;
+    }
+
+    // 수정 후 데이터 새로고침
+    function refreshAfterEdit() {
+        closeEditModal();
+        closeTextPopup(); // 텍스트 팝업도 닫기
+        if (currentCategory) {
+            loadRecords(currentCategory);
+        }
+    }
+
+    // 수정 폼 제출
+    document.getElementById('editForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!currentEditRecord) return;
+
+        const { id, type } = currentEditRecord;
+        let endpoint = '';
+        const params = new URLSearchParams();
+        params.append('id', id);
+
         try {
-            const response = await fetch(`${API_BASE_URL}/sleep/all`);
-            const data = await response.json();
-            cachedData['sleep'] = data;
-
-            if (data.length === 0) {
-                document.getElementById('sleepTable').innerHTML = '<p>No data</p>';
-                return;
+            if (type === 'CHECK') {
+                endpoint = `${API_BASE}/check`;
+                params.append('date', document.getElementById('editDate').value);
+                params.append('success', document.getElementById('editSuccess').checked);
+            } else if (type === 'TEXT') {
+                endpoint = `${API_BASE}/text`;
+                params.append('date', document.getElementById('editDate').value);
+                params.append('title', document.getElementById('editTitle').value);
+                params.append('text', document.getElementById('editText').value);
+            } else if (type === 'TIME') {
+                endpoint = `${API_BASE}/time`;
+                params.append('date', document.getElementById('editDate').value);
+                params.append('time', document.getElementById('editTime').value);
+            } else if (type === 'NUMBER') {
+                endpoint = `${API_BASE}/number`;
+                params.append('date', document.getElementById('editDate').value);
+                params.append('number', document.getElementById('editNumber').value);
             }
 
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+            const response = await fetch(`${endpoint}?${params.toString()}`, {
+                method: 'PUT',
+                credentials: 'include'
+            });
 
-            const phoneStats = calculateStats(data, item => !item.viewPhone);
-
-            let html = '<div class="stats">';
-            html += '<p>I try to wake up at 06:00 and go to bed at 22:00, and I try to sleep 8 hours every day.</p>';
-            html += `<span><b>No Phone Rate:</b> ${phoneStats.rate}%</span>`;
-            html += `<span><b>Longest No Phone Streak:</b> ${phoneStats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td>${formatTime(item.sleepTime)}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td>${formatTime(item.wakeTime)}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.viewPhone ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}" title="View Phone">${value}</td>`;
-                });
-                html += '</tr>';
+            if (response.ok) {
+                refreshAfterEdit();
+            } else {
+                showModalError('수정에 실패했습니다.');
             }
-
-            html += '</table>';
-            document.getElementById('sleepTable').innerHTML = html;
         } catch (error) {
-            console.error('Sleep loading error:', error);
-            document.getElementById('sleepTable').innerHTML = `<p>Error: ${error.message}</p>`;
+            console.error('수정 오류:', error);
+            showModalError('수정 중 오류가 발생했습니다.');
         }
-    }
-
-    async function loadSex() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/sex/all`);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                document.getElementById('sexTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.sex);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.sex ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('sexTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('sexTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    async function loadExercise() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/exercise/all`);
-            const data = await response.json();
-            cachedData['exercise'] = data;
-
-            if (data.length === 0) {
-                document.getElementById('exerciseTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.work);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.work ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td>${formatTime(item.time)}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('exerciseTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('exerciseTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    async function loadDiet() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/diet/all`);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                document.getElementById('dietTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.drink);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.drink ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('dietTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('dietTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    async function loadCaffeine() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/caffeine/all`);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                document.getElementById('caffeineTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.drink);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.drink ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('caffeineTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('caffeineTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    async function loadAlcohol() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/alcohol/all`);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                document.getElementById('alcoholTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.drink);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.drink ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('alcoholTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('alcoholTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-        loadSmoking();
-        loadSleep();
-        loadSex();
-        loadExercise();
-        loadDiet();
-        loadCaffeine();
-        loadAlcohol();
     });
+
+    // 레코드 삭제
+    async function deleteRecord() {
+        if (!currentEditRecord) return;
+
+        if (!confirm('정말 삭제하시겠습니까?')) return;
+
+        const { id, type } = currentEditRecord;
+        let endpoint = '';
+
+        if (type === 'CHECK') endpoint = `${API_BASE}/check`;
+        else if (type === 'TEXT') endpoint = `${API_BASE}/text`;
+        else if (type === 'TIME') endpoint = `${API_BASE}/time`;
+        else if (type === 'NUMBER') endpoint = `${API_BASE}/number`;
+
+        try {
+            const response = await fetch(`${endpoint}?id=${id}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                refreshAfterEdit();
+            } else {
+                showModalError('삭제에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('삭제 오류:', error);
+            showModalError('삭제 중 오류가 발생했습니다.');
+        }
+    }
+
+    function showModalError(message) {
+        const element = document.getElementById('editModalError');
+        element.innerHTML = `<div class="error-message">${message}</div>`;
+        setTimeout(() => {
+            element.innerHTML = '';
+        }, 5000);
+    }
+
+    // UI 표시 함수
+    function showLoginSection() {
+        document.getElementById('loginSection').style.display = 'block';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('mainSection').style.display = 'none';
+    }
+
+    function showMainSection() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('mainSection').style.display = 'block';
+
+        // User 정보 표시
+        if (currentUser) {
+            // title: null이면 "Hi."
+            const greeting = currentUser.title || 'Hi.';
+            document.getElementById('userGreeting').textContent = greeting;
+
+            // description: null이면 오늘 날짜 (YY.MM.DD)
+            if (currentUser.description) {
+                document.getElementById('userDesc').textContent = currentUser.description;
+            } else {
+                // 오늘 날짜 표시
+                const now = new Date();
+                const year = String(now.getFullYear()).slice(2);
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                document.getElementById('userDesc').textContent = `${year}.${month}.${day}`;
+            }
+        }
+    }
+
+    // 프로필 수정 모달 열기
+    document.getElementById('editProfileBtn').addEventListener('click', () => {
+        if (currentUser) {
+            document.getElementById('profileTitle').value = currentUser.title || '';
+            document.getElementById('profileDescription').value = currentUser.description || '';
+            document.getElementById('profileModal').classList.add('active');
+        }
+    });
+
+    // 프로필 수정 모달 닫기
+    function closeProfileModal() {
+        document.getElementById('profileModal').classList.remove('active');
+        document.getElementById('profileModalError').innerHTML = '';
+    }
+
+    // 프로필 수정 폼 제출
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!currentUser) return;
+
+        const title = document.getElementById('profileTitle').value;
+        const description = document.getElementById('profileDescription').value;
+
+        const params = new URLSearchParams();
+        params.append('title', title);
+        params.append('description', description);
+
+        try {
+            const response = await fetch(`${API_BASE}/user?${params.toString()}`, {
+                method: 'PUT',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                // 업데이트된 user 정보 반영
+                currentUser.title = title;
+                currentUser.description = description;
+
+                // UI 업데이트
+                document.getElementById('userGreeting').textContent = title || 'Hi.';
+
+                // description이 없으면 오늘 날짜 표시
+                if (description) {
+                    document.getElementById('userDesc').textContent = description;
+                } else {
+                    const now = new Date();
+                    const year = String(now.getFullYear()).slice(2);
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const day = String(now.getDate()).padStart(2, '0');
+                    document.getElementById('userDesc').textContent = `${year}.${month}.${day}`;
+                }
+
+                closeProfileModal();
+            } else {
+                showProfileModalError('프로필 수정에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('프로필 수정 오류:', error);
+            showProfileModalError('프로필 수정 중 오류가 발생했습니다.');
+        }
+    });
+
+    function showProfileModalError(message) {
+        const element = document.getElementById('profileModalError');
+        element.innerHTML = `<div class="error-message">${message}</div>`;
+        setTimeout(() => {
+            element.innerHTML = '';
+        }, 5000);
+    }
+
+    function showError(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.innerHTML = `<div class="error-message">${message}</div>`;
+        setTimeout(() => {
+            element.innerHTML = '';
+        }, 5000);
+    }
+
+    function showSuccess(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.innerHTML = `<div class="success-message">${message}</div>`;
+    }
 </script>
 </body>
 </html>

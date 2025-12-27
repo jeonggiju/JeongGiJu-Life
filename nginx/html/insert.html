@@ -1,650 +1,954 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>JeongGiJu - 데이터 입력</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #ffffff;
+            color: #000000;
+            padding: 40px 60px;
+            min-height: 100vh;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .top-actions {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #000;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: #000;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #f5f5f5;
+        }
+
+        .btn-primary {
+            background: #000;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .content {
+            max-width: 600px;
+            margin-top: 40px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #333;
+        }
+
+        .category-select {
+            background: #f9f9f9;
             padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: none;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .tab {
-            display: inline-block;
-            padding: 5px 15px;
-            border: 1px solid black;
+            padding: 10px 20px;
+            border: 1px solid #000;
             background: white;
             cursor: pointer;
-            margin-right: 5px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            background: #f5f5f5;
         }
 
         .tab.active {
-            background: black;
-            color: white;
+            background: #000;
+            color: #fff;
         }
 
         .tab-content {
             display: none;
-            margin-top: 20px;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .form-section {
-            border: 1px solid black;
-            padding: 10px;
-            margin-bottom: 20px;
+        .checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        label {
-            display: inline-block;
-            margin-right: 10px;
-        }
-
-        input {
-            margin-right: 10px;
-        }
-
-        button {
-            padding: 5px 15px;
-            margin-right: 5px;
-        }
-
-        table {
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        td {
-            border: 1px solid black;
-            padding: 5px;
-            text-align: center;
-            min-width: 90px;
+        .checkbox-field input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
             cursor: pointer;
         }
 
-        td:hover {
-            background: #f0f0f0;
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
         }
 
-        .date-cell {
-            font-weight: bold;
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
         }
 
-        .red-cell {
-            color: red;
+        /* 로그인 */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
         }
 
-        .message {
-            display: none;
-            margin: 10px 0;
-            padding: 5px;
-            border: 1px solid black;
+        .login-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
         }
 
-        .message.show {
-            display: block;
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border: 2px solid black;
-            padding: 20px;
-            z-index: 1000;
+        .form-footer a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
         }
 
-        .modal.show {
-            display: block;
-        }
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
 
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-        }
+            .top-actions {
+                position: static;
+                margin-bottom: 20px;
+                flex-direction: column;
+            }
 
-        .overlay.show {
-            display: block;
-        }
-
-        .btn-delete {
-            background: red;
-            color: white;
+            .title {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-<h1>Admin</h1>
-<p>99.06.08</p>
-
-<div>
-    <div class="tab active" onclick="switchTab('smoking')">Smoking</div>
-    <div class="tab" onclick="switchTab('sleep')">Sleep</div>
-    <div class="tab" onclick="switchTab('sex')">Sex</div>
-    <div class="tab" onclick="switchTab('exercise')">Exercise</div>
-    <div class="tab" onclick="switchTab('diet')">Diet</div>
-    <div class="tab" onclick="switchTab('caffeine')">Caffeine</div>
-    <div class="tab" onclick="switchTab('alcohol')">Alcohol</div>
-</div>
-
-<div id="smoking" class="tab-content active">
-    <div class="form-section">
-        <div id="smokingMessage" class="message"></div>
-        <label>Date <input type="date" id="smokingDate"></label>
-        <label><input type="checkbox" id="smokingSmoke"> Smoked</label>
-        <button onclick="saveSmoking()">Save</button>
+<!-- 로그인 섹션 -->
+<div id="loginSection">
+    <div class="login-container">
+        <div class="login-title">로그인</div>
+        <div id="loginError"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="submit-btn">로그인</button>
+        </form>
+        <div class="form-footer">
+            계정이 없으신가요? <a href="#" id="showSignup">회원가입</a>
+        </div>
     </div>
-    <div id="smokingTable"></div>
 </div>
 
-<div id="sleep" class="tab-content">
-    <div class="form-section">
-        <div id="sleepMessage" class="message"></div>
-        <label>Date <input type="date" id="sleepDate"></label>
-        <label>Sleep <input type="time" id="sleepTime"></label>
-        <label>Wake <input type="time" id="wakeTime"></label>
-        <label><input type="checkbox" id="sleepViewPhone"> View Phone</label>
-        <button onclick="saveSleep()">Save</button>
+<!-- 회원가입 섹션 -->
+<div id="signupSection" style="display: none;">
+    <div class="login-container">
+        <div class="login-title">회원가입</div>
+        <div id="signupError"></div>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="signupUsername">사용자명</label>
+                <input type="text" id="signupUsername" required>
+            </div>
+            <div class="form-group">
+                <label for="signupEmail">이메일</label>
+                <input type="email" id="signupEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="signupPassword">비밀번호</label>
+                <input type="password" id="signupPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="signupTitle">타이틀 (선택)</label>
+                <input type="text" id="signupTitle">
+            </div>
+            <div class="form-group">
+                <label for="signupDescription">설명 (선택)</label>
+                <textarea id="signupDescription"></textarea>
+            </div>
+            <button type="submit" class="submit-btn">회원가입</button>
+            <button type="button" id="cancelSignup" class="btn" style="width: 100%; margin-top: 10px;">취소</button>
+        </form>
     </div>
-    <div id="sleepTable"></div>
 </div>
 
-<div id="sex" class="tab-content">
-    <div class="form-section">
-        <div id="sexMessage" class="message"></div>
-        <label>Date <input type="date" id="sexDate"></label>
-        <label><input type="checkbox" id="sexSex"> Did it</label>
-        <button onclick="saveSex()">Save</button>
+<!-- 메인 섹션 -->
+<div id="mainSection" style="display: none;">
+    <div class="top-actions">
+        <button class="btn" id="editProfileBtn">프로필 수정</button>
+        <a href="index.html" class="btn">데이터 조회</a>
+        <button class="btn btn-primary" id="logoutBtn">로그아웃</button>
     </div>
-    <div id="sexTable"></div>
-</div>
 
-<div id="exercise" class="tab-content">
-    <div class="form-section">
-        <div id="exerciseMessage" class="message"></div>
-        <label>Date <input type="date" id="exerciseDate"></label>
-        <label><input type="checkbox" id="exerciseWork"> Worked out</label>
-        <label>Time <input type="time" id="exerciseTime"></label>
-        <button onclick="saveExercise()">Save</button>
+    <div class="header">
+        <div class="title">데이터 입력</div>
+        <div class="subtitle">카테고리와 레코드를 추가하세요</div>
     </div>
-    <div id="exerciseTable"></div>
-</div>
 
-<div id="diet" class="tab-content">
-    <div class="form-section">
-        <div id="dietMessage" class="message"></div>
-        <label>Date <input type="date" id="dietDate"></label>
-        <label><input type="checkbox" id="dietDrink"> Consumed</label>
-        <button onclick="saveDiet()">Save</button>
+    <div class="content">
+        <!-- 카테고리 추가 -->
+        <div class="section">
+            <div class="section-title">카테고리 추가</div>
+            <div id="categoryMessage"></div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label for="categoryTitle">제목 *</label>
+                    <input type="text" id="categoryTitle" required placeholder="예: 운동">
+                </div>
+                <div class="form-group">
+                    <label for="categoryDescription">설명</label>
+                    <textarea id="categoryDescription" placeholder="카테고리 설명 (선택사항)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="recordType">타입 *</label>
+                    <select id="recordType" required>
+                        <option value="">선택하세요</option>
+                        <option value="CHECK">CHECK - 성공/실패 기록</option>
+                        <option value="TEXT">TEXT - 텍스트 기록</option>
+                        <option value="TIME">TIME - 시간 기록</option>
+                        <option value="NUMBER">NUMBER - 숫자 기록</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">카테고리 추가</button>
+            </form>
+        </div>
+
+        <!-- 레코드 추가 -->
+        <div class="section">
+            <div class="section-title">레코드 추가</div>
+            <div id="recordMessage"></div>
+
+            <!-- 카테고리 선택 -->
+            <div class="category-select">
+                <label>카테고리 선택 *</label>
+                <select id="selectedCategory">
+                    <option value="">먼저 카테고리를 선택하세요</option>
+                </select>
+            </div>
+
+            <!-- CHECK 레코드 -->
+            <div id="checkTab" class="tab-content">
+                <form id="checkForm">
+                    <div class="form-group">
+                        <label for="checkDate">날짜 *</label>
+                        <input type="date" id="checkDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-field">
+                            <input type="checkbox" id="checkSuccess">
+                            <span>성공 여부</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="submit-btn">추가</button>
+                </form>
+            </div>
+
+            <!-- TEXT 레코드 -->
+            <div id="textTab" class="tab-content">
+                <form id="textForm">
+                    <div class="form-group">
+                        <label for="textDate">날짜 *</label>
+                        <input type="date" id="textDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="textTitle">제목 *</label>
+                        <input type="text" id="textTitle" required placeholder="제목을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="textContent">내용 *</label>
+                        <textarea id="textContent" required placeholder="내용을 입력하세요"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">추가</button>
+                </form>
+            </div>
+
+            <!-- TIME 레코드 -->
+            <div id="timeTab" class="tab-content">
+                <form id="timeForm">
+                    <div class="form-group">
+                        <label for="timeDate">날짜 *</label>
+                        <input type="date" id="timeDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeTime">시간 *</label>
+                        <input type="time" id="timeTime" required step="1">
+                    </div>
+                    <button type="submit" class="submit-btn">추가</button>
+                </form>
+            </div>
+
+            <!-- NUMBER 레코드 -->
+            <div id="numberTab" class="tab-content">
+                <form id="numberForm">
+                    <div class="form-group">
+                        <label for="numberDate">날짜 *</label>
+                        <input type="date" id="numberDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numberValue">숫자 *</label>
+                        <input type="number" id="numberValue" required step="any" placeholder="예: 75.5">
+                    </div>
+                    <button type="submit" class="submit-btn">추가</button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div id="dietTable"></div>
 </div>
 
-<div id="caffeine" class="tab-content">
-    <div class="form-section">
-        <div id="caffeineMessage" class="message"></div>
-        <label>Date <input type="date" id="caffeineDate"></label>
-        <label><input type="checkbox" id="caffeineDrink"> Consumed</label>
-        <button onclick="saveCaffeine()">Save</button>
+<!-- 프로필 수정 모달 -->
+<div id="profileModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 40px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <div style="font-size: 24px; font-weight: 700;">프로필 수정</div>
+            <button onclick="closeProfileModal()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1;">×</button>
+        </div>
+        <div id="profileModalError"></div>
+        <form id="profileForm">
+            <div class="form-group">
+                <label for="profileTitle">타이틀</label>
+                <input type="text" id="profileTitle" placeholder="예: Hi.">
+            </div>
+            <div class="form-group">
+                <label for="profileDescription">설명</label>
+                <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요"></textarea>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">저장</button>
+                <button type="button" class="btn" onclick="closeProfileModal()" style="flex: 1;">취소</button>
+            </div>
+        </form>
     </div>
-    <div id="caffeineTable"></div>
-</div>
-
-<div id="alcohol" class="tab-content">
-    <div class="form-section">
-        <div id="alcoholMessage" class="message"></div>
-        <label>Date <input type="date" id="alcoholDate"></label>
-        <label><input type="checkbox" id="alcoholDrink"> Consumed</label>
-        <button onclick="saveAlcohol()">Save</button>
-    </div>
-    <div id="alcoholTable"></div>
-</div>
-
-<div class="overlay" id="overlay" onclick="closeModal()"></div>
-<div class="modal" id="editModal">
-    <h3>Edit / Delete</h3>
-    <p id="modalDate"></p>
-    <div id="modalContent"></div>
-    <button onclick="updateRecord()">Update</button>
-    <button class="btn-delete" onclick="deleteRecord()">Delete</button>
-    <button onclick="closeModal()">Cancel</button>
 </div>
 
 <script>
-    const API_BASE_URL = '';
+    const API_BASE = '/api';
+    let currentUser = null;
+    let categories = [];
 
-    function formatTime(timeObj) {
-        if (!timeObj) return '--:--';
+    // 페이지 로드
+    window.addEventListener('DOMContentLoaded', async () => {
+        await checkAuth();
 
-        if (typeof timeObj === 'string') {
-            return timeObj;
-        }
-
-        if (Array.isArray(timeObj)) {
-            const hour = timeObj[0] || 0;
-            const minute = timeObj[1] || 0;
-            return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-        }
-
-        let hour = 0;
-        let minute = 0;
-
-        if (timeObj.hour !== undefined && timeObj.hour !== null) {
-            hour = timeObj.hour;
-        }
-        if (timeObj.minute !== undefined && timeObj.minute !== null) {
-            minute = timeObj.minute;
-        }
-
-        return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-    }
-
-    let currentEditType = '';
-    let currentEditDate = '';
-    let currentEditId = 0;
-
-    function switchTab(tabName) {
+        // 초기 로드 시 탭 숨김
         document.querySelectorAll('.tab-content').forEach(content => {
             content.classList.remove('active');
         });
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.classList.remove('active');
+    });
+
+    // 인증 확인
+    async function checkAuth() {
+        try {
+            const response = await fetch(`${API_BASE}/auth/me`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                currentUser = await response.json();
+
+                // /api/user 호출하여 title, description 가져오기
+                try {
+                    const userResponse = await fetch(`${API_BASE}/user`, {
+                        credentials: 'include'
+                    });
+
+                    if (userResponse.ok) {
+                        const userData = await userResponse.json();
+                        // title, description, birthYear, birthMonth, birthDay 업데이트
+                        currentUser.title = userData.title;
+                        currentUser.description = userData.description;
+                        currentUser.birthYear = userData.birthYear;
+                        currentUser.birthMonth = userData.birthMonth;
+                        currentUser.birthDay = userData.birthDay;
+                    }
+                } catch (error) {
+                    console.error('User 정보 로드 실패:', error);
+                }
+
+                showMainSection();
+                await loadCategories();
+            } else {
+                showLoginSection();
+            }
+        } catch (error) {
+            console.error('인증 확인 실패:', error);
+            showLoginSection();
+        }
+    }
+
+    // 로그인
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch(`${API_BASE}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email, password })
+            });
+
+            if (response.ok) {
+                await checkAuth();
+            } else {
+                showError('loginError', '로그인에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('로그인 오류:', error);
+            showError('loginError', '로그인 중 오류가 발생했습니다.');
+        }
+    });
+
+    // 회원가입
+    document.getElementById('showSignup').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'block';
+    });
+
+    document.getElementById('cancelSignup').addEventListener('click', () => {
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const signupData = {
+            username: document.getElementById('signupUsername').value,
+            email: document.getElementById('signupEmail').value,
+            password: document.getElementById('signupPassword').value,
+            title: document.getElementById('signupTitle').value || '',
+            description: document.getElementById('signupDescription').value || ''
+        };
+
+        try {
+            const response = await fetch(`${API_BASE}/auth/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(signupData)
+            });
+
+            if (response.ok) {
+                showSuccess('signupError', '회원가입이 완료되었습니다.');
+                setTimeout(() => {
+                    document.getElementById('signupSection').style.display = 'none';
+                    document.getElementById('loginSection').style.display = 'block';
+                }, 1500);
+            } else {
+                showError('signupError', '회원가입에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('회원가입 오류:', error);
+            showError('signupError', '회원가입 중 오류가 발생했습니다.');
+        }
+    });
+
+    // 로그아웃
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        try {
+            await fetch(`${API_BASE}/auth/logout`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            currentUser = null;
+            showLoginSection();
+        } catch (error) {
+            console.error('로그아웃 오류:', error);
+        }
+    });
+
+    // 카테고리 로드
+    async function loadCategories() {
+        try {
+            const response = await fetch(`${API_BASE}/category/all`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                categories = await response.json();
+                updateCategorySelect();
+            }
+        } catch (error) {
+            console.error('카테고리 로드 오류:', error);
+        }
+    }
+
+    // 카테고리 셀렉트 업데이트
+    function updateCategorySelect() {
+        const select = document.getElementById('selectedCategory');
+
+        if (!categories || categories.length === 0) {
+            select.innerHTML = '<option value="">등록된 카테고리가 없습니다</option>';
+            return;
+        }
+
+        select.innerHTML = '<option value="">카테고리를 선택하세요</option>';
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.dataset.type = category.recordType;
+            option.textContent = `${category.title} (${category.recordType})`;
+            select.appendChild(option);
+        });
+    }
+
+    // 카테고리 선택 시 해당 타입의 폼만 표시
+    document.getElementById('selectedCategory').addEventListener('change', function() {
+        const selectedOption = this.selectedOptions[0];
+
+        if (!selectedOption || !selectedOption.dataset.type) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            return;
+        }
+
+        const recordType = selectedOption.dataset.type;
+
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
         });
 
-        document.getElementById(tabName).classList.add('active');
-        event.target.classList.add('active');
-    }
+        let targetContent;
 
-    function showMessage(elementId, message) {
-        const element = document.getElementById(elementId);
-        element.textContent = message;
-        element.classList.add('show');
-        setTimeout(() => {
-            element.classList.remove('show');
-        }, 3000);
-    }
-
-    function openModal(type, date, data) {
-        currentEditType = type;
-        currentEditDate = date;
-        currentEditId = data.id;
-        document.getElementById('modalDate').textContent = date;
-        const modalContent = document.getElementById('modalContent');
-
-        if (type === 'smoking') {
-            modalContent.innerHTML = `<label><input type="checkbox" id="editSmoke" ${data.smoke ? 'checked' : ''}> Smoked</label>`;
-        } else if (type === 'sleep') {
-            modalContent.innerHTML = `
-                <label>Sleep <input type="time" id="editSleepTime" value="${data.sleepTime}"></label><br>
-                <label>Wake <input type="time" id="editWakeTime" value="${data.wakeTime}"></label><br>
-                <label><input type="checkbox" id="editViewPhone" ${data.viewPhone ? 'checked' : ''}> View Phone</label>
-            `;
-        } else if (type === 'sex') {
-            modalContent.innerHTML = `<label><input type="checkbox" id="editSex" ${data.sex ? 'checked' : ''}> Did it</label>`;
-        } else if (type === 'exercise') {
-            modalContent.innerHTML = `
-                <label><input type="checkbox" id="editWork" ${data.work ? 'checked' : ''}> Worked out</label><br>
-                <label>Time <input type="time" id="editTime" value="${data.time}"></label>
-            `;
-        } else if (type === 'caffeine' || type === 'diet' || type === 'alcohol') {
-            modalContent.innerHTML = `<label><input type="checkbox" id="editDrink" ${data.drink ? 'checked' : ''}> Consumed</label>`;
+        switch(recordType) {
+            case 'CHECK':
+                targetContent = document.getElementById('checkTab');
+                break;
+            case 'TEXT':
+                targetContent = document.getElementById('textTab');
+                break;
+            case 'TIME':
+                targetContent = document.getElementById('timeTab');
+                break;
+            case 'NUMBER':
+                targetContent = document.getElementById('numberTab');
+                break;
         }
 
-        document.getElementById('overlay').classList.add('show');
-        document.getElementById('editModal').classList.add('show');
-    }
-
-    function closeModal() {
-        document.getElementById('overlay').classList.remove('show');
-        document.getElementById('editModal').classList.remove('show');
-    }
-
-    async function updateRecord() {
-        try {
-            let url = `${API_BASE_URL}/${currentEditType}?date=${currentEditDate}`;
-
-            if (currentEditType === 'smoking') {
-                const smoke = document.getElementById('editSmoke').checked;
-                url += `&smoke=${smoke}`;
-            } else if (currentEditType === 'sleep') {
-                const sleepTime = document.getElementById('editSleepTime').value;
-                const wakeTime = document.getElementById('editWakeTime').value;
-                const viewPhone = document.getElementById('editViewPhone').checked;
-                url += `&sleepTime=${sleepTime}&wakeTime=${wakeTime}&viewPhone=${viewPhone}`;
-            } else if (currentEditType === 'sex') {
-                const sex = document.getElementById('editSex').checked;
-                url += `&sex=${sex}`;
-            } else if (currentEditType === 'exercise') {
-                const work = document.getElementById('editWork').checked;
-                const time = document.getElementById('editTime').value;
-                url += `&work=${work}&time=${time}`;
-            } else if (currentEditType === 'caffeine' || currentEditType === 'diet' || currentEditType === 'alcohol') {
-                const drink = document.getElementById('editDrink').checked;
-                url += `&drink=${drink}`;
-            }
-
-            const response = await fetch(url, { method: 'PUT' });
-
-            if (response.ok) {
-                showMessage(`${currentEditType}Message`, 'Updated');
-                closeModal();
-                loadData(currentEditType);
-            } else {
-                showMessage(`${currentEditType}Message`, 'Failed');
-            }
-        } catch (error) {
-            showMessage(`${currentEditType}Message`, 'Error: ' + error.message);
+        if (targetContent) {
+            targetContent.classList.add('active');
         }
-    }
-
-    async function deleteRecord() {
-        if (!confirm('Delete this record?')) return;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/${currentEditType}?id=${currentEditId}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                showMessage(`${currentEditType}Message`, 'Deleted');
-                closeModal();
-                loadData(currentEditType);
-            } else {
-                showMessage(`${currentEditType}Message`, 'Failed');
-            }
-        } catch (error) {
-            showMessage(`${currentEditType}Message`, 'Error: ' + error.message);
-        }
-    }
-
-    async function saveSmoking() {
-        const date = document.getElementById('smokingDate').value;
-        const smoke = document.getElementById('smokingSmoke').checked;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/smoking?smoke=${smoke}&date=${date}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                showMessage('smokingMessage', 'Saved');
-                document.getElementById('smokingSmoke').checked = false;
-                loadData('smoking');
-            } else {
-                showMessage('smokingMessage', 'Failed');
-            }
-        } catch (error) {
-            showMessage('smokingMessage', 'Error: ' + error.message);
-        }
-    }
-
-    async function saveSleep() {
-        const date = document.getElementById('sleepDate').value;
-        const sleepTime = document.getElementById('sleepTime').value;
-        const wakeTime = document.getElementById('wakeTime').value;
-        const viewPhone = document.getElementById('sleepViewPhone').checked;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/sleep?date=${date}&sleepTime=${sleepTime}&wakeTime=${wakeTime}&viewPhone=${viewPhone}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                showMessage('sleepMessage', 'Saved');
-                document.getElementById('sleepTime').value = '';
-                document.getElementById('wakeTime').value = '';
-                document.getElementById('sleepViewPhone').checked = false;
-                loadData('sleep');
-            } else {
-                showMessage('sleepMessage', 'Failed');
-            }
-        } catch (error) {
-            showMessage('sleepMessage', 'Error: ' + error.message);
-        }
-    }
-
-    async function saveSex() {
-        const date = document.getElementById('sexDate').value;
-        const sex = document.getElementById('sexSex').checked;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/sex?sex=${sex}&date=${date}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                showMessage('sexMessage', 'Saved');
-                document.getElementById('sexSex').checked = false;
-                loadData('sex');
-            } else {
-                showMessage('sexMessage', 'Failed');
-            }
-        } catch (error) {
-            showMessage('sexMessage', 'Error: ' + error.message);
-        }
-    }
-
-    async function saveExercise() {
-        const date = document.getElementById('exerciseDate').value;
-        const work = document.getElementById('exerciseWork').checked;
-        const time = document.getElementById('exerciseTime').value;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/exercise?work=${work}&time=${time}&date=${date}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                showMessage('exerciseMessage', 'Saved');
-                document.getElementById('exerciseWork').checked = false;
-                document.getElementById('exerciseTime').value = '';
-                loadData('exercise');
-            } else {
-                showMessage('exerciseMessage', 'Failed');
-            }
-        } catch (error) {
-            showMessage('exerciseMessage', 'Error: ' + error.message);
-        }
-    }
-
-    async function saveDiet() {
-        const date = document.getElementById('dietDate').value;
-        const drink = document.getElementById('dietDrink').checked;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/diet?drink=${drink}&date=${date}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                showMessage('dietMessage', 'Saved');
-                document.getElementById('dietDrink').checked = false;
-                loadData('diet');
-            } else {
-                showMessage('dietMessage', 'Failed');
-            }
-        } catch (error) {
-            showMessage('dietMessage', 'Error: ' + error.message);
-        }
-    }
-
-    async function saveCaffeine() {
-        const date = document.getElementById('caffeineDate').value;
-        const drink = document.getElementById('caffeineDrink').checked;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/caffeine?drink=${drink}&date=${date}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                showMessage('caffeineMessage', 'Saved');
-                document.getElementById('caffeineDrink').checked = false;
-                loadData('caffeine');
-            } else {
-                showMessage('caffeineMessage', 'Failed');
-            }
-        } catch (error) {
-            showMessage('caffeineMessage', 'Error: ' + error.message);
-        }
-    }
-
-    async function saveAlcohol() {
-        const date = document.getElementById('alcoholDate').value;
-        const drink = document.getElementById('alcoholDrink').checked;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/alcohol?drink=${drink}&date=${date}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                showMessage('alcoholMessage', 'Saved');
-                document.getElementById('alcoholDrink').checked = false;
-                loadData('alcohol');
-            } else {
-                showMessage('alcoholMessage', 'Failed');
-            }
-        } catch (error) {
-            showMessage('alcoholMessage', 'Error: ' + error.message);
-        }
-    }
-
-    async function loadData(type) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/${type}/all`);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                document.getElementById(`${type}Table`).innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            let html = '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell" onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                if (type === 'sleep') {
-                    html += '<tr>';
-                    chunk.forEach(item => {
-                        const sleepTime = formatTime(item.sleepTime);
-                        html += `<td onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${sleepTime}</td>`;
-                    });
-                    html += '</tr>';
-
-                    html += '<tr>';
-                    chunk.forEach(item => {
-                        const wakeTime = formatTime(item.wakeTime);
-                        html += `<td onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${wakeTime}</td>`;
-                    });
-                    html += '</tr>';
-
-                    html += '<tr>';
-                    chunk.forEach(item => {
-                        const value = item.viewPhone ? 'O' : 'X';
-                        const cellClass = value === 'O' ? 'red-cell' : '';
-                        html += `<td class="${cellClass}" onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})' title="View Phone">${value}</td>`;
-                    });
-                    html += '</tr>';
-                } else if (type === 'exercise') {
-                    html += '<tr>';
-                    chunk.forEach(item => {
-                        const value = item.work ? 'O' : 'X';
-                        const cellClass = value === 'O' ? 'red-cell' : '';
-                        html += `<td class="${cellClass}" onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${value}</td>`;
-                    });
-                    html += '</tr>';
-
-                    html += '<tr>';
-                    chunk.forEach(item => {
-                        const time = formatTime(item.time);
-                        html += `<td onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${time}</td>`;
-                    });
-                    html += '</tr>';
-                } else {
-                    html += '<tr>';
-                    chunk.forEach(item => {
-                        let value;
-                        if (type === 'smoking') {
-                            value = item.smoke ? 'O' : 'X';
-                        } else if (type === 'sex') {
-                            value = item.sex ? 'O' : 'X';
-                        } else {
-                            value = item.drink ? 'O' : 'X';
-                        }
-                        const cellClass = value === 'O' ? 'red-cell' : '';
-                        html += `<td class="${cellClass}" onclick='openEditModal("${type}", "${item.date}", ${JSON.stringify(item)})'>${value}</td>`;
-                    });
-                    html += '</tr>';
-                }
-            }
-
-            html += '</table>';
-            document.getElementById(`${type}Table`).innerHTML = html;
-        } catch (error) {
-            document.getElementById(`${type}Table`).innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    function openEditModal(type, date, item) {
-        let data = { id: item.id };
-        if (type === 'smoking') {
-            data.smoke = item.smoke;
-        } else if (type === 'sleep') {
-            data.sleepTime = formatTime(item.sleepTime);
-            data.wakeTime = formatTime(item.wakeTime);
-            data.viewPhone = item.viewPhone;
-        } else if (type === 'sex') {
-            data.sex = item.sex;
-        } else if (type === 'exercise') {
-            data.work = item.work;
-            data.time = formatTime(item.time);
-        } else {
-            data.drink = item.drink;
-        }
-        openModal(type, date, data);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('smokingDate').value = today;
-        document.getElementById('sleepDate').value = today;
-        document.getElementById('sexDate').value = today;
-        document.getElementById('exerciseDate').value = today;
-        document.getElementById('dietDate').value = today;
-        document.getElementById('caffeineDate').value = today;
-        document.getElementById('alcoholDate').value = today;
-
-        loadData('smoking');
-        loadData('sleep');
-        loadData('sex');
-        loadData('exercise');
-        loadData('diet');
-        loadData('caffeine');
-        loadData('alcohol');
     });
+
+    // 카테고리 추가
+    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('categoryTitle').value;
+        const description = document.getElementById('categoryDescription').value;
+        const recordType = document.getElementById('recordType').value;
+
+        const params = new URLSearchParams();
+        params.append('title', title);
+        params.append('description', description);
+        params.append('recordType', recordType);
+
+        try {
+            const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                showMessage('categoryMessage', '카테고리가 추가되었습니다.', 'success');
+                document.getElementById('categoryForm').reset();
+                await loadCategories();
+            } else {
+                showMessage('categoryMessage', '카테고리 추가에 실패했습니다.', 'error');
+            }
+        } catch (error) {
+            console.error('카테고리 추가 오류:', error);
+            showMessage('categoryMessage', '오류가 발생했습니다.', 'error');
+        }
+    });
+
+    // CHECK 레코드 추가
+    document.getElementById('checkForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const categoryId = document.getElementById('selectedCategory').value;
+        if (!categoryId) {
+            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
+            return;
+        }
+
+        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
+        if (selectedOption.dataset.type !== 'CHECK') {
+            showMessage('recordMessage', 'CHECK 타입 카테고리를 선택해주세요.', 'error');
+            return;
+        }
+
+        const date = document.getElementById('checkDate').value;
+        const success = document.getElementById('checkSuccess').checked;
+
+        const params = new URLSearchParams();
+        params.append('categoryId', categoryId);
+        params.append('date', date);
+        params.append('success', success);
+
+        try {
+            const response = await fetch(`${API_BASE}/check?${params.toString()}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
+                document.getElementById('checkForm').reset();
+            } else {
+                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
+            }
+        } catch (error) {
+            console.error('레코드 추가 오류:', error);
+            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
+        }
+    });
+
+    // TEXT 레코드 추가
+    document.getElementById('textForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const categoryId = document.getElementById('selectedCategory').value;
+        if (!categoryId) {
+            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
+            return;
+        }
+
+        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
+        if (selectedOption.dataset.type !== 'TEXT') {
+            showMessage('recordMessage', 'TEXT 타입 카테고리를 선택해주세요.', 'error');
+            return;
+        }
+
+        const date = document.getElementById('textDate').value;
+        const title = document.getElementById('textTitle').value;
+        const text = document.getElementById('textContent').value;
+
+        const params = new URLSearchParams();
+        params.append('categoryId', categoryId);
+        params.append('date', date);
+        params.append('title', title);
+        params.append('text', text);
+
+        try {
+            const response = await fetch(`${API_BASE}/text?${params.toString()}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
+                document.getElementById('textForm').reset();
+            } else {
+                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
+            }
+        } catch (error) {
+            console.error('레코드 추가 오류:', error);
+            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
+        }
+    });
+
+    // TIME 레코드 추가
+    document.getElementById('timeForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const categoryId = document.getElementById('selectedCategory').value;
+        if (!categoryId) {
+            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
+            return;
+        }
+
+        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
+        if (selectedOption.dataset.type !== 'TIME') {
+            showMessage('recordMessage', 'TIME 타입 카테고리를 선택해주세요.', 'error');
+            return;
+        }
+
+        const date = document.getElementById('timeDate').value;
+        const time = document.getElementById('timeTime').value;
+
+        const params = new URLSearchParams();
+        params.append('categoryId', categoryId);
+        params.append('date', date);
+        params.append('time', time);
+
+        try {
+            const response = await fetch(`${API_BASE}/time?${params.toString()}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
+                document.getElementById('timeForm').reset();
+            } else {
+                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
+            }
+        } catch (error) {
+            console.error('레코드 추가 오류:', error);
+            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
+        }
+    });
+
+    // NUMBER 레코드 추가
+    document.getElementById('numberForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const categoryId = document.getElementById('selectedCategory').value;
+        if (!categoryId) {
+            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
+            return;
+        }
+
+        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
+        if (selectedOption.dataset.type !== 'NUMBER') {
+            showMessage('recordMessage', 'NUMBER 타입 카테고리를 선택해주세요.', 'error');
+            return;
+        }
+
+        const date = document.getElementById('numberDate').value;
+        const number = document.getElementById('numberValue').value;
+
+        const params = new URLSearchParams();
+        params.append('categoryId', categoryId);
+        params.append('date', date);
+        params.append('number', number);
+
+        try {
+            const response = await fetch(`${API_BASE}/number?${params.toString()}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
+                document.getElementById('numberForm').reset();
+            } else {
+                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
+            }
+        } catch (error) {
+            console.error('레코드 추가 오류:', error);
+            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
+        }
+    });
+
+    // UI 표시 함수
+    function showLoginSection() {
+        document.getElementById('loginSection').style.display = 'block';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('mainSection').style.display = 'none';
+    }
+
+    function showMainSection() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('mainSection').style.display = 'block';
+    }
+
+    // 프로필 수정 모달 열기
+    document.getElementById('editProfileBtn').addEventListener('click', () => {
+        if (currentUser) {
+            document.getElementById('profileTitle').value = currentUser.title || '';
+            document.getElementById('profileDescription').value = currentUser.description || '';
+            const modal = document.getElementById('profileModal');
+            modal.style.display = 'flex';
+        }
+    });
+
+    // 프로필 수정 모달 닫기
+    function closeProfileModal() {
+        document.getElementById('profileModal').style.display = 'none';
+        document.getElementById('profileModalError').innerHTML = '';
+    }
+
+    // 프로필 수정 폼 제출
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!currentUser) return;
+
+        const title = document.getElementById('profileTitle').value;
+        const description = document.getElementById('profileDescription').value;
+
+        const params = new URLSearchParams();
+        params.append('title', title);
+        params.append('description', description);
+
+        try {
+            const response = await fetch(`${API_BASE}/user?${params.toString()}`, {
+                method: 'PUT',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                currentUser.title = title;
+                currentUser.description = description;
+                closeProfileModal();
+                showMessage('categoryMessage', '프로필이 수정되었습니다.', 'success');
+            } else {
+                showProfileModalError('프로필 수정에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('프로필 수정 오류:', error);
+            showProfileModalError('프로필 수정 중 오류가 발생했습니다.');
+        }
+    });
+
+    function showProfileModalError(message) {
+        const element = document.getElementById('profileModalError');
+        element.innerHTML = `<div class="error-message">${message}</div>`;
+        setTimeout(() => {
+            element.innerHTML = '';
+        }, 5000);
+    }
+
+    function showError(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.innerHTML = `<div class="error-message">${message}</div>`;
+        setTimeout(() => {
+            element.innerHTML = '';
+        }, 5000);
+    }
+
+    function showSuccess(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.innerHTML = `<div class="success-message">${message}</div>`;
+    }
+
+    function showMessage(elementId, message, type) {
+        const element = document.getElementById(elementId);
+        const className = type === 'success' ? 'success-message' : 'error-message';
+        element.innerHTML = `<div class="${className}">${message}</div>`;
+
+        setTimeout(() => {
+            element.innerHTML = '';
+        }, 5000);
+    }
 </script>
 </body>
 </html>
