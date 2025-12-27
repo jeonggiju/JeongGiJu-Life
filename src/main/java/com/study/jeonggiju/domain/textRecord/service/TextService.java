@@ -29,7 +29,11 @@ public class TextService {
 
 	public FindTextResponse find(UUID textId){
 		TextRecord textRecord = textRepository.findById(textId).orElseThrow();
-		FindTextResponse response = FindTextResponse.builder().id(textRecord.getId()).title(textRecord.getTitle()).text(textRecord.getText()).date(textRecord.getDate()).build();
+		FindTextResponse response = FindTextResponse.builder()
+			.id(textRecord.getId())
+			.title(textRecord.getTitle())
+			.text(textRecord.getText())
+			.date(textRecord.getDate()).build();
 		return response;
 	}
 

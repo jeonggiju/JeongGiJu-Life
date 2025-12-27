@@ -25,7 +25,13 @@ public class CategoryService {
 
 	public FindCategoryResponse find(UUID categoryId){
 		Category category = categoryRepository.findById(categoryId).orElseThrow();
-		return FindCategoryResponse.builder().id(category.getId()).title(category.getTitle()).description(category.getDescription()).build();
+		return FindCategoryResponse
+			.builder()
+			.id(category.getId())
+			.title(category.getTitle())
+			.description(category.getDescription())
+			.recordType(category.getRecordType())
+			.build();
 
 	}
 
@@ -33,7 +39,13 @@ public class CategoryService {
 		List<Category> categories = categoryRepository.findAllByUserId(userId).orElseThrow();
 		List<FindCategoryResponse> result = new ArrayList();
 		for(Category category : categories) {
-			result.add(FindCategoryResponse.builder().id(category.getId()).title(category.getTitle()).description(category.getDescription()).build());
+			result.add(FindCategoryResponse
+				.builder()
+				.id(category.getId())
+				.title(category.getTitle())
+				.description(category.getDescription())
+				.recordType(category.getRecordType())
+				.build());
 		}
 		return result;
 
