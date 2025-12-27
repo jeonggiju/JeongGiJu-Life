@@ -24,6 +24,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 @Table
 @Entity
@@ -48,6 +49,7 @@ public class Category {
 	@ManyToOne
 	@JsonIgnore
 	@JoinColumn(name="user_id")
+	@ToString.Exclude
 	private User user;
 
 	@OneToMany(
@@ -55,6 +57,7 @@ public class Category {
 		cascade = CascadeType.ALL,
 		orphanRemoval = true
 	)
+	@ToString.Exclude
 	private List<TextRecord> textRecords = new ArrayList<>();
 
 	@OneToMany(
@@ -62,6 +65,7 @@ public class Category {
 		cascade = CascadeType.ALL,
 		orphanRemoval = true
 	)
+	@ToString.Exclude
 	private List<CheckRecord> checkRecords = new ArrayList<>();
 
 	@OneToMany(
@@ -69,6 +73,7 @@ public class Category {
 		cascade = CascadeType.ALL,
 		orphanRemoval = true
 	)
+	@ToString.Exclude
 	private List<TimeRecord> timeRecords = new ArrayList<>();
 
 
