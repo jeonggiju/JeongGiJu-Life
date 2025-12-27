@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.study.jeonggiju.domain.category.entity.Category;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,9 +42,17 @@ public class User {
 	@Column
 	private Authority authority;
 
-	@OneToMany(mappedBy = "user")
-	private List<Category> categories;
+	@OneToMany(
+		mappedBy = "user",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true
+	)private List<Category> categories;
 
 	protected User() {
+	}
+
+	public void update(String title, String description){
+		this.title = title;
+		this.description = description;
 	}
 }

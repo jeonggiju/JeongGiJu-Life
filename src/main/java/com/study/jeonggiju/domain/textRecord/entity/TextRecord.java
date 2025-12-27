@@ -3,8 +3,7 @@ package com.study.jeonggiju.domain.textRecord.entity;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import org.springframework.data.annotation.CreatedDate;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.study.jeonggiju.domain.category.entity.Category;
 
 import jakarta.persistence.Column;
@@ -31,6 +30,7 @@ public class TextRecord {
 
 	@ManyToOne
 	@JoinColumn(name="category_id", nullable = false)
+	@JsonIgnore
 	private Category category;
 
 	private String title;
@@ -38,17 +38,17 @@ public class TextRecord {
 	@Column(columnDefinition = "TEXT")
 	private String text;
 
-	@CreatedDate
-	private LocalDate createdAt;
+	private LocalDate date;
 
 	protected TextRecord() {}
 
-	public static TextRecord of(Category category, String title, String text) {
-		return TextRecord.builder().category(category).title(title).text(text).build();
+	public static TextRecord of(Category category, String title, String text, LocalDate date) {
+		return TextRecord.builder().category(category).title(title).text(text).date(date).build();
 	}
 
-	public void update(String title, String text){
+	public void update(String title, String text, LocalDate date){
 		this.title = title;
 		this.text = text;
+		this.date = date;
 	}
 }

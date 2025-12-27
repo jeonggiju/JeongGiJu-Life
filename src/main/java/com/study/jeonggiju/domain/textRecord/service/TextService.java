@@ -14,7 +14,9 @@ import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.study.jeonggiju.domain.textRecord.repository.TextRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TextService {
@@ -27,14 +29,15 @@ public class TextService {
 	}
 
 	public List<TextRecord> findAll(UUID categoryId){
-		return textRepository.findAllByCategoryId(categoryId);
+		log.info("categoryId : {}", categoryId);
+		return textRepository.findAllByCategory_Id(categoryId);
 	}
 
 	@Transactional
 	public void save(SaveText dto){
 		UUID categoryId = dto.getCategoryId();
 		Category category = categoryRepository.findById(categoryId).orElseThrow();
-		TextRecord textRecord = TextRecord.of(category, dto.getTitle(), dto.getText());
+		TextRecord textRecord = TextRecord.of(category, dto.getTitle(), dto.getText(), dto.getDate());
 		textRepository.save(textRecord);
 	}
 
@@ -42,7 +45,7 @@ public class TextService {
 	public void update(UpdateText dto){
 		UUID id = dto.getId();
 		TextRecord textRecord = textRepository.findById(id).orElseThrow();
-		textRecord.update(dto.getTitle(), dto.getText());
+		textRecord.update(dto.getTitle(), dto.getText(), dto.getDate());
 		textRepository.save(textRecord);
 	}
 

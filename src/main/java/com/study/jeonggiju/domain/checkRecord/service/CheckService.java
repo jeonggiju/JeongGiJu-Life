@@ -27,13 +27,13 @@ public class CheckService {
 	}
 
 	public List<CheckRecord> findAll(UUID categoryId){
-		return checkRepository.findAllByCategoryId(categoryId);
+		return checkRepository.findAllByCategory_Id(categoryId);
 	}
 
 	@Transactional
 	public void save(SaveCheck dto){
 		Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow();
-		CheckRecord checkRecord = CheckRecord.of(category, dto.isSuccess());
+		CheckRecord checkRecord = CheckRecord.of(category, dto.isSuccess(), dto.getDate());
 		checkRepository.save(checkRecord);
 	}
 
@@ -41,7 +41,7 @@ public class CheckService {
 	public void update(UpdateCheck dto){
 		UUID id = dto.getId();
 		CheckRecord checkRecord = checkRepository.findById(id).orElseThrow();
-		checkRecord.update(dto.isSuccess());
+		checkRecord.update(dto.isSuccess(), dto.getDate());
 		checkRepository.save(checkRecord);
 	}
 

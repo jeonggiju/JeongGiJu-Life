@@ -18,7 +18,9 @@ import com.study.jeonggiju.security.authentication.LifeAuthenticationProvider;
 import com.study.jeonggiju.security.principal.LifeUserDetails;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class CategoryController {
 
 	private final CategoryService categoryService;
 
-	@GetMapping
+	@GetMapping("/all")
 	public ResponseEntity<?> findAll(
 		@AuthenticationPrincipal LifeUserDetails userDetails
 	) {
@@ -35,11 +37,17 @@ public class CategoryController {
 		);
 	}
 
+	@GetMapping
+	public ResponseEntity<?> find(UUID id){
+		return ResponseEntity.ok(categoryService.find(id));
+	}
+
 	@PostMapping
 	public ResponseEntity<?> add(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		AddCategory addCategory
 	){
+		log.info("add category : {}", addCategory);
 		categoryService.save(userDetails.getId(), addCategory);
 		return ResponseEntity.ok().build();
 	}

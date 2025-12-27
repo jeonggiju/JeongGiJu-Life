@@ -9,5 +9,5 @@ import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
 
 public interface TextRepository extends JpaRepository<TextRecord, UUID> {
 
-	List<TextRecord> findAllByCategoryId(UUID categoryId);
+	List<TextRecord> findAllByCategory_Id(UUID categoryId);
 }

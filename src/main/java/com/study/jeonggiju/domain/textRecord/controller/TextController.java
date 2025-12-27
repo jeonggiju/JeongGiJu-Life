@@ -1,5 +1,6 @@
 package com.study.jeonggiju.domain.textRecord.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.study.jeonggiju.domain.textRecord.dto.SaveText;
 import com.study.jeonggiju.domain.textRecord.dto.UpdateText;
+import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.study.jeonggiju.domain.textRecord.service.TextService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/text")
 @RequiredArgsConstructor
@@ -35,7 +39,10 @@ public class TextController {
 	public ResponseEntity<?> findAll(
 		UUID categoryId
 	){
-		return ResponseEntity.ok(textService.findAll(categoryId));
+		log.info("categoryId : {}", categoryId);
+		List<TextRecord> all = textService.findAll(categoryId);
+		log.info("all : {}", all);
+		return ResponseEntity.ok(all);
 	}
 
 	@PostMapping

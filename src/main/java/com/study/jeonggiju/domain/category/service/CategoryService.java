@@ -21,6 +21,10 @@ public class CategoryService {
 	private final CategoryRepository categoryRepository;
 	private final UserRepository userRepository;
 
+	public Category find(UUID categoryId){
+		return categoryRepository.findById(categoryId).orElseThrow();
+	}
+
 	public List<Category> findAll(UUID userId){
 		return categoryRepository.findAllByUserId(userId).orElseThrow();
 	}

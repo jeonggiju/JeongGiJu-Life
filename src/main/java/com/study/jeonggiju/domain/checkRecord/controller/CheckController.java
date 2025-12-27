@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class CheckController {
 	private final CheckService checkService;
 
-
 	@GetMapping
 	public ResponseEntity<?> find(
 		UUID checkId

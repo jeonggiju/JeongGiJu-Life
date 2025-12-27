@@ -13,104 +13,74 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: #ffffff;
+            color: #000000;
+            padding: 40px 60px;
             min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
         .header {
-            background: white;
-            border-radius: 12px;
-            padding: 20px 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin-bottom: 40px;
         }
 
-        .header h1 {
-            color: #f5576c;
-            font-size: 24px;
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
 
-        .header-actions {
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .top-actions {
+            position: absolute;
+            top: 40px;
+            right: 60px;
             display: flex;
             gap: 10px;
-            align-items: center;
-        }
-
-        .user-info {
-            color: #666;
-            margin-right: 15px;
         }
 
         .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border: 1px solid #000;
+            background: white;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: #000;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #f5f5f5;
         }
 
         .btn-primary {
-            background: #f5576c;
-            color: white;
+            background: #000;
+            color: #fff;
+            border: none;
         }
 
         .btn-primary:hover {
-            background: #e04455;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(245, 87, 108, 0.4);
+            background: #333;
         }
 
-        .btn-secondary {
-            background: #ffe0e6;
-            color: #f5576c;
+        .content {
+            max-width: 600px;
+            margin-top: 40px;
         }
 
-        .btn-secondary:hover {
-            background: #ffc9d4;
+        .section {
+            margin-bottom: 60px;
         }
 
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-
-        .btn-success {
-            background: #22c55e;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #16a34a;
-        }
-
-        .login-card {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
-            margin: 100px auto;
-        }
-
-        .login-card h2 {
-            color: #333;
-            margin-bottom: 30px;
-            text-align: center;
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
 
         .form-group {
@@ -120,26 +90,24 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
+            font-size: 14px;
             font-weight: 500;
         }
 
         .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
+            border: 1px solid #ddd;
             font-size: 14px;
-            transition: border-color 0.3s;
         }
 
         .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
-            border-color: #f5576c;
+            border-color: #000;
         }
 
         .form-group textarea {
@@ -147,55 +115,49 @@
             min-height: 100px;
         }
 
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
         }
 
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .submit-btn:hover {
+            background: #333;
         }
 
-        .card h3 {
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .category-select {
+            background: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         .tabs {
-            display: flex;
+            display: none;
             gap: 10px;
             margin-bottom: 20px;
-            border-bottom: 2px solid #e5e7eb;
         }
 
         .tab {
-            padding: 12px 24px;
+            padding: 10px 20px;
+            border: 1px solid #000;
+            background: white;
             cursor: pointer;
-            border: none;
-            background: none;
-            color: #666;
             font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
+            transition: all 0.2s;
         }
 
         .tab:hover {
-            color: #f5576c;
+            background: #f5f5f5;
         }
 
         .tab.active {
-            color: #f5576c;
-            border-bottom-color: #f5576c;
+            background: #000;
+            color: #fff;
         }
 
         .tab-content {
@@ -204,48 +166,6 @@
 
         .tab-content.active {
             display: block;
-        }
-
-        .category-select {
-            background: #f9fafb;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .category-select label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-        }
-
-        .category-select select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .success-message {
-            background: #dcfce7;
-            color: #166534;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border-left: 4px solid #22c55e;
-            display: none;
-        }
-
-        .error-message {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border-left: 4px solid #ef4444;
-            display: none;
         }
 
         .checkbox-field {
@@ -260,213 +180,248 @@
             cursor: pointer;
         }
 
-        .record-type-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
         }
 
-        .record-type-badge.CHECK {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .record-type-badge.TEXT {
+        .success-message {
             background: #dcfce7;
             color: #166534;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
         }
 
-        .record-type-badge.TIME {
-            background: #fef3c7;
-            color: #92400e;
+        /* 로그인 */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
         }
 
-        @media (max-width: 968px) {
-            .main-content {
-                grid-template-columns: 1fr;
+        .login-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
             }
 
-            .header {
+            .top-actions {
+                position: static;
+                margin-bottom: 20px;
                 flex-direction: column;
-                gap: 15px;
-                text-align: center;
             }
 
-            .header-actions {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .header-actions .btn {
-                width: 100%;
+            .title {
+                font-size: 24px;
             }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <!-- 로그인하지 않은 경우 -->
-    <div id="loginSection">
-        <div class="login-card">
-            <h2>🔐 로그인</h2>
-            <div id="loginError"></div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">이메일</label>
-                    <input type="email" id="email" required placeholder="이메일을 입력하세요">
-                </div>
-                <div class="form-group">
-                    <label for="password">비밀번호</label>
-                    <input type="password" id="password" required placeholder="비밀번호를 입력하세요">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">로그인</button>
-            </form>
-            <div style="text-align: center; margin-top: 20px; color: #666;">
-                계정이 없으신가요? <a href="#" id="showSignup" style="color: #f5576c; text-decoration: none;">회원가입</a>
+<!-- 로그인 섹션 -->
+<div id="loginSection">
+    <div class="login-container">
+        <div class="login-title">로그인</div>
+        <div id="loginError"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" required>
             </div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="submit-btn">로그인</button>
+        </form>
+        <div class="form-footer">
+            계정이 없으신가요? <a href="#" id="showSignup">회원가입</a>
         </div>
     </div>
+</div>
 
-    <!-- 회원가입 -->
-    <div id="signupSection" style="display: none;">
-        <div class="login-card">
-            <h2>📝 회원가입</h2>
-            <div id="signupError"></div>
-            <form id="signupForm">
-                <div class="form-group">
-                    <label for="signupUsername">사용자명</label>
-                    <input type="text" id="signupUsername" required placeholder="사용자명을 입력하세요">
-                </div>
-                <div class="form-group">
-                    <label for="signupEmail">이메일</label>
-                    <input type="email" id="signupEmail" required placeholder="이메일을 입력하세요">
-                </div>
-                <div class="form-group">
-                    <label for="signupPassword">비밀번호</label>
-                    <input type="password" id="signupPassword" required placeholder="비밀번호를 입력하세요">
-                </div>
-                <div class="form-group">
-                    <label for="signupTitle">타이틀 (선택)</label>
-                    <input type="text" id="signupTitle" placeholder="타이틀을 입력하세요">
-                </div>
-                <div class="form-group">
-                    <label for="signupDescription">설명 (선택)</label>
-                    <textarea id="signupDescription" placeholder="설명을 입력하세요"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">회원가입</button>
-                <button type="button" id="cancelSignup" class="btn btn-secondary" style="width: 100%;">취소</button>
-            </form>
-        </div>
+<!-- 회원가입 섹션 -->
+<div id="signupSection" style="display: none;">
+    <div class="login-container">
+        <div class="login-title">회원가입</div>
+        <div id="signupError"></div>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="signupUsername">사용자명</label>
+                <input type="text" id="signupUsername" required>
+            </div>
+            <div class="form-group">
+                <label for="signupEmail">이메일</label>
+                <input type="email" id="signupEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="signupPassword">비밀번호</label>
+                <input type="password" id="signupPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="signupTitle">타이틀 (선택)</label>
+                <input type="text" id="signupTitle">
+            </div>
+            <div class="form-group">
+                <label for="signupDescription">설명 (선택)</label>
+                <textarea id="signupDescription"></textarea>
+            </div>
+            <button type="submit" class="submit-btn">회원가입</button>
+            <button type="button" id="cancelSignup" class="btn" style="width: 100%; margin-top: 10px;">취소</button>
+        </form>
+    </div>
+</div>
+
+<!-- 메인 섹션 -->
+<div id="mainSection" style="display: none;">
+    <div class="top-actions">
+        <button class="btn" id="editProfileBtn">프로필 수정</button>
+        <a href="index.html" class="btn">데이터 조회</a>
+        <button class="btn btn-primary" id="logoutBtn">로그아웃</button>
     </div>
 
-    <!-- 메인 컨텐츠 (로그인 후) -->
-    <div id="mainSection" style="display: none;">
-        <div class="header">
-            <h1>✏️ 데이터 입력</h1>
-            <div class="header-actions">
-                <span class="user-info" id="userInfo"></span>
-                <a href="index.html" class="btn btn-secondary">데이터 조회</a>
-                <button class="btn btn-danger" id="logoutBtn">로그아웃</button>
-            </div>
+    <div class="header">
+        <div class="title">데이터 입력</div>
+        <div class="subtitle">카테고리와 레코드를 추가하세요</div>
+    </div>
+
+    <div class="content">
+        <!-- 카테고리 추가 -->
+        <div class="section">
+            <div class="section-title">카테고리 추가</div>
+            <div id="categoryMessage"></div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label for="categoryTitle">제목 *</label>
+                    <input type="text" id="categoryTitle" required placeholder="예: 운동">
+                </div>
+                <div class="form-group">
+                    <label for="categoryDescription">설명</label>
+                    <textarea id="categoryDescription" placeholder="카테고리 설명 (선택사항)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="recordType">타입 *</label>
+                    <select id="recordType" required>
+                        <option value="">선택하세요</option>
+                        <option value="CHECK">CHECK - 성공/실패 기록</option>
+                        <option value="TEXT">TEXT - 텍스트 기록</option>
+                        <option value="TIME">TIME - 시간 기록</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">카테고리 추가</button>
+            </form>
         </div>
 
-        <div class="main-content">
-            <!-- 카테고리 추가 -->
-            <div class="card">
-                <h3>📁 카테고리 추가</h3>
-                <div id="categoryMessage"></div>
-                <form id="categoryForm">
+        <!-- 레코드 추가 -->
+        <div class="section">
+            <div class="section-title">레코드 추가</div>
+            <div id="recordMessage"></div>
+
+            <!-- 카테고리 선택 -->
+            <div class="category-select">
+                <label>카테고리 선택 *</label>
+                <select id="selectedCategory">
+                    <option value="">먼저 카테고리를 선택하세요</option>
+                </select>
+            </div>
+
+            <!-- CHECK 레코드 -->
+            <div id="checkTab" class="tab-content">
+                <form id="checkForm">
                     <div class="form-group">
-                        <label for="categoryTitle">카테고리 제목 *</label>
-                        <input type="text" id="categoryTitle" required placeholder="예: 운동 기록">
+                        <label for="checkDate">날짜 *</label>
+                        <input type="date" id="checkDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="categoryDescription">설명</label>
-                        <textarea id="categoryDescription" placeholder="카테고리에 대한 설명을 입력하세요"></textarea>
+                        <label class="checkbox-field">
+                            <input type="checkbox" id="checkSuccess">
+                            <span>성공 여부</span>
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <label for="recordType">레코드 타입 *</label>
-                        <select id="recordType" required>
-                            <option value="">선택하세요</option>
-                            <option value="CHECK">CHECK - 체크 항목 (성공/실패)</option>
-                            <option value="TEXT">TEXT - 텍스트 기록</option>
-                            <option value="TIME">TIME - 날짜 기록</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-success" style="width: 100%;">
-                        카테고리 추가
-                    </button>
+                    <button type="submit" class="submit-btn">추가</button>
                 </form>
             </div>
 
-            <!-- 레코드 추가 -->
-            <div class="card">
-                <h3>📝 레코드 추가</h3>
-                <div id="recordMessage"></div>
+            <!-- TEXT 레코드 -->
+            <div id="textTab" class="tab-content">
+                <form id="textForm">
+                    <div class="form-group">
+                        <label for="textDate">날짜 *</label>
+                        <input type="date" id="textDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="textTitle">제목 *</label>
+                        <input type="text" id="textTitle" required placeholder="제목을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="textContent">내용 *</label>
+                        <textarea id="textContent" required placeholder="내용을 입력하세요"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">추가</button>
+                </form>
+            </div>
 
-                <!-- 카테고리 선택 -->
-                <div class="category-select">
-                    <label>카테고리 선택 *</label>
-                    <select id="selectedCategory">
-                        <option value="">먼저 카테고리를 선택하세요</option>
-                    </select>
-                </div>
-
-                <!-- 탭 -->
-                <div class="tabs">
-                    <button class="tab active" data-tab="check">✅ CHECK</button>
-                    <button class="tab" data-tab="text">📄 TEXT</button>
-                    <button class="tab" data-tab="time">📅 TIME</button>
-                </div>
-
-                <!-- CHECK 레코드 추가 -->
-                <div id="checkTab" class="tab-content active">
-                    <form id="checkForm">
-                        <div class="form-group">
-                            <label class="checkbox-field">
-                                <input type="checkbox" id="checkSuccess">
-                                <span>성공 여부</span>
-                            </label>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            CHECK 레코드 추가
-                        </button>
-                    </form>
-                </div>
-
-                <!-- TEXT 레코드 추가 -->
-                <div id="textTab" class="tab-content">
-                    <form id="textForm">
-                        <div class="form-group">
-                            <label for="textTitle">제목 *</label>
-                            <input type="text" id="textTitle" required placeholder="제목을 입력하세요">
-                        </div>
-                        <div class="form-group">
-                            <label for="textContent">내용 *</label>
-                            <textarea id="textContent" required placeholder="내용을 입력하세요"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            TEXT 레코드 추가
-                        </button>
-                    </form>
-                </div>
-
-                <!-- TIME 레코드 추가 -->
-                <div id="timeTab" class="tab-content">
-                    <form id="timeForm">
-                        <div class="form-group">
-                            <label for="timeDate">날짜 *</label>
-                            <input type="date" id="timeDate" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            TIME 레코드 추가
-                        </button>
-                    </form>
-                </div>
+            <!-- TIME 레코드 -->
+            <div id="timeTab" class="tab-content">
+                <form id="timeForm">
+                    <div class="form-group">
+                        <label for="timeDate">날짜 *</label>
+                        <input type="date" id="timeDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeTime">시간 *</label>
+                        <input type="time" id="timeTime" required step="1">
+                    </div>
+                    <button type="submit" class="submit-btn">추가</button>
+                </form>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- 프로필 수정 모달 -->
+<div id="profileModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 40px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <div style="font-size: 24px; font-weight: 700;">프로필 수정</div>
+            <button onclick="closeProfileModal()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1;">×</button>
+        </div>
+        <div id="profileModalError"></div>
+        <form id="profileForm">
+            <div class="form-group">
+                <label for="profileTitle">타이틀</label>
+                <input type="text" id="profileTitle" placeholder="예: Hi.">
+            </div>
+            <div class="form-group">
+                <label for="profileDescription">설명</label>
+                <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요"></textarea>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">저장</button>
+                <button type="button" class="btn" onclick="closeProfileModal()" style="flex: 1;">취소</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -475,23 +430,13 @@
     let currentUser = null;
     let categories = [];
 
-    // 페이지 로드 시 인증 확인
+    // 페이지 로드
     window.addEventListener('DOMContentLoaded', async () => {
         await checkAuth();
-    });
 
-    // 탭 전환
-    document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            const tabName = tab.dataset.tab;
-
-            // 모든 탭 비활성화
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-            // 선택된 탭 활성화
-            tab.classList.add('active');
-            document.getElementById(`${tabName}Tab`).classList.add('active');
+        // 초기 로드 시 탭 숨김
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
         });
     });
 
@@ -503,8 +448,24 @@
             });
 
             if (response.ok) {
-                const data = await response.json();
-                currentUser = data;
+                currentUser = await response.json();
+
+                // /api/user 호출하여 title, description 가져오기
+                try {
+                    const userResponse = await fetch(`${API_BASE}/user`, {
+                        credentials: 'include'
+                    });
+
+                    if (userResponse.ok) {
+                        const userData = await userResponse.json();
+                        // title과 description 업데이트
+                        currentUser.title = userData.title;
+                        currentUser.description = userData.description;
+                    }
+                } catch (error) {
+                    console.error('User 정보 로드 실패:', error);
+                }
+
                 showMainSection();
                 await loadCategories();
             } else {
@@ -534,8 +495,7 @@
             if (response.ok) {
                 await checkAuth();
             } else {
-                const error = await response.json();
-                showError('loginError', error.message || '로그인에 실패했습니다.');
+                showError('loginError', '로그인에 실패했습니다.');
             }
         } catch (error) {
             console.error('로그인 오류:', error);
@@ -543,20 +503,18 @@
         }
     });
 
-    // 회원가입 표시
+    // 회원가입
     document.getElementById('showSignup').addEventListener('click', (e) => {
         e.preventDefault();
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('signupSection').style.display = 'block';
     });
 
-    // 회원가입 취소
     document.getElementById('cancelSignup').addEventListener('click', () => {
         document.getElementById('signupSection').style.display = 'none';
         document.getElementById('loginSection').style.display = 'block';
     });
 
-    // 회원가입
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -576,14 +534,13 @@
             });
 
             if (response.ok) {
-                showSuccess('signupError', '회원가입이 완료되었습니다. 로그인해주세요.');
+                showSuccess('signupError', '회원가입이 완료되었습니다.');
                 setTimeout(() => {
                     document.getElementById('signupSection').style.display = 'none';
                     document.getElementById('loginSection').style.display = 'block';
                 }, 1500);
             } else {
-                const error = await response.json();
-                showError('signupError', error.message || '회원가입에 실패했습니다.');
+                showError('signupError', '회원가입에 실패했습니다.');
             }
         } catch (error) {
             console.error('회원가입 오류:', error);
@@ -608,7 +565,7 @@
     // 카테고리 로드
     async function loadCategories() {
         try {
-            const response = await fetch(`${API_BASE}/category`, {
+            const response = await fetch(`${API_BASE}/category/all`, {
                 credentials: 'include'
             });
 
@@ -640,33 +597,71 @@
         });
     }
 
+    // 카테고리 선택 시 해당 타입의 폼만 표시
+    document.getElementById('selectedCategory').addEventListener('change', function() {
+        const selectedOption = this.selectedOptions[0];
+
+        if (!selectedOption || !selectedOption.dataset.type) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            return;
+        }
+
+        const recordType = selectedOption.dataset.type;
+
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+
+        let targetContent;
+
+        switch(recordType) {
+            case 'CHECK':
+                targetContent = document.getElementById('checkTab');
+                break;
+            case 'TEXT':
+                targetContent = document.getElementById('textTab');
+                break;
+            case 'TIME':
+                targetContent = document.getElementById('timeTab');
+                break;
+        }
+
+        if (targetContent) {
+            targetContent.classList.add('active');
+        }
+    });
+
     // 카테고리 추가
     document.getElementById('categoryForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const categoryData = {
-            title: document.getElementById('categoryTitle').value,
-            description: document.getElementById('categoryDescription').value,
-            recordType: document.getElementById('recordType').value
-        };
+        const title = document.getElementById('categoryTitle').value;
+        const description = document.getElementById('categoryDescription').value;
+        const recordType = document.getElementById('recordType').value;
+
+        const params = new URLSearchParams();
+        params.append('title', title);
+        params.append('description', description);
+        params.append('recordType', recordType);
 
         try {
-            const response = await fetch(`${API_BASE}/category?addCategory=${encodeURIComponent(JSON.stringify(categoryData))}`, {
+            const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
                 method: 'POST',
                 credentials: 'include'
             });
 
             if (response.ok) {
-                showMessage('categoryMessage', '카테고리가 성공적으로 추가되었습니다!', 'success');
+                showMessage('categoryMessage', '카테고리가 추가되었습니다.', 'success');
                 document.getElementById('categoryForm').reset();
                 await loadCategories();
             } else {
-                const error = await response.json();
-                showMessage('categoryMessage', error.message || '카테고리 추가에 실패했습니다.', 'error');
+                showMessage('categoryMessage', '카테고리 추가에 실패했습니다.', 'error');
             }
         } catch (error) {
             console.error('카테고리 추가 오류:', error);
-            showMessage('categoryMessage', '카테고리 추가 중 오류가 발생했습니다.', 'error');
+            showMessage('categoryMessage', '오류가 발생했습니다.', 'error');
         }
     });
 
@@ -686,27 +681,29 @@
             return;
         }
 
-        const checkData = {
-            categoryId: categoryId,
-            success: document.getElementById('checkSuccess').checked
-        };
+        const date = document.getElementById('checkDate').value;
+        const success = document.getElementById('checkSuccess').checked;
+
+        const params = new URLSearchParams();
+        params.append('categoryId', categoryId);
+        params.append('date', date);
+        params.append('success', success);
 
         try {
-            const response = await fetch(`${API_BASE}/check?saveCheck=${encodeURIComponent(JSON.stringify(checkData))}`, {
+            const response = await fetch(`${API_BASE}/check?${params.toString()}`, {
                 method: 'POST',
                 credentials: 'include'
             });
 
             if (response.ok) {
-                showMessage('recordMessage', 'CHECK 레코드가 성공적으로 추가되었습니다!', 'success');
+                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
                 document.getElementById('checkForm').reset();
             } else {
-                const error = await response.json();
-                showMessage('recordMessage', error.message || '레코드 추가에 실패했습니다.', 'error');
+                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
             }
         } catch (error) {
-            console.error('CHECK 레코드 추가 오류:', error);
-            showMessage('recordMessage', '레코드 추가 중 오류가 발생했습니다.', 'error');
+            console.error('레코드 추가 오류:', error);
+            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
         }
     });
 
@@ -726,28 +723,31 @@
             return;
         }
 
-        const textData = {
-            categoryId: categoryId,
-            title: document.getElementById('textTitle').value,
-            text: document.getElementById('textContent').value
-        };
+        const date = document.getElementById('textDate').value;
+        const title = document.getElementById('textTitle').value;
+        const text = document.getElementById('textContent').value;
+
+        const params = new URLSearchParams();
+        params.append('categoryId', categoryId);
+        params.append('date', date);
+        params.append('title', title);
+        params.append('text', text);
 
         try {
-            const response = await fetch(`${API_BASE}/text?dto=${encodeURIComponent(JSON.stringify(textData))}`, {
+            const response = await fetch(`${API_BASE}/text?${params.toString()}`, {
                 method: 'POST',
                 credentials: 'include'
             });
 
             if (response.ok) {
-                showMessage('recordMessage', 'TEXT 레코드가 성공적으로 추가되었습니다!', 'success');
+                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
                 document.getElementById('textForm').reset();
             } else {
-                const error = await response.json();
-                showMessage('recordMessage', error.message || '레코드 추가에 실패했습니다.', 'error');
+                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
             }
         } catch (error) {
-            console.error('TEXT 레코드 추가 오류:', error);
-            showMessage('recordMessage', '레코드 추가 중 오류가 발생했습니다.', 'error');
+            console.error('레코드 추가 오류:', error);
+            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
         }
     });
 
@@ -767,27 +767,29 @@
             return;
         }
 
-        const timeData = {
-            categoryId: categoryId,
-            date: document.getElementById('timeDate').value
-        };
+        const date = document.getElementById('timeDate').value;
+        const time = document.getElementById('timeTime').value;
+
+        const params = new URLSearchParams();
+        params.append('categoryId', categoryId);
+        params.append('date', date);
+        params.append('time', time);
 
         try {
-            const response = await fetch(`${API_BASE}/time?dto=${encodeURIComponent(JSON.stringify(timeData))}`, {
+            const response = await fetch(`${API_BASE}/time?${params.toString()}`, {
                 method: 'POST',
                 credentials: 'include'
             });
 
             if (response.ok) {
-                showMessage('recordMessage', 'TIME 레코드가 성공적으로 추가되었습니다!', 'success');
+                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
                 document.getElementById('timeForm').reset();
             } else {
-                const error = await response.json();
-                showMessage('recordMessage', error.message || '레코드 추가에 실패했습니다.', 'error');
+                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
             }
         } catch (error) {
-            console.error('TIME 레코드 추가 오류:', error);
-            showMessage('recordMessage', '레코드 추가 중 오류가 발생했습니다.', 'error');
+            console.error('레코드 추가 오류:', error);
+            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
         }
     });
 
@@ -802,16 +804,68 @@
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('signupSection').style.display = 'none';
         document.getElementById('mainSection').style.display = 'block';
+    }
 
+    // 프로필 수정 모달 열기
+    document.getElementById('editProfileBtn').addEventListener('click', () => {
         if (currentUser) {
-            document.getElementById('userInfo').textContent =
-                `${currentUser.username || currentUser.email}님`;
+            document.getElementById('profileTitle').value = currentUser.title || '';
+            document.getElementById('profileDescription').value = currentUser.description || '';
+            const modal = document.getElementById('profileModal');
+            modal.style.display = 'flex';
         }
+    });
+
+    // 프로필 수정 모달 닫기
+    function closeProfileModal() {
+        document.getElementById('profileModal').style.display = 'none';
+        document.getElementById('profileModalError').innerHTML = '';
+    }
+
+    // 프로필 수정 폼 제출
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!currentUser) return;
+
+        const title = document.getElementById('profileTitle').value;
+        const description = document.getElementById('profileDescription').value;
+
+        const params = new URLSearchParams();
+        params.append('title', title);
+        params.append('description', description);
+
+        try {
+            const response = await fetch(`${API_BASE}/user?${params.toString()}`, {
+                method: 'PUT',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                currentUser.title = title;
+                currentUser.description = description;
+                closeProfileModal();
+                showMessage('categoryMessage', '프로필이 수정되었습니다.', 'success');
+            } else {
+                showProfileModalError('프로필 수정에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('프로필 수정 오류:', error);
+            showProfileModalError('프로필 수정 중 오류가 발생했습니다.');
+        }
+    });
+
+    function showProfileModalError(message) {
+        const element = document.getElementById('profileModalError');
+        element.innerHTML = `<div class="error-message">${message}</div>`;
+        setTimeout(() => {
+            element.innerHTML = '';
+        }, 5000);
     }
 
     function showError(elementId, message) {
         const element = document.getElementById(elementId);
-        element.innerHTML = `<div class="error-message" style="display: block;">${message}</div>`;
+        element.innerHTML = `<div class="error-message">${message}</div>`;
         setTimeout(() => {
             element.innerHTML = '';
         }, 5000);
@@ -819,13 +873,13 @@
 
     function showSuccess(elementId, message) {
         const element = document.getElementById(elementId);
-        element.innerHTML = `<div class="success-message" style="display: block;">${message}</div>`;
+        element.innerHTML = `<div class="success-message">${message}</div>`;
     }
 
     function showMessage(elementId, message, type) {
         const element = document.getElementById(elementId);
         const className = type === 'success' ? 'success-message' : 'error-message';
-        element.innerHTML = `<div class="${className}" style="display: block;">${message}</div>`;
+        element.innerHTML = `<div class="${className}">${message}</div>`;
 
         setTimeout(() => {
             element.innerHTML = '';

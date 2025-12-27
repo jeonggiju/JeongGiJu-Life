@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.study.jeonggiju.domain.checkRecord.entity.CheckRecord;
 import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.study.jeonggiju.domain.timeRecord.entity.TimeRecord;
@@ -42,6 +43,7 @@ public class Category {
 	private String title;
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name="user_id")
 	private User user;
 

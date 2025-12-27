@@ -9,5 +9,5 @@ import com.study.jeonggiju.domain.checkRecord.entity.CheckRecord;
 
 public interface CheckRepository extends JpaRepository<CheckRecord, UUID> {
 
-	List<CheckRecord> findAllByCategoryId(UUID categoryId);
+	List<CheckRecord> findAllByCategory_Id(UUID categoryId);
 }

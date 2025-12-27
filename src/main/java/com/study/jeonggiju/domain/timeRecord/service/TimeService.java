@@ -27,14 +27,14 @@ public class TimeService {
 	}
 
 	public List<TimeRecord> findAll(UUID categoryId){
-		return timeRepository.findAllByCategoryId(categoryId);
+		return timeRepository.findAllByCategory_Id(categoryId);
 	}
 
 	@Transactional
 	public void save(SaveTime dto){
 		UUID id = dto.getCategoryId();
 		Category category = categoryRepository.findById(id).orElseThrow();
-		TimeRecord timeRecord = TimeRecord.of(category, dto.getDate());
+		TimeRecord timeRecord = TimeRecord.of(category,dto.getTime() ,dto.getDate());
 		timeRepository.save(timeRecord);
 	}
 
@@ -42,7 +42,7 @@ public class TimeService {
 	public void update(UpdateTime dto){
 		UUID id = dto.getId();
 		TimeRecord timeRecord = timeRepository.findById(id).orElseThrow();
-		timeRecord.update(dto.getDate());
+		timeRecord.update(dto.getTime(),dto.getDate());
 		timeRepository.save(timeRecord);
 	}
 

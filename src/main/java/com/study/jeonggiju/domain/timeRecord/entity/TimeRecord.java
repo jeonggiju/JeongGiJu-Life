@@ -1,10 +1,12 @@
 package com.study.jeonggiju.domain.timeRecord.entity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.study.jeonggiju.domain.category.entity.Category;
 
 import jakarta.persistence.Column;
@@ -30,22 +32,23 @@ public class TimeRecord {
 	private UUID id;
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name="category_id")
 	private Category category;
 
 	@Column
-	private LocalDate date;
+	private LocalTime time;
 
-	@CreatedDate
-	private LocalDate createdAt;
+	private LocalDate date;
 
 	protected TimeRecord() {}
 
-	public static TimeRecord of(Category category, LocalDate date) {
-		return TimeRecord.builder().category(category).date(date).build();
+	public static TimeRecord of(Category category,LocalTime time, LocalDate date) {
+		return TimeRecord.builder().category(category).time(time).date(date).build();
 	}
 
-	public void update(LocalDate date){
+	public void update(LocalTime time,LocalDate date){
+		this.time = time;
 		this.date = date;
 	}
 }
