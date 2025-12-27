@@ -1,6 +1,7 @@
 package com.study.jeonggiju.domain.textRecord.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.study.jeonggiju.domain.category.entity.Category;
 import com.study.jeonggiju.domain.category.repository.CategoryRepository;
+import com.study.jeonggiju.domain.textRecord.dto.FindTextResponse;
 import com.study.jeonggiju.domain.textRecord.dto.SaveText;
 import com.study.jeonggiju.domain.textRecord.dto.UpdateText;
 import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
@@ -25,17 +27,29 @@ public class TextService {
 	private final CategoryRepository categoryRepository;
 	private final TextRepository textRepository;
 
-	public TextRecord find(UUID textId){
-		return textRepository.findById(textId).orElseThrow();
+	public FindTextResponse find(UUID textId){
+		TextRecord textRecord = textRepository.findById(textId).orElseThrow();
+		FindTextResponse response = FindTextResponse.builder().id(textRecord.getId()).title(textRecord.getTitle()).text(textRecord.getText()).date(textRecord.getDate()).build();
+		return response;
 	}
 
-	public List<TextRecord> findByDate(UUID categoryId ,LocalDate date){
-		return textRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
+	public List<FindTextResponse> findByDate(UUID categoryId ,LocalDate date){
+		List<TextRecord> textRecords = textRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
+		List<FindTextResponse> result = new ArrayList();
+		for(TextRecord textRecord : textRecords) {
+			result.add(FindTextResponse.builder().id(textRecord.getId()).title(textRecord.getTitle()).text(textRecord.getText()).date(textRecord.getDate()).build());
+		}
+		return result;
 	}
 
-	public List<TextRecord> findAll(UUID categoryId){
-		log.info("categoryId : {}", categoryId);
-		return textRepository.findAllByCategory_Id(categoryId);
+	public List<FindTextResponse> findAll(UUID categoryId){
+		List<TextRecord> allByCategoryId = textRepository.findAllByCategory_Id(categoryId);
+		List<FindTextResponse> result = new ArrayList();
+		for(TextRecord textRecord : allByCategoryId) {
+			result.add(FindTextResponse.builder().id(textRecord.getId()).title(textRecord.getTitle()).text(textRecord.getText()).date(textRecord.getDate()).build());
+		}
+		return result;
+
 	}
 
 	@Transactional

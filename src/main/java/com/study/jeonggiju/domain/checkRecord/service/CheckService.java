@@ -1,6 +1,7 @@
 package com.study.jeonggiju.domain.checkRecord.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.study.jeonggiju.domain.category.entity.Category;
 import com.study.jeonggiju.domain.category.repository.CategoryRepository;
+import com.study.jeonggiju.domain.checkRecord.dto.FindCheckResponse;
 import com.study.jeonggiju.domain.checkRecord.dto.SaveCheck;
 import com.study.jeonggiju.domain.checkRecord.dto.UpdateCheck;
 import com.study.jeonggiju.domain.checkRecord.entity.CheckRecord;
@@ -23,12 +25,20 @@ public class CheckService {
 	private final CheckRepository checkRepository;
 	private final CategoryRepository categoryRepository;
 
-	public CheckRecord find(UUID checkId){
-		return checkRepository.findById(checkId).orElseThrow();
+	public FindCheckResponse find(UUID checkId){
+		CheckRecord checkRecord = checkRepository.findById(checkId).orElseThrow();
+		return FindCheckResponse.builder().id(checkRecord.getId()).success(checkRecord.isSuccess()).date(checkRecord.getDate()).build();
 	}
 
-	public List<CheckRecord> findAll(UUID categoryId){
-		return checkRepository.findAllByCategory_Id(categoryId);
+	public List<FindCheckResponse> findAll(UUID categoryId){
+		List<CheckRecord> allByCategoryId = checkRepository.findAllByCategory_Id(categoryId);
+
+		List<FindCheckResponse> result = new ArrayList();
+		for(CheckRecord checkRecord : allByCategoryId) {
+			FindCheckResponse response = FindCheckResponse.builder().id(checkRecord.getId()).success(checkRecord.isSuccess()).date(checkRecord.getDate()).build();
+			result.add(response);
+		}
+		return result;
 	}
 
 	public CheckRecord findByDate(UUID categoryId ,LocalDate date){

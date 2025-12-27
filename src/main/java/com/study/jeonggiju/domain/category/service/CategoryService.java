@@ -1,11 +1,13 @@
 package com.study.jeonggiju.domain.category.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import com.study.jeonggiju.domain.category.dto.AddCategory;
+import com.study.jeonggiju.domain.category.dto.FindCategoryResponse;
 import com.study.jeonggiju.domain.category.dto.UpdateCategory;
 import com.study.jeonggiju.domain.category.entity.Category;
 import com.study.jeonggiju.domain.category.repository.CategoryRepository;
@@ -21,12 +23,20 @@ public class CategoryService {
 	private final CategoryRepository categoryRepository;
 	private final UserRepository userRepository;
 
-	public Category find(UUID categoryId){
-		return categoryRepository.findById(categoryId).orElseThrow();
+	public FindCategoryResponse find(UUID categoryId){
+		Category category = categoryRepository.findById(categoryId).orElseThrow();
+		return FindCategoryResponse.builder().id(category.getId()).title(category.getTitle()).description(category.getDescription()).build();
+
 	}
 
-	public List<Category> findAll(UUID userId){
-		return categoryRepository.findAllByUserId(userId).orElseThrow();
+	public List<FindCategoryResponse> findAll(UUID userId){
+		List<Category> categories = categoryRepository.findAllByUserId(userId).orElseThrow();
+		List<FindCategoryResponse> result = new ArrayList();
+		for(Category category : categories) {
+			result.add(FindCategoryResponse.builder().id(category.getId()).title(category.getTitle()).description(category.getDescription()).build());
+		}
+		return result;
+
 	}
 
 	public void save(UUID userId, AddCategory addCategory){

@@ -1,6 +1,7 @@
 package com.study.jeonggiju.domain.timeRecord.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.study.jeonggiju.domain.category.entity.Category;
 import com.study.jeonggiju.domain.category.repository.CategoryRepository;
+import com.study.jeonggiju.domain.timeRecord.dto.FindTimeResponse;
 import com.study.jeonggiju.domain.timeRecord.dto.SaveTime;
 import com.study.jeonggiju.domain.timeRecord.dto.UpdateTime;
 import com.study.jeonggiju.domain.timeRecord.entity.TimeRecord;
@@ -23,16 +25,23 @@ public class TimeService {
 	private final TimeRepository timeRepository;
 	private final CategoryRepository categoryRepository;
 
-	public TimeRecord find(UUID timeId){
-		return timeRepository.findById(timeId).orElseThrow();
+	public FindTimeResponse find(UUID timeId){
+		TimeRecord timeRecord = timeRepository.findById(timeId).orElseThrow();
+		return FindTimeResponse.builder().id(timeRecord.getId()).time(timeRecord.getTime()).date(timeRecord.getDate()).build();
 	}
 
-	public List<TimeRecord> findAll(UUID categoryId){
-		return timeRepository.findAllByCategory_Id(categoryId);
+	public List<FindTimeResponse> findAll(UUID categoryId){
+		List<TimeRecord> allByCategoryId = timeRepository.findAllByCategory_Id(categoryId);
+		List<FindTimeResponse> result = new ArrayList();
+		for(TimeRecord timeRecord : allByCategoryId) {
+			result.add(FindTimeResponse.builder().id(timeRecord.getId()).time(timeRecord.getTime()).date(timeRecord.getDate()).build());
+		}
+		return result;
 	}
 
-	public TimeRecord findByDate(UUID categoryId , LocalDate date){
-		return timeRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
+	public FindTimeResponse findByDate(UUID categoryId , LocalDate date){
+		TimeRecord timeRecord = timeRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
+		return FindTimeResponse.builder().id(timeRecord.getId()).time(timeRecord.getTime()).date(timeRecord.getDate()).build();
 	}
 
 	@Transactional

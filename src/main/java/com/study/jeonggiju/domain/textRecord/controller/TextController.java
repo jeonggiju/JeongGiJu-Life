@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.study.jeonggiju.domain.textRecord.dto.FindTextResponse;
 import com.study.jeonggiju.domain.textRecord.dto.SaveText;
 import com.study.jeonggiju.domain.textRecord.dto.UpdateText;
 import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
@@ -41,7 +42,7 @@ public class TextController {
 		UUID categoryId,
 		LocalDate date
 	){
-		List<TextRecord> byDate = textService.findByDate(categoryId, date);
+		List<FindTextResponse> byDate = textService.findByDate(categoryId, date);
 		return ResponseEntity.ok(byDate);
 	}
 
@@ -49,9 +50,7 @@ public class TextController {
 	public ResponseEntity<?> findAll(
 		UUID categoryId
 	){
-		log.info("categoryId : {}", categoryId);
-		List<TextRecord> all = textService.findAll(categoryId);
-		log.info("all : {}", all);
+		List<FindTextResponse> all = textService.findAll(categoryId);
 		return ResponseEntity.ok(all);
 	}
 
