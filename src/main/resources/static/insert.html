@@ -327,6 +327,7 @@
                         <option value="CHECK">CHECK - 성공/실패 기록</option>
                         <option value="TEXT">TEXT - 텍스트 기록</option>
                         <option value="TIME">TIME - 시간 기록</option>
+                        <option value="NUMBER">NUMBER - 숫자 기록</option>
                     </select>
                 </div>
                 <button type="submit" class="submit-btn">카테고리 추가</button>
@@ -392,6 +393,21 @@
                     <div class="form-group">
                         <label for="timeTime">시간 *</label>
                         <input type="time" id="timeTime" required step="1">
+                    </div>
+                    <button type="submit" class="submit-btn">추가</button>
+                </form>
+            </div>
+
+            <!-- NUMBER 레코드 -->
+            <div id="numberTab" class="tab-content">
+                <form id="numberForm">
+                    <div class="form-group">
+                        <label for="numberDate">날짜 *</label>
+                        <input type="date" id="numberDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numberValue">숫자 *</label>
+                        <input type="number" id="numberValue" required step="any" placeholder="예: 75.5">
                     </div>
                     <button type="submit" class="submit-btn">추가</button>
                 </form>
@@ -629,6 +645,9 @@
             case 'TIME':
                 targetContent = document.getElementById('timeTab');
                 break;
+            case 'NUMBER':
+                targetContent = document.getElementById('numberTab');
+                break;
         }
 
         if (targetContent) {
@@ -787,6 +806,48 @@
             if (response.ok) {
                 showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
                 document.getElementById('timeForm').reset();
+            } else {
+                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
+            }
+        } catch (error) {
+            console.error('레코드 추가 오류:', error);
+            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
+        }
+    });
+
+    // NUMBER 레코드 추가
+    document.getElementById('numberForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const categoryId = document.getElementById('selectedCategory').value;
+        if (!categoryId) {
+            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
+            return;
+        }
+
+        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
+        if (selectedOption.dataset.type !== 'NUMBER') {
+            showMessage('recordMessage', 'NUMBER 타입 카테고리를 선택해주세요.', 'error');
+            return;
+        }
+
+        const date = document.getElementById('numberDate').value;
+        const number = document.getElementById('numberValue').value;
+
+        const params = new URLSearchParams();
+        params.append('categoryId', categoryId);
+        params.append('date', date);
+        params.append('number', number);
+
+        try {
+            const response = await fetch(`${API_BASE}/number?${params.toString()}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
+                document.getElementById('numberForm').reset();
             } else {
                 showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
             }

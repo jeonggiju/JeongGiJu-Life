@@ -68,6 +68,21 @@
             background: #333;
         }
 
+        .language-toggle {
+            padding: 8px 16px;
+            border: 1px solid #000;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+            min-width: 50px;
+        }
+
+        .language-toggle:hover {
+            background: #f5f5f5;
+        }
+
         .categories {
             display: flex;
             gap: 10px;
@@ -78,9 +93,9 @@
         .view-toggle {
             display: none;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 30px;
-            align-items: flex-start;
+            gap: 4px;
+            flex-shrink: 0;
+            min-width: 80px;
         }
 
         .view-toggle.active {
@@ -88,14 +103,15 @@
         }
 
         .toggle-btn {
-            padding: 10px 20px;
+            padding: 8px 16px;
             border: 1px solid #000;
             background: white;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             transition: all 0.2s;
-            min-width: 120px;
+            text-align: center;
+            white-space: nowrap;
         }
 
         .toggle-btn:hover {
@@ -107,15 +123,26 @@
             color: #fff;
         }
 
-        .success-rate {
-            margin: 15px 0;
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            padding: 12px;
-            background: #f0f0f0;
-            border-radius: 4px;
-            text-align: center;
+        .category-description {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #000;
+            padding: 0;
+        }
+
+        .content-with-sidebar {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .right-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .records-section {
+            width: 100%;
         }
 
         .category-btn {
@@ -135,10 +162,6 @@
         .category-btn.active {
             background: #000;
             color: #fff;
-        }
-
-        .records-section {
-            margin-top: 40px;
         }
 
         .date-group {
@@ -161,15 +184,15 @@
         }
 
         .check-table td {
-            padding: 12px;
+            padding: 8px;
             text-align: center;
             border: 1px solid #e0e0e0;
         }
 
         .date-cell {
             font-weight: 500;
-            font-size: 13px;
-            color: #666;
+            font-size: 14px;
+            color: #000;
         }
 
         .result-cell {
@@ -177,6 +200,14 @@
             font-size: 16px;
             cursor: pointer;
             transition: all 0.2s;
+        }
+
+        .result-success {
+            color: #ef4444;
+        }
+
+        .result-fail {
+            color: #000;
         }
 
         .result-cell:hover {
@@ -231,6 +262,48 @@
         .time-graph-large canvas {
             display: block;
             margin: 0 auto;
+        }
+
+        /* NUMBER 테이블 스타일 */
+        .number-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .number-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .number-cell {
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #3b82f6;
+        }
+
+        .number-cell:hover {
+            background: #f5f5f5;
+        }
+
+        .number-graph-large {
+            margin-bottom: 40px;
+            padding: 30px 0;
+        }
+
+        .number-graph-large canvas {
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* 달력에서 NUMBER 데이터가 있는 날 */
+        .has-data-number {
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: 600;
         }
 
         .graph-controls {
@@ -312,13 +385,13 @@
         .calendar-year-title {
             font-size: 28px;
             font-weight: 700;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
 
         .calendar-months {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
+            gap: 15px;
         }
 
         .calendar-month {
@@ -430,10 +503,6 @@
             display: flex;
             gap: 2px;
             margin-bottom: 5px;
-            position: sticky;
-            top: 0;
-            background: #f9f9f9;
-            z-index: 2;
         }
 
         .heatmap-months {
@@ -496,7 +565,7 @@
 
         /* TIME/TEXT 히트맵 */
         .heatmap-data {
-            background: #60a5fa;
+            background: #22c55e;
         }
 
         /* 과거 + 데이터 없음 */
@@ -832,6 +901,20 @@
                 font-size: 10px;
                 padding-right: 5px;
             }
+
+            .content-with-sidebar {
+                flex-direction: column;
+            }
+
+            .view-toggle {
+                flex-direction: row;
+                flex-wrap: wrap;
+                min-width: 100%;
+            }
+
+            .right-content {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -885,7 +968,7 @@
                 <textarea id="signupDescription" placeholder="간단한 소개"></textarea>
             </div>
             <div class="form-group">
-                <label>생년월일 (선택)</label>
+                <label>생년월일</label>
                 <div class="birth-date-inputs">
                     <input type="number" id="signupBirthYear" placeholder="년 (YYYY)" min="1900" max="2100" style="width: 120px;">
                     <input type="number" id="signupBirthMonth" placeholder="월 (1-12)" min="1" max="12" style="width: 100px;">
@@ -901,9 +984,10 @@
 <!-- 메인 섹션 -->
 <div id="mainSection" style="display: none;">
     <div class="top-actions">
-        <button class="btn" id="editProfileBtn">프로필 수정</button>
-        <a href="insert.html" class="btn">데이터 입력</a>
-        <button class="btn btn-primary" id="logoutBtn">로그아웃</button>
+        <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
+        <a href="insert.html" class="btn" data-lang-ko="데이터 입력" data-lang-en="Add Data">데이터 입력</a>
+        <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
+        <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
     </div>
 
     <div class="header">
@@ -913,15 +997,16 @@
 
     <div class="categories" id="categoryButtons"></div>
 
-    <div class="success-rate" id="successRate" style="display: none;"></div>
+    <div class="content-with-sidebar">
+        <div class="view-toggle" id="viewToggle"></div>
 
-    <div class="view-toggle" id="viewToggle">
-        <button class="toggle-btn active" id="graphViewBtn">그래프</button>
-        <button class="toggle-btn" id="tableViewBtn">테이블</button>
-    </div>
+        <div class="right-content">
+            <div class="category-description" id="categoryDescription" style="display: none;"></div>
 
-    <div class="records-section" id="recordsSection">
-        <div class="empty-state">카테고리를 선택하세요</div>
+            <div class="records-section" id="recordsSection">
+                <div class="empty-state">카테고리를 선택하세요</div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -929,16 +1014,16 @@
 <div id="editModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title">레코드 수정</div>
+            <div class="modal-title" data-lang-ko="레코드 수정" data-lang-en="Edit Record">레코드 수정</div>
             <button class="modal-close" onclick="closeEditModal()">×</button>
         </div>
         <div id="editModalError"></div>
         <form id="editForm">
             <div id="editFormContent"></div>
             <div class="modal-actions">
-                <button type="submit" class="btn btn-primary">수정</button>
-                <button type="button" class="btn" onclick="deleteRecord()">삭제</button>
-                <button type="button" class="btn" onclick="closeEditModal()">취소</button>
+                <button type="submit" class="btn btn-primary" data-lang-ko="수정" data-lang-en="Save">수정</button>
+                <button type="button" class="btn" onclick="deleteRecord()" data-lang-ko="삭제" data-lang-en="Delete">삭제</button>
+                <button type="button" class="btn" onclick="closeEditModal()" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
             </div>
         </form>
     </div>
@@ -948,30 +1033,22 @@
 <div id="profileModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title">프로필 수정</div>
+            <div class="modal-title" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</div>
             <button class="modal-close" onclick="closeProfileModal()">×</button>
         </div>
         <div id="profileModalError"></div>
         <form id="profileForm">
             <div class="form-group">
-                <label for="profileTitle">타이틀</label>
+                <label for="profileTitle" data-lang-ko="타이틀" data-lang-en="Title">타이틀</label>
                 <input type="text" id="profileTitle" placeholder="예: Hi.">
             </div>
             <div class="form-group">
-                <label for="profileDescription">설명</label>
+                <label for="profileDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
                 <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요"></textarea>
             </div>
-            <div class="form-group">
-                <label>생년월일</label>
-                <div class="birth-date-inputs">
-                    <input type="number" id="profileBirthYear" placeholder="년 (YYYY)" min="1900" max="2100" style="width: 120px;">
-                    <input type="number" id="profileBirthMonth" placeholder="월 (1-12)" min="1" max="12" style="width: 100px;">
-                    <input type="number" id="profileBirthDay" placeholder="일 (1-31)" min="1" max="31" style="width: 100px;">
-                </div>
-            </div>
             <div class="modal-actions">
-                <button type="submit" class="btn btn-primary">저장</button>
-                <button type="button" class="btn" onclick="closeProfileModal()">취소</button>
+                <button type="submit" class="btn btn-primary" data-lang-ko="저장" data-lang-en="Save">저장</button>
+                <button type="button" class="btn" onclick="closeProfileModal()" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
             </div>
         </form>
     </div>
@@ -994,6 +1071,88 @@
     let currentCategory = null;
     let allRecords = [];
     let currentView = 'graph'; // 'graph' or 'table'
+    let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
+
+    // 번역 데이터
+    const translations = {
+        // 뷰 토글
+        'graph': { ko: '그래프', en: 'Graph' },
+        'table': { ko: '테이블', en: 'Table' },
+        'calendar': { ko: '달력', en: 'Calendar' },
+        'list': { ko: '리스트', en: 'List' },
+        'heatmap': { ko: '100년', en: '100Y' },
+
+        // 빈 상태
+        'selectCategory': { ko: '카테고리를 선택하세요', en: 'Select a category' },
+        'noData': { ko: '등록된 데이터가 없습니다.', en: 'No data available.' },
+        'loading': { ko: '데이터를 불러오는 중...', en: 'Loading...' },
+        'loadError': { ko: '데이터를 불러올 수 없습니다.', en: 'Failed to load data.' },
+
+        // 모달
+        'editProfile': { ko: '프로필 수정', en: 'Edit Profile' },
+        'editRecord': { ko: '레코드 수정', en: 'Edit Record' },
+        'deleteRecord': { ko: '레코드 삭제', en: 'Delete Record' },
+        'deleteConfirm': { ko: '정말 삭제하시겠습니까?', en: 'Are you sure you want to delete?' },
+
+        // 버튼
+        'save': { ko: '저장', en: 'Save' },
+        'cancel': { ko: '취소', en: 'Cancel' },
+        'edit': { ko: '수정', en: 'Edit' },
+        'delete': { ko: '삭제', en: 'Delete' },
+        'close': { ko: '닫기', en: 'Close' },
+
+        // 폼 라벨
+        'date': { ko: '날짜', en: 'Date' },
+        'title': { ko: '타이틀', en: 'Title' },
+        'titleLabel': { ko: '제목', en: 'Title' },
+        'description': { ko: '설명', en: 'Description' },
+        'content': { ko: '내용', en: 'Content' },
+        'time': { ko: '시간', en: 'Time' },
+        'success': { ko: '성공 여부', en: 'Success' },
+
+        // 달력/그래프
+        'year': { ko: '년', en: '' },
+        'month': { ko: '월', en: '' },
+        'dateRange': { ko: '날짜 범위 (최근 전체월)', en: 'Date Range (All Recent Months)' },
+        'timeRange': { ko: '시간 범위', en: 'Time Range' },
+        'min': { ko: '최소', en: 'Min' },
+        'max': { ko: '최대', en: 'Max' },
+        'hour': { ko: '시', en: 'h' },
+
+        // 요일
+        'sun': { ko: '일', en: 'Sun' },
+        'mon': { ko: '월', en: 'Mon' },
+        'tue': { ko: '화', en: 'Tue' },
+        'wed': { ko: '수', en: 'Wed' },
+        'thu': { ko: '목', en: 'Thu' },
+        'fri': { ko: '금', en: 'Fri' },
+        'sat': { ko: '토', en: 'Sat' }
+    };
+
+    // 언어 전환 함수
+    function toggleLanguage() {
+        currentLang = currentLang === 'ko' ? 'en' : 'ko';
+        localStorage.setItem('language', currentLang);
+        applyLanguage();
+    }
+
+    // 언어 적용 함수
+    function applyLanguage() {
+        // 언어 토글 버튼 텍스트 변경
+        document.getElementById('languageToggle').textContent = currentLang === 'ko' ? 'EN' : 'KO';
+
+        // data-lang 속성이 있는 모든 요소 업데이트
+        document.querySelectorAll('[data-lang-ko]').forEach(element => {
+            const ko = element.getAttribute('data-lang-ko');
+            const en = element.getAttribute('data-lang-en');
+            element.textContent = currentLang === 'ko' ? ko : en;
+        });
+    }
+
+    // 페이지 로드 시 언어 적용
+    document.addEventListener('DOMContentLoaded', () => {
+        applyLanguage();
+    });
 
     // 뷰 토글 이벤트 설정
     function setupViewToggleEvents() {
@@ -1228,7 +1387,7 @@
         }
 
         container.innerHTML = categories.map(category => `
-                <button class="category-btn" data-id="${category.id}" data-type="${category.recordType}">
+                <button class="category-btn" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}">
                     ${category.title}
                 </button>
             `).join('');
@@ -1242,7 +1401,8 @@
                 currentCategory = {
                     id: btn.dataset.id,
                     type: btn.dataset.type,
-                    title: btn.textContent.trim()
+                    title: btn.textContent.trim(),
+                    description: btn.dataset.description
                 };
 
                 // 타입별 기본 뷰 설정
@@ -1276,6 +1436,9 @@
                 case 'TIME':
                     endpoint = `${API_BASE}/time/all?categoryId=${category.id}`;
                     break;
+                case 'NUMBER':
+                    endpoint = `${API_BASE}/number/all?categoryId=${category.id}`;
+                    break;
             }
 
             const response = await fetch(endpoint, { credentials: 'include' });
@@ -1296,10 +1459,19 @@
     function displayRecords(records, category) {
         const recordsSection = document.getElementById('recordsSection');
         const viewToggle = document.getElementById('viewToggle');
+        const categoryDescription = document.getElementById('categoryDescription');
+
+        // 카테고리 설명 표시
+        if (category && category.description) {
+            categoryDescription.textContent = category.description;
+            categoryDescription.style.display = 'block';
+        } else {
+            categoryDescription.style.display = 'none';
+        }
 
         if (!records || records.length === 0) {
             viewToggle.classList.remove('active');
-            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            recordsSection.innerHTML = `<div class="empty-state" data-lang-ko="등록된 데이터가 없습니다." data-lang-en="No data available.">${translations.noData[currentLang]}</div>`;
             return;
         }
 
@@ -1309,22 +1481,29 @@
         // 타입별 버튼 구성
         if (category.type === 'CHECK') {
             viewToggle.innerHTML = `
-                    <button class="toggle-btn ${currentView === 'table' ? 'active' : ''}" id="tableViewBtn">테이블</button>
-                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn">달력</button>
-                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn">100년</button>
+                    <button class="toggle-btn ${currentView === 'table' ? 'active' : ''}" id="tableViewBtn" data-lang-ko="테이블" data-lang-en="Table">${translations.table[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn" data-lang-ko="달력" data-lang-en="Calendar">${translations.calendar[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn" data-lang-ko="100년" data-lang-en="100Y">${translations.heatmap[currentLang]}</button>
                 `;
         } else if (category.type === 'TIME') {
             viewToggle.innerHTML = `
-                    <button class="toggle-btn ${currentView === 'graph' ? 'active' : ''}" id="graphViewBtn">그래프</button>
-                    <button class="toggle-btn ${currentView === 'table' ? 'active' : ''}" id="tableViewBtn">테이블</button>
-                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn">달력</button>
-                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn">100년</button>
+                    <button class="toggle-btn ${currentView === 'graph' ? 'active' : ''}" id="graphViewBtn" data-lang-ko="그래프" data-lang-en="Graph">${translations.graph[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'table' ? 'active' : ''}" id="tableViewBtn" data-lang-ko="테이블" data-lang-en="Table">${translations.table[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn" data-lang-ko="달력" data-lang-en="Calendar">${translations.calendar[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn" data-lang-ko="100년" data-lang-en="100Y">${translations.heatmap[currentLang]}</button>
+                `;
+        } else if (category.type === 'NUMBER') {
+            viewToggle.innerHTML = `
+                    <button class="toggle-btn ${currentView === 'graph' ? 'active' : ''}" id="graphViewBtn" data-lang-ko="그래프" data-lang-en="Graph">${translations.graph[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'table' ? 'active' : ''}" id="tableViewBtn" data-lang-ko="테이블" data-lang-en="Table">${translations.table[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn" data-lang-ko="달력" data-lang-en="Calendar">${translations.calendar[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn" data-lang-ko="100년" data-lang-en="100Y">${translations.heatmap[currentLang]}</button>
                 `;
         } else if (category.type === 'TEXT') {
             viewToggle.innerHTML = `
-                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn">달력</button>
-                    <button class="toggle-btn ${currentView === 'list' ? 'active' : ''}" id="listViewBtn">리스트</button>
-                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn">100년</button>
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn" data-lang-ko="달력" data-lang-en="Calendar">${translations.calendar[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'list' ? 'active' : ''}" id="listViewBtn" data-lang-ko="리스트" data-lang-en="List">${translations.list[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn" data-lang-ko="100년" data-lang-en="100Y">${translations.heatmap[currentLang]}</button>
                 `;
         }
 
@@ -1334,12 +1513,10 @@
         if (category.type === 'CHECK') {
             displayCheckRecords(records);
         } else if (category.type === 'TIME') {
-            // TIME 타입은 성공률 숨김
-            document.getElementById('successRate').style.display = 'none';
             displayTimeRecords(records);
+        } else if (category.type === 'NUMBER') {
+            displayNumberRecords(records);
         } else if (category.type === 'TEXT') {
-            // TEXT 타입은 성공률 숨김
-            document.getElementById('successRate').style.display = 'none';
             displayTextRecords(records);
         }
     }
@@ -1347,26 +1524,6 @@
     // CHECK: 전체를 하나의 테이블로 표시 (심플)
     // CHECK: 테이블, 달력 또는 히트맵 표시
     function displayCheckRecords(records) {
-        // 성공률 계산
-        let successCount = 0;
-        let totalCount = records.length;
-        records.forEach(record => {
-            if (record.success) {
-                successCount++;
-            }
-        });
-
-        const successRate = totalCount > 0 ? Math.round((successCount / totalCount) * 100) : 0;
-
-        // 성공률 표시
-        const successRateElement = document.getElementById('successRate');
-        if (totalCount > 0) {
-            successRateElement.innerHTML = `성공률: ${successRate}% (${successCount}/${totalCount})`;
-            successRateElement.style.display = 'block';
-        } else {
-            successRateElement.style.display = 'none';
-        }
-
         if (currentView === 'calendar') {
             displayCheckCalendar(records);
         } else if (currentView === 'heatmap') {
@@ -1419,7 +1576,8 @@
             chunk.forEach(date => {
                 const record = recordMap[date];
                 const symbol = record.success ? 'O' : 'X';
-                html += `<td class="result-cell" onclick='openEditModal("${record.id}", "CHECK", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${symbol}</td>`;
+                const resultClass = record.success ? 'result-success' : 'result-fail';
+                html += `<td class="result-cell ${resultClass}" onclick='openEditModal("${record.id}", "CHECK", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${symbol}</td>`;
             });
             // 10개 미만일 경우 빈 셀 추가
             for (let j = chunk.length; j < 10; j++) {
@@ -1458,8 +1616,8 @@
             yearMap[year][month][date] = recordsByDate[date];
         });
 
-        // 년도 정렬 (최신순)
-        const sortedYears = Object.keys(yearMap).sort((a, b) => b.localeCompare(a));
+        // 년도 정렬 (오래된 순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
 
         if (sortedYears.length === 0) {
             recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
@@ -1470,7 +1628,7 @@
 
         sortedYears.forEach(year => {
             html += `<div class="calendar-year">`;
-            html += `<div class="calendar-year-title">${year}년</div>`;
+            html += `<div class="calendar-year-title">${year}${translations.year[currentLang]}</div>`;
 
             // 월별 달력 (1~12월)
             html += `<div class="calendar-months">`;
@@ -1496,11 +1654,19 @@
         const startDayOfWeek = firstDay.getDay();
 
         let html = `<div class="calendar-month">`;
-        html += `<div class="calendar-month-title">${month}월</div>`;
+        html += `<div class="calendar-month-title">${month}${translations.month[currentLang]}</div>`;
         html += `<div class="calendar-grid">`;
 
         // 요일 헤더
-        const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+        const weekDays = [
+            translations.sun[currentLang],
+            translations.mon[currentLang],
+            translations.tue[currentLang],
+            translations.wed[currentLang],
+            translations.thu[currentLang],
+            translations.fri[currentLang],
+            translations.sat[currentLang]
+        ];
         weekDays.forEach(day => {
             html += `<div class="calendar-weekday">${day}</div>`;
         });
@@ -1545,20 +1711,21 @@
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // 시작일 계산 (생년월일이 있으면 태어난 날 + 1년, 없으면 100년 전)
+        // 시작일 계산 (생년월일이 있으면 태어난 날, 없으면 100년 전)
         let startDate;
+        let birthYear = null;
         if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
             startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
-            startDate.setFullYear(startDate.getFullYear() + 1); // 1살부터 시작
             startDate.setHours(0, 0, 0, 0);
+            birthYear = currentUser.birthYear;
         } else {
             startDate = new Date(today);
             startDate.setFullYear(startDate.getFullYear() - 100);
+            birthYear = startDate.getFullYear();
         }
 
-        // 총 일수 계산
-        const totalDays = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)) + 365; // 오늘 + 미래 1년
-        const totalYears = Math.ceil(totalDays / 365);
+        // 100년 표시
+        const totalYears = 100;
 
         let html = '<div class="heatmap-container">';
 
@@ -1568,17 +1735,16 @@
         html += '<div class="heatmap-months">';
         const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // 각 월의 일수
         for (let m = 0; m < 12; m++) {
-            const monthName = `${m + 1}월`;
-            html += `<div class="heatmap-month-label" style="width: ${monthDays[m] * 18}px;">${monthName}</div>`;
+            const monthName = `${m + 1}${translations.month[currentLang]}`;
+            const width = (monthDays[m] * 18) - 2; // (셀 16px + gap 2px) * 일수 - 마지막 gap
+            html += `<div class="heatmap-month-label" style="width: ${width}px;">${monthName}</div>`;
         }
         html += '</div>';
         html += '</div>';
 
         // 년도별로 표시
         for (let year = 0; year < totalYears; year++) {
-            const yearDate = new Date(startDate);
-            yearDate.setFullYear(yearDate.getFullYear() + year);
-            const yearLabel = yearDate.getFullYear();
+            const yearLabel = birthYear + year;
 
             html += '<div class="heatmap-row">';
             html += `<div class="heatmap-year-label">${yearLabel}</div>`;
@@ -1688,19 +1854,19 @@
             // 그래프 컨트롤 추가 - 아래에 표시
             html += `<div class="graph-controls">`;
             html += `<div class="control-group">`;
-            html += `<label>날짜 범위 (최근 <span id="dateRangeValue">전체</span>일)</label>`;
+            html += `<label>${translations.dateRange[currentLang]} (<span id="dateRangeValue">${currentLang === 'ko' ? '전체' : 'All'}</span>${currentLang === 'ko' ? '일' : ' days'})</label>`;
             html += `<input type="range" id="dateRangeSlider" min="7" max="${sortedDates.length}" value="${sortedDates.length}" step="1">`;
-            html += `<div class="range-labels"><span>7일</span><span>전체</span></div>`;
+            html += `<div class="range-labels"><span>7${currentLang === 'ko' ? '일' : ' days'}</span><span>${currentLang === 'ko' ? '전체' : 'All'}</span></div>`;
             html += `</div>`;
             html += `<div class="control-group">`;
-            html += `<label>시간 범위: <span id="timeRangeValue">0시 ~ 24시</span></label>`;
+            html += `<label>${translations.timeRange[currentLang]}: <span id="timeRangeValue">0${translations.hour[currentLang]} ~ 24${translations.hour[currentLang]}</span></label>`;
             html += `<div class="time-range-sliders">`;
             html += `<div class="time-slider">`;
-            html += `<label>최소</label>`;
+            html += `<label>${translations.min[currentLang]}</label>`;
             html += `<input type="range" id="minTimeSlider" min="0" max="23" value="0" step="1">`;
             html += `</div>`;
             html += `<div class="time-slider">`;
-            html += `<label>최대</label>`;
+            html += `<label>${translations.max[currentLang]}</label>`;
             html += `<input type="range" id="maxTimeSlider" min="1" max="24" value="24" step="1">`;
             html += `</div>`;
             html += `</div>`;
@@ -1885,8 +2051,8 @@
             yearMap[year][month][date] = recordsByDate[date];
         });
 
-        // 년도 정렬 (최신순)
-        const sortedYears = Object.keys(yearMap).sort((a, b) => b.localeCompare(a));
+        // 년도 정렬 (오래된 순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
 
         if (sortedYears.length === 0) {
             recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
@@ -1897,7 +2063,7 @@
 
         sortedYears.forEach(year => {
             html += `<div class="calendar-year">`;
-            html += `<div class="calendar-year-title">${year}년</div>`;
+            html += `<div class="calendar-year-title">${year}${translations.year[currentLang]}</div>`;
 
             // 월별 달력 (1~12월)
             html += `<div class="calendar-months">`;
@@ -1923,11 +2089,19 @@
         const startDayOfWeek = firstDay.getDay();
 
         let html = `<div class="calendar-month">`;
-        html += `<div class="calendar-month-title">${month}월</div>`;
+        html += `<div class="calendar-month-title">${month}${translations.month[currentLang]}</div>`;
         html += `<div class="calendar-grid">`;
 
         // 요일 헤더
-        const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+        const weekDays = [
+            translations.sun[currentLang],
+            translations.mon[currentLang],
+            translations.tue[currentLang],
+            translations.wed[currentLang],
+            translations.thu[currentLang],
+            translations.fri[currentLang],
+            translations.sat[currentLang]
+        ];
         weekDays.forEach(day => {
             html += `<div class="calendar-weekday">${day}</div>`;
         });
@@ -1973,17 +2147,19 @@
 
         // 시작일 계산
         let startDate;
+        let birthYear = null;
         if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
             startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
-            startDate.setFullYear(startDate.getFullYear() + 1); // 1살부터 시작
             startDate.setHours(0, 0, 0, 0);
+            birthYear = currentUser.birthYear;
         } else {
             startDate = new Date(today);
             startDate.setFullYear(startDate.getFullYear() - 100);
+            birthYear = startDate.getFullYear();
         }
 
-        const totalDays = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)) + 365;
-        const totalYears = Math.ceil(totalDays / 365);
+        // 100년 표시
+        const totalYears = 100;
 
         let html = '<div class="heatmap-container">';
 
@@ -1993,16 +2169,15 @@
         html += '<div class="heatmap-months">';
         const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         for (let m = 0; m < 12; m++) {
-            const monthName = `${m + 1}월`;
-            html += `<div class="heatmap-month-label" style="width: ${monthDays[m] * 18}px;">${monthName}</div>`;
+            const monthName = `${m + 1}${translations.month[currentLang]}`;
+            const width = (monthDays[m] * 18) - 2;
+            html += `<div class="heatmap-month-label" style="width: ${width}px;">${monthName}</div>`;
         }
         html += '</div>';
         html += '</div>';
 
         for (let year = 0; year < totalYears; year++) {
-            const yearDate = new Date(startDate);
-            yearDate.setFullYear(yearDate.getFullYear() + year);
-            const yearLabel = yearDate.getFullYear();
+            const yearLabel = birthYear + year;
 
             html += '<div class="heatmap-row">';
             html += `<div class="heatmap-year-label">${yearLabel}</div>`;
@@ -2265,8 +2440,8 @@
             yearMap[year][month][date] = recordsByDate[date];
         });
 
-        // 년도 정렬 (최신순)
-        const sortedYears = Object.keys(yearMap).sort((a, b) => b.localeCompare(a));
+        // 년도 정렬 (오래된 순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
 
         if (sortedYears.length === 0) {
             recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
@@ -2277,7 +2452,7 @@
 
         sortedYears.forEach(year => {
             html += `<div class="calendar-year">`;
-            html += `<div class="calendar-year-title">${year}년</div>`;
+            html += `<div class="calendar-year-title">${year}${translations.year[currentLang]}</div>`;
 
             // 월별 달력 (1~12월)
             html += `<div class="calendar-months">`;
@@ -2385,17 +2560,19 @@
 
         // 시작일 계산
         let startDate;
+        let birthYear = null;
         if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
             startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
-            startDate.setFullYear(startDate.getFullYear() + 1); // 1살부터 시작
             startDate.setHours(0, 0, 0, 0);
+            birthYear = currentUser.birthYear;
         } else {
             startDate = new Date(today);
             startDate.setFullYear(startDate.getFullYear() - 100);
+            birthYear = startDate.getFullYear();
         }
 
-        const totalDays = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)) + 365;
-        const totalYears = Math.ceil(totalDays / 365);
+        // 100년 표시
+        const totalYears = 100;
 
         let html = '<div class="heatmap-container">';
 
@@ -2405,16 +2582,15 @@
         html += '<div class="heatmap-months">';
         const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         for (let m = 0; m < 12; m++) {
-            const monthName = `${m + 1}월`;
-            html += `<div class="heatmap-month-label" style="width: ${monthDays[m] * 18}px;">${monthName}</div>`;
+            const monthName = `${m + 1}${translations.month[currentLang]}`;
+            const width = (monthDays[m] * 18) - 2;
+            html += `<div class="heatmap-month-label" style="width: ${width}px;">${monthName}</div>`;
         }
         html += '</div>';
         html += '</div>';
 
         for (let year = 0; year < totalYears; year++) {
-            const yearDate = new Date(startDate);
-            yearDate.setFullYear(yearDate.getFullYear() + year);
-            const yearLabel = yearDate.getFullYear();
+            const yearLabel = birthYear + year;
 
             html += '<div class="heatmap-row">';
             html += `<div class="heatmap-year-label">${yearLabel}</div>`;
@@ -2460,6 +2636,334 @@
         recordsSection.innerHTML = html;
     }
 
+    // ========== NUMBER 타입 함수들 ==========
+
+    // NUMBER: 그래프, 테이블, 달력, 히트맵 표시
+    function displayNumberRecords(records) {
+        if (currentView === 'graph') {
+            displayNumberGraph(records);
+        } else if (currentView === 'calendar') {
+            displayNumberCalendar(records);
+        } else if (currentView === 'heatmap') {
+            displayNumberHeatmap(records);
+        } else {
+            displayNumberTable(records);
+        }
+    }
+
+    // NUMBER 그래프 뷰
+    function displayNumberGraph(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 정리 및 정렬
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedDates.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        let html = `<div class="number-graph-large">`;
+        html += `<canvas id="numberLineChart" width="800" height="400"></canvas>`;
+        html += `</div>`;
+
+        recordsSection.innerHTML = html;
+
+        // Chart.js로 그래프 그리기
+        const ctx = document.getElementById('numberLineChart').getContext('2d');
+
+        const labels = sortedDates;
+        const data = sortedDates.map(date => recordMap[date].number);
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number',
+                    data: data,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // NUMBER 테이블 뷰
+    function displayNumberTable(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 정리
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        // 날짜 정렬 (오름차순)
+        const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedDates.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        // 10개씩 행으로 나누기
+        let html = '';
+        html += `<table class="number-table">`;
+
+        for (let i = 0; i < sortedDates.length; i += 10) {
+            const chunk = sortedDates.slice(i, i + 10);
+
+            // 날짜 행
+            html += `<tr>`;
+            chunk.forEach(date => {
+                html += `<td class="date-cell">${date}</td>`;
+            });
+            // 10개 미만일 경우 빈 셀 추가
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
+            html += `</tr>`;
+
+            // 숫자 행
+            html += `<tr>`;
+            chunk.forEach(date => {
+                const record = recordMap[date];
+                html += `<td class="number-cell" onclick='openEditModal("${record.id}", "NUMBER", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${record.number}</td>`;
+            });
+            // 10개 미만일 경우 빈 셀 추가
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
+            html += `</tr>`;
+        }
+
+        html += `</table>`;
+        recordsSection.innerHTML = html;
+    }
+
+    // NUMBER 달력 뷰
+    function displayNumberCalendar(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 날짜별로 레코드 맵핑
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordsByDate[record.date] = record;
+            }
+        });
+
+        // 연도별로 그룹화
+        const yearMap = {};
+        Object.keys(recordsByDate).forEach(date => {
+            const year = date.split('-')[0];
+            if (!yearMap[year]) {
+                yearMap[year] = {};
+            }
+            const month = date.split('-')[1];
+            if (!yearMap[year][month]) {
+                yearMap[year][month] = {};
+            }
+            yearMap[year][month][date] = recordsByDate[date];
+        });
+
+        // 년도 정렬 (오래된 순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        let html = '';
+
+        sortedYears.forEach(year => {
+            html += `<div class="calendar-year">`;
+            html += `<div class="calendar-year-title">${year}${translations.year[currentLang]}</div>`;
+
+            // 월별 달력 (1~12월)
+            html += `<div class="calendar-months">`;
+            for (let month = 1; month <= 12; month++) {
+                const monthStr = String(month).padStart(2, '0');
+                const monthData = yearMap[year][monthStr] || {};
+
+                html += generateNumberMonthCalendar(year, month, monthData);
+            }
+            html += `</div>`;
+            html += `</div>`;
+        });
+
+        recordsSection.innerHTML = html;
+    }
+
+    // NUMBER 월별 달력 생성
+    function generateNumberMonthCalendar(year, month, monthData) {
+        const monthStr = String(month).padStart(2, '0');
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        let html = `<div class="calendar-month">`;
+        html += `<div class="calendar-month-title">${month}${translations.month[currentLang]}</div>`;
+        html += `<div class="calendar-grid">`;
+
+        // 요일 헤더
+        const weekDays = [
+            translations.sun[currentLang],
+            translations.mon[currentLang],
+            translations.tue[currentLang],
+            translations.wed[currentLang],
+            translations.thu[currentLang],
+            translations.fri[currentLang],
+            translations.sat[currentLang]
+        ];
+        weekDays.forEach(day => {
+            html += `<div class="calendar-weekday">${day}</div>`;
+        });
+
+        // 첫 주 빈 칸
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += `<div class="calendar-day empty"></div>`;
+        }
+
+        // 날짜들
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayStr = String(day).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
+            const record = monthData[dateStr];
+
+            if (record) {
+                html += `<div class="calendar-day has-data-number" onclick='openEditModal("${record.id}", "NUMBER", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>${day}</div>`;
+            } else {
+                html += `<div class="calendar-day">${day}</div>`;
+            }
+        }
+
+        html += `</div>`;
+        html += `</div>`;
+
+        return html;
+    }
+
+    // NUMBER 히트맵 뷰 (100년)
+    function displayNumberHeatmap(records) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        // 데이터를 날짜별 맵으로 변환
+        const recordMap = {};
+        records.forEach(record => {
+            if (record.date) {
+                recordMap[record.date] = record;
+            }
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 시작일 계산
+        let startDate;
+        let birthYear = null;
+        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+            startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = currentUser.birthYear;
+        } else {
+            startDate = new Date(today);
+            startDate.setFullYear(startDate.getFullYear() - 100);
+            birthYear = startDate.getFullYear();
+        }
+
+        // 100년 표시
+        const totalYears = 100;
+
+        let html = '<div class="heatmap-container">';
+
+        // 월 헤더 추가
+        html += '<div class="heatmap-header">';
+        html += '<div class="heatmap-year-label"></div>';
+        html += '<div class="heatmap-months">';
+        const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        for (let m = 0; m < 12; m++) {
+            const monthName = `${m + 1}${translations.month[currentLang]}`;
+            const width = (monthDays[m] * 18) - 2;
+            html += `<div class="heatmap-month-label" style="width: ${width}px;">${monthName}</div>`;
+        }
+        html += '</div>';
+        html += '</div>';
+
+        for (let year = 0; year < totalYears; year++) {
+            const yearLabel = birthYear + year;
+
+            html += '<div class="heatmap-row">';
+            html += `<div class="heatmap-year-label">${yearLabel}</div>`;
+            html += '<div class="heatmap-days">';
+
+            for (let day = 0; day < 365; day++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + (year * 365 + day));
+
+                if (date > new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)) {
+                    html += `<div class="heatmap-cell heatmap-future-empty" title="미래"></div>`;
+                    continue;
+                }
+
+                const dateStr = date.toISOString().split('T')[0];
+                const record = recordMap[dateStr];
+                const isPast = date < today;
+
+                let className = 'heatmap-cell';
+
+                if (record) {
+                    className += ' heatmap-data';
+                } else if (isPast) {
+                    className += ' heatmap-past-empty';
+                } else {
+                    className += ' heatmap-future-empty';
+                }
+
+                const title = `${dateStr}${record ? ` (${record.number})` : ''}`;
+
+                if (record) {
+                    html += `<div class="${className}" title="${title}" onclick='openEditModal("${record.id}", "NUMBER", ${JSON.stringify(record).replace(/"/g, '&quot;')})'></div>`;
+                } else {
+                    html += `<div class="${className}" title="${title}"></div>`;
+                }
+            }
+
+            html += '</div>'; // heatmap-days
+            html += '</div>'; // heatmap-row
+        }
+
+        html += '</div>'; // heatmap-container
+        recordsSection.innerHTML = html;
+    }
+
     // 월별 달력 생성
     function generateMonthCalendar(year, month, monthData) {
         const monthStr = String(month).padStart(2, '0');
@@ -2469,11 +2973,19 @@
         const startDayOfWeek = firstDay.getDay(); // 0(일) ~ 6(토)
 
         let html = `<div class="calendar-month">`;
-        html += `<div class="calendar-month-title">${month}월</div>`;
+        html += `<div class="calendar-month-title">${month}${translations.month[currentLang]}</div>`;
         html += `<div class="calendar-grid">`;
 
         // 요일 헤더
-        const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+        const weekDays = [
+            translations.sun[currentLang],
+            translations.mon[currentLang],
+            translations.tue[currentLang],
+            translations.wed[currentLang],
+            translations.thu[currentLang],
+            translations.fri[currentLang],
+            translations.sat[currentLang]
+        ];
         weekDays.forEach(day => {
             html += `<div class="calendar-weekday">${day}</div>`;
         });
@@ -2522,7 +3034,7 @@
                 const data = await response.json();
 
                 if (!data || data.length === 0) {
-                    content.innerHTML = '<div style="text-align: center; padding: 20px; color: #999;">데이터가 없습니다.</div>';
+                    content.innerHTML = `<div style="text-align: center; padding: 20px; color: #999;">${translations.noData[currentLang]}</div>`;
                     return;
                 }
 
@@ -2531,7 +3043,7 @@
                     html += `<div class="text-popup-item">`;
                     html += `<div class="text-popup-item-header">`;
                     html += `<span class="text-popup-item-title">${record.title}</span>`;
-                    html += `<button class="btn-small" onclick='openEditModal("${record.id}", "TEXT", ${JSON.stringify(record).replace(/"/g, '&quot;')})'>수정</button>`;
+                    html += `<button class="btn-small" onclick='openEditModal("${record.id}", "TEXT", ${JSON.stringify(record).replace(/"/g, '&quot;')})' data-lang-ko="수정" data-lang-en="Edit">${translations.edit[currentLang]}</button>`;
                     html += `</div>`;
                     html += `<div class="text-popup-item-content">${record.text}</div>`;
                     html += `</div>`;
@@ -2572,6 +3084,11 @@
 
     // 수정 모달 열기
     function openEditModal(id, type, record) {
+        // TEXT 타입일 때는 텍스트 팝업 먼저 닫기
+        if (type === 'TEXT') {
+            closeTextPopup();
+        }
+
         currentEditRecord = { id, type, record };
         const modal = document.getElementById('editModal');
         const formContent = document.getElementById('editFormContent');
@@ -2581,28 +3098,28 @@
         if (type === 'CHECK') {
             html = `
                     <div class="form-group">
-                        <label for="editDate">날짜 *</label>
+                        <label for="editDate" data-lang-ko="날짜" data-lang-en="Date">${translations.date[currentLang]} *</label>
                         <input type="date" id="editDate" required value="${record.date || ''}">
                     </div>
                     <div class="form-group">
                         <label class="checkbox-field">
                             <input type="checkbox" id="editSuccess" ${record.success ? 'checked' : ''}>
-                            <span>성공 여부</span>
+                            <span data-lang-ko="성공 여부" data-lang-en="Success">${translations.success[currentLang]}</span>
                         </label>
                     </div>
                 `;
         } else if (type === 'TEXT') {
             html = `
                     <div class="form-group">
-                        <label for="editDate">날짜 *</label>
+                        <label for="editDate" data-lang-ko="날짜" data-lang-en="Date">${translations.date[currentLang]} *</label>
                         <input type="date" id="editDate" required value="${record.date || ''}">
                     </div>
                     <div class="form-group">
-                        <label for="editTitle">제목 *</label>
+                        <label for="editTitle" data-lang-ko="제목" data-lang-en="Title">${translations.titleLabel[currentLang]} *</label>
                         <input type="text" id="editTitle" required value="${record.title || ''}">
                     </div>
                     <div class="form-group">
-                        <label for="editText">내용 *</label>
+                        <label for="editText" data-lang-ko="내용" data-lang-en="Content">${translations.content[currentLang]} *</label>
                         <textarea id="editText" required>${record.text || ''}</textarea>
                     </div>
                 `;
@@ -2612,12 +3129,23 @@
                 : record.time) : '';
             html = `
                     <div class="form-group">
-                        <label for="editDate">날짜 *</label>
+                        <label for="editDate" data-lang-ko="날짜" data-lang-en="Date">${translations.date[currentLang]} *</label>
                         <input type="date" id="editDate" required value="${record.date || ''}">
                     </div>
                     <div class="form-group">
-                        <label for="editTime">시간 *</label>
+                        <label for="editTime" data-lang-ko="시간" data-lang-en="Time">${translations.time[currentLang]} *</label>
                         <input type="time" id="editTime" required step="1" value="${timeValue}">
+                    </div>
+                `;
+        } else if (type === 'NUMBER') {
+            html = `
+                    <div class="form-group">
+                        <label for="editDate" data-lang-ko="날짜" data-lang-en="Date">${translations.date[currentLang]} *</label>
+                        <input type="date" id="editDate" required value="${record.date || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label for="editNumber" data-lang-ko="숫자" data-lang-en="Number">${currentLang === 'ko' ? '숫자' : 'Number'} *</label>
+                        <input type="number" id="editNumber" required step="any" value="${record.number || ''}">
                     </div>
                 `;
         }
@@ -2667,6 +3195,10 @@
                 endpoint = `${API_BASE}/time`;
                 params.append('date', document.getElementById('editDate').value);
                 params.append('time', document.getElementById('editTime').value);
+            } else if (type === 'NUMBER') {
+                endpoint = `${API_BASE}/number`;
+                params.append('date', document.getElementById('editDate').value);
+                params.append('number', document.getElementById('editNumber').value);
             }
 
             const response = await fetch(`${endpoint}?${params.toString()}`, {
@@ -2697,6 +3229,7 @@
         if (type === 'CHECK') endpoint = `${API_BASE}/check`;
         else if (type === 'TEXT') endpoint = `${API_BASE}/text`;
         else if (type === 'TIME') endpoint = `${API_BASE}/time`;
+        else if (type === 'NUMBER') endpoint = `${API_BASE}/number`;
 
         try {
             const response = await fetch(`${endpoint}?id=${id}`, {
@@ -2760,9 +3293,6 @@
         if (currentUser) {
             document.getElementById('profileTitle').value = currentUser.title || '';
             document.getElementById('profileDescription').value = currentUser.description || '';
-            document.getElementById('profileBirthYear').value = currentUser.birthYear || '';
-            document.getElementById('profileBirthMonth').value = currentUser.birthMonth || '';
-            document.getElementById('profileBirthDay').value = currentUser.birthDay || '';
             document.getElementById('profileModal').classList.add('active');
         }
     });
@@ -2781,16 +3311,10 @@
 
         const title = document.getElementById('profileTitle').value;
         const description = document.getElementById('profileDescription').value;
-        const birthYear = document.getElementById('profileBirthYear').value;
-        const birthMonth = document.getElementById('profileBirthMonth').value;
-        const birthDay = document.getElementById('profileBirthDay').value;
 
         const params = new URLSearchParams();
         params.append('title', title);
         params.append('description', description);
-        if (birthYear) params.append('birthYear', birthYear);
-        if (birthMonth) params.append('birthMonth', birthMonth);
-        if (birthDay) params.append('birthDay', birthDay);
 
         try {
             const response = await fetch(`${API_BASE}/user?${params.toString()}`, {
@@ -2802,9 +3326,6 @@
                 // 업데이트된 user 정보 반영
                 currentUser.title = title;
                 currentUser.description = description;
-                currentUser.birthYear = birthYear ? parseInt(birthYear) : null;
-                currentUser.birthMonth = birthMonth ? parseInt(birthMonth) : null;
-                currentUser.birthDay = birthDay ? parseInt(birthDay) : null;
 
                 // UI 업데이트
                 document.getElementById('userGreeting').textContent = title || 'Hi.';

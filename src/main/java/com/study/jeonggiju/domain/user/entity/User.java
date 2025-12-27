@@ -15,11 +15,13 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name = "users")
 @Builder @Data
 @AllArgsConstructor
+@ToString(exclude = "categories")
 public class User {
 
 	@Id

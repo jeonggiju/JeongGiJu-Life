@@ -10,4 +10,7 @@ public class UserInfo {
 	private String email;
 	private String title;
 	private String description;
+	private int birthYear;
+	private int birthMonth;
+	private int birthDay;
 }

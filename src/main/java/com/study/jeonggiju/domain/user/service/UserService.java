@@ -44,6 +44,9 @@ public class UserService {
 			.email(user.getEmail())
 			.title(user.getTitle())
 			.description(user.getDescription())
+			.birthYear(user.getBirthYear())
+			.birthMonth(user.getBirthMonth())
+			.birthDay(user.getBirthDay())
 			.build();
 	}
 

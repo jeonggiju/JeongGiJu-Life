@@ -13,6 +13,8 @@ import com.study.jeonggiju.domain.user.entity.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -38,6 +40,7 @@ public class Category {
 	@Column(columnDefinition = "TEXT")
 	private String description;
 
+	@Enumerated(EnumType.STRING)
 	private RecordType recordType;
 
 	private String title;
