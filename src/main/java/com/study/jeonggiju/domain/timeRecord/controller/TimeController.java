@@ -1,4 +1,4 @@
-package com.study.jeonggiju.domain.checkRecord.controller;
+package com.study.jeonggiju.domain.timeRecord.controller;
 
 import java.util.UUID;
 
@@ -11,56 +11,49 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.study.jeonggiju.domain.checkRecord.dto.SaveCheck;
-import com.study.jeonggiju.domain.checkRecord.dto.UpdateCheck;
-import com.study.jeonggiju.domain.checkRecord.service.CheckService;
+import com.study.jeonggiju.domain.timeRecord.dto.SaveTime;
+import com.study.jeonggiju.domain.timeRecord.dto.UpdateTime;
+import com.study.jeonggiju.domain.timeRecord.service.TimeService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/check")
+@RequestMapping("/api/time")
 @RequiredArgsConstructor
-public class CheckController {
-	private final CheckService checkService;
+public class TimeController {
 
+	private final TimeService timeService;
 
 	@GetMapping
-	public ResponseEntity<?> find(
-		UUID checkId
-	){
-		return ResponseEntity.ok(checkService.find(checkId));
+	public ResponseEntity<?> find(UUID timeId){
+		return ResponseEntity.ok(timeService.find(timeId));
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<?> findAll(
-		UUID categoryId
-	){
-		return ResponseEntity.ok(checkService.findAll(categoryId));
+	public ResponseEntity<?> findAll(UUID categoryId){
+		return ResponseEntity.ok(timeService.findAll(categoryId));
 	}
 
 	@PostMapping
 	public ResponseEntity<?> save(
-		SaveCheck saveCheck
+		SaveTime dto
 	){
-		try{
-			checkService.save(saveCheck);
-			return ResponseEntity.ok().build();
-		}catch(Exception e){
-			return ResponseEntity.badRequest().build();
-		}
+		timeService.save(dto);
+		return ResponseEntity.ok().build();
 	}
 
 	@PutMapping
 	public ResponseEntity<?> update(
-		UpdateCheck dto
+		UpdateTime dto
 	){
-		checkService.update(dto);
+		timeService.update(dto);
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping
 	public ResponseEntity<?> delete(UUID id){
-		checkService.delete(id);
+		timeService.delete(id);
 		return ResponseEntity.ok().build();
 	}
+
 }

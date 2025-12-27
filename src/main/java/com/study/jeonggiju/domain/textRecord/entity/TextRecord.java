@@ -42,4 +42,13 @@ public class TextRecord {
 	private LocalDate createdAt;
 
 	protected TextRecord() {}
+
+	public static TextRecord of(Category category, String title, String text) {
+		return TextRecord.builder().category(category).title(title).text(text).build();
+	}
+
+	public void update(String title, String text){
+		this.title = title;
+		this.text = text;
+	}
 }

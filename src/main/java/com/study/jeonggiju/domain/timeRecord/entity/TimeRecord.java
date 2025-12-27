@@ -34,10 +34,18 @@ public class TimeRecord {
 	private Category category;
 
 	@Column
-	private boolean success;
+	private LocalDate date;
 
 	@CreatedDate
 	private LocalDate createdAt;
 
 	protected TimeRecord() {}
+
+	public static TimeRecord of(Category category, LocalDate date) {
+		return TimeRecord.builder().category(category).date(date).build();
+	}
+
+	public void update(LocalDate date){
+		this.date = date;
+	}
 }

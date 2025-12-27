@@ -1,788 +1,746 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Records</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <title>JeongGiJu - 데이터 조회</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
         }
 
-        .tab {
-            display: inline-block;
-            padding: 5px 15px;
-            border: 1px solid black;
-            background: white;
-            cursor: pointer;
-            margin-right: 5px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .tab.active {
-            background: black;
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .user-info {
+            color: #666;
+            margin-right: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
             color: white;
         }
 
-        .tab-content {
-            display: none;
-            margin-top: 20px;
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
         }
 
-        .tab-content.active {
-            display: flex;
+        .btn-secondary {
+            background: #e0e7ff;
+            color: #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #c7d2fe;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            margin: 100px auto;
+        }
+
+        .login-card h2 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
             gap: 20px;
         }
 
-        .view-toggle {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-width: 40px;
-        }
-
-        .view-toggle button {
-            padding: 20px 8px;
+        .sidebar {
             background: white;
-            border: 1px solid black;
-            cursor: pointer;
-            text-align: center;
-            font-size: 12px;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            letter-spacing: 3px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: fit-content;
         }
 
-        .view-toggle button.active {
-            background: black;
-            color: white;
+        .sidebar h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .category-item:hover {
+            background: #f3f4f6;
+        }
+
+        .category-item.active {
+            background: #e0e7ff;
+            border-color: #667eea;
+        }
+
+        .category-item .category-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .category-item .category-desc {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .category-item .category-type {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .category-type.CHECK {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .category-type.TEXT {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .category-type.TIME {
+            background: #fef3c7;
+            color: #92400e;
         }
 
         .content-area {
-            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-height: 500px;
         }
 
-        table {
-            border-collapse: collapse;
+        .content-area h3 {
+            color: #333;
             margin-bottom: 20px;
+            font-size: 20px;
         }
 
-        td {
-            border: 1px solid black;
-            padding: 5px;
+        .records-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .record-card {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .record-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .record-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .record-date {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .record-content {
+            color: #555;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .record-success {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .record-success.true {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .record-success.false {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .empty-state {
             text-align: center;
-            min-width: 90px;
+            padding: 60px 20px;
+            color: #999;
         }
 
-        .date-cell {
-            font-weight: bold;
-        }
-
-        .red-cell {
-            color: red;
-        }
-
-        .stats {
-            margin-bottom: 15px;
-        }
-
-        .stats span {
-            margin-right: 20px;
-        }
-
-        .table-view, .graph-view {
-            display: none;
-        }
-
-        .table-view.active, .graph-view.active {
-            display: block;
-        }
-
-        .chart-container {
-            position: relative;
-            height: 500px;
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
             margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ef4444;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #22c55e;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .header-actions .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-<h1>Hi.</h1>
-<p>99.06.08</p>
-
-<div>
-    <div class="tab active" onclick="switchTab('smoking')">Smoking</div>
-    <div class="tab" onclick="switchTab('sleep')">Sleep</div>
-    <div class="tab" onclick="switchTab('sex')">Sex</div>
-    <div class="tab" onclick="switchTab('exercise')">Exercise</div>
-    <div class="tab" onclick="switchTab('diet')">Diet</div>
-    <div class="tab" onclick="switchTab('caffeine')">Caffeine</div>
-    <div class="tab" onclick="switchTab('alcohol')">Alcohol</div>
-</div>
-
-<!-- Smoking: 테이블만 -->
-<div id="smoking" class="tab-content active">
-    <div class="content-area">
-        <div id="smokingTable"></div>
-    </div>
-</div>
-
-<!-- Sleep: 테이블 + 그래프 옵션 -->
-<div id="sleep" class="tab-content">
-    <div class="view-toggle">
-        <button class="active" onclick="switchView('sleep', 'table')">TABLE</button>
-        <button onclick="switchView('sleep', 'graph')">GRAPH</button>
-    </div>
-    <div class="content-area">
-        <div class="table-view active" id="sleep-table-view">
-            <div id="sleepTable"></div>
-        </div>
-        <div class="graph-view" id="sleep-graph-view">
-            <div class="chart-container">
-                <canvas id="sleepChart"></canvas>
+<div class="container">
+    <!-- 로그인하지 않은 경우 -->
+    <div id="loginSection">
+        <div class="login-card">
+            <h2>🔐 로그인</h2>
+            <div id="loginError"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">이메일</label>
+                    <input type="email" id="email" required placeholder="이메일을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" required placeholder="비밀번호를 입력하세요">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">로그인</button>
+            </form>
+            <div style="text-align: center; margin-top: 20px; color: #666;">
+                계정이 없으신가요? <a href="#" id="showSignup" style="color: #667eea; text-decoration: none;">회원가입</a>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Sex: 테이블만 -->
-<div id="sex" class="tab-content">
-    <div class="content-area">
-        <div id="sexTable"></div>
-    </div>
-</div>
-
-<!-- Exercise: 테이블 + 그래프 옵션 -->
-<div id="exercise" class="tab-content">
-    <div class="view-toggle">
-        <button class="active" onclick="switchView('exercise', 'table')">TABLE</button>
-        <button onclick="switchView('exercise', 'graph')">GRAPH</button>
-    </div>
-    <div class="content-area">
-        <div class="table-view active" id="exercise-table-view">
-            <div id="exerciseTable"></div>
+    <!-- 회원가입 -->
+    <div id="signupSection" style="display: none;">
+        <div class="login-card">
+            <h2>📝 회원가입</h2>
+            <div id="signupError"></div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupUsername">사용자명</label>
+                    <input type="text" id="signupUsername" required placeholder="사용자명을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">이메일</label>
+                    <input type="email" id="signupEmail" required placeholder="이메일을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">비밀번호</label>
+                    <input type="password" id="signupPassword" required placeholder="비밀번호를 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="signupTitle">타이틀 (선택)</label>
+                    <input type="text" id="signupTitle" placeholder="타이틀을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="signupDescription">설명 (선택)</label>
+                    <textarea id="signupDescription" placeholder="설명을 입력하세요"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">회원가입</button>
+                <button type="button" id="cancelSignup" class="btn btn-secondary" style="width: 100%;">취소</button>
+            </form>
         </div>
-        <div class="graph-view" id="exercise-graph-view">
-            <div class="chart-container">
-                <canvas id="exerciseChart"></canvas>
+    </div>
+
+    <!-- 메인 컨텐츠 (로그인 후) -->
+    <div id="mainSection" style="display: none;">
+        <div class="header">
+            <h1>📊 JeongGiJu</h1>
+            <div class="header-actions">
+                <span class="user-info" id="userInfo"></span>
+                <a href="insert.html" class="btn btn-secondary">데이터 입력</a>
+                <button class="btn btn-danger" id="logoutBtn">로그아웃</button>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Diet: 테이블만 -->
-<div id="diet" class="tab-content">
-    <div class="content-area">
-        <div id="dietTable"></div>
-    </div>
-</div>
+        <div class="main-content">
+            <div class="sidebar">
+                <h3>📁 카테고리</h3>
+                <ul class="category-list" id="categoryList">
+                    <li class="loading">카테고리를 불러오는 중...</li>
+                </ul>
+            </div>
 
-<!-- Caffeine: 테이블만 -->
-<div id="caffeine" class="tab-content">
-    <div class="content-area">
-        <div id="caffeineTable"></div>
-    </div>
-</div>
-
-<!-- Alcohol: 테이블만 -->
-<div id="alcohol" class="tab-content">
-    <div class="content-area">
-        <div id="alcoholTable"></div>
+            <div class="content-area">
+                <div id="recordsSection">
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p>카테고리를 선택하면 데이터가 표시됩니다</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    const API_BASE_URL = '';
-    let charts = {};
-    let cachedData = {};
-
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.classList.remove('active');
-        });
-
-        document.getElementById(tabName).classList.add('active');
-        event.target.classList.add('active');
-    }
-
-    function switchView(type, view) {
-        const tableView = document.getElementById(`${type}-table-view`);
-        const graphView = document.getElementById(`${type}-graph-view`);
-        const buttons = document.querySelectorAll(`#${type} .view-toggle button`);
-
-        buttons.forEach(btn => btn.classList.remove('active'));
-
-        if (view === 'table') {
-            tableView.classList.add('active');
-            graphView.classList.remove('active');
-            event.target.classList.add('active');
-        } else {
-            tableView.classList.remove('active');
-            graphView.classList.add('active');
-            event.target.classList.add('active');
-
-            if (!charts[type] && cachedData[type]) {
-                createChart(type, cachedData[type]);
-            }
-        }
-    }
-
-    function calculateStats(data, getValueFunc) {
-        if (data.length === 0) return { rate: 0, longestStreak: 0 };
-
-        const oCount = data.filter(item => getValueFunc(item)).length;
-        const rate = Math.round((oCount / data.length) * 100);
-
-        let currentStreak = 0;
-        let longestStreak = 0;
-
-        data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        for (let i = 0; i < data.length; i++) {
-            if (getValueFunc(data[i])) {
-                currentStreak++;
-                longestStreak = Math.max(longestStreak, currentStreak);
-            } else {
-                currentStreak = 0;
-            }
-        }
-
-        return { rate, longestStreak };
-    }
-
-    function formatTime(timeObj) {
-        if (!timeObj) return '--:--';
-
-        if (typeof timeObj === 'string') {
-            return timeObj;
-        }
-
-        if (Array.isArray(timeObj)) {
-            const hour = timeObj[0] || 0;
-            const minute = timeObj[1] || 0;
-            return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-        }
-
-        let hour = 0;
-        let minute = 0;
-
-        if (timeObj.hour !== undefined && timeObj.hour !== null) {
-            hour = timeObj.hour;
-        }
-        if (timeObj.minute !== undefined && timeObj.minute !== null) {
-            minute = timeObj.minute;
-        }
-
-        return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-    }
-
-    function timeToMinutes(timeObj) {
-        if (!timeObj) return null;
-
-        if (typeof timeObj === 'string') {
-            const parts = timeObj.split(':');
-            const hour = parseInt(parts[0]) || 0;
-            const minute = parseInt(parts[1]) || 0;
-            return hour * 60 + minute;
-        }
-
-        let hour = 0;
-        let minute = 0;
-
-        if (Array.isArray(timeObj)) {
-            hour = timeObj[0] || 0;
-            minute = timeObj[1] || 0;
-        } else if (typeof timeObj === 'object') {
-            hour = timeObj.hour || 0;
-            minute = timeObj.minute || 0;
-        }
-
-        return hour * 60 + minute;
-    }
-
-    function createChart(type, data) {
-        const canvas = document.getElementById(`${type}Chart`);
-        const ctx = canvas.getContext('2d');
-
-        if (charts[type]) {
-            charts[type].destroy();
-        }
-
-        const displayData = data.slice(-100);
-        const labels = displayData.map(item => item.date);
-
-        let chartConfig;
-
-        if (type === 'sleep') {
-            chartConfig = {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Sleep Time',
-                        data: displayData.map(item => timeToMinutes(item.sleepTime)),
-                        borderColor: 'rgb(54, 162, 235)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
-                        tension: 0.3
-                    }, {
-                        label: 'Wake Time',
-                        data: displayData.map(item => timeToMinutes(item.wakeTime)),
-                        borderColor: 'rgb(255, 206, 86)',
-                        backgroundColor: 'rgba(255, 206, 86, 0.1)',
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.parsed.y;
-                                    const hours = Math.floor(value / 60);
-                                    const minutes = value % 60;
-                                    return `${context.dataset.label}: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            ticks: {
-                                callback: function(value) {
-                                    const hours = Math.floor(value / 60);
-                                    const minutes = value % 60;
-                                    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-        } else if (type === 'exercise') {
-            chartConfig = {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Exercise Time',
-                        data: displayData.map(item => {
-                            if (!item.work) return null;
-                            const minutes = timeToMinutes(item.time);
-                            return minutes !== null ? minutes : 0;
-                        }),
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                        tension: 0.3,
-                        spanGaps: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    if (context.parsed.y === null) return 'No Exercise';
-                                    const value = context.parsed.y;
-                                    const hours = Math.floor(value / 60);
-                                    const minutes = value % 60;
-                                    return `Exercise Time: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    const hours = Math.floor(value / 60);
-                                    const minutes = value % 60;
-                                    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-        }
-
-        charts[type] = new Chart(ctx, chartConfig);
-    }
-
-    async function loadSmoking() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/smoking/all`);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                document.getElementById('smokingTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.smoke);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.smoke ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('smokingTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('smokingTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    async function loadSleep() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/sleep/all`);
-            const data = await response.json();
-            cachedData['sleep'] = data;
-
-            if (data.length === 0) {
-                document.getElementById('sleepTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const phoneStats = calculateStats(data, item => !item.viewPhone);
-
-            let html = '<div class="stats">';
-            html += '<p>I try to wake up at 06:00 and go to bed at 22:00, and I try to sleep 8 hours every day.</p>';
-            html += `<span><b>No Phone Rate:</b> ${phoneStats.rate}%</span>`;
-            html += `<span><b>Longest No Phone Streak:</b> ${phoneStats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td>${formatTime(item.sleepTime)}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td>${formatTime(item.wakeTime)}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.viewPhone ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}" title="View Phone">${value}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('sleepTable').innerHTML = html;
-        } catch (error) {
-            console.error('Sleep loading error:', error);
-            document.getElementById('sleepTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    async function loadSex() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/sex/all`);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                document.getElementById('sexTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.sex);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.sex ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('sexTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('sexTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    async function loadExercise() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/exercise/all`);
-            const data = await response.json();
-            cachedData['exercise'] = data;
-
-            if (data.length === 0) {
-                document.getElementById('exerciseTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.work);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.work ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td>${formatTime(item.time)}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('exerciseTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('exerciseTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    async function loadDiet() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/diet/all`);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                document.getElementById('dietTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.drink);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.drink ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('dietTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('dietTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    async function loadCaffeine() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/caffeine/all`);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                document.getElementById('caffeineTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.drink);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.drink ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('caffeineTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('caffeineTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    async function loadAlcohol() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/alcohol/all`);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                document.getElementById('alcoholTable').innerHTML = '<p>No data</p>';
-                return;
-            }
-
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const stats = calculateStats(data, item => item.drink);
-
-            let html = '<div class="stats">';
-            html += `<span><b>O Rate:</b> ${stats.rate}%</span>`;
-            html += `<span><b>Longest Streak:</b> ${stats.longestStreak} days</span>`;
-            html += '</div>';
-
-            html += '<table>';
-            const chunkSize = 15;
-
-            for (let i = 0; i < data.length; i += chunkSize) {
-                const chunk = data.slice(i, i + chunkSize);
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    html += `<td class="date-cell">${item.date}</td>`;
-                });
-                html += '</tr>';
-
-                html += '<tr>';
-                chunk.forEach(item => {
-                    const value = item.drink ? 'O' : 'X';
-                    const cellClass = value === 'O' ? 'red-cell' : '';
-                    html += `<td class="${cellClass}">${value}</td>`;
-                });
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            document.getElementById('alcoholTable').innerHTML = html;
-        } catch (error) {
-            document.getElementById('alcoholTable').innerHTML = `<p>Error: ${error.message}</p>`;
-        }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-        loadSmoking();
-        loadSleep();
-        loadSex();
-        loadExercise();
-        loadDiet();
-        loadCaffeine();
-        loadAlcohol();
+    const API_BASE = 'http://localhost:8080/api';
+    let currentUser = null;
+    let currentCategory = null;
+
+    // 페이지 로드 시 인증 확인
+    window.addEventListener('DOMContentLoaded', async () => {
+        await checkAuth();
     });
+
+    // 인증 확인
+    async function checkAuth() {
+        try {
+            const response = await fetch(`${API_BASE}/auth/me`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                currentUser = data;
+                showMainSection();
+                loadCategories();
+            } else {
+                showLoginSection();
+            }
+        } catch (error) {
+            console.error('인증 확인 실패:', error);
+            showLoginSection();
+        }
+    }
+
+    // 로그인
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch(`${API_BASE}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email, password })
+            });
+
+            if (response.ok) {
+                await checkAuth();
+            } else {
+                const error = await response.json();
+                showError('loginError', error.message || '로그인에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('로그인 오류:', error);
+            showError('loginError', '로그인 중 오류가 발생했습니다.');
+        }
+    });
+
+    // 회원가입 표시
+    document.getElementById('showSignup').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'block';
+    });
+
+    // 회원가입 취소
+    document.getElementById('cancelSignup').addEventListener('click', () => {
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+    });
+
+    // 회원가입
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const signupData = {
+            username: document.getElementById('signupUsername').value,
+            email: document.getElementById('signupEmail').value,
+            password: document.getElementById('signupPassword').value,
+            title: document.getElementById('signupTitle').value || '',
+            description: document.getElementById('signupDescription').value || ''
+        };
+
+        try {
+            const response = await fetch(`${API_BASE}/auth/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(signupData)
+            });
+
+            if (response.ok) {
+                showSuccess('signupError', '회원가입이 완료되었습니다. 로그인해주세요.');
+                setTimeout(() => {
+                    document.getElementById('signupSection').style.display = 'none';
+                    document.getElementById('loginSection').style.display = 'block';
+                }, 1500);
+            } else {
+                const error = await response.json();
+                showError('signupError', error.message || '회원가입에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('회원가입 오류:', error);
+            showError('signupError', '회원가입 중 오류가 발생했습니다.');
+        }
+    });
+
+    // 로그아웃
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        try {
+            await fetch(`${API_BASE}/auth/logout`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            currentUser = null;
+            showLoginSection();
+        } catch (error) {
+            console.error('로그아웃 오류:', error);
+        }
+    });
+
+    // 카테고리 로드
+    async function loadCategories() {
+        try {
+            const response = await fetch(`${API_BASE}/category`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                displayCategories(data);
+            } else {
+                document.getElementById('categoryList').innerHTML =
+                    '<li style="color: #ef4444; padding: 10px;">카테고리를 불러올 수 없습니다.</li>';
+            }
+        } catch (error) {
+            console.error('카테고리 로드 오류:', error);
+            document.getElementById('categoryList').innerHTML =
+                '<li style="color: #ef4444; padding: 10px;">오류가 발생했습니다.</li>';
+        }
+    }
+
+    // 카테고리 표시
+    function displayCategories(categories) {
+        const categoryList = document.getElementById('categoryList');
+
+        if (!categories || categories.length === 0) {
+            categoryList.innerHTML = '<li style="padding: 10px; color: #999;">등록된 카테고리가 없습니다.</li>';
+            return;
+        }
+
+        categoryList.innerHTML = categories.map(category => `
+                <li class="category-item" data-id="${category.id}" data-type="${category.recordType}">
+                    <div class="category-title">${category.title}</div>
+                    <div class="category-desc">${category.description || ''}</div>
+                    <span class="category-type ${category.recordType}">${category.recordType}</span>
+                </li>
+            `).join('');
+
+        // 카테고리 클릭 이벤트
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                currentCategory = {
+                    id: item.dataset.id,
+                    type: item.dataset.type,
+                    title: item.querySelector('.category-title').textContent
+                };
+
+                loadRecords(currentCategory);
+            });
+        });
+    }
+
+    // 레코드 로드
+    async function loadRecords(category) {
+        const recordsSection = document.getElementById('recordsSection');
+        recordsSection.innerHTML = '<div class="loading">데이터를 불러오는 중...</div>';
+
+        try {
+            let endpoint = '';
+            switch (category.type) {
+                case 'CHECK':
+                    endpoint = `${API_BASE}/check/all?categoryId=${category.id}`;
+                    break;
+                case 'TEXT':
+                    endpoint = `${API_BASE}/text/all?categoryId=${category.id}`;
+                    break;
+                case 'TIME':
+                    endpoint = `${API_BASE}/time/all?categoryId=${category.id}`;
+                    break;
+            }
+
+            const response = await fetch(endpoint, { credentials: 'include' });
+
+            if (response.ok) {
+                const data = await response.json();
+                displayRecords(data, category);
+            } else {
+                recordsSection.innerHTML = '<div class="error-message">데이터를 불러올 수 없습니다.</div>';
+            }
+        } catch (error) {
+            console.error('레코드 로드 오류:', error);
+            recordsSection.innerHTML = '<div class="error-message">오류가 발생했습니다.</div>';
+        }
+    }
+
+    // 레코드 표시
+    function displayRecords(records, category) {
+        const recordsSection = document.getElementById('recordsSection');
+
+        if (!records || records.length === 0) {
+            recordsSection.innerHTML = `
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                        </svg>
+                        <p>등록된 데이터가 없습니다.</p>
+                    </div>
+                `;
+            return;
+        }
+
+        let html = `<h3>${category.title} - ${category.type}</h3>`;
+        html += '<div class="records-container">';
+
+        records.forEach(record => {
+            html += '<div class="record-card">';
+
+            if (category.type === 'CHECK') {
+                html += `
+                        <div class="record-header">
+                            <span class="record-success ${record.success}">${record.success ? '✅ 성공' : '❌ 실패'}</span>
+                            <span class="record-date">${formatDate(record.createdAt)}</span>
+                        </div>
+                    `;
+            } else if (category.type === 'TEXT') {
+                html += `
+                        <div class="record-header">
+                            <span class="record-title">${record.title}</span>
+                            <span class="record-date">${formatDate(record.createdAt)}</span>
+                        </div>
+                        <div class="record-content">${record.text}</div>
+                    `;
+            } else if (category.type === 'TIME') {
+                html += `
+                        <div class="record-header">
+                            <span class="record-title">📅 ${record.date}</span>
+                            <span class="record-date">${formatDate(record.createdAt)}</span>
+                        </div>
+                    `;
+            }
+
+            html += '</div>';
+        });
+
+        html += '</div>';
+        recordsSection.innerHTML = html;
+    }
+
+    // 날짜 포맷
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // UI 표시 함수
+    function showLoginSection() {
+        document.getElementById('loginSection').style.display = 'block';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('mainSection').style.display = 'none';
+    }
+
+    function showMainSection() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('mainSection').style.display = 'block';
+
+        if (currentUser) {
+            document.getElementById('userInfo').textContent =
+                `${currentUser.username || currentUser.email}님`;
+        }
+    }
+
+    function showError(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.innerHTML = `<div class="error-message">${message}</div>`;
+        setTimeout(() => {
+            element.innerHTML = '';
+        }, 5000);
+    }
+
+    function showSuccess(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.innerHTML = `<div class="success-message">${message}</div>`;
+    }
 </script>
 </body>
 </html>
