@@ -504,6 +504,7 @@
                             <option value="TEXT">TEXT - 텍스트 기록</option>
                             <option value="TIME">TIME - 시간 기록</option>
                             <option value="NUMBER">NUMBER - 숫자 기록</option>
+                            <option value="CHECKLIST">CHECKLIST - 할일 목록</option>
                         </select>
                     </div>
                     <button type="submit" class="submit-btn">카테고리 추가</button>
@@ -584,6 +585,27 @@
                         <div class="form-group">
                             <label for="numberValue">숫자 *</label>
                             <input type="number" id="numberValue" required step="any" placeholder="예: 75.5">
+                        </div>
+                        <button type="submit" class="submit-btn">추가</button>
+                    </form>
+                </div>
+
+                <!-- CHECKLIST 레코드 -->
+                <div id="checklistTab" class="tab-content">
+                    <form id="checklistForm">
+                        <div class="form-group">
+                            <label for="checklistDate">날짜 *</label>
+                            <input type="date" id="checklistDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="checklistTodo">할일 *</label>
+                            <input type="text" id="checklistTodo" required placeholder="예: 운동하기">
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-field">
+                                <input type="checkbox" id="checklistSuccess">
+                                <span>완료 여부</span>
+                            </label>
                         </div>
                         <button type="submit" class="submit-btn">추가</button>
                     </form>
@@ -887,6 +909,9 @@
             case 'NUMBER':
                 targetContent = document.getElementById('numberTab');
                 break;
+            case 'CHECKLIST':
+                targetContent = document.getElementById('checklistTab');
+                break;
         }
 
         if (targetContent) {
@@ -1087,6 +1112,50 @@
             if (response.ok) {
                 showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
                 document.getElementById('numberForm').reset();
+            } else {
+                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
+            }
+        } catch (error) {
+            console.error('레코드 추가 오류:', error);
+            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
+        }
+    });
+
+    // CHECKLIST 레코드 추가
+    document.getElementById('checklistForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const categoryId = document.getElementById('selectedCategory').value;
+        if (!categoryId) {
+            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
+            return;
+        }
+
+        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
+        if (selectedOption.dataset.type !== 'CHECKLIST') {
+            showMessage('recordMessage', 'CHECKLIST 타입 카테고리를 선택해주세요.', 'error');
+            return;
+        }
+
+        const date = document.getElementById('checklistDate').value;
+        const todo = document.getElementById('checklistTodo').value;
+        const success = document.getElementById('checklistSuccess').checked;
+
+        const params = new URLSearchParams();
+        params.append('categoryId', categoryId);
+        params.append('date', date);
+        params.append('todo', todo);
+        params.append('success', success);
+
+        try {
+            const response = await fetch(`${API_BASE}/check-list?${params.toString()}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
+                document.getElementById('checklistForm').reset();
             } else {
                 showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
             }
