@@ -462,8 +462,9 @@
 <!-- 메인 섹션 -->
 <div id="mainSection" style="display: none;">
     <div class="top-actions">
+        <a href="index.html" class="btn">홈</a>
         <button class="btn" id="editProfileBtn">프로필 수정</button>
-        <a href="index.html" class="btn">데이터 조회</a>
+        <a href="manage.html" class="btn">데이터 조회</a>
         <button class="btn btn-primary" id="logoutBtn">로그아웃</button>
     </div>
 
@@ -505,6 +506,13 @@
                             <option value="TIME">TIME - 시간 기록</option>
                             <option value="NUMBER">NUMBER - 숫자 기록</option>
                             <option value="CHECKLIST">CHECKLIST - 할일 목록</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="visibility">공개 설정 *</label>
+                        <select id="visibility" required>
+                            <option value="PRIVATE">PRIVATE - 나만 보기</option>
+                            <option value="PUBLIC">PUBLIC - 모두에게 공개</option>
                         </select>
                     </div>
                     <button type="submit" class="submit-btn">카테고리 추가</button>
@@ -662,6 +670,13 @@
             <div class="form-group">
                 <label>타입</label>
                 <input type="text" id="editCategoryType" readonly style="background: #f5f5f5; cursor: not-allowed;">
+            </div>
+            <div class="form-group">
+                <label for="editCategoryVisibility">공개 설정 *</label>
+                <select id="editCategoryVisibility" required>
+                    <option value="PRIVATE">PRIVATE - 나만 보기</option>
+                    <option value="PUBLIC">PUBLIC - 모두에게 공개</option>
+                </select>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 30px;">
                 <button type="submit" class="btn btn-primary" style="flex: 1;">저장</button>
@@ -839,10 +854,14 @@
 
         let html = '';
         categories.forEach(category => {
+            const visibilityBadge = category.visibility === 'PUBLIC'
+                ? '<span style="display: inline-block; padding: 2px 8px; background: #000; color: #fff; font-size: 11px; font-weight: 600; margin-left: 8px;">PUBLIC</span>'
+                : '<span style="display: inline-block; padding: 2px 8px; background: #e5e5e5; color: #666; font-size: 11px; font-weight: 600; margin-left: 8px;">PRIVATE</span>';
+
             html += `
                 <div class="category-item">
                     <div class="category-info">
-                        <div class="category-title">${category.title}</div>
+                        <div class="category-title">${category.title}${visibilityBadge}</div>
                         <div class="category-meta">
                             타입: ${category.recordType}
                             ${category.description ? ` | ${category.description}` : ''}
@@ -926,11 +945,13 @@
         const title = document.getElementById('categoryTitle').value;
         const description = document.getElementById('categoryDescription').value;
         const recordType = document.getElementById('recordType').value;
+        const visibility = document.getElementById('visibility').value;
 
         const params = new URLSearchParams();
         params.append('title', title);
         params.append('description', description);
         params.append('recordType', recordType);
+        params.append('visibility', visibility);
 
         try {
             const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
@@ -1270,6 +1291,7 @@
         document.getElementById('editCategoryTitle').value = category.title || '';
         document.getElementById('editCategoryDescription').value = category.description || '';
         document.getElementById('editCategoryType').value = category.recordType || '';
+        document.getElementById('editCategoryVisibility').value = category.visibility || 'PRIVATE';
         document.getElementById('editCategoryModal').classList.add('active');
     }
 
@@ -1288,11 +1310,13 @@
 
         const title = document.getElementById('editCategoryTitle').value;
         const description = document.getElementById('editCategoryDescription').value;
+        const visibility = document.getElementById('editCategoryVisibility').value;
 
         const params = new URLSearchParams();
         params.append('id', editingCategoryId);
         params.append('title', title);
         params.append('description', description);
+        params.append('visibility', visibility);
 
         try {
             const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
