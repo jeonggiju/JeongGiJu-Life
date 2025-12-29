@@ -1,5 +1,6 @@
 package com.study.jeonggiju.domain.category.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.study.jeonggiju.domain.category.dto.AddCategory;
+import com.study.jeonggiju.domain.category.dto.PublicCategoryResponse;
 import com.study.jeonggiju.domain.category.dto.UpdateCategory;
 import com.study.jeonggiju.domain.category.service.CategoryService;
 import com.study.jeonggiju.security.authentication.LifeAuthenticationProvider;
@@ -47,7 +49,6 @@ public class CategoryController {
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		AddCategory addCategory
 	){
-		log.info("add category : {}", addCategory);
 		categoryService.save(userDetails.getId(), addCategory);
 		return ResponseEntity.ok().build();
 	}
@@ -66,4 +67,9 @@ public class CategoryController {
 		return ResponseEntity.ok().build();
 	}
 
+	@GetMapping("/public")
+	public ResponseEntity<?> findPublicCategories(){
+		List<PublicCategoryResponse> responses = categoryService.findPublic();
+		return ResponseEntity.ok(responses);
+	}
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.annotations.Comment;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.study.jeonggiju.domain.checkRecord.entity.CheckRecord;
 import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
@@ -46,6 +48,10 @@ public class Category {
 
 	private String title;
 
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Visibility visibility;
+
 	@ManyToOne
 	@JsonIgnore
 	@JoinColumn(name="user_id")
@@ -80,12 +86,13 @@ public class Category {
 	protected Category() {
 	}
 
-	public static Category of(String title, String description, RecordType recordType, User user) {
-		return Category.builder().title(title).description(description).recordType(recordType).user(user).build();
+	public static Category of(String title, String description, RecordType recordType, User user, Visibility visibility) {
+		return Category.builder().title(title).description(description).recordType(recordType).user(user).visibility(visibility).build();
 	}
 
-	public void update(String title, String description){
+	public void update(String title, String description, Visibility visibility){
 		this.title = title;
 		this.description = description;
+		this.visibility = visibility;
 	}
 }
