@@ -102,6 +102,30 @@
             display: flex;
         }
 
+        .add-record-btn {
+            padding: 8px 16px;
+            border: 1px solid #666;
+            background: #666;
+            color: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .add-record-btn:hover {
+            background: #777;
+            border-color: #777;
+        }
+
+        .add-record-btn:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+        }
+
         .toggle-btn {
             padding: 8px 16px;
             border: 1px solid #000;
@@ -124,10 +148,21 @@
         }
 
         .category-description {
-            margin: 0 0 10px 0;
+            margin: 0;
             font-size: 14px;
             color: #000;
             padding: 0;
+        }
+
+        .category-header-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .category-header-wrapper .label-toggle-btn {
+            flex-shrink: 0;
         }
 
         .content-with-sidebar {
@@ -443,40 +478,242 @@
 
         /* CHECK 달력 스타일 */
         .calendar-day.has-data-success {
-            background: #dcfce7;
-            color: #16a34a;
+            background: #d1fae5;
+            color: #00a854;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .calendar-day.has-data-success:hover {
-            background: #bbf7d0;
+            background: #a7f3d0;
+        }
+
+        /* 단계별 라벨 숨기기 스타일 */
+        /* 1단계: 날짜 숫자만 숨김 */
+        .hide-calendar-days .calendar-day {
+            color: transparent !important;
+        }
+
+        /* 1단계에서 색상 선명하게 + 미묘한 그림자 */
+        .hide-calendar-days .calendar-day.has-data {
+            background: #1a1a1a !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .hide-calendar-days .calendar-day.has-data-success {
+            background: #00d26a !important;
+            box-shadow: 0 1px 3px rgba(0, 210, 106, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.has-data-fail {
+            background: #ff3b30 !important;
+            box-shadow: 0 1px 3px rgba(255, 59, 48, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.checklist-complete {
+            background: #00d26a !important;
+            box-shadow: 0 1px 3px rgba(0, 210, 106, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.checklist-partial {
+            background: #fbbf24 !important;
+            box-shadow: 0 1px 3px rgba(251, 191, 36, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.checklist-low {
+            background: #ff3b30 !important;
+            box-shadow: 0 1px 3px rgba(255, 59, 48, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.has-data-time {
+            background: #1a1a1a !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .hide-calendar-days .calendar-day.has-data-number {
+            background: #000000 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .hide-calendar-days .heatmap-data {
+            background: #00d26a !important;
+            box-shadow: 0 1px 3px rgba(0, 210, 106, 0.3);
+        }
+
+        /* 2단계: 날짜 + 요일 숨김 */
+        .hide-calendar-weekdays .calendar-day,
+        .hide-calendar-weekdays .calendar-weekday {
+            color: transparent !important;
+        }
+
+        /* 2단계에서 색상 유지 + 중간 그림자 */
+        .hide-calendar-weekdays .calendar-day.has-data {
+            background: #1a1a1a !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .hide-calendar-weekdays .calendar-day.has-data-success {
+            background: #00d26a !important;
+            box-shadow: 0 2px 6px rgba(0, 210, 106, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.has-data-fail {
+            background: #ff3b30 !important;
+            box-shadow: 0 2px 6px rgba(255, 59, 48, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.checklist-complete {
+            background: #00d26a !important;
+            box-shadow: 0 2px 6px rgba(0, 210, 106, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.checklist-partial {
+            background: #fbbf24 !important;
+            box-shadow: 0 2px 6px rgba(251, 191, 36, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.checklist-low {
+            background: #ff3b30 !important;
+            box-shadow: 0 2px 6px rgba(255, 59, 48, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.has-data-time {
+            background: #1a1a1a !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .hide-calendar-weekdays .calendar-day.has-data-number {
+            background: #000000 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .hide-calendar-weekdays .heatmap-data {
+            background: #00d26a !important;
+            box-shadow: 0 2px 6px rgba(0, 210, 106, 0.4);
+        }
+
+        /* 3단계: 날짜 + 요일 + 월 제목 숨김 */
+        .hide-calendar-all .calendar-day,
+        .hide-calendar-all .calendar-weekday,
+        .hide-calendar-all .calendar-month-title {
+            color: transparent !important;
+        }
+
+        /* 3단계에서 색상 유지 + 강한 그림자 */
+        .hide-calendar-all .calendar-day.has-data {
+            background: #1a1a1a !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .hide-calendar-all .calendar-day.has-data-success {
+            background: #00d26a !important;
+            box-shadow: 0 4px 10px rgba(0, 210, 106, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.has-data-fail {
+            background: #ff3b30 !important;
+            box-shadow: 0 4px 10px rgba(255, 59, 48, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.checklist-complete {
+            background: #00d26a !important;
+            box-shadow: 0 4px 10px rgba(0, 210, 106, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.checklist-partial {
+            background: #fbbf24 !important;
+            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.checklist-low {
+            background: #ff3b30 !important;
+            box-shadow: 0 4px 10px rgba(255, 59, 48, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.has-data-time {
+            background: #1a1a1a !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .hide-calendar-all .calendar-day.has-data-number {
+            background: #000000 !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hide-calendar-all .heatmap-data {
+            background: #00d26a !important;
+            box-shadow: 0 4px 10px rgba(0, 210, 106, 0.5);
+        }
+
+        .hide-calendar-days .calendar-day.empty,
+        .hide-calendar-weekdays .calendar-day.empty,
+        .hide-calendar-all .calendar-day.empty {
+            visibility: hidden;
+        }
+
+        /* 라벨 토글 버튼 */
+        .label-toggle-btn {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+            transition: all 0.2s;
+        }
+
+        .label-toggle-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .label-toggle-btn.active {
+            background: #000;
+            color: white;
+            border-color: #000;
+        }
+
+        /* 히트맵 라벨 숨기기 스타일 */
+        /* 1단계: 월 라벨 숨김 */
+        .hide-heatmap-months .heatmap-month-label {
+            color: transparent !important;
+        }
+
+        /* 2단계: 월 + 년도 라벨 숨김 */
+        .hide-heatmap-years .heatmap-month-label,
+        .hide-heatmap-years .heatmap-year-label {
+            color: transparent !important;
+        }
+
+        /* 3단계: 모든 라벨 숨김 (월 + 년도) - 2단계와 동일하지만 강조를 위해 유지 */
+        .hide-heatmap-all .heatmap-month-label,
+        .hide-heatmap-all .heatmap-year-label {
+            color: transparent !important;
         }
 
         .calendar-day.has-data-fail {
-            background: #fee2e2;
-            color: #dc2626;
+            background: #ffe5e5;
+            color: #cc2e24;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .calendar-day.has-data-fail:hover {
-            background: #fecaca;
+            background: #ffcccc;
         }
 
         /* CHECKLIST 달력 색상 (기존 달력 구조 사용) */
         .calendar-day.checklist-complete {
-            background: #dcfce7;
-            color: #16a34a;
+            background: #d1fae5;
+            color: #00a854;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .calendar-day.checklist-complete:hover {
-            background: #bbf7d0;
+            background: #a7f3d0;
         }
 
         .calendar-day.checklist-partial {
@@ -492,15 +729,15 @@
         }
 
         .calendar-day.checklist-low {
-            background: #fee2e2;
-            color: #dc2626;
+            background: #ffe5e5;
+            color: #cc2e24;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .calendar-day.checklist-low:hover {
-            background: #fecaca;
+            background: #ffcccc;
         }
 
         /* TIME 달력 스타일 */
@@ -612,7 +849,7 @@
 
         /* TIME/TEXT 히트맵 */
         .heatmap-data {
-            background: #22c55e;
+            background: #00d26a;
         }
 
         /* 과거 + 데이터 없음 */
@@ -689,16 +926,23 @@
             color: #999;
         }
 
-        /* 로그인 */
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
+        /* 로그인 섹션 스타일 */
+        .simple-auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background: #e8e8e8;
+            padding: 20px;
         }
 
-        .login-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 30px;
+        .simple-auth-box {
+            background: white;
+            padding: 40px 50px;
+            border: 1px solid #ccc;
+            min-width: 450px;
+            max-width: 500px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .form-group {
@@ -1539,64 +1783,93 @@
 </head>
 <body>
 <!-- 로그인 섹션 -->
-<div id="loginSection">
-    <div class="login-container">
-        <div class="login-title">로그인</div>
-        <div id="loginError"></div>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">이메일</label>
-                <input type="email" id="email" required>
+<div id="loginSection" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="simple-auth-container">
+        <div class="simple-auth-box">
+            <div style="text-align: left; margin-bottom: 10px;">
+                <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
-            <div class="form-group">
-                <label for="password">비밀번호</label>
-                <input type="password" id="password" required>
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign In</h2>
+            <div id="loginError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <form id="loginForm">
+                <table style="margin: 0 auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
+                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding-top: 15px;">
+                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Sign In</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div style="text-align: center; margin-top: 20px; font-size: 12px;">
+                New account? <a href="#" id="showSignup" style="color: #0066cc; text-decoration: underline;">Sign Up</a>
             </div>
-            <button type="submit" class="submit-btn">로그인</button>
-        </form>
-        <div class="form-footer">
-            계정이 없으신가요? <a href="#" id="showSignup">회원가입</a>
         </div>
     </div>
 </div>
 
 <!-- 회원가입 섹션 -->
-<div id="signupSection" style="display: none;">
-    <div class="login-container">
-        <div class="login-title">회원가입</div>
-        <div id="signupError"></div>
-        <form id="signupForm">
-            <div class="form-group">
-                <label for="signupUsername">사용자명</label>
-                <input type="text" id="signupUsername" required>
+<div id="signupSection" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="simple-auth-container">
+        <div class="simple-auth-box">
+            <div style="text-align: left; margin-bottom: 10px;">
+                <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
-            <div class="form-group">
-                <label for="signupEmail">이메일</label>
-                <input type="email" id="signupEmail" required>
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign Up</h2>
+            <div id="signupError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <form id="signupForm">
+                <table style="margin: 0 auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupUsername" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td style="padding: 5px 0;"><input type="email" id="signupEmail" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
+                        <td style="padding: 5px 0;"><input type="password" id="signupPassword" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Title:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupTitle" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Description:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Year:</td>
+                        <td style="padding: 5px 0;"><input type="number" id="signupBirthYear" placeholder="YYYY" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Month:</td>
+                        <td style="padding: 5px 0;"><input type="number" id="signupBirthMonth" placeholder="MM" min="1" max="12" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Day:</td>
+                        <td style="padding: 5px 0;"><input type="number" id="signupBirthDay" placeholder="DD" min="1" max="31" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding-top: 15px;">
+                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;">Sign Up</button>
+                            <button type="button" id="cancelSignup" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Cancel</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div style="text-align: center; margin-top: 20px; font-size: 12px;">
+                Already have an account? <a href="#" id="showLogin" style="color: #0066cc; text-decoration: underline;">Sign In</a>
             </div>
-            <div class="form-group">
-                <label for="signupPassword">비밀번호</label>
-                <input type="password" id="signupPassword" required>
-            </div>
-            <div class="form-group">
-                <label for="signupTitle">타이틀 (선택)</label>
-                <input type="text" id="signupTitle" placeholder="예: Hi.">
-            </div>
-            <div class="form-group">
-                <label for="signupDescription">설명 (선택)</label>
-                <textarea id="signupDescription" placeholder="간단한 소개"></textarea>
-            </div>
-            <div class="form-group">
-                <label>생년월일 (선택)</label>
-                <div class="birth-date-inputs">
-                    <input type="number" id="signupBirthYear" placeholder="년 (YYYY)" min="1900" max="2100" style="width: 120px;">
-                    <input type="number" id="signupBirthMonth" placeholder="월 (1-12)" min="1" max="12" style="width: 100px;">
-                    <input type="number" id="signupBirthDay" placeholder="일 (1-31)" min="1" max="31" style="width: 100px;">
-                </div>
-            </div>
-            <button type="submit" class="submit-btn">회원가입</button>
-            <button type="button" id="cancelSignup" class="btn" style="width: 100%; margin-top: 10px;">취소</button>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -1605,7 +1878,7 @@
     <div class="top-actions">
         <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
         <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
-        <a href="insert.html" class="btn" data-lang-ko="데이터 입력" data-lang-en="Add Data">데이터 입력</a>
+        <a href="insert.html" class="btn" data-lang-ko="카테고리 관리" data-lang-en="Manage Categories">카테고리 관리</a>
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
         <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
     </div>
@@ -1618,13 +1891,21 @@
     <div class="categories" id="categoryButtons"></div>
 
     <div class="content-with-sidebar">
-        <div class="view-toggle" id="viewToggle"></div>
+        <div>
+            <div class="view-toggle" id="viewToggle"></div>
+            <button class="add-record-btn" id="addRecordBtn" style="display: none;" onclick="openAddRecordModal()">
+                <span data-lang-ko="추가" data-lang-en="Add">추가</span>
+            </button>
+        </div>
 
         <div class="right-content">
-            <div class="category-description" id="categoryDescription" style="display: none;"></div>
+            <div class="category-header-wrapper" style="display: none;" id="categoryHeaderWrapper">
+                <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;"><span data-lang-ko="라벨" data-lang-en="Labels">라벨</span></button>
+                <div class="category-description" id="categoryDescription"></div>
+            </div>
 
             <div class="records-section" id="recordsSection">
-                <div class="empty-state">카테고리를 선택하세요</div>
+                <div class="empty-state" data-lang-ko="카테고리를 선택하세요" data-lang-en="Select a category">Select a category</div>
             </div>
         </div>
     </div>
@@ -1702,6 +1983,21 @@
     </div>
 </div>
 
+<!-- 데이터 추가 모달 -->
+<div id="addRecordModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title" id="addRecordModalTitle">레코드 추가</h2>
+            <button class="modal-close" onclick="closeAddRecordModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div id="addRecordFormContainer"></div>
+            <div id="addRecordError"></div>
+            <button type="button" class="btn-primary" id="submitAddRecord" style="width: 100%; padding: 12px; margin-top: 20px;">추가</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const API_BASE = '/api';
     let currentUser = null;
@@ -1726,6 +2022,7 @@
         'noData': { ko: '등록된 데이터가 없습니다.', en: 'No data available.' },
         'loading': { ko: '데이터를 불러오는 중...', en: 'Loading...' },
         'loadError': { ko: '데이터를 불러올 수 없습니다.', en: 'Failed to load data.' },
+        'error': { ko: '오류가 발생했습니다.', en: 'An error occurred.' },
 
         // 모달
         'editProfile': { ko: '프로필 수정', en: 'Edit Profile' },
@@ -2536,6 +2833,12 @@
         document.getElementById('signupSection').style.display = 'block';
     });
 
+    document.getElementById('showLogin').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+    });
+
     document.getElementById('cancelSignup').addEventListener('click', () => {
         document.getElementById('signupSection').style.display = 'none';
         document.getElementById('loginSection').style.display = 'block';
@@ -2665,7 +2968,13 @@
     // 레코드 로드
     async function loadRecords(category) {
         const recordsSection = document.getElementById('recordsSection');
-        recordsSection.innerHTML = '<div class="empty-state">데이터를 불러오는 중...</div>';
+        recordsSection.innerHTML = `<div class="empty-state">${translations.loading[currentLang]}</div>`;
+
+        // 추가 버튼 표시
+        const addBtn = document.getElementById('addRecordBtn');
+        if (addBtn) {
+            addBtn.style.display = 'block';
+        }
 
         try {
             let endpoint = '';
@@ -2693,11 +3002,11 @@
                 allRecords = await response.json();
                 displayRecords(allRecords, category);
             } else {
-                recordsSection.innerHTML = '<div class="empty-state">데이터를 불러올 수 없습니다.</div>';
+                recordsSection.innerHTML = `<div class="empty-state">${translations.loadError[currentLang]}</div>`;
             }
         } catch (error) {
             console.error('레코드 로드 오류:', error);
-            recordsSection.innerHTML = '<div class="empty-state">오류가 발생했습니다.</div>';
+            recordsSection.innerHTML = `<div class="empty-state">${translations.error[currentLang]}</div>`;
         }
     }
 
@@ -2706,13 +3015,16 @@
         const recordsSection = document.getElementById('recordsSection');
         const viewToggle = document.getElementById('viewToggle');
         const categoryDescription = document.getElementById('categoryDescription');
+        const categoryHeaderWrapper = document.getElementById('categoryHeaderWrapper');
+        const globalLabelToggle = document.getElementById('globalCalendarLabelToggle');
 
-        // 카테고리 설명 표시
+        // 카테고리 설명과 라벨 버튼 표시
         if (category && category.description) {
             categoryDescription.textContent = category.description;
-            categoryDescription.style.display = 'block';
+            categoryHeaderWrapper.style.display = 'flex';
         } else {
-            categoryDescription.style.display = 'none';
+            categoryDescription.textContent = '';
+            categoryHeaderWrapper.style.display = 'none';
         }
 
         if (!records || records.length === 0) {
@@ -2790,9 +3102,55 @@
         }
     }
 
+    // 전역 라벨 토글 버튼 표시/숨김 및 이벤트 설정
+    function setupGlobalLabelToggle(show) {
+        const globalLabelToggle = document.getElementById('globalCalendarLabelToggle');
+
+        if (show) {
+            globalLabelToggle.style.display = 'block';
+
+            // 기존 이벤트 리스너 제거 (중복 방지)
+            const newButton = globalLabelToggle.cloneNode(true);
+            globalLabelToggle.parentNode.replaceChild(newButton, globalLabelToggle);
+
+            const button = document.getElementById('globalCalendarLabelToggle');
+            let toggleState = 0; // 0: 전체 표시, 1: 날짜 숨김, 2: 요일 숨김, 3: 월 숨김
+
+            button.addEventListener('click', function() {
+                const container = document.getElementById('calendarContainer');
+                if (!container) return;
+
+                // 모든 클래스 제거
+                container.classList.remove('hide-calendar-days', 'hide-calendar-weekdays', 'hide-calendar-all');
+
+                // 다음 상태로 전환
+                toggleState = (toggleState + 1) % 4;
+
+                // 상태에 따라 클래스 추가
+                if (toggleState === 1) {
+                    container.classList.add('hide-calendar-days');
+                    this.classList.add('active');
+                } else if (toggleState === 2) {
+                    container.classList.add('hide-calendar-weekdays');
+                    this.classList.add('active');
+                } else if (toggleState === 3) {
+                    container.classList.add('hide-calendar-all');
+                    this.classList.add('active');
+                } else {
+                    this.classList.remove('active');
+                }
+            });
+        } else {
+            globalLabelToggle.style.display = 'none';
+        }
+    }
+
     // CHECK 테이블 뷰
     function displayCheckTable(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
 
         // 날짜별로 정리
         const recordMap = {};
@@ -2806,26 +3164,26 @@
         const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
 
         if (sortedDates.length === 0) {
-            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
+
+        // 한 행에 표시할 최대 개수 (데이터가 적으면 데이터 개수만큼만)
+        const itemsPerRow = Math.min(10, sortedDates.length);
 
         // 10개씩 행으로 나누기
         let html = '';
         html += `<table class="check-table">`;
 
-        for (let i = 0; i < sortedDates.length; i += 10) {
-            const chunk = sortedDates.slice(i, i + 10);
+        for (let i = 0; i < sortedDates.length; i += itemsPerRow) {
+            const chunk = sortedDates.slice(i, i + itemsPerRow);
 
             // 날짜 행
             html += `<tr>`;
             chunk.forEach(date => {
                 html += `<td class="date-cell">${date}</td>`;
             });
-            // 10개 미만일 경우 빈 셀 추가
-            for (let j = chunk.length; j < 10; j++) {
-                html += `<td class="empty-cell"></td>`;
-            }
             html += `</tr>`;
 
             // O/X 행
@@ -2836,10 +3194,6 @@
                 const resultClass = record.success ? 'result-success' : 'result-fail';
                 html += `<td class="result-cell ${resultClass}" data-record-id="${record.id}" data-record-type="CHECK" style="cursor: pointer;">${symbol}</td>`;
             });
-            // 10개 미만일 경우 빈 셀 추가
-            for (let j = chunk.length; j < 10; j++) {
-                html += `<td class="empty-cell"></td>`;
-            }
             html += `</tr>`;
         }
 
@@ -2862,6 +3216,9 @@
     // CHECK 달력 뷰
     function displayCheckCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 표시
+        setupGlobalLabelToggle(true);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -2889,11 +3246,12 @@
         const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
 
         if (sortedYears.length === 0) {
-            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
 
-        let html = '';
+        let html = `<div id="calendarContainer">`;
 
         sortedYears.forEach(year => {
             html += `<div class="calendar-year">`;
@@ -2911,16 +3269,26 @@
             html += `</div>`;
         });
 
+        html += `</div>`; // calendarContainer 닫기
+
         recordsSection.innerHTML = html;
 
         // 클릭 이벤트 리스너 추가
-        recordsSection.querySelectorAll('[data-record-id]').forEach(cell => {
+        recordsSection.querySelectorAll('.calendar-day[data-date]').forEach(cell => {
             cell.addEventListener('click', function() {
                 const recordId = this.getAttribute('data-record-id');
                 const recordType = this.getAttribute('data-record-type');
-                const record = allRecords.find(r => r.id === recordId);
-                if (record) {
-                    openEditModal(recordId, recordType, record);
+                const date = this.getAttribute('data-date');
+
+                if (recordId) {
+                    // 데이터가 있으면 수정 모달
+                    const record = allRecords.find(r => r.id === recordId);
+                    if (record) {
+                        openEditModal(recordId, recordType, record);
+                    }
+                } else {
+                    // 데이터가 없으면 추가 모달 (해당 날짜로 미리 채움)
+                    openAddRecordModalWithDate(date);
                 }
             });
         });
@@ -2965,9 +3333,9 @@
 
             if (record) {
                 const className = record.success ? 'has-data-success' : 'has-data-fail';
-                html += `<div class="calendar-day ${className}" data-record-id="${record.id}" data-record-type="CHECK" style="cursor: pointer;">${day}</div>`;
+                html += `<div class="calendar-day ${className}" data-record-id="${record.id}" data-record-type="CHECK" data-date="${dateStr}" style="cursor: pointer;">${day}</div>`;
             } else {
-                html += `<div class="calendar-day">${day}</div>`;
+                html += `<div class="calendar-day" data-date="${dateStr}" data-record-type="CHECK" style="cursor: pointer;">${day}</div>`;
             }
         }
 
@@ -3112,6 +3480,9 @@
     function displayChecklistCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
+        // 전역 라벨 토글 표시
+        setupGlobalLabelToggle(true);
+
         // 날짜별로 레코드 그룹화
         const recordsByDate = {};
         records.forEach(record => {
@@ -3141,11 +3512,12 @@
         const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
 
         if (sortedYears.length === 0) {
-            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
 
-        let html = '';
+        let html = `<div id="calendarContainer">`;
 
         sortedYears.forEach(year => {
             html += `<div class="calendar-year">`;
@@ -3163,14 +3535,53 @@
             html += `</div>`;
         });
 
+        html += `</div>`; // calendarContainer 닫기
+
         recordsSection.innerHTML = html;
 
-        // 클릭 이벤트 리스너 추가 (날짜 클릭 시 해당 날짜의 할일 목록 표시)
+        // 라벨 토글 버튼 이벤트 (4단계 순환)
+        const labelToggleBtn = document.getElementById('calendarLabelToggle');
+        if (labelToggleBtn) {
+            let toggleState = 0; // 0: 전체 표시, 1: 날짜 숨김, 2: 요일 숨김, 3: 월 숨김
+            labelToggleBtn.addEventListener('click', function() {
+                const container = document.getElementById('calendarContainer');
+
+                // 모든 클래스 제거
+                container.classList.remove('hide-calendar-days', 'hide-calendar-weekdays', 'hide-calendar-all');
+
+                // 다음 상태로 전환
+                toggleState = (toggleState + 1) % 4;
+
+                // 상태에 따라 클래스 추가
+                if (toggleState === 1) {
+                    container.classList.add('hide-calendar-days');
+                    this.classList.add('active');
+                } else if (toggleState === 2) {
+                    container.classList.add('hide-calendar-weekdays');
+                    this.classList.add('active');
+                } else if (toggleState === 3) {
+                    container.classList.add('hide-calendar-all');
+                    this.classList.add('active');
+                } else {
+                    this.classList.remove('active');
+                }
+            });
+        }
+
+        // 클릭 이벤트 리스너 추가
         recordsSection.querySelectorAll('[data-checklist-date]').forEach(cell => {
             cell.addEventListener('click', function() {
                 const dateStr = this.getAttribute('data-checklist-date');
-                const dateRecords = recordsByDate[dateStr] || [];
-                showChecklistModal(dateStr, dateRecords);
+                const hasData = this.getAttribute('data-has-data') === 'true';
+
+                if (hasData) {
+                    // 데이터가 있으면 체크리스트 모달 표시
+                    const dateRecords = recordsByDate[dateStr] || [];
+                    showChecklistModal(dateStr, dateRecords);
+                } else {
+                    // 데이터가 없으면 추가 모달 열기
+                    openAddRecordModalWithDate(dateStr);
+                }
             });
         });
     }
@@ -3178,6 +3589,9 @@
     // CHECKLIST 주간 뷰
     function displayChecklistWeekly(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
 
         // 날짜별로 레코드 그룹화
         const recordsByDate = {};
@@ -3280,7 +3694,7 @@
                 }
             }
 
-            html += `<div class="weekly-day ${colorClass}" data-date="${dateStr}">`;
+            html += `<div class="weekly-day ${colorClass}" data-date="${dateStr}" style="cursor: pointer;">`;
             html += `<div class="weekly-day-header">`;
             html += `<div class="weekly-day-name">${dayName}</div>`;
             html += `<div class="weekly-day-num">${dayNum}</div>`;
@@ -3339,6 +3753,19 @@
                 const record = allRecords.find(r => r.id === recordId);
                 if (record) {
                     openEditModal(recordId, 'CHECKLIST', record);
+                }
+            });
+        });
+
+        // 날짜 클릭 이벤트 (빈 공간 클릭 시 추가 모달)
+        recordsSection.querySelectorAll('.weekly-day').forEach(day => {
+            day.addEventListener('click', function(e) {
+                // todo 아이템 클릭이 아닌 경우에만
+                if (!e.target.closest('.weekly-todo-item')) {
+                    const date = this.getAttribute('data-date');
+                    if (date) {
+                        openAddRecordModalWithDate(date);
+                    }
                 }
             });
         });
@@ -3404,6 +3831,9 @@
     // CHECKLIST 월간 뷰
     function displayChecklistMonthly(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
 
         // 날짜별로 레코드 그룹화
         const recordsByDate = {};
@@ -3506,7 +3936,7 @@
                 dayClass = 'holiday';
             }
 
-            html += `<div class="monthly-day ${colorClass} ${dayClass}" data-date="${dateStr}">`;
+            html += `<div class="monthly-day ${colorClass} ${dayClass}" data-date="${dateStr}" style="cursor: pointer;">`;
             html += `<div class="monthly-day-num">${day}</div>`;
             html += `<div class="monthly-day-content">`;
 
@@ -3557,6 +3987,19 @@
                 const record = allRecords.find(r => r.id === recordId);
                 if (record) {
                     openEditModal(recordId, 'CHECKLIST', record);
+                }
+            });
+        });
+
+        // 날짜 클릭 이벤트 (빈 공간 클릭 시 추가 모달)
+        recordsSection.querySelectorAll('.monthly-day').forEach(day => {
+            day.addEventListener('click', function(e) {
+                // todo 아이템 클릭이 아닌 경우에만
+                if (!e.target.closest('.monthly-todo-item')) {
+                    const date = this.getAttribute('data-date');
+                    if (date) {
+                        openAddRecordModalWithDate(date);
+                    }
                 }
             });
         });
@@ -3614,9 +4057,9 @@
                     className = 'checklist-low';
                 }
 
-                html += `<div class="calendar-day ${className}" data-checklist-date="${dateStr}" style="cursor: pointer;">${day}</div>`;
+                html += `<div class="calendar-day ${className}" data-checklist-date="${dateStr}" data-has-data="true" style="cursor: pointer;">${day}</div>`;
             } else {
-                html += `<div class="calendar-day">${day}</div>`;
+                html += `<div class="calendar-day" data-checklist-date="${dateStr}" data-has-data="false" style="cursor: pointer;">${day}</div>`;
             }
         }
 
@@ -3629,6 +4072,9 @@
     // CHECKLIST 히트맵 뷰 (100년)
     function displayChecklistHeatmap(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
 
         // 날짜별로 레코드 그룹화
         const recordsByDate = {};
@@ -3758,10 +4204,11 @@
         dateElement.textContent = dateStr;
 
         // 내용 생성
+        let html = '';
+
         if (records.length === 0) {
-            bodyElement.innerHTML = '<div class="checklist-empty">등록된 할일이 없습니다.</div>';
+            html += '<div class="checklist-empty">등록된 할일이 없습니다.</div>';
         } else {
-            let html = '';
             records.forEach((record, index) => {
                 const status = record.success ? '✓' : '✗';
                 const statusClass = record.success ? 'completed' : 'incomplete';
@@ -3772,20 +4219,29 @@
                     </div>
                 `;
             });
-            bodyElement.innerHTML = html;
-
-            // 클릭 이벤트 리스너 추가
-            bodyElement.querySelectorAll('.checklist-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const recordId = this.getAttribute('data-record-id');
-                    const record = records.find(r => r.id === recordId);
-                    if (record) {
-                        closeChecklistModal();
-                        openEditModal(recordId, 'CHECKLIST', record);
-                    }
-                });
-            });
         }
+
+        // 추가 버튼
+        html += `
+            <button class="btn-primary" onclick="closeChecklistModal(); openAddRecordModalWithDate('${dateStr}');"
+                style="width: 100%; margin-top: 20px; padding: 12px; background: #666; border: 1px solid #666;">
+                ${currentLang === 'ko' ? '+ 할일 추가' : '+ Add Todo'}
+            </button>
+        `;
+
+        bodyElement.innerHTML = html;
+
+        // 클릭 이벤트 리스너 추가
+        bodyElement.querySelectorAll('.checklist-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const recordId = this.getAttribute('data-record-id');
+                const record = records.find(r => r.id === recordId);
+                if (record) {
+                    closeChecklistModal();
+                    openEditModal(recordId, 'CHECKLIST', record);
+                }
+            });
+        });
 
         modal.classList.add('active');
     }
@@ -3810,6 +4266,9 @@
     function displayTimeGraph(records) {
         const recordsSection = document.getElementById('recordsSection');
 
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
+
         // 날짜별로 정리 (각 날짜당 첫 번째 레코드만 사용)
         const recordMap = {};
         records.forEach(record => {
@@ -3822,7 +4281,8 @@
         const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
 
         if (sortedDates.length === 0) {
-            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -4002,6 +4462,9 @@
     function displayTimeTable(records) {
         const recordsSection = document.getElementById('recordsSection');
 
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
+
         // 날짜별로 정리
         const recordMap = {};
         records.forEach(record => {
@@ -4014,24 +4477,25 @@
         const sortedDates = Object.keys(recordMap).sort((a, b) => a.localeCompare(b));
 
         if (sortedDates.length === 0) {
-            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
+
+        // 한 행에 표시할 최대 개수 (데이터가 적으면 데이터 개수만큼만)
+        const itemsPerRow = Math.min(10, sortedDates.length);
 
         // 테이블만 표시
         let html = `<table class="time-table">`;
 
-        for (let i = 0; i < sortedDates.length; i += 10) {
-            const chunk = sortedDates.slice(i, i + 10);
+        for (let i = 0; i < sortedDates.length; i += itemsPerRow) {
+            const chunk = sortedDates.slice(i, i + itemsPerRow);
 
             // 날짜 행
             html += `<tr>`;
             chunk.forEach(date => {
                 html += `<td class="date-cell">${date}</td>`;
             });
-            for (let j = chunk.length; j < 10; j++) {
-                html += `<td class="empty-cell"></td>`;
-            }
             html += `</tr>`;
 
             // 시간 행
@@ -4041,9 +4505,6 @@
                 const timeStr = formatTime(record.time);
                 html += `<td class="time-cell" data-record-id="${record.id}" data-record-type="TIME" style="cursor: pointer;">${timeStr}</td>`;
             });
-            for (let j = chunk.length; j < 10; j++) {
-                html += `<td class="empty-cell"></td>`;
-            }
             html += `</tr>`;
         }
 
@@ -4066,6 +4527,9 @@
     // TIME 달력 뷰
     function displayTimeCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 표시
+        setupGlobalLabelToggle(true);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -4093,11 +4557,12 @@
         const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
 
         if (sortedYears.length === 0) {
-            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
 
-        let html = '';
+        let html = `<div id="calendarContainer">`;
 
         sortedYears.forEach(year => {
             html += `<div class="calendar-year">`;
@@ -4115,16 +4580,55 @@
             html += `</div>`;
         });
 
+        html += `</div>`; // calendarContainer 닫기
+
         recordsSection.innerHTML = html;
 
+        // 라벨 토글 버튼 이벤트 (4단계 순환)
+        const labelToggleBtn = document.getElementById('calendarLabelToggle');
+        if (labelToggleBtn) {
+            let toggleState = 0; // 0: 전체 표시, 1: 날짜 숨김, 2: 요일 숨김, 3: 월 숨김
+            labelToggleBtn.addEventListener('click', function() {
+                const container = document.getElementById('calendarContainer');
+
+                // 모든 클래스 제거
+                container.classList.remove('hide-calendar-days', 'hide-calendar-weekdays', 'hide-calendar-all');
+
+                // 다음 상태로 전환
+                toggleState = (toggleState + 1) % 4;
+
+                // 상태에 따라 클래스 추가
+                if (toggleState === 1) {
+                    container.classList.add('hide-calendar-days');
+                    this.classList.add('active');
+                } else if (toggleState === 2) {
+                    container.classList.add('hide-calendar-weekdays');
+                    this.classList.add('active');
+                } else if (toggleState === 3) {
+                    container.classList.add('hide-calendar-all');
+                    this.classList.add('active');
+                } else {
+                    this.classList.remove('active');
+                }
+            });
+        }
+
         // 클릭 이벤트 리스너 추가
-        recordsSection.querySelectorAll('[data-record-id]').forEach(cell => {
+        recordsSection.querySelectorAll('.calendar-day[data-date]').forEach(cell => {
             cell.addEventListener('click', function() {
                 const recordId = this.getAttribute('data-record-id');
                 const recordType = this.getAttribute('data-record-type');
-                const record = allRecords.find(r => r.id === recordId);
-                if (record) {
-                    openEditModal(recordId, recordType, record);
+                const date = this.getAttribute('data-date');
+
+                if (recordId) {
+                    // 데이터가 있으면 수정 모달
+                    const record = allRecords.find(r => r.id === recordId);
+                    if (record) {
+                        openEditModal(recordId, recordType, record);
+                    }
+                } else {
+                    // 데이터가 없으면 추가 모달 (해당 날짜로 미리 채움)
+                    openAddRecordModalWithDate(date);
                 }
             });
         });
@@ -4168,9 +4672,9 @@
             const record = monthData[dateStr];
 
             if (record) {
-                html += `<div class="calendar-day has-data-time" data-record-id="${record.id}" data-record-type="TIME" style="cursor: pointer;">${day}</div>`;
+                html += `<div class="calendar-day has-data-time" data-record-id="${record.id}" data-record-type="TIME" data-date="${dateStr}" style="cursor: pointer;">${day}</div>`;
             } else {
-                html += `<div class="calendar-day">${day}</div>`;
+                html += `<div class="calendar-day" data-date="${dateStr}" data-record-type="TIME" style="cursor: pointer;">${day}</div>`;
             }
         }
 
@@ -4183,6 +4687,9 @@
     // TIME 히트맵 뷰 (100년)
     function displayTimeHeatmap(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
 
         // 데이터를 날짜별 맵으로 변환
         const recordMap = {};
@@ -4486,6 +4993,9 @@
     function displayTextCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
+        // 전역 라벨 토글 표시
+        setupGlobalLabelToggle(true);
+
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
         records.forEach(record => {
@@ -4515,11 +5025,12 @@
         const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
 
         if (sortedYears.length === 0) {
-            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
 
-        let html = '';
+        let html = `<div id="calendarContainer">`;
 
         sortedYears.forEach(year => {
             html += `<div class="calendar-year">`;
@@ -4537,7 +5048,38 @@
             html += `</div>`;
         });
 
+        html += `</div>`; // calendarContainer 닫기
+
         recordsSection.innerHTML = html;
+
+        // 라벨 토글 버튼 이벤트 (4단계 순환)
+        const labelToggleBtn = document.getElementById('calendarLabelToggle');
+        if (labelToggleBtn) {
+            let toggleState = 0; // 0: 전체 표시, 1: 날짜 숨김, 2: 요일 숨김, 3: 월 숨김
+            labelToggleBtn.addEventListener('click', function() {
+                const container = document.getElementById('calendarContainer');
+
+                // 모든 클래스 제거
+                container.classList.remove('hide-calendar-days', 'hide-calendar-weekdays', 'hide-calendar-all');
+
+                // 다음 상태로 전환
+                toggleState = (toggleState + 1) % 4;
+
+                // 상태에 따라 클래스 추가
+                if (toggleState === 1) {
+                    container.classList.add('hide-calendar-days');
+                    this.classList.add('active');
+                } else if (toggleState === 2) {
+                    container.classList.add('hide-calendar-weekdays');
+                    this.classList.add('active');
+                } else if (toggleState === 3) {
+                    container.classList.add('hide-calendar-all');
+                    this.classList.add('active');
+                } else {
+                    this.classList.remove('active');
+                }
+            });
+        }
 
         // 클릭 이벤트 리스너 추가
         recordsSection.querySelectorAll('[data-click-type="text-popup"]').forEach(cell => {
@@ -4551,6 +5093,9 @@
     // TEXT 리스트 뷰
     function displayTextList(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
 
         // 년월별로 그룹화
         const yearMonthMap = {};
@@ -4574,7 +5119,8 @@
         const sortedYears = Object.keys(yearMonthMap).sort((a, b) => b.localeCompare(a));
 
         if (sortedYears.length === 0) {
-            recordsSection.innerHTML = '<div class="empty-state">등록된 데이터가 없습니다.</div>';
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -4633,6 +5179,9 @@
     // TEXT 히트맵 뷰 (100년)
     function displayTextHeatmap(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
 
         // 데이터를 날짜별 맵으로 변환 (하나의 날짜에 여러 개 있을 수 있음)
         const recordMap = {};
@@ -4773,6 +5322,7 @@
 
         if (sortedDates.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -4998,6 +5548,9 @@
     function displayNumberTable(records) {
         const recordsSection = document.getElementById('recordsSection');
 
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
+
         // 날짜별로 정리
         const recordMap = {};
         records.forEach(record => {
@@ -5011,25 +5564,25 @@
 
         if (sortedDates.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
+
+        // 한 행에 표시할 최대 개수 (데이터가 적으면 데이터 개수만큼만)
+        const itemsPerRow = Math.min(10, sortedDates.length);
 
         // 10개씩 행으로 나누기
         let html = '';
         html += `<table class="number-table">`;
 
-        for (let i = 0; i < sortedDates.length; i += 10) {
-            const chunk = sortedDates.slice(i, i + 10);
+        for (let i = 0; i < sortedDates.length; i += itemsPerRow) {
+            const chunk = sortedDates.slice(i, i + itemsPerRow);
 
             // 날짜 행
             html += `<tr>`;
             chunk.forEach(date => {
                 html += `<td class="date-cell">${date}</td>`;
             });
-            // 10개 미만일 경우 빈 셀 추가
-            for (let j = chunk.length; j < 10; j++) {
-                html += `<td class="empty-cell"></td>`;
-            }
             html += `</tr>`;
 
             // 숫자 행
@@ -5038,10 +5591,6 @@
                 const record = recordMap[date];
                 html += `<td class="number-cell" data-record-id="${record.id}" data-record-type="NUMBER" style="cursor: pointer;">${record.number}</td>`;
             });
-            // 10개 미만일 경우 빈 셀 추가
-            for (let j = chunk.length; j < 10; j++) {
-                html += `<td class="empty-cell"></td>`;
-            }
             html += `</tr>`;
         }
 
@@ -5064,6 +5613,9 @@
     // NUMBER 달력 뷰
     function displayNumberCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 표시
+        setupGlobalLabelToggle(true);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -5092,10 +5644,11 @@
 
         if (sortedYears.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
             return;
         }
 
-        let html = '';
+        let html = `<div id="calendarContainer">`;
 
         sortedYears.forEach(year => {
             html += `<div class="calendar-year">`;
@@ -5113,16 +5666,55 @@
             html += `</div>`;
         });
 
+        html += `</div>`; // calendarContainer 닫기
+
         recordsSection.innerHTML = html;
 
+        // 라벨 토글 버튼 이벤트 (4단계 순환)
+        const labelToggleBtn = document.getElementById('calendarLabelToggle');
+        if (labelToggleBtn) {
+            let toggleState = 0; // 0: 전체 표시, 1: 날짜 숨김, 2: 요일 숨김, 3: 월 숨김
+            labelToggleBtn.addEventListener('click', function() {
+                const container = document.getElementById('calendarContainer');
+
+                // 모든 클래스 제거
+                container.classList.remove('hide-calendar-days', 'hide-calendar-weekdays', 'hide-calendar-all');
+
+                // 다음 상태로 전환
+                toggleState = (toggleState + 1) % 4;
+
+                // 상태에 따라 클래스 추가
+                if (toggleState === 1) {
+                    container.classList.add('hide-calendar-days');
+                    this.classList.add('active');
+                } else if (toggleState === 2) {
+                    container.classList.add('hide-calendar-weekdays');
+                    this.classList.add('active');
+                } else if (toggleState === 3) {
+                    container.classList.add('hide-calendar-all');
+                    this.classList.add('active');
+                } else {
+                    this.classList.remove('active');
+                }
+            });
+        }
+
         // 클릭 이벤트 리스너 추가
-        recordsSection.querySelectorAll('[data-record-id]').forEach(cell => {
+        recordsSection.querySelectorAll('.calendar-day[data-date]').forEach(cell => {
             cell.addEventListener('click', function() {
                 const recordId = this.getAttribute('data-record-id');
                 const recordType = this.getAttribute('data-record-type');
-                const record = allRecords.find(r => r.id === recordId);
-                if (record) {
-                    openEditModal(recordId, recordType, record);
+                const date = this.getAttribute('data-date');
+
+                if (recordId) {
+                    // 데이터가 있으면 수정 모달
+                    const record = allRecords.find(r => r.id === recordId);
+                    if (record) {
+                        openEditModal(recordId, recordType, record);
+                    }
+                } else {
+                    // 데이터가 없으면 추가 모달 (해당 날짜로 미리 채움)
+                    openAddRecordModalWithDate(date);
                 }
             });
         });
@@ -5166,9 +5758,9 @@
             const record = monthData[dateStr];
 
             if (record) {
-                html += `<div class="calendar-day has-data-number" data-record-id="${record.id}" data-record-type="NUMBER" style="cursor: pointer;">${day}</div>`;
+                html += `<div class="calendar-day has-data-number" data-record-id="${record.id}" data-record-type="NUMBER" data-date="${dateStr}" style="cursor: pointer;">${day}</div>`;
             } else {
-                html += `<div class="calendar-day">${day}</div>`;
+                html += `<div class="calendar-day" data-date="${dateStr}" data-record-type="NUMBER" style="cursor: pointer;">${day}</div>`;
             }
         }
 
@@ -5181,6 +5773,9 @@
     // NUMBER 히트맵 뷰 (100년)
     function displayNumberHeatmap(records) {
         const recordsSection = document.getElementById('recordsSection');
+
+        // 전역 라벨 토글 숨김
+        setupGlobalLabelToggle(false);
 
         // 데이터를 날짜별 맵으로 변환
         const recordMap = {};
@@ -5735,6 +6330,181 @@
         const element = document.getElementById(elementId);
         element.innerHTML = `<div class="success-message">${message}</div>`;
     }
+
+    // 데이터 추가 모달 열기
+    function openAddRecordModal(presetDate = null) {
+        if (!currentCategory) {
+            alert(currentLang === 'ko' ? '카테고리를 먼저 선택해주세요.' : 'Please select a category first.');
+            return;
+        }
+
+        const modal = document.getElementById('addRecordModal');
+        const formContainer = document.getElementById('addRecordFormContainer');
+        const modalTitle = document.getElementById('addRecordModalTitle');
+
+        modalTitle.textContent = currentLang === 'ko' ? '레코드 추가' : 'Add Record';
+
+        // 날짜 설정 (presetDate가 있으면 사용, 없으면 오늘 날짜)
+        let dateStr;
+        if (presetDate) {
+            dateStr = presetDate;
+        } else {
+            const today = new Date();
+            dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        }
+
+        let formHtml = '';
+        const type = currentCategory.type; // recordType -> type으로 수정
+
+        if (type === 'CHECK') {
+            formHtml = `
+                <div class="form-group">
+                    <label for="addDate">${translations.date[currentLang]} *</label>
+                    <input type="date" id="addDate" required value="${dateStr}">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-field">
+                        <input type="checkbox" id="addSuccess">
+                        <span>${translations.success[currentLang]}</span>
+                    </label>
+                </div>
+            `;
+        } else if (type === 'TEXT') {
+            formHtml = `
+                <div class="form-group">
+                    <label for="addDate">${translations.date[currentLang]} *</label>
+                    <input type="date" id="addDate" required value="${dateStr}">
+                </div>
+                <div class="form-group">
+                    <label for="addTitle">${translations.titleLabel[currentLang]} *</label>
+                    <input type="text" id="addTitle" required placeholder="${currentLang === 'ko' ? '예: 오늘의 생각' : 'e.g., Today\'s thoughts'}">
+                </div>
+                <div class="form-group">
+                    <label for="addText">${translations.content[currentLang]} *</label>
+                    <textarea id="addText" required style="min-height: 150px;" placeholder="${currentLang === 'ko' ? '내용을 입력하세요' : 'Enter content'}"></textarea>
+                </div>
+            `;
+        } else if (type === 'TIME') {
+            formHtml = `
+                <div class="form-group">
+                    <label for="addDate">${translations.date[currentLang]} *</label>
+                    <input type="date" id="addDate" required value="${dateStr}">
+                </div>
+                <div class="form-group">
+                    <label for="addTime">${translations.time[currentLang]} *</label>
+                    <input type="time" id="addTime" required>
+                </div>
+            `;
+        } else if (type === 'NUMBER') {
+            formHtml = `
+                <div class="form-group">
+                    <label for="addDate">${translations.date[currentLang]} *</label>
+                    <input type="date" id="addDate" required value="${dateStr}">
+                </div>
+                <div class="form-group">
+                    <label for="addNumber">${currentLang === 'ko' ? '숫자' : 'Number'} *</label>
+                    <input type="number" id="addNumber" required step="any" placeholder="${currentLang === 'ko' ? '예: 100' : 'e.g., 100'}">
+                </div>
+            `;
+        } else if (type === 'CHECKLIST') {
+            formHtml = `
+                <div class="form-group">
+                    <label for="addDate">${translations.date[currentLang]} *</label>
+                    <input type="date" id="addDate" required value="${dateStr}">
+                </div>
+                <div class="form-group">
+                    <label for="addTodo">${currentLang === 'ko' ? '할일' : 'Todo'} *</label>
+                    <input type="text" id="addTodo" required placeholder="${currentLang === 'ko' ? '예: 운동하기' : 'e.g., Exercise'}">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-field">
+                        <input type="checkbox" id="addSuccess">
+                        <span>${currentLang === 'ko' ? '완료 여부' : 'Completed'}</span>
+                    </label>
+                </div>
+            `;
+        }
+
+        formContainer.innerHTML = formHtml;
+        modal.classList.add('active');
+    }
+
+    // 데이터 추가 모달 닫기
+    function closeAddRecordModal() {
+        const modal = document.getElementById('addRecordModal');
+        modal.classList.remove('active');
+        document.getElementById('addRecordError').innerHTML = '';
+    }
+
+    // 특정 날짜로 데이터 추가 모달 열기
+    function openAddRecordModalWithDate(date) {
+        openAddRecordModal(date);
+    }
+
+    // 데이터 추가 제출
+    document.getElementById('submitAddRecord').addEventListener('click', async () => {
+        if (!currentCategory) return;
+
+        const type = currentCategory.type; // recordType -> type으로 수정
+        let endpoint = '';
+        const params = new URLSearchParams();
+        params.append('categoryId', currentCategory.id);
+
+        try {
+            const date = document.getElementById('addDate').value;
+            params.append('date', date);
+
+            if (type === 'CHECK') {
+                endpoint = `${API_BASE}/check`;
+                params.append('success', document.getElementById('addSuccess').checked);
+            } else if (type === 'TEXT') {
+                endpoint = `${API_BASE}/text`;
+                params.append('title', document.getElementById('addTitle').value);
+                params.append('text', document.getElementById('addText').value);
+            } else if (type === 'TIME') {
+                endpoint = `${API_BASE}/time`;
+                params.append('time', document.getElementById('addTime').value);
+            } else if (type === 'NUMBER') {
+                endpoint = `${API_BASE}/number`;
+                params.append('number', document.getElementById('addNumber').value);
+            } else if (type === 'CHECKLIST') {
+                endpoint = `${API_BASE}/check-list`;
+                params.append('todo', document.getElementById('addTodo').value);
+                params.append('success', document.getElementById('addSuccess').checked);
+            }
+
+            const response = await fetch(`${endpoint}?${params.toString()}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                closeAddRecordModal();
+                // 데이터 새로고침
+                await loadRecords(currentCategory);
+            } else {
+                showAddRecordError(currentLang === 'ko' ? '레코드 추가에 실패했습니다.' : 'Failed to add record.');
+            }
+        } catch (error) {
+            console.error('레코드 추가 오류:', error);
+            showAddRecordError(currentLang === 'ko' ? '오류가 발생했습니다.' : 'An error occurred.');
+        }
+    });
+
+    function showAddRecordError(message) {
+        const element = document.getElementById('addRecordError');
+        element.innerHTML = `<div class="error-message">${message}</div>`;
+        setTimeout(() => {
+            element.innerHTML = '';
+        }, 5000);
+    }
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('addRecordModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeAddRecordModal();
+        }
+    });
 </script>
 </body>
 </html>

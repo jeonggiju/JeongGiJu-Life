@@ -69,6 +69,21 @@
             background: #333;
         }
 
+        .language-toggle {
+            padding: 8px 16px;
+            border: 1px solid #000;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+            min-width: 50px;
+        }
+
+        .language-toggle:hover {
+            background: #f5f5f5;
+        }
+
         .content {
             max-width: 1680px;
             width: 100%;
@@ -85,31 +100,26 @@
         /* 섹션 3단 레이아웃 */
         .section-grid {
             display: grid;
-            /* 넓은 화면에서 3개 섹션이 공간을 더 잘 채우도록 */
-            grid-template-columns: minmax(520px, 1.55fr) minmax(420px, 1fr) minmax(520px, 1.15fr);
-            gap: 64px;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
             align-items: start;
         }
 
-        /* 섹션을 카드처럼 보여서 빈 공간이 어색하지 않게 */
+        /* 섹션 스타일 */
         .section-grid .section {
-            padding: 18px 20px;
+            padding: 30px;
             border: 1px solid #eee;
             background: #fff;
-        }
-
-        .section-grid .section {
-            margin-bottom: 0;
         }
 
         @media (max-width: 1024px) {
             .section-grid {
                 grid-template-columns: 1fr;
-                gap: 60px;
+                gap: 30px;
             }
 
             .section-grid .section {
-                margin-bottom: 0;
+                padding: 20px;
             }
         }
 
@@ -234,10 +244,8 @@
 
         #categoryList {
             display: grid;
-            /* 섹션 폭에 따라 자동으로 칸 수가 늘어나게 */
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
         }
 
         #categoryList > p {
@@ -352,16 +360,23 @@
             color: #000;
         }
 
-        /* 로그인 */
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
+        /* 로그인 섹션 스타일 */
+        .simple-auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background: #e8e8e8;
+            padding: 20px;
         }
 
-        .login-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 30px;
+        .simple-auth-box {
+            background: white;
+            padding: 40px 50px;
+            border: 1px solid #ccc;
+            min-width: 450px;
+            max-width: 500px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .form-footer {
@@ -379,7 +394,7 @@
 
         @media (max-width: 1024px) {
             #categoryList {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
         }
 
@@ -406,218 +421,143 @@
 </head>
 <body>
 <!-- 로그인 섹션 -->
-<div id="loginSection">
-    <div class="login-container">
-        <div class="login-title">로그인</div>
-        <div id="loginError"></div>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">이메일</label>
-                <input type="email" id="email" required>
+<div id="loginSection" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="simple-auth-container">
+        <div class="simple-auth-box">
+            <div style="text-align: left; margin-bottom: 10px;">
+                <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
-            <div class="form-group">
-                <label for="password">비밀번호</label>
-                <input type="password" id="password" required>
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign In</h2>
+            <div id="loginError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <form id="loginForm">
+                <table style="margin: 0 auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
+                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding-top: 15px;">
+                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Sign In</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div style="text-align: center; margin-top: 20px; font-size: 12px;">
+                New account? <a href="#" id="showSignup" style="color: #0066cc; text-decoration: underline;">Sign Up</a>
             </div>
-            <button type="submit" class="submit-btn">로그인</button>
-        </form>
-        <div class="form-footer">
-            계정이 없으신가요? <a href="#" id="showSignup">회원가입</a>
         </div>
     </div>
 </div>
 
 <!-- 회원가입 섹션 -->
-<div id="signupSection" style="display: none;">
-    <div class="login-container">
-        <div class="login-title">회원가입</div>
-        <div id="signupError"></div>
-        <form id="signupForm">
-            <div class="form-group">
-                <label for="signupUsername">사용자명</label>
-                <input type="text" id="signupUsername" required>
+<div id="signupSection" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="simple-auth-container">
+        <div class="simple-auth-box">
+            <div style="text-align: left; margin-bottom: 10px;">
+                <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
-            <div class="form-group">
-                <label for="signupEmail">이메일</label>
-                <input type="email" id="signupEmail" required>
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign Up</h2>
+            <div id="signupError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <form id="signupForm">
+                <table style="margin: 0 auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupUsername" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td style="padding: 5px 0;"><input type="email" id="signupEmail" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
+                        <td style="padding: 5px 0;"><input type="password" id="signupPassword" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Title:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupTitle" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Description:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding-top: 15px;">
+                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;">Sign Up</button>
+                            <button type="button" id="cancelSignup" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Cancel</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div style="text-align: center; margin-top: 20px; font-size: 12px;">
+                Already have an account? <a href="#" id="showLogin" style="color: #0066cc; text-decoration: underline;">Sign In</a>
             </div>
-            <div class="form-group">
-                <label for="signupPassword">비밀번호</label>
-                <input type="password" id="signupPassword" required>
-            </div>
-            <div class="form-group">
-                <label for="signupTitle">타이틀 (선택)</label>
-                <input type="text" id="signupTitle">
-            </div>
-            <div class="form-group">
-                <label for="signupDescription">설명 (선택)</label>
-                <textarea id="signupDescription"></textarea>
-            </div>
-            <button type="submit" class="submit-btn">회원가입</button>
-            <button type="button" id="cancelSignup" class="btn" style="width: 100%; margin-top: 10px;">취소</button>
-        </form>
+        </div>
     </div>
 </div>
 
 <!-- 메인 섹션 -->
 <div id="mainSection" style="display: none;">
     <div class="top-actions">
-        <a href="index.html" class="btn">홈</a>
-        <button class="btn" id="editProfileBtn">프로필 수정</button>
-        <a href="manage.html" class="btn">데이터 조회</a>
-        <button class="btn btn-primary" id="logoutBtn">로그아웃</button>
+        <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
+        <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
+        <a href="manage.html" class="btn" data-lang-ko="데이터 조회" data-lang-en="View Data">데이터 조회</a>
+        <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
+        <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
     </div>
 
     <div class="header">
-        <div class="title">데이터 입력</div>
-        <div class="subtitle">카테고리와 레코드를 추가하세요</div>
+        <div class="title" data-lang-ko="카테고리 관리" data-lang-en="Category Management">카테고리 관리</div>
+        <div class="subtitle" data-lang-ko="카테고리를 추가하고 관리하세요" data-lang-en="Add and manage your categories">카테고리를 추가하고 관리하세요</div>
     </div>
 
     <div class="content">
-        <!-- SECTION LAYOUT: 3 columns -->
+        <!-- SECTION LAYOUT: 2 columns -->
         <div class="section-grid">
             <!-- 카테고리 관리 -->
             <div class="section">
-                <div class="section-title">카테고리 관리</div>
-                <div id="categoryList" style="margin-bottom: 20px;">
-                    <p style="color: #666; font-size: 14px;">카테고리를 불러오는 중...</p>
+                <div class="section-title" data-lang-ko="카테고리 관리" data-lang-en="Category Management">카테고리 관리</div>
+                <div id="categoryList">
+                    <p style="color: #666; font-size: 14px;" data-lang-ko="카테고리를 불러오는 중..." data-lang-en="Loading categories...">카테고리를 불러오는 중...</p>
                 </div>
             </div>
 
             <!-- 카테고리 추가 -->
             <div class="section">
-                <div class="section-title">카테고리 추가</div>
+                <div class="section-title" data-lang-ko="카테고리 추가" data-lang-en="Add Category">카테고리 추가</div>
                 <div id="categoryMessage"></div>
                 <form id="categoryForm">
                     <div class="form-group">
-                        <label for="categoryTitle">제목 *</label>
-                        <input type="text" id="categoryTitle" required placeholder="예: 운동">
+                        <label for="categoryTitle" data-lang-ko="제목 *" data-lang-en="Title *">제목 *</label>
+                        <input type="text" id="categoryTitle" required placeholder="예: 운동" data-placeholder-ko="예: 운동" data-placeholder-en="e.g. Exercise">
                     </div>
                     <div class="form-group">
-                        <label for="categoryDescription">설명</label>
-                        <textarea id="categoryDescription" placeholder="카테고리 설명 (선택사항)"></textarea>
+                        <label for="categoryDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
+                        <textarea id="categoryDescription" placeholder="카테고리 설명 (선택사항)" data-placeholder-ko="카테고리 설명 (선택사항)" data-placeholder-en="Category description (optional)"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="recordType">타입 *</label>
+                        <label for="recordType" data-lang-ko="타입 *" data-lang-en="Type *">타입 *</label>
                         <select id="recordType" required>
-                            <option value="">선택하세요</option>
-                            <option value="CHECK">CHECK - 성공/실패 기록</option>
-                            <option value="TEXT">TEXT - 텍스트 기록</option>
-                            <option value="TIME">TIME - 시간 기록</option>
-                            <option value="NUMBER">NUMBER - 숫자 기록</option>
-                            <option value="CHECKLIST">CHECKLIST - 할일 목록</option>
+                            <option value="" data-lang-ko="선택하세요" data-lang-en="Select">선택하세요</option>
+                            <option value="CHECK" data-lang-ko="CHECK - 성공/실패 기록" data-lang-en="CHECK - Success/Fail">CHECK - 성공/실패 기록</option>
+                            <option value="TEXT" data-lang-ko="TEXT - 텍스트 기록" data-lang-en="TEXT - Text Record">TEXT - 텍스트 기록</option>
+                            <option value="TIME" data-lang-ko="TIME - 시간 기록" data-lang-en="TIME - Time Record">TIME - 시간 기록</option>
+                            <option value="NUMBER" data-lang-ko="NUMBER - 숫자 기록" data-lang-en="NUMBER - Number Record">NUMBER - 숫자 기록</option>
+                            <option value="CHECKLIST" data-lang-ko="CHECKLIST - 할일 목록" data-lang-en="CHECKLIST - Todo List">CHECKLIST - 할일 목록</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="visibility">공개 설정 *</label>
+                        <label for="visibility" data-lang-ko="공개 설정 *" data-lang-en="Visibility *">공개 설정 *</label>
                         <select id="visibility" required>
-                            <option value="PRIVATE">PRIVATE - 나만 보기</option>
-                            <option value="PUBLIC">PUBLIC - 모두에게 공개</option>
+                            <option value="PRIVATE" data-lang-ko="PRIVATE - 나만 보기" data-lang-en="PRIVATE - Only Me">PRIVATE - 나만 보기</option>
+                            <option value="PUBLIC" data-lang-ko="PUBLIC - 모두에게 공개" data-lang-en="PUBLIC - Public">PUBLIC - 모두에게 공개</option>
                         </select>
                     </div>
-                    <button type="submit" class="submit-btn">카테고리 추가</button>
+                    <button type="submit" class="submit-btn" data-lang-ko="카테고리 추가" data-lang-en="Add Category">카테고리 추가</button>
                 </form>
-            </div>
-
-            <!-- 레코드 추가 -->
-            <div class="section">
-                <div class="section-title">레코드 추가</div>
-                <div id="recordMessage"></div>
-
-                <!-- 카테고리 선택 -->
-                <div class="category-select">
-                    <label>카테고리 선택 *</label>
-                    <select id="selectedCategory">
-                        <option value="">먼저 카테고리를 선택하세요</option>
-                    </select>
-                </div>
-
-                <!-- CHECK 레코드 -->
-                <div id="checkTab" class="tab-content">
-                    <form id="checkForm">
-                        <div class="form-group">
-                            <label for="checkDate">날짜 *</label>
-                            <input type="date" id="checkDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="checkbox-field">
-                                <input type="checkbox" id="checkSuccess">
-                                <span>성공 여부</span>
-                            </label>
-                        </div>
-                        <button type="submit" class="submit-btn">추가</button>
-                    </form>
-                </div>
-
-                <!-- TEXT 레코드 -->
-                <div id="textTab" class="tab-content">
-                    <form id="textForm">
-                        <div class="form-group">
-                            <label for="textDate">날짜 *</label>
-                            <input type="date" id="textDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="textTitle">제목 *</label>
-                            <input type="text" id="textTitle" required placeholder="제목을 입력하세요">
-                        </div>
-                        <div class="form-group">
-                            <label for="textContent">내용 *</label>
-                            <textarea id="textContent" required placeholder="내용을 입력하세요"></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn">추가</button>
-                    </form>
-                </div>
-
-                <!-- TIME 레코드 -->
-                <div id="timeTab" class="tab-content">
-                    <form id="timeForm">
-                        <div class="form-group">
-                            <label for="timeDate">날짜 *</label>
-                            <input type="date" id="timeDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="timeTime">시간 *</label>
-                            <input type="time" id="timeTime" required step="1">
-                        </div>
-                        <button type="submit" class="submit-btn">추가</button>
-                    </form>
-                </div>
-
-                <!-- NUMBER 레코드 -->
-                <div id="numberTab" class="tab-content">
-                    <form id="numberForm">
-                        <div class="form-group">
-                            <label for="numberDate">날짜 *</label>
-                            <input type="date" id="numberDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="numberValue">숫자 *</label>
-                            <input type="number" id="numberValue" required step="any" placeholder="예: 75.5">
-                        </div>
-                        <button type="submit" class="submit-btn">추가</button>
-                    </form>
-                </div>
-
-                <!-- CHECKLIST 레코드 -->
-                <div id="checklistTab" class="tab-content">
-                    <form id="checklistForm">
-                        <div class="form-group">
-                            <label for="checklistDate">날짜 *</label>
-                            <input type="date" id="checklistDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="checklistTodo">할일 *</label>
-                            <input type="text" id="checklistTodo" required placeholder="예: 운동하기">
-                        </div>
-                        <div class="form-group">
-                            <label class="checkbox-field">
-                                <input type="checkbox" id="checklistSuccess">
-                                <span>완료 여부</span>
-                            </label>
-                        </div>
-                        <button type="submit" class="submit-btn">추가</button>
-                    </form>
-                </div>
             </div>
 
         </div>
@@ -629,22 +569,22 @@
 <div id="profileModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
     <div style="background: white; padding: 40px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <div style="font-size: 24px; font-weight: 700;">프로필 수정</div>
+            <div style="font-size: 24px; font-weight: 700;" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</div>
             <button onclick="closeProfileModal()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1;">×</button>
         </div>
         <div id="profileModalError"></div>
         <form id="profileForm">
             <div class="form-group">
-                <label for="profileTitle">타이틀</label>
-                <input type="text" id="profileTitle" placeholder="예: Hi.">
+                <label for="profileTitle" data-lang-ko="타이틀" data-lang-en="Title">타이틀</label>
+                <input type="text" id="profileTitle" placeholder="예: Hi." data-placeholder-ko="예: Hi." data-placeholder-en="e.g. Hi.">
             </div>
             <div class="form-group">
-                <label for="profileDescription">설명</label>
-                <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요"></textarea>
+                <label for="profileDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
+                <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요" data-placeholder-ko="간단한 소개를 입력하세요" data-placeholder-en="Enter a brief introduction"></textarea>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 30px;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;">저장</button>
-                <button type="button" class="btn" onclick="closeProfileModal()" style="flex: 1;">취소</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;" data-lang-ko="저장" data-lang-en="Save">저장</button>
+                <button type="button" class="btn" onclick="closeProfileModal()" style="flex: 1;" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
             </div>
         </form>
     </div>
@@ -654,33 +594,33 @@
 <div id="editCategoryModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title">카테고리 수정</div>
+            <div class="modal-title" data-lang-ko="카테고리 수정" data-lang-en="Edit Category">카테고리 수정</div>
             <button class="modal-close" onclick="closeEditCategoryModal()">×</button>
         </div>
         <div id="editCategoryModalError"></div>
         <form id="editCategoryForm">
             <div class="form-group">
-                <label for="editCategoryTitle">제목 *</label>
+                <label for="editCategoryTitle" data-lang-ko="제목 *" data-lang-en="Title *">제목 *</label>
                 <input type="text" id="editCategoryTitle" required>
             </div>
             <div class="form-group">
-                <label for="editCategoryDescription">설명</label>
+                <label for="editCategoryDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
                 <textarea id="editCategoryDescription"></textarea>
             </div>
             <div class="form-group">
-                <label>타입</label>
+                <label data-lang-ko="타입" data-lang-en="Type">타입</label>
                 <input type="text" id="editCategoryType" readonly style="background: #f5f5f5; cursor: not-allowed;">
             </div>
             <div class="form-group">
-                <label for="editCategoryVisibility">공개 설정 *</label>
+                <label for="editCategoryVisibility" data-lang-ko="공개 설정 *" data-lang-en="Visibility *">공개 설정 *</label>
                 <select id="editCategoryVisibility" required>
-                    <option value="PRIVATE">PRIVATE - 나만 보기</option>
-                    <option value="PUBLIC">PUBLIC - 모두에게 공개</option>
+                    <option value="PRIVATE" data-lang-ko="PRIVATE - 나만 보기" data-lang-en="PRIVATE - Only Me">PRIVATE - 나만 보기</option>
+                    <option value="PUBLIC" data-lang-ko="PUBLIC - 모두에게 공개" data-lang-en="PUBLIC - Public">PUBLIC - 모두에게 공개</option>
                 </select>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 30px;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;">저장</button>
-                <button type="button" class="btn" onclick="closeEditCategoryModal()" style="flex: 1;">취소</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;" data-lang-ko="저장" data-lang-en="Save">저장</button>
+                <button type="button" class="btn" onclick="closeEditCategoryModal()" style="flex: 1;" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
             </div>
         </form>
     </div>
@@ -690,9 +630,94 @@
     const API_BASE = '/api';
     let currentUser = null;
     let categories = [];
+    let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
+
+    // 번역 데이터
+    const translations = {
+        // 버튼
+        'home': { ko: '홈', en: 'Home' },
+        'editProfile': { ko: '프로필 수정', en: 'Edit Profile' },
+        'viewData': { ko: '데이터 조회', en: 'View Data' },
+        'logout': { ko: '로그아웃', en: 'Logout' },
+        'save': { ko: '저장', en: 'Save' },
+        'cancel': { ko: '취소', en: 'Cancel' },
+        'edit': { ko: '수정', en: 'Edit' },
+        'delete': { ko: '삭제', en: 'Delete' },
+
+        // 제목
+        'categoryManagementTitle': { ko: '카테고리 관리', en: 'Category Management' },
+        'subtitle': { ko: '카테고리를 추가하고 관리하세요', en: 'Add and manage your categories' },
+        'categoryManagement': { ko: '카테고리 관리', en: 'Category Management' },
+        'addCategory': { ko: '카테고리 추가', en: 'Add Category' },
+        'editCategory': { ko: '카테고리 수정', en: 'Edit Category' },
+
+        // 폼 라벨
+        'title': { ko: '제목 *', en: 'Title *' },
+        'titleLabel': { ko: '타이틀', en: 'Title' },
+        'description': { ko: '설명', en: 'Description' },
+        'type': { ko: '타입 *', en: 'Type *' },
+        'typeLabel': { ko: '타입', en: 'Type' },
+        'visibility': { ko: '공개 설정 *', en: 'Visibility *' },
+
+        // 옵션
+        'select': { ko: '선택하세요', en: 'Select' },
+        'checkType': { ko: 'CHECK - 성공/실패 기록', en: 'CHECK - Success/Fail' },
+        'textType': { ko: 'TEXT - 텍스트 기록', en: 'TEXT - Text Record' },
+        'timeType': { ko: 'TIME - 시간 기록', en: 'TIME - Time Record' },
+        'numberType': { ko: 'NUMBER - 숫자 기록', en: 'NUMBER - Number Record' },
+        'checklistType': { ko: 'CHECKLIST - 할일 목록', en: 'CHECKLIST - Todo List' },
+        'private': { ko: 'PRIVATE - 나만 보기', en: 'PRIVATE - Only Me' },
+        'public': { ko: 'PUBLIC - 모두에게 공개', en: 'PUBLIC - Public' },
+
+        // 메시지
+        'loading': { ko: '카테고리를 불러오는 중...', en: 'Loading categories...' },
+        'noCategories': { ko: '등록된 카테고리가 없습니다', en: 'No categories' },
+        'categoryAdded': { ko: '카테고리가 추가되었습니다.', en: 'Category added successfully.' },
+        'categoryUpdated': { ko: '카테고리가 수정되었습니다.', en: 'Category updated successfully.' },
+        'categoryDeleted': { ko: '카테고리가 삭제되었습니다.', en: 'Category deleted successfully.' },
+        'categoryDeleteFailed': { ko: '카테고리 삭제에 실패했습니다.', en: 'Failed to delete category.' },
+        'categoryDeleteError': { ko: '카테고리 삭제 중 오류가 발생했습니다.', en: 'Error occurred while deleting category.' },
+        'deleteConfirmMsg': { ko: '정말 삭제하시겠습니까?\n\n이 카테고리의 모든 레코드도 함께 삭제됩니다.', en: 'Are you sure you want to delete?\n\nAll records in this category will also be deleted.' },
+        'profileUpdated': { ko: '프로필이 수정되었습니다.', en: 'Profile updated successfully.' },
+        'error': { ko: '오류가 발생했습니다.', en: 'An error occurred.' },
+        'deleteConfirm': { ko: '정말 삭제하시겠습니까?', en: 'Are you sure you want to delete?' }
+    };
+
+    // 언어 전환 함수
+    function toggleLanguage() {
+        currentLang = currentLang === 'ko' ? 'en' : 'ko';
+        localStorage.setItem('language', currentLang);
+        applyLanguage();
+    }
+
+    // 언어 적용 함수
+    function applyLanguage() {
+        // 언어 토글 버튼 텍스트 변경
+        document.getElementById('languageToggle').textContent = currentLang === 'ko' ? 'EN' : 'KO';
+
+        // data-lang 속성이 있는 모든 요소 업데이트
+        document.querySelectorAll('[data-lang-ko]').forEach(element => {
+            const ko = element.getAttribute('data-lang-ko');
+            const en = element.getAttribute('data-lang-en');
+            element.textContent = currentLang === 'ko' ? ko : en;
+        });
+
+        // placeholder 속성 업데이트
+        document.querySelectorAll('[data-placeholder-ko]').forEach(element => {
+            const ko = element.getAttribute('data-placeholder-ko');
+            const en = element.getAttribute('data-placeholder-en');
+            element.placeholder = currentLang === 'ko' ? ko : en;
+        });
+
+        // 카테고리 목록 다시 렌더링 (버튼 텍스트 업데이트)
+        if (categories && categories.length > 0) {
+            updateCategoryList();
+        }
+    }
 
     // 페이지 로드
     window.addEventListener('DOMContentLoaded', async () => {
+        applyLanguage(); // 언어 적용
         await checkAuth();
 
         // 초기 로드 시 탭 숨김
@@ -774,6 +799,12 @@
         document.getElementById('signupSection').style.display = 'block';
     });
 
+    document.getElementById('showLogin').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+    });
+
     document.getElementById('cancelSignup').addEventListener('click', () => {
         document.getElementById('signupSection').style.display = 'none';
         document.getElementById('loginSection').style.display = 'block';
@@ -835,7 +866,6 @@
 
             if (response.ok) {
                 categories = await response.json();
-                updateCategorySelect();
                 updateCategoryList();
             }
         } catch (error) {
@@ -848,7 +878,7 @@
         const listContainer = document.getElementById('categoryList');
 
         if (!categories || categories.length === 0) {
-            listContainer.innerHTML = '<p style="color: #666; font-size: 14px;">등록된 카테고리가 없습니다.</p>';
+            listContainer.innerHTML = `<p style="color: #666; font-size: 14px;">${translations.noCategories[currentLang]}</p>`;
             return;
         }
 
@@ -858,18 +888,20 @@
                 ? '<span style="display: inline-block; padding: 2px 8px; background: #000; color: #fff; font-size: 11px; font-weight: 600; margin-left: 8px;">PUBLIC</span>'
                 : '<span style="display: inline-block; padding: 2px 8px; background: #e5e5e5; color: #666; font-size: 11px; font-weight: 600; margin-left: 8px;">PRIVATE</span>';
 
+            const typeLabel = currentLang === 'ko' ? '타입' : 'Type';
+
             html += `
                 <div class="category-item">
                     <div class="category-info">
                         <div class="category-title">${category.title}${visibilityBadge}</div>
                         <div class="category-meta">
-                            타입: ${category.recordType}
+                            ${typeLabel}: ${category.recordType}
                             ${category.description ? ` | ${category.description}` : ''}
                         </div>
                     </div>
                     <div class="category-actions">
-                        <button class="btn-edit" onclick="openEditCategoryModal('${category.id}')">수정</button>
-                        <button class="btn-delete" onclick="deleteCategory('${category.id}', '${category.title}')">삭제</button>
+                        <button class="btn-edit" onclick="openEditCategoryModal('${category.id}')">${translations.edit[currentLang]}</button>
+                        <button class="btn-delete" onclick="deleteCategory('${category.id}', '${category.title}')">${translations.delete[currentLang]}</button>
                     </div>
                 </div>
             `;
@@ -877,314 +909,6 @@
         listContainer.innerHTML = html;
     }
 
-    // 카테고리 셀렉트 업데이트
-    function updateCategorySelect() {
-        const select = document.getElementById('selectedCategory');
-
-        if (!categories || categories.length === 0) {
-            select.innerHTML = '<option value="">등록된 카테고리가 없습니다</option>';
-            return;
-        }
-
-        select.innerHTML = '<option value="">카테고리를 선택하세요</option>';
-        categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category.id;
-            option.dataset.type = category.recordType;
-            option.textContent = `${category.title} (${category.recordType})`;
-            select.appendChild(option);
-        });
-    }
-
-    // 카테고리 선택 시 해당 타입의 폼만 표시
-    document.getElementById('selectedCategory').addEventListener('change', function() {
-        const selectedOption = this.selectedOptions[0];
-
-        if (!selectedOption || !selectedOption.dataset.type) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            return;
-        }
-
-        const recordType = selectedOption.dataset.type;
-
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
-
-        let targetContent;
-
-        switch(recordType) {
-            case 'CHECK':
-                targetContent = document.getElementById('checkTab');
-                break;
-            case 'TEXT':
-                targetContent = document.getElementById('textTab');
-                break;
-            case 'TIME':
-                targetContent = document.getElementById('timeTab');
-                break;
-            case 'NUMBER':
-                targetContent = document.getElementById('numberTab');
-                break;
-            case 'CHECKLIST':
-                targetContent = document.getElementById('checklistTab');
-                break;
-        }
-
-        if (targetContent) {
-            targetContent.classList.add('active');
-        }
-    });
-
-    // 카테고리 추가
-    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const title = document.getElementById('categoryTitle').value;
-        const description = document.getElementById('categoryDescription').value;
-        const recordType = document.getElementById('recordType').value;
-        const visibility = document.getElementById('visibility').value;
-
-        const params = new URLSearchParams();
-        params.append('title', title);
-        params.append('description', description);
-        params.append('recordType', recordType);
-        params.append('visibility', visibility);
-
-        try {
-            const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                showMessage('categoryMessage', '카테고리가 추가되었습니다.', 'success');
-                document.getElementById('categoryForm').reset();
-                await loadCategories();
-            } else {
-                showMessage('categoryMessage', '카테고리 추가에 실패했습니다.', 'error');
-            }
-        } catch (error) {
-            console.error('카테고리 추가 오류:', error);
-            showMessage('categoryMessage', '오류가 발생했습니다.', 'error');
-        }
-    });
-
-    // CHECK 레코드 추가
-    document.getElementById('checkForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const categoryId = document.getElementById('selectedCategory').value;
-        if (!categoryId) {
-            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
-            return;
-        }
-
-        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
-        if (selectedOption.dataset.type !== 'CHECK') {
-            showMessage('recordMessage', 'CHECK 타입 카테고리를 선택해주세요.', 'error');
-            return;
-        }
-
-        const date = document.getElementById('checkDate').value;
-        const success = document.getElementById('checkSuccess').checked;
-
-        const params = new URLSearchParams();
-        params.append('categoryId', categoryId);
-        params.append('date', date);
-        params.append('success', success);
-
-        try {
-            const response = await fetch(`${API_BASE}/check?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
-                document.getElementById('checkForm').reset();
-            } else {
-                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
-            }
-        } catch (error) {
-            console.error('레코드 추가 오류:', error);
-            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
-        }
-    });
-
-    // TEXT 레코드 추가
-    document.getElementById('textForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const categoryId = document.getElementById('selectedCategory').value;
-        if (!categoryId) {
-            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
-            return;
-        }
-
-        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
-        if (selectedOption.dataset.type !== 'TEXT') {
-            showMessage('recordMessage', 'TEXT 타입 카테고리를 선택해주세요.', 'error');
-            return;
-        }
-
-        const date = document.getElementById('textDate').value;
-        const title = document.getElementById('textTitle').value;
-        const text = document.getElementById('textContent').value;
-
-        const params = new URLSearchParams();
-        params.append('categoryId', categoryId);
-        params.append('date', date);
-        params.append('title', title);
-        params.append('text', text);
-
-        try {
-            const response = await fetch(`${API_BASE}/text?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
-                document.getElementById('textForm').reset();
-            } else {
-                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
-            }
-        } catch (error) {
-            console.error('레코드 추가 오류:', error);
-            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
-        }
-    });
-
-    // TIME 레코드 추가
-    document.getElementById('timeForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const categoryId = document.getElementById('selectedCategory').value;
-        if (!categoryId) {
-            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
-            return;
-        }
-
-        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
-        if (selectedOption.dataset.type !== 'TIME') {
-            showMessage('recordMessage', 'TIME 타입 카테고리를 선택해주세요.', 'error');
-            return;
-        }
-
-        const date = document.getElementById('timeDate').value;
-        const time = document.getElementById('timeTime').value;
-
-        const params = new URLSearchParams();
-        params.append('categoryId', categoryId);
-        params.append('date', date);
-        params.append('time', time);
-
-        try {
-            const response = await fetch(`${API_BASE}/time?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
-                document.getElementById('timeForm').reset();
-            } else {
-                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
-            }
-        } catch (error) {
-            console.error('레코드 추가 오류:', error);
-            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
-        }
-    });
-
-    // NUMBER 레코드 추가
-    document.getElementById('numberForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const categoryId = document.getElementById('selectedCategory').value;
-        if (!categoryId) {
-            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
-            return;
-        }
-
-        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
-        if (selectedOption.dataset.type !== 'NUMBER') {
-            showMessage('recordMessage', 'NUMBER 타입 카테고리를 선택해주세요.', 'error');
-            return;
-        }
-
-        const date = document.getElementById('numberDate').value;
-        const number = document.getElementById('numberValue').value;
-
-        const params = new URLSearchParams();
-        params.append('categoryId', categoryId);
-        params.append('date', date);
-        params.append('number', number);
-
-        try {
-            const response = await fetch(`${API_BASE}/number?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
-                document.getElementById('numberForm').reset();
-            } else {
-                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
-            }
-        } catch (error) {
-            console.error('레코드 추가 오류:', error);
-            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
-        }
-    });
-
-    // CHECKLIST 레코드 추가
-    document.getElementById('checklistForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const categoryId = document.getElementById('selectedCategory').value;
-        if (!categoryId) {
-            showMessage('recordMessage', '카테고리를 먼저 선택해주세요.', 'error');
-            return;
-        }
-
-        const selectedOption = document.getElementById('selectedCategory').selectedOptions[0];
-        if (selectedOption.dataset.type !== 'CHECKLIST') {
-            showMessage('recordMessage', 'CHECKLIST 타입 카테고리를 선택해주세요.', 'error');
-            return;
-        }
-
-        const date = document.getElementById('checklistDate').value;
-        const todo = document.getElementById('checklistTodo').value;
-        const success = document.getElementById('checklistSuccess').checked;
-
-        const params = new URLSearchParams();
-        params.append('categoryId', categoryId);
-        params.append('date', date);
-        params.append('todo', todo);
-        params.append('success', success);
-
-        try {
-            const response = await fetch(`${API_BASE}/check-list?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                showMessage('recordMessage', '레코드가 추가되었습니다.', 'success');
-                document.getElementById('checklistForm').reset();
-            } else {
-                showMessage('recordMessage', '레코드 추가에 실패했습니다.', 'error');
-            }
-        } catch (error) {
-            console.error('레코드 추가 오류:', error);
-            showMessage('recordMessage', '오류가 발생했습니다.', 'error');
-        }
-    });
 
     // UI 표시 함수
     function showLoginSection() {
@@ -1238,13 +962,15 @@
                 currentUser.title = title;
                 currentUser.description = description;
                 closeProfileModal();
-                showMessage('categoryMessage', '프로필이 수정되었습니다.', 'success');
+                showMessage('categoryMessage', translations.profileUpdated[currentLang], 'success');
             } else {
-                showProfileModalError('프로필 수정에 실패했습니다.');
+                const errorMsg = currentLang === 'ko' ? '프로필 수정에 실패했습니다.' : 'Failed to update profile.';
+                showProfileModalError(errorMsg);
             }
         } catch (error) {
             console.error('프로필 수정 오류:', error);
-            showProfileModalError('프로필 수정 중 오류가 발생했습니다.');
+            const errorMsg = currentLang === 'ko' ? '프로필 수정 중 오류가 발생했습니다.' : 'Error occurred while updating profile.';
+            showProfileModalError(errorMsg);
         }
     });
 
@@ -1325,21 +1051,63 @@
             });
 
             if (response.ok) {
-                showMessage('categoryMessage', '카테고리가 수정되었습니다.', 'success');
+                showMessage('categoryMessage', translations.categoryUpdated[currentLang], 'success');
                 closeEditCategoryModal();
                 await loadCategories();
             } else {
-                showEditCategoryModalError('카테고리 수정에 실패했습니다.');
+                const errorMsg = currentLang === 'ko' ? '카테고리 수정에 실패했습니다.' : 'Failed to update category.';
+                showEditCategoryModalError(errorMsg);
             }
         } catch (error) {
             console.error('카테고리 수정 오류:', error);
-            showEditCategoryModalError('카테고리 수정 중 오류가 발생했습니다.');
+            const errorMsg = currentLang === 'ko' ? '카테고리 수정 중 오류가 발생했습니다.' : 'Error occurred while updating category.';
+            showEditCategoryModalError(errorMsg);
+        }
+    });
+
+    // 카테고리 추가 폼
+    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('categoryTitle').value;
+        const description = document.getElementById('categoryDescription').value;
+        const recordType = document.getElementById('recordType').value;
+        const visibility = document.getElementById('visibility').value;
+
+        const params = new URLSearchParams();
+        params.append('title', title);
+        params.append('description', description);
+        params.append('recordType', recordType);
+        params.append('visibility', visibility);
+
+        try {
+            const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                showMessage('categoryMessage', translations.categoryAdded[currentLang], 'success');
+                document.getElementById('categoryForm').reset();
+                await loadCategories();
+            } else {
+                const errorMsg = currentLang === 'ko' ? '카테고리 추가에 실패했습니다.' : 'Failed to add category.';
+                showMessage('categoryMessage', errorMsg, 'error');
+            }
+        } catch (error) {
+            console.error('카테고리 추가 오류:', error);
+            const errorMsg = currentLang === 'ko' ? '카테고리 추가 중 오류가 발생했습니다.' : 'Error occurred while adding category.';
+            showMessage('categoryMessage', errorMsg, 'error');
         }
     });
 
     // 카테고리 삭제
     async function deleteCategory(categoryId, categoryTitle) {
-        if (!confirm(`정말 "${categoryTitle}" 카테고리를 삭제하시겠습니까?\n\n이 카테고리의 모든 레코드도 함께 삭제됩니다.`)) {
+        const confirmMsg = currentLang === 'ko'
+            ? `정말 "${categoryTitle}" 카테고리를 삭제하시겠습니까?\n\n이 카테고리의 모든 레코드도 함께 삭제됩니다.`
+            : `Are you sure you want to delete "${categoryTitle}"?\n\nAll records in this category will also be deleted.`;
+
+        if (!confirm(confirmMsg)) {
             return;
         }
 
@@ -1350,14 +1118,14 @@
             });
 
             if (response.ok) {
-                showMessage('categoryMessage', '카테고리가 삭제되었습니다.', 'success');
+                showMessage('categoryMessage', translations.categoryDeleted[currentLang], 'success');
                 await loadCategories();
             } else {
-                showMessage('categoryMessage', '카테고리 삭제에 실패했습니다.', 'error');
+                showMessage('categoryMessage', translations.categoryDeleteFailed[currentLang], 'error');
             }
         } catch (error) {
             console.error('카테고리 삭제 오류:', error);
-            showMessage('categoryMessage', '카테고리 삭제 중 오류가 발생했습니다.', 'error');
+            showMessage('categoryMessage', translations.categoryDeleteError[currentLang], 'error');
         }
     }
 
