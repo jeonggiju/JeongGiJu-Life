@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -11,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.study.jeonggiju.domain.category.dto.AddCategory;
 import com.study.jeonggiju.domain.category.dto.FindCategoryResponse;
+import com.study.jeonggiju.domain.category.dto.LikeEmailCategoryResponse;
 import com.study.jeonggiju.domain.category.dto.PublicCategoryResponse;
 import com.study.jeonggiju.domain.category.dto.UpdateCategory;
 import com.study.jeonggiju.domain.category.entity.Category;
 import com.study.jeonggiju.domain.category.repository.CategoryRepository;
+import com.study.jeonggiju.domain.categoryLike.entity.CategoryLike;
 import com.study.jeonggiju.domain.user.entity.User;
 import com.study.jeonggiju.domain.user.repository.UserRepository;
 
@@ -57,6 +60,27 @@ public class CategoryService {
 		}
 		return result;
 
+	}
+
+	@Transactional(readOnly = true)
+	public List<LikeEmailCategoryResponse> findEmailLikeUser(UUID categoryId, UUID userId){
+		Category category = categoryRepository.findById(categoryId).orElseThrow();
+
+		if(!category.getUser().getId().equals(userId)) {
+			throw new RuntimeException("잘못된 사용자입니다.");
+		};
+
+		List<LikeEmailCategoryResponse> result = new ArrayList<>();
+		List<CategoryLike> categoryLike = category.getCategoryLike();
+
+		for(CategoryLike like : categoryLike) {
+			result.add(
+				LikeEmailCategoryResponse.builder()
+					.email(like.getUser().getEmail())
+					.build());
+		}
+
+		return result;
 	}
 
 	@Transactional

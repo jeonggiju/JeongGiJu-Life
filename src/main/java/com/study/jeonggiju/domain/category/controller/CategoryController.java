@@ -7,12 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.study.jeonggiju.domain.category.dto.AddCategory;
+import com.study.jeonggiju.domain.category.dto.LikeEmailCategoryResponse;
 import com.study.jeonggiju.domain.category.dto.PublicCategoryResponse;
 import com.study.jeonggiju.domain.category.dto.UpdateCategory;
 import com.study.jeonggiju.domain.category.service.CategoryService;
@@ -38,6 +40,17 @@ public class CategoryController {
 			categoryService.findAll(userDetails.getId())
 		);
 	}
+
+
+	@GetMapping("/{categoryId}/email")
+	public ResponseEntity<List<LikeEmailCategoryResponse>> getEmails(
+		@AuthenticationPrincipal LifeUserDetails userDetails,
+		@PathVariable UUID categoryId
+	){
+		List<LikeEmailCategoryResponse> emailLikeUser = categoryService.findEmailLikeUser(categoryId, userDetails.getId());
+		return ResponseEntity.ok(emailLikeUser);
+	}
+
 
 	@GetMapping
 	public ResponseEntity<?> find(UUID id){
