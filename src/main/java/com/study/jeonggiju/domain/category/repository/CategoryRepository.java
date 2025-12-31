@@ -11,7 +11,8 @@ import com.study.jeonggiju.domain.category.entity.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
-	Optional<List<Category>> findAllByUserId(UUID userId);
+
+	List<Category> findAllByUserId(UUID userId);
 
 	@Query("""
     	select c

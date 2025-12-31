@@ -43,7 +43,7 @@ public class CategoryService {
 
 	@Transactional(readOnly = true)
 	public List<FindCategoryResponse> findAll(UUID userId){
-		List<Category> categories = categoryRepository.findAllByUserId(userId).orElseThrow();
+		List<Category> categories = categoryRepository.findAllByUserId(userId);
 		List<FindCategoryResponse> result = new ArrayList();
 		for(Category category : categories) {
 			result.add(FindCategoryResponse
