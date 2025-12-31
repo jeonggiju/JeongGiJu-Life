@@ -12,27 +12,29 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #ffffff;
-            color: #000000;
-            padding: 40px 60px;
+            font-family: Arial, sans-serif;
+            background: #fff;
+            color: #333;
+            padding: 32px 36px;
             min-height: 100vh;
         }
 
         .header {
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
         }
 
         .greeting {
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-size: 32px;
+            font-weight: normal;
+            margin-bottom: 8px;
         }
 
         .user-desc {
-            font-size: 16px;
+            font-size: 14px;
             color: #666;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .top-actions {
@@ -40,54 +42,51 @@
             top: 40px;
             right: 60px;
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn {
-            padding: 8px 16px;
-            border: 1px solid #000;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
+            font-size: 13px;
             text-decoration: none;
-            color: #000;
+            color: #333;
             display: inline-block;
         }
 
         .btn:hover {
-            background: #f5f5f5;
+            background: #f0f0f0;
         }
 
         .btn-primary {
-            background: #000;
-            color: #fff;
+            background: #e0e0e0;
+            border-color: #999;
         }
 
         .btn-primary:hover {
-            background: #333;
+            background: #d0d0d0;
         }
 
         .language-toggle {
-            padding: 8px 16px;
-            border: 1px solid #000;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.2s;
+            font-size: 13px;
             min-width: 50px;
         }
 
         .language-toggle:hover {
-            background: #f5f5f5;
+            background: #f0f0f0;
         }
 
         .categories {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .view-toggle {
@@ -103,14 +102,12 @@
         }
 
         .add-record-btn {
-            padding: 8px 16px;
+            padding: 6px 12px;
             border: 1px solid #666;
             background: #666;
             color: #fff;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s;
+            font-size: 12px;
             text-align: center;
             margin-top: 4px;
         }
@@ -127,38 +124,36 @@
         }
 
         .toggle-btn {
-            padding: 8px 16px;
-            border: 1px solid #000;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s;
+            font-size: 12px;
             text-align: center;
             white-space: nowrap;
         }
 
         .toggle-btn:hover {
-            background: #f5f5f5;
+            background: #f0f0f0;
         }
 
         .toggle-btn.active {
-            background: #000;
-            color: #fff;
+            background: #e0e0e0;
+            border-color: #999;
         }
 
         .category-description {
             margin: 0;
-            font-size: 14px;
-            color: #000;
+            font-size: 13px;
+            color: #333;
             padding: 0;
         }
 
         .category-header-wrapper {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 10px;
+            gap: 12px;
+            margin-bottom: 8px;
         }
 
         .category-header-wrapper .label-toggle-btn {
@@ -167,7 +162,7 @@
 
         .content-with-sidebar {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: flex-start;
         }
 
@@ -181,68 +176,65 @@
         }
 
         .category-btn {
-            padding: 10px 20px;
-            border: 1px solid #000;
+            padding: 8px 16px;
+            border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
+            font-size: 13px;
         }
 
         .category-btn:hover {
-            background: #f5f5f5;
+            background: #f0f0f0;
         }
 
         .category-btn.active {
-            background: #000;
-            color: #fff;
+            background: #e8e8e8;
+            border-color: #999;
         }
 
         .date-group {
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .date-group-header {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #ddd;
         }
 
         /* CHECK 테이블 스타일 */
         .check-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .check-table td {
             padding: 8px;
             text-align: center;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #ddd;
         }
 
         .date-cell {
-            font-weight: 500;
-            font-size: 14px;
-            color: #000;
+            font-weight: normal;
+            font-size: 13px;
+            color: #333;
         }
 
         .result-cell {
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: bold;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .result-success {
-            color: #ef4444;
+            color: #cc0000;
         }
 
         .result-fail {
-            color: #000;
+            color: #333;
         }
 
         .result-cell:hover {
@@ -257,19 +249,18 @@
         .time-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .time-table td {
-            padding: 12px;
+            padding: 10px;
             text-align: center;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #ddd;
         }
 
         .time-cell {
-            font-weight: 500;
+            font-weight: normal;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .time-cell:hover {
@@ -277,21 +268,21 @@
         }
 
         .time-graph-container {
-            margin-bottom: 40px;
-            padding: 20px;
+            margin-bottom: 30px;
+            padding: 15px;
             background: #f9f9f9;
-            border-radius: 8px;
+            border-radius: 0;
         }
 
         .time-graph-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 12px;
         }
 
         .time-graph-large {
-            margin-bottom: 40px;
-            padding: 30px 0;
+            margin-bottom: 30px;
+            padding: 20px 0;
         }
 
         .time-graph-large canvas {
@@ -303,21 +294,20 @@
         .number-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .number-table td {
             padding: 8px;
             text-align: center;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #ddd;
         }
 
         .number-cell {
-            font-weight: 600;
-            font-size: 15px;
+            font-weight: bold;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s;
-            color: #000;
+            color: #333;
         }
 
         .number-cell:hover {
@@ -336,13 +326,13 @@
 
         .graph-controls {
             background: #f9f9f9;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0;
         }
 
         .control-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .control-group:last-child {
@@ -351,9 +341,9 @@
 
         .control-group label {
             display: block;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
         }
 
         .control-group input[type="range"] {
@@ -407,31 +397,31 @@
 
         /* TEXT 달력 스타일 */
         .calendar-year {
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
         .calendar-year-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 12px;
         }
 
         .calendar-months {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            gap: 12px;
         }
 
         .calendar-month {
-            border: 1px solid #e0e0e0;
-            padding: 15px;
+            border: 1px solid #ddd;
+            padding: 12px;
             background: #fafafa;
         }
 
         .calendar-month-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
             text-align: center;
         }
 
@@ -443,10 +433,10 @@
 
         .calendar-weekday {
             text-align: center;
-            font-size: 11px;
-            font-weight: 500;
+            font-size: 10px;
+            font-weight: bold;
             color: #999;
-            padding: 5px 0;
+            padding: 4px 0;
         }
 
         .calendar-day {
@@ -454,7 +444,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 11px;
             background: white;
             border: 1px solid #f0f0f0;
         }
@@ -465,11 +455,10 @@
         }
 
         .calendar-day.has-data {
-            background: #333;
+            background: #666;
             color: white;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .calendar-day.has-data:hover {
@@ -480,9 +469,8 @@
         .calendar-day.has-data-success {
             background: #d1fae5;
             color: #00a854;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .calendar-day.has-data-success:hover {
@@ -654,23 +642,21 @@
 
         /* 라벨 토글 버튼 */
         .label-toggle-btn {
-            padding: 6px 12px;
-            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 12px;
-            margin-left: 10px;
-            transition: all 0.2s;
+            font-size: 11px;
+            margin-left: 8px;
         }
 
         .label-toggle-btn:hover {
-            background: #f5f5f5;
+            background: #f0f0f0;
         }
 
         .label-toggle-btn.active {
-            background: #000;
-            color: white;
-            border-color: #000;
+            background: #e0e0e0;
+            border-color: #999;
         }
 
         /* 히트맵 라벨 숨기기 스타일 */
@@ -694,9 +680,8 @@
         .calendar-day.has-data-fail {
             background: #ffe5e5;
             color: #cc2e24;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .calendar-day.has-data-fail:hover {
@@ -707,9 +692,8 @@
         .calendar-day.checklist-complete {
             background: #d1fae5;
             color: #00a854;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .calendar-day.checklist-complete:hover {
@@ -719,9 +703,8 @@
         .calendar-day.checklist-partial {
             background: #fef3c7;
             color: #d97706;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .calendar-day.checklist-partial:hover {
@@ -731,9 +714,8 @@
         .calendar-day.checklist-low {
             background: #ffe5e5;
             color: #cc2e24;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .calendar-day.checklist-low:hover {
@@ -742,11 +724,10 @@
 
         /* TIME 달력 스타일 */
         .calendar-day.has-data-time {
-            background: #333;
+            background: #666;
             color: white;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .calendar-day.has-data-time:hover {
@@ -755,15 +736,14 @@
 
         /* NUMBER 달력 스타일 */
         .calendar-day.has-data-number {
-            background: #000;
+            background: #333;
             color: #fff;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .calendar-day.has-data-number:hover {
-            background: #333;
+            background: #555;
         }
 
         /* 히트맵 스타일 (100년 뷰) */
@@ -771,47 +751,47 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
-            padding: 20px;
+            padding: 15px;
             overflow-x: auto;
             overflow-y: auto;
             max-height: 80vh;
             background: #f9f9f9;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #ddd;
         }
 
         .heatmap-header {
             display: flex;
-            gap: 2px; /* 년도 라벨과 월 헤더 사이 간격 */
+            gap: 2px;
             margin-bottom: 5px;
         }
 
         .heatmap-months {
             display: flex;
-            gap: 2px; /* 월 헤더 간 간격 제거 - 데이터 셀과 정렬 맞추기 */
+            gap: 2px;
         }
 
         .heatmap-month-label {
-            font-size: 11px;
+            font-size: 10px;
             color: #666;
             text-align: center;
-            font-weight: 500;
+            font-weight: bold;
             flex-shrink: 0;
         }
 
         .heatmap-row {
             display: flex;
-            gap: 2px; /* 년도 라벨과 데이터 셀 사이 간격 */
+            gap: 2px;
             align-items: center;
         }
 
         .heatmap-year-label {
             width: 60px;
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
             text-align: right;
-            padding-right: 10px;
+            padding-right: 8px;
             flex-shrink: 0;
-            font-weight: 500;
+            font-weight: bold;
         }
 
         .heatmap-days {
@@ -869,60 +849,59 @@
         }
 
         .year-header {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
 
         .month-group {
-            margin-bottom: 30px;
-            padding-left: 20px;
+            margin-bottom: 25px;
+            padding-left: 15px;
         }
 
         .month-header {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
             color: #666;
         }
 
         .text-record-item {
-            padding: 15px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #f0f0f0;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .text-record-item:hover {
             background: #fafafa;
-            padding-left: 10px;
+            padding-left: 8px;
         }
 
         .text-record-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .text-record-title {
-            font-weight: 600;
-            font-size: 15px;
+            font-weight: bold;
+            font-size: 14px;
         }
 
         .text-record-date {
-            font-size: 13px;
+            font-size: 12px;
             color: #999;
         }
 
         .text-record-content {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 20px;
             color: #999;
         }
 
@@ -932,54 +911,53 @@
             justify-content: center;
             align-items: center;
             height: 100%;
-            background: #e8e8e8;
+            background: #f5f5f5;
             padding: 20px;
         }
 
         .simple-auth-box {
             background: white;
-            padding: 40px 50px;
-            border: 1px solid #ccc;
-            min-width: 450px;
+            padding: 40px;
+            border: 1px solid #ddd;
+            min-width: 400px;
             max-width: 500px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: bold;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            font-size: 14px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            font-size: 13px;
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #000;
+            border-color: #999;
         }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 60px;
         }
 
         .birth-date-inputs {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .birth-date-inputs input {
@@ -989,46 +967,44 @@
 
         .submit-btn {
             width: 100%;
-            padding: 12px;
-            background: #000;
-            color: #fff;
-            border: none;
-            font-size: 14px;
-            font-weight: 500;
+            padding: 10px;
+            background: #e0e0e0;
+            color: #333;
+            border: 1px solid #999;
+            font-size: 13px;
             cursor: pointer;
         }
 
         .submit-btn:hover {
-            background: #333;
+            background: #d0d0d0;
         }
 
         .form-footer {
             text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
+            margin-top: 15px;
+            font-size: 13px;
             color: #666;
         }
 
         .form-footer a {
-            color: #000;
-            text-decoration: none;
-            font-weight: 500;
+            color: #0066cc;
+            text-decoration: underline;
         }
 
         .error-message {
             background: #fee2e2;
             color: #991b1b;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
         }
 
         .success-message {
             background: #dcfce7;
             color: #166534;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
         }
 
         /* 모달 */
@@ -1051,11 +1027,12 @@
 
         .modal-content {
             background: white;
-            padding: 40px;
+            padding: 30px;
             max-width: 500px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
+            border: 1px solid #ccc;
         }
 
         .modal-content.modal-large {
@@ -1066,31 +1043,33 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
         }
 
         .modal-title {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 18px;
+            font-weight: bold;
         }
 
         .modal-close {
             background: none;
             border: none;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
             color: #666;
             line-height: 1;
         }
 
         .modal-close:hover {
-            color: #000;
+            color: #333;
         }
 
         .modal-actions {
             display: flex;
-            gap: 10px;
-            margin-top: 30px;
+            gap: 8px;
+            margin-top: 20px;
         }
 
         .modal-actions button {
@@ -1099,32 +1078,32 @@
 
         /* 텍스트 팝업 스타일 */
         .text-popup-item {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .text-popup-item-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .text-popup-item-title {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: bold;
         }
 
         .text-popup-item-content {
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 13px;
+            line-height: 1.5;
             color: #333;
             white-space: pre-wrap;
         }
 
         .text-popup-divider {
             height: 1px;
-            background: #e0e0e0;
-            margin: 20px 0;
+            background: #ddd;
+            margin: 15px 0;
         }
 
         /* 히트맵 풀스크린 모달 스타일 */
@@ -1138,7 +1117,7 @@
             background: white;
             z-index: 2000;
             overflow: auto;
-            padding: 50px 10px 10px 10px;
+            padding: 40px 10px 10px 10px;
         }
 
         .heatmap-modal.active {
@@ -1162,19 +1141,19 @@
 
         /* 모달 내부 월 헤더 너비 조정 */
         .heatmap-modal .heatmap-month-label {
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .heatmap-close {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background: #000;
+            top: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background: #666;
             color: white;
             border: none;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
             z-index: 2001;
             border-radius: 50%;
@@ -1185,7 +1164,7 @@
         }
 
         .heatmap-close:hover {
-            background: #333;
+            background: #555;
         }
 
         /* CHECKLIST 모달 */
@@ -1208,59 +1187,58 @@
 
         .checklist-modal-content {
             background: white;
-            border-radius: 8px;
+            border-radius: 0;
             max-width: 500px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid #ccc;
         }
 
         .checklist-modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 24px;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
         }
 
         .checklist-modal-header h3 {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: bold;
             margin: 0;
         }
 
         .checklist-modal-close {
             background: none;
             border: none;
-            font-size: 28px;
+            font-size: 24px;
             color: #666;
             cursor: pointer;
             line-height: 1;
             padding: 0;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .checklist-modal-close:hover {
-            color: #000;
+            color: #333;
         }
 
         #checklistModalBody {
-            padding: 24px;
+            padding: 20px;
         }
 
         .checklist-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px;
+            gap: 10px;
+            padding: 10px;
             border-bottom: 1px solid #f0f0f0;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
         .checklist-item:hover {
@@ -1272,14 +1250,14 @@
         }
 
         .checklist-item-status {
-            font-size: 20px;
-            width: 24px;
+            font-size: 18px;
+            width: 22px;
             text-align: center;
         }
 
         .checklist-item-todo {
             flex: 1;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .checklist-item.completed .checklist-item-todo {
@@ -1292,9 +1270,9 @@
 
         .checklist-empty {
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 20px;
             color: #999;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         /* CHECKLIST 주간 뷰 */
@@ -1302,23 +1280,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding: 20px 0;
+            margin-bottom: 15px;
+            padding: 15px 0;
             border-bottom: 1px solid #f0f0f0;
         }
 
         .weekly-nav-btn {
-            padding: 6px 12px;
+            padding: 5px 10px;
             background: transparent;
             border: none;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             color: #666;
-            transition: all 0.2s;
         }
 
         .weekly-nav-btn:hover {
-            color: #000;
+            color: #333;
         }
 
         .weekly-title-container {
@@ -1900,8 +1877,9 @@
 
         <div class="right-content">
             <div class="category-header-wrapper" style="display: none;" id="categoryHeaderWrapper">
-                <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;"><span data-lang-ko="라벨" data-lang-en="Labels">라벨</span></button>
+                <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;">📅 <span data-lang-ko="라벨" data-lang-en="Labels">라벨</span></button>
                 <div class="category-description" id="categoryDescription"></div>
+                <span class="category-like-count" id="categoryLikeCount" style="display: none; margin-left: auto; padding: 4px 10px; background: #f5f5f5; border: 1px solid #ddd; font-size: 12px; color: #666;"></span>
             </div>
 
             <div class="records-section" id="recordsSection">
@@ -2062,7 +2040,10 @@
         'wed': { ko: '수', en: 'Wed' },
         'thu': { ko: '목', en: 'Thu' },
         'fri': { ko: '금', en: 'Fri' },
-        'sat': { ko: '토', en: 'Sat' }
+        'sat': { ko: '토', en: 'Sat' },
+
+        // 좋아요
+        'likes': { ko: '좋아요', en: 'Likes' }
     };
 
     // 언어 전환 함수
@@ -3017,6 +2998,7 @@
         const categoryDescription = document.getElementById('categoryDescription');
         const categoryHeaderWrapper = document.getElementById('categoryHeaderWrapper');
         const globalLabelToggle = document.getElementById('globalCalendarLabelToggle');
+        const categoryLikeCount = document.getElementById('categoryLikeCount');
 
         // 카테고리 설명과 라벨 버튼 표시
         if (category && category.description) {
@@ -3025,6 +3007,15 @@
         } else {
             categoryDescription.textContent = '';
             categoryHeaderWrapper.style.display = 'none';
+        }
+
+        // PUBLIC 카테고리일 때 좋아요 개수 표시
+        if (category && category.visibility === 'PUBLIC') {
+            loadLikeCountForManage(category.id);
+            categoryLikeCount.style.display = 'block';
+            categoryHeaderWrapper.style.display = 'flex';
+        } else {
+            categoryLikeCount.style.display = 'none';
         }
 
         if (!records || records.length === 0) {
@@ -6497,6 +6488,27 @@
         setTimeout(() => {
             element.innerHTML = '';
         }, 5000);
+    }
+
+    // ==================== 좋아요 기능 ====================
+
+    // 좋아요 개수 로드 (manage.html용)
+    async function loadLikeCountForManage(categoryId) {
+        try {
+            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const count = await response.json();
+                const likeElement = document.getElementById('categoryLikeCount');
+                if (likeElement) {
+                    likeElement.textContent = `❤️ ${count} ${translations.likes[currentLang]}`;
+                }
+            }
+        } catch (error) {
+            console.error('좋아요 개수 로드 오류:', error);
+        }
     }
 
     // 모달 외부 클릭 시 닫기

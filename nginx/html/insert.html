@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JeongGiJu - 데이터 입력</title>
+    <title>JeongGiJu - 카테고리 관리</title>
     <style>
         * {
             margin: 0;
@@ -12,27 +12,31 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #ffffff;
-            color: #000000;
-            /* 좌우 여백을 너무 크게 잡으면 '왼쪽 몰림'처럼 보여서 살짝 줄임 */
+            font-family: Arial, sans-serif;
+            background: #fff;
+            color: #333;
             padding: 32px 36px;
             min-height: 100vh;
+            font-size: 14px;
         }
 
         .header {
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
         }
 
         .title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: normal;
+            margin-bottom: 5px;
+            color: #000;
         }
 
         .subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
+            font-weight: normal;
         }
 
         .top-actions {
@@ -40,48 +44,43 @@
             top: 40px;
             right: 60px;
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn {
-            padding: 8px 16px;
-            border: 1px solid #000;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
+            font-size: 13px;
             text-decoration: none;
-            color: #000;
+            color: #333;
             display: inline-block;
         }
 
         .btn:hover {
-            background: #f5f5f5;
+            background: #f0f0f0;
         }
 
         .btn-primary {
-            background: #000;
-            color: #fff;
-            border: none;
+            background: #e0e0e0;
+            border-color: #999;
         }
 
         .btn-primary:hover {
-            background: #333;
+            background: #d0d0d0;
         }
 
         .language-toggle {
-            padding: 8px 16px;
-            border: 1px solid #000;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.2s;
-            min-width: 50px;
+            font-size: 13px;
         }
 
         .language-toggle:hover {
-            background: #f5f5f5;
+            background: #f0f0f0;
         }
 
         .content {
@@ -94,219 +93,191 @@
             margin-bottom: 60px;
         }
 
-
-
-
-        /* 섹션 3단 레이아웃 */
         .section-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            gap: 80px;
             align-items: start;
         }
 
-        /* 섹션 스타일 */
         .section-grid .section {
-            padding: 30px;
-            border: 1px solid #eee;
-            background: #fff;
+            padding: 0;
+            border: none;
+            background: transparent;
+            margin-bottom: 0;
         }
 
         @media (max-width: 1024px) {
             .section-grid {
                 grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .section-grid .section {
-                padding: 20px;
+                gap: 50px;
             }
         }
 
         .section-title {
             font-size: 18px;
-            font-weight: 600;
+            font-weight: bold;
             margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #000;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #333;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            font-size: 14px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #000;
+            border-color: #999;
         }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 80px;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 12px;
-            background: #000;
-            color: #fff;
-            border: none;
-            font-size: 14px;
-            font-weight: 500;
+            padding: 10px;
+            background: #e0e0e0;
+            color: #333;
+            border: 1px solid #999;
+            font-size: 13px;
             cursor: pointer;
         }
 
         .submit-btn:hover {
-            background: #333;
-        }
-
-        .category-select {
-            background: #f9f9f9;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .tabs {
-            display: none;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            border: 1px solid #000;
-            background: white;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            background: #f5f5f5;
-        }
-
-        .tab.active {
-            background: #000;
-            color: #fff;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .checkbox-field {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .checkbox-field input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
+            background: #d0d0d0;
         }
 
         .error-message {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            background: #ffe0e0;
+            color: #cc0000;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border: 1px solid #ffcccc;
         }
 
         .success-message {
-            background: #dcfce7;
-            color: #166534;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            background: #e0ffe0;
+            color: #006600;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border: 1px solid #ccffcc;
         }
 
         #categoryList {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
-        }
-
-        #categoryList > p {
-            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-bottom: 20px;
         }
 
         .category-item {
-            border: 1px solid #ddd;
-            padding: 15px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            padding: 12px 0;
             display: flex;
             flex-direction: column;
-            background: #fafafa;
-            min-height: 120px;
+            background: transparent;
+            min-height: 80px;
+        }
+
+        .category-item:last-child {
+            border-bottom: none;
         }
 
         .category-info {
             flex: 1;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .category-title {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: bold;
             margin-bottom: 5px;
         }
 
         .category-meta {
-            font-size: 13px;
+            font-size: 12px;
             color: #666;
             word-break: break-word;
         }
 
+        .like-info {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 2px 6px;
+            background: #fff;
+            border: 1px solid #ddd;
+            font-size: 11px;
+            color: #666;
+        }
+
         .category-actions {
             display: flex;
-            gap: 8px;
+            flex-wrap: wrap;
+            gap: 5px;
             margin-top: auto;
         }
 
-        .btn-edit, .btn-delete {
+        .btn-edit, .btn-delete, .btn-view-likes {
             flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #000;
+            min-width: 70px;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 13px;
-            transition: all 0.2s;
+            font-size: 12px;
             text-align: center;
+        }
+        background: white;
+        cursor: pointer;
+        font-size: 12px;
+        text-align: center;
         }
 
         .btn-edit:hover {
-            background: #f5f5f5;
+            background: #f0f0f0;
         }
 
         .btn-delete {
-            border-color: #dc2626;
-            color: #dc2626;
+            border-color: #cc0000;
+            color: #cc0000;
         }
 
         .btn-delete:hover {
-            background: #dc2626;
-            color: white;
+            background: #ffeeee;
+        }
+
+        .btn-view-likes {
+            border-color: #009900;
+            color: #009900;
+        }
+
+        .btn-view-likes:hover {
+            background: #eeffee;
         }
 
         .modal {
@@ -328,29 +299,32 @@
 
         .modal-content {
             background: white;
-            padding: 40px;
+            padding: 30px;
             max-width: 500px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
+            border: 1px solid #ccc;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
         }
 
         .modal-title {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 18px;
+            font-weight: bold;
         }
 
         .modal-close {
             background: none;
             border: none;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
             color: #666;
             line-height: 1;
@@ -360,41 +334,26 @@
             color: #000;
         }
 
-        /* 로그인 섹션 스타일 */
         .simple-auth-container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100%;
-            background: #e8e8e8;
+            background: #f5f5f5;
             padding: 20px;
         }
 
         .simple-auth-box {
             background: white;
-            padding: 40px 50px;
-            border: 1px solid #ccc;
-            min-width: 450px;
+            padding: 40px;
+            border: 1px solid #ddd;
+            min-width: 400px;
             max-width: 500px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .form-footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .form-footer a {
-            color: #000;
-            text-decoration: none;
-            font-weight: 500;
         }
 
         @media (max-width: 1024px) {
             #categoryList {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -403,18 +362,25 @@
                 padding: 20px;
             }
 
+            .top-actions {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+            }
+
             #categoryList {
                 grid-template-columns: 1fr;
             }
 
-            .top-actions {
-                position: static;
-                margin-bottom: 20px;
-                flex-direction: column;
+            .simple-auth-box {
+                min-width: auto;
+                padding: 30px 20px;
             }
 
-            .title {
-                font-size: 24px;
+            .modal-content {
+                padding: 20px;
             }
         }
     </style>
@@ -427,21 +393,21 @@
             <div style="text-align: left; margin-bottom: 10px;">
                 <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
-            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign In</h2>
-            <div id="loginError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <h2 style="text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: normal;">Sign In</h2>
+            <div id="loginError" style="color: #cc0000; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="loginForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Email:</td>
+                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Password:</td>
+                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Sign In</button>
+                            <button type="submit" style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;">Sign In</button>
                         </td>
                     </tr>
                 </table>
@@ -460,34 +426,34 @@
             <div style="text-align: left; margin-bottom: 10px;">
                 <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
-            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign Up</h2>
-            <div id="signupError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <h2 style="text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: normal;">Sign Up</h2>
+            <div id="signupError" style="color: #cc0000; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="signupForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupUsername" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Username:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupUsername" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="signupEmail" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Email:</td>
+                        <td style="padding: 5px 0;"><input type="email" id="signupEmail" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="signupPassword" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Password:</td>
+                        <td style="padding: 5px 0;"><input type="password" id="signupPassword" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Title:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupTitle" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Title:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupTitle" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Description:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Description:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;">Sign Up</button>
-                            <button type="button" id="cancelSignup" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Cancel</button>
+                            <button type="submit" style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px; margin-right: 10px;">Sign Up</button>
+                            <button type="button" id="cancelSignup" style="padding: 8px 24px; border: 1px solid #999; background: #fff; cursor: pointer; font-size: 13px;">Cancel</button>
                         </td>
                     </tr>
                 </table>
@@ -504,7 +470,7 @@
     <div class="top-actions">
         <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
         <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
-        <a href="manage.html" class="btn" data-lang-ko="데이터 조회" data-lang-en="View Data">데이터 조회</a>
+        <a href="manage.html" class="btn" data-lang-ko="데이터 관리" data-lang-en="View Data">데이터 관리</a>
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
         <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
     </div>
@@ -520,8 +486,8 @@
             <!-- 카테고리 관리 -->
             <div class="section">
                 <div class="section-title" data-lang-ko="카테고리 관리" data-lang-en="Category Management">카테고리 관리</div>
-                <div id="categoryList">
-                    <p style="color: #666; font-size: 14px;" data-lang-ko="카테고리를 불러오는 중..." data-lang-en="Loading categories...">카테고리를 불러오는 중...</p>
+                <div id="categoryList" style="margin-bottom: 20px;">
+                    <p style="color: #666; font-size: 13px;" data-lang-ko="카테고리를 불러오는 중..." data-lang-en="Loading categories...">카테고리를 불러오는 중...</p>
                 </div>
             </div>
 
@@ -567,10 +533,10 @@
 
 <!-- 프로필 수정 모달 -->
 <div id="profileModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
-    <div style="background: white; padding: 40px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <div style="font-size: 24px; font-weight: 700;" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</div>
-            <button onclick="closeProfileModal()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #666; line-height: 1;">×</button>
+    <div style="background: white; padding: 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; border: 1px solid #ccc;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ddd;">
+            <div style="font-size: 18px; font-weight: bold;" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</div>
+            <button onclick="closeProfileModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; line-height: 1;">×</button>
         </div>
         <div id="profileModalError"></div>
         <form id="profileForm">
@@ -626,6 +592,26 @@
     </div>
 </div>
 
+<!-- 좋아요 목록 모달 -->
+<div id="likeListModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title" data-lang-ko="좋아요 목록" data-lang-en="Like List">좋아요 목록</div>
+            <button class="modal-close" onclick="closeLikeListModal()">×</button>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;" id="likeListCategoryTitle"></div>
+            <div style="font-size: 14px; color: #666;" id="likeListCount"></div>
+        </div>
+        <div id="likeListContent" style="max-height: 400px; overflow-y: auto;">
+            <p style="color: #666; text-align: center; padding: 40px 0;">로딩 중...</p>
+        </div>
+        <div style="margin-top: 30px; text-align: center;">
+            <button class="btn" onclick="closeLikeListModal()" data-lang-ko="닫기" data-lang-en="Close">닫기</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const API_BASE = '/api';
     let currentUser = null;
@@ -637,12 +623,14 @@
         // 버튼
         'home': { ko: '홈', en: 'Home' },
         'editProfile': { ko: '프로필 수정', en: 'Edit Profile' },
-        'viewData': { ko: '데이터 조회', en: 'View Data' },
+        'viewData': { ko: '데이터 관리', en: 'View Data' },
         'logout': { ko: '로그아웃', en: 'Logout' },
         'save': { ko: '저장', en: 'Save' },
         'cancel': { ko: '취소', en: 'Cancel' },
+        'close': { ko: '닫기', en: 'Close' },
         'edit': { ko: '수정', en: 'Edit' },
         'delete': { ko: '삭제', en: 'Delete' },
+        'viewLikes': { ko: '좋아요 목록', en: 'View Likes' },
 
         // 제목
         'categoryManagementTitle': { ko: '카테고리 관리', en: 'Category Management' },
@@ -650,6 +638,7 @@
         'categoryManagement': { ko: '카테고리 관리', en: 'Category Management' },
         'addCategory': { ko: '카테고리 추가', en: 'Add Category' },
         'editCategory': { ko: '카테고리 수정', en: 'Edit Category' },
+        'likeListTitle': { ko: '좋아요 목록', en: 'Like List' },
 
         // 폼 라벨
         'title': { ko: '제목 *', en: 'Title *' },
@@ -659,28 +648,15 @@
         'typeLabel': { ko: '타입', en: 'Type' },
         'visibility': { ko: '공개 설정 *', en: 'Visibility *' },
 
-        // 옵션
-        'select': { ko: '선택하세요', en: 'Select' },
-        'checkType': { ko: 'CHECK - 성공/실패 기록', en: 'CHECK - Success/Fail' },
-        'textType': { ko: 'TEXT - 텍스트 기록', en: 'TEXT - Text Record' },
-        'timeType': { ko: 'TIME - 시간 기록', en: 'TIME - Time Record' },
-        'numberType': { ko: 'NUMBER - 숫자 기록', en: 'NUMBER - Number Record' },
-        'checklistType': { ko: 'CHECKLIST - 할일 목록', en: 'CHECKLIST - Todo List' },
-        'private': { ko: 'PRIVATE - 나만 보기', en: 'PRIVATE - Only Me' },
-        'public': { ko: 'PUBLIC - 모두에게 공개', en: 'PUBLIC - Public' },
-
         // 메시지
         'loading': { ko: '카테고리를 불러오는 중...', en: 'Loading categories...' },
         'noCategories': { ko: '등록된 카테고리가 없습니다', en: 'No categories' },
+        'noLikes': { ko: '아직 좋아요가 없습니다', en: 'No likes yet' },
         'categoryAdded': { ko: '카테고리가 추가되었습니다.', en: 'Category added successfully.' },
         'categoryUpdated': { ko: '카테고리가 수정되었습니다.', en: 'Category updated successfully.' },
         'categoryDeleted': { ko: '카테고리가 삭제되었습니다.', en: 'Category deleted successfully.' },
-        'categoryDeleteFailed': { ko: '카테고리 삭제에 실패했습니다.', en: 'Failed to delete category.' },
-        'categoryDeleteError': { ko: '카테고리 삭제 중 오류가 발생했습니다.', en: 'Error occurred while deleting category.' },
-        'deleteConfirmMsg': { ko: '정말 삭제하시겠습니까?\n\n이 카테고리의 모든 레코드도 함께 삭제됩니다.', en: 'Are you sure you want to delete?\n\nAll records in this category will also be deleted.' },
         'profileUpdated': { ko: '프로필이 수정되었습니다.', en: 'Profile updated successfully.' },
-        'error': { ko: '오류가 발생했습니다.', en: 'An error occurred.' },
-        'deleteConfirm': { ko: '정말 삭제하시겠습니까?', en: 'Are you sure you want to delete?' }
+        'deleteConfirm': { ko: '정말 삭제하시겠습니까?\n\n이 카테고리의 모든 레코드도 함께 삭제됩니다.', en: 'Are you sure you want to delete?\n\nAll records in this category will also be deleted.' }
     };
 
     // 언어 전환 함수
@@ -717,24 +693,26 @@
 
     // 페이지 로드
     window.addEventListener('DOMContentLoaded', async () => {
+        console.log('=== INSERT.HTML 페이지 로드 시작 ===');
+        console.log('API_BASE:', API_BASE);
         applyLanguage(); // 언어 적용
         await checkAuth();
-
-        // 초기 로드 시 탭 숨김
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
     });
 
     // 인증 확인
     async function checkAuth() {
+        console.log('1. checkAuth() 함수 시작');
         try {
+            console.log('2. API 요청:', `${API_BASE}/auth/me`);
             const response = await fetch(`${API_BASE}/auth/me`, {
                 credentials: 'include'
             });
 
+            console.log('3. 응답 상태:', response.status, response.ok);
+
             if (response.ok) {
                 currentUser = await response.json();
+                console.log('4. 사용자 정보:', currentUser);
 
                 // /api/user 호출하여 title, description 가져오기
                 try {
@@ -750,14 +728,19 @@
                         currentUser.birthYear = userData.birthYear;
                         currentUser.birthMonth = userData.birthMonth;
                         currentUser.birthDay = userData.birthDay;
+                        console.log('5. 사용자 상세 정보 로드 완료');
                     }
                 } catch (error) {
                     console.error('User 정보 로드 실패:', error);
                 }
 
+                console.log('6. showMainSection() 호출');
                 showMainSection();
+                console.log('7. loadCategories() 호출');
                 await loadCategories();
+                console.log('8. 모든 초기화 완료');
             } else {
+                console.log('인증 실패 - 로그인 필요');
                 showLoginSection();
             }
         } catch (error) {
@@ -878,49 +861,153 @@
         const listContainer = document.getElementById('categoryList');
 
         if (!categories || categories.length === 0) {
-            listContainer.innerHTML = `<p style="color: #666; font-size: 14px;">${translations.noCategories[currentLang]}</p>`;
+            listContainer.innerHTML = `<p style="color: #000; font-size: 14px;">${translations.noCategories[currentLang]}</p>`;
             return;
         }
+
+        const typeLabel = currentLang === 'ko' ? '타입' : 'Type';
+        const editText = translations.edit[currentLang];
+        const deleteText = translations.delete[currentLang];
+        const viewLikesText = translations.viewLikes[currentLang];
 
         let html = '';
         categories.forEach(category => {
             const visibilityBadge = category.visibility === 'PUBLIC'
                 ? '<span style="display: inline-block; padding: 2px 8px; background: #000; color: #fff; font-size: 11px; font-weight: 600; margin-left: 8px;">PUBLIC</span>'
-                : '<span style="display: inline-block; padding: 2px 8px; background: #e5e5e5; color: #666; font-size: 11px; font-weight: 600; margin-left: 8px;">PRIVATE</span>';
+                : '<span style="display: inline-block; padding: 2px 8px; background: #e5e5e5; color: #000; font-size: 11px; font-weight: 600; margin-left: 8px;">PRIVATE</span>';
 
-            const typeLabel = currentLang === 'ko' ? '타입' : 'Type';
+            const likeInfo = category.visibility === 'PUBLIC'
+                ? `<span class="like-info" data-category-id="${category.id}">❤️ 0</span>`
+                : '';
+
+            // PUBLIC 카테고리는 3개 버튼 (수정, 삭제, 좋아요 목록)
+            // PRIVATE 카테고리는 2개 버튼 (수정, 삭제)
+            const actionsHtml = category.visibility === 'PUBLIC'
+                ? `
+                    <button class="btn-edit" onclick="openEditCategoryModal('${category.id}')">${editText}</button>
+                    <button class="btn-delete" onclick="deleteCategory('${category.id}', '${category.title}')">${deleteText}</button>
+                    <button class="btn-view-likes" onclick="openLikeListModal('${category.id}', '${category.title}')">${viewLikesText}</button>
+                  `
+                : `
+                    <button class="btn-edit" onclick="openEditCategoryModal('${category.id}')">${editText}</button>
+                    <button class="btn-delete" onclick="deleteCategory('${category.id}', '${category.title}')">${deleteText}</button>
+                  `;
 
             html += `
                 <div class="category-item">
                     <div class="category-info">
-                        <div class="category-title">${category.title}${visibilityBadge}</div>
+                        <div class="category-title">${category.title}${visibilityBadge}${likeInfo}</div>
                         <div class="category-meta">
                             ${typeLabel}: ${category.recordType}
                             ${category.description ? ` | ${category.description}` : ''}
                         </div>
                     </div>
                     <div class="category-actions">
-                        <button class="btn-edit" onclick="openEditCategoryModal('${category.id}')">${translations.edit[currentLang]}</button>
-                        <button class="btn-delete" onclick="deleteCategory('${category.id}', '${category.title}')">${translations.delete[currentLang]}</button>
+                        ${actionsHtml}
                     </div>
                 </div>
             `;
         });
         listContainer.innerHTML = html;
+
+        // PUBLIC 카테고리의 좋아요 개수 로드
+        categories.forEach(category => {
+            if (category.visibility === 'PUBLIC') {
+                loadLikeCountForInsert(category.id);
+            }
+        });
     }
 
+    // 좋아요 개수 로드 함수 (insert.html용)
+    async function loadLikeCountForInsert(categoryId) {
+        try {
+            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const likeElement = document.querySelector(`.like-info[data-category-id="${categoryId}"]`);
+                if (likeElement) {
+                    likeElement.textContent = `❤️ ${data.count}`;
+                }
+            }
+        } catch (error) {
+            console.error('좋아요 개수 로드 실패:', error);
+        }
+    }
+
+    // 카테고리 추가
+    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('categoryTitle').value;
+        const description = document.getElementById('categoryDescription').value;
+        const recordType = document.getElementById('recordType').value;
+        const visibility = document.getElementById('visibility').value;
+
+        const params = new URLSearchParams();
+        params.append('title', title);
+        params.append('description', description);
+        params.append('recordType', recordType);
+        params.append('visibility', visibility);
+
+        try {
+            const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                showMessage('categoryMessage', translations.categoryAdded[currentLang], 'success');
+                document.getElementById('categoryForm').reset();
+                await loadCategories();
+            } else {
+                const errorMsg = currentLang === 'ko' ? '카테고리 추가에 실패했습니다.' : 'Failed to add category.';
+                showMessage('categoryMessage', errorMsg, 'error');
+            }
+        } catch (error) {
+            console.error('카테고리 추가 오류:', error);
+            const errorMsg = currentLang === 'ko' ? '오류가 발생했습니다.' : 'An error occurred.';
+            showMessage('categoryMessage', errorMsg, 'error');
+        }
+    });
 
     // UI 표시 함수
     function showLoginSection() {
-        document.getElementById('loginSection').style.display = 'block';
-        document.getElementById('signupSection').style.display = 'none';
-        document.getElementById('mainSection').style.display = 'none';
+        console.log('>>> showLoginSection() 호출됨');
+        const loginSection = document.getElementById('loginSection');
+        const signupSection = document.getElementById('signupSection');
+        const mainSection = document.getElementById('mainSection');
+
+        console.log('>>> DOM 요소 존재 확인:', {
+            loginSection: !!loginSection,
+            signupSection: !!signupSection,
+            mainSection: !!mainSection
+        });
+
+        if (loginSection) loginSection.style.display = 'block';
+        if (signupSection) signupSection.style.display = 'none';
+        if (mainSection) mainSection.style.display = 'none';
+        console.log('>>> 로그인 섹션 표시 완료');
     }
 
     function showMainSection() {
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('signupSection').style.display = 'none';
-        document.getElementById('mainSection').style.display = 'block';
+        console.log('>>> showMainSection() 호출됨');
+        const loginSection = document.getElementById('loginSection');
+        const signupSection = document.getElementById('signupSection');
+        const mainSection = document.getElementById('mainSection');
+
+        console.log('>>> DOM 요소 존재 확인:', {
+            loginSection: !!loginSection,
+            signupSection: !!signupSection,
+            mainSection: !!mainSection
+        });
+
+        if (loginSection) loginSection.style.display = 'none';
+        if (signupSection) signupSection.style.display = 'none';
+        if (mainSection) mainSection.style.display = 'block';
+        console.log('>>> 메인 섹션 표시 완료');
     }
 
     // 프로필 수정 모달 열기
@@ -1028,6 +1115,69 @@
         editingCategoryId = null;
     }
 
+    // 좋아요 목록 모달 열기
+    async function openLikeListModal(categoryId, categoryTitle) {
+        document.getElementById('likeListCategoryTitle').textContent = categoryTitle;
+        document.getElementById('likeListModal').classList.add('active');
+
+        const contentDiv = document.getElementById('likeListContent');
+        const countDiv = document.getElementById('likeListCount');
+
+        // 로딩 표시
+        const loadingText = currentLang === 'ko' ? '로딩 중...' : 'Loading...';
+        contentDiv.innerHTML = `<p style="color: #000; text-align: center; padding: 40px 0;">${loadingText}</p>`;
+        countDiv.textContent = '';
+
+        try {
+            const response = await fetch(`${API_BASE}/category/${categoryId}/email`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const emails = await response.json();
+
+                if (emails.length === 0) {
+                    const noLikesText = translations.noLikes[currentLang];
+                    contentDiv.innerHTML = `<p style="color: #000; text-align: center; padding: 40px 0;">${noLikesText}</p>`;
+                    countDiv.textContent = currentLang === 'ko' ? '0명이 좋아요를 눌렀습니다' : '0 likes';
+                } else {
+                    const countText = currentLang === 'ko'
+                        ? `${emails.length}명이 좋아요를 눌렀습니다`
+                        : `${emails.length} ${emails.length === 1 ? 'like' : 'likes'}`;
+                    countDiv.textContent = countText;
+
+                    let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+                    emails.forEach((item, index) => {
+                        const colors = ['#ffccff', '#ccffff', '#ffffcc', '#ccffcc', '#ffcccc'];
+                        const bgColor = colors[index % colors.length];
+                        html += `
+                            <div style="padding: 15px 20px; background: ${bgColor}; border: 4px solid #000; display: flex; align-items: center; gap: 12px; box-shadow: 5px 5px 0px rgba(0,0,0,0.3); transform: rotate(${(index % 2 === 0 ? 0.5 : -0.5)}deg);">
+                                <span style="display: flex; justify-content: center; align-items: center; width: 38px; height: 38px; background: #ff00ff; color: #fff; border: 3px solid #000; font-size: 18px; font-weight: 900; box-shadow: 3px 3px 0px #000;">
+                                    ${index + 1}
+                                </span>
+                                <span style="font-size: 16px; font-weight: 700;">${item.email}</span>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    contentDiv.innerHTML = html;
+                }
+            } else {
+                const errorText = currentLang === 'ko' ? '목록을 불러오는데 실패했습니다.' : 'Failed to load list.';
+                contentDiv.innerHTML = `<p style="color: #ff0000; text-align: center; padding: 40px 0;">${errorText}</p>`;
+            }
+        } catch (error) {
+            console.error('좋아요 이메일 목록 로드 오류:', error);
+            const errorText = currentLang === 'ko' ? '오류가 발생했습니다.' : 'An error occurred.';
+            contentDiv.innerHTML = `<p style="color: #ff0000; text-align: center; padding: 40px 0;">${errorText}</p>`;
+        }
+    }
+
+    // 좋아요 목록 모달 닫기
+    function closeLikeListModal() {
+        document.getElementById('likeListModal').classList.remove('active');
+    }
+
     // 카테고리 수정 폼 제출
     document.getElementById('editCategoryForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1065,42 +1215,6 @@
         }
     });
 
-    // 카테고리 추가 폼
-    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const title = document.getElementById('categoryTitle').value;
-        const description = document.getElementById('categoryDescription').value;
-        const recordType = document.getElementById('recordType').value;
-        const visibility = document.getElementById('visibility').value;
-
-        const params = new URLSearchParams();
-        params.append('title', title);
-        params.append('description', description);
-        params.append('recordType', recordType);
-        params.append('visibility', visibility);
-
-        try {
-            const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                showMessage('categoryMessage', translations.categoryAdded[currentLang], 'success');
-                document.getElementById('categoryForm').reset();
-                await loadCategories();
-            } else {
-                const errorMsg = currentLang === 'ko' ? '카테고리 추가에 실패했습니다.' : 'Failed to add category.';
-                showMessage('categoryMessage', errorMsg, 'error');
-            }
-        } catch (error) {
-            console.error('카테고리 추가 오류:', error);
-            const errorMsg = currentLang === 'ko' ? '카테고리 추가 중 오류가 발생했습니다.' : 'Error occurred while adding category.';
-            showMessage('categoryMessage', errorMsg, 'error');
-        }
-    });
-
     // 카테고리 삭제
     async function deleteCategory(categoryId, categoryTitle) {
         const confirmMsg = currentLang === 'ko'
@@ -1121,11 +1235,13 @@
                 showMessage('categoryMessage', translations.categoryDeleted[currentLang], 'success');
                 await loadCategories();
             } else {
-                showMessage('categoryMessage', translations.categoryDeleteFailed[currentLang], 'error');
+                const errorMsg = currentLang === 'ko' ? '카테고리 삭제에 실패했습니다.' : 'Failed to delete category.';
+                showMessage('categoryMessage', errorMsg, 'error');
             }
         } catch (error) {
             console.error('카테고리 삭제 오류:', error);
-            showMessage('categoryMessage', translations.categoryDeleteError[currentLang], 'error');
+            const errorMsg = currentLang === 'ko' ? '카테고리 삭제 중 오류가 발생했습니다.' : 'Error occurred while deleting category.';
+            showMessage('categoryMessage', errorMsg, 'error');
         }
     }
 
@@ -1136,6 +1252,27 @@
         setTimeout(() => {
             element.innerHTML = '';
         }, 5000);
+    }
+
+    // ==================== 좋아요 기능 ====================
+
+    // 좋아요 개수 로드 (insert.html용)
+    async function loadLikeCountForInsert(categoryId) {
+        try {
+            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const count = await response.json();
+                const likeElement = document.querySelector(`.like-info[data-category-id="${categoryId}"]`);
+                if (likeElement) {
+                    likeElement.textContent = `❤️ ${count}`;
+                }
+            }
+        } catch (error) {
+            console.error('좋아요 개수 로드 오류:', error);
+        }
     }
 </script>
 </body>
