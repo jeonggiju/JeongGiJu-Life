@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.hibernate.annotations.Comment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.study.jeonggiju.domain.categoryLike.entity.CategoryLike;
 import com.study.jeonggiju.domain.checkRecord.entity.CheckRecord;
 import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.study.jeonggiju.domain.timeRecord.entity.TimeRecord;
@@ -82,6 +83,12 @@ public class Category {
 	@ToString.Exclude
 	private List<TimeRecord> timeRecords = new ArrayList<>();
 
+	@OneToMany(
+		mappedBy = "category",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true
+	)
+	public List<CategoryLike> categoryLike;
 
 	protected Category() {
 	}

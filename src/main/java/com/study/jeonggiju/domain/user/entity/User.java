@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.study.jeonggiju.domain.category.entity.Category;
+import com.study.jeonggiju.domain.categoryLike.entity.CategoryLike;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -59,7 +60,15 @@ public class User {
 		mappedBy = "user",
 		cascade = CascadeType.ALL,
 		orphanRemoval = true
-	)private List<Category> categories;
+	)
+	private List<Category> categories;
+
+	@OneToMany(
+		mappedBy = "user",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true
+	)
+	private List<CategoryLike> categoryLike;
 
 	protected User() {
 	}
