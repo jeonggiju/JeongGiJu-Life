@@ -22,9 +22,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "category_like",
-	uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "category_id"})
+	uniqueConstraints = @UniqueConstraint(name = "uk_user_category",columnNames = {"user_id", "category_id"})
 )
-@Data @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryLike {
@@ -43,4 +43,9 @@ public class CategoryLike {
 
 	@CreatedDate
 	public LocalDateTime createdAt;
+
+
+	public static CategoryLike of(User user, Category category) {
+		return new CategoryLike(null, user, category, null);
+	}
 }
