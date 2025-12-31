@@ -1,6 +1,5 @@
 package com.study.jeonggiju.auth.controller;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.study.jeonggiju.security.principal.LifeUserDetails;
 import com.study.jeonggiju.domain.user.dto.ErrorResponse;
 import com.study.jeonggiju.domain.user.dto.LoginRequest;
 import com.study.jeonggiju.domain.user.dto.LoginResponse;
@@ -25,6 +23,7 @@ import com.study.jeonggiju.domain.user.dto.MeResponse;
 import com.study.jeonggiju.domain.user.dto.SignUpRequest;
 import com.study.jeonggiju.domain.user.dto.SignUpResponse;
 import com.study.jeonggiju.domain.user.service.UserService;
+import com.study.jeonggiju.security.principal.LifeUserDetails;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 
-import org.springframework.data.annotation.CreatedDate;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.study.jeonggiju.domain.category.entity.Category;
 

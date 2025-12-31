@@ -1,7 +1,5 @@
 package com.study.jeonggiju.domain.user.controller;
 
-import java.util.UUID;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;

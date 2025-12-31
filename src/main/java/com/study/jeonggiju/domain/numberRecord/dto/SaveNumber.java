@@ -1,7 +1,6 @@
 package com.study.jeonggiju.domain.numberRecord.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.UUID;
 
 import lombok.Data;

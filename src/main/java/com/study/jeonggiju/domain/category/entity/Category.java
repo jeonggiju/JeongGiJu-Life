@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.annotations.Comment;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.study.jeonggiju.domain.categoryLike.entity.CategoryLike;
 import com.study.jeonggiju.domain.checkRecord.entity.CheckRecord;

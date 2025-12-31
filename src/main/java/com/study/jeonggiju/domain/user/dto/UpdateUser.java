@@ -1,7 +1,5 @@
 package com.study.jeonggiju.domain.user.dto;
 
-import java.util.UUID;
-
 import lombok.Builder;
 import lombok.Data;
 

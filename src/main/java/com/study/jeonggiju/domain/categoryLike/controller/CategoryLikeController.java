@@ -1,6 +1,5 @@
 package com.study.jeonggiju.domain.categoryLike.controller;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;

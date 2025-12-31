@@ -7,8 +7,6 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.study.jeonggiju.domain.category.entity.Category;
-import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.study.jeonggiju.domain.timeRecord.entity.TimeRecord;
 
 public interface TimeRepository extends JpaRepository<TimeRecord, UUID> {

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.study.jeonggiju.domain.textRecord.dto.FindTextResponse;
 import com.study.jeonggiju.domain.textRecord.dto.SaveText;
 import com.study.jeonggiju.domain.textRecord.dto.UpdateText;
-import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.study.jeonggiju.domain.textRecord.service.TextService;
 
 import lombok.RequiredArgsConstructor;

@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.study.jeonggiju.domain.checkRecord.entity.CheckRecord;
 import com.study.jeonggiju.domain.textRecord.entity.TextRecord;
 
 public interface TextRepository extends JpaRepository<TextRecord, UUID> {

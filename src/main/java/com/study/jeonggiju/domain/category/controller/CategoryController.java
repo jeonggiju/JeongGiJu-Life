@@ -18,7 +18,6 @@ import com.study.jeonggiju.domain.category.dto.LikeEmailCategoryResponse;
 import com.study.jeonggiju.domain.category.dto.PublicCategoryResponse;
 import com.study.jeonggiju.domain.category.dto.UpdateCategory;
 import com.study.jeonggiju.domain.category.service.CategoryService;
-import com.study.jeonggiju.security.authentication.LifeAuthenticationProvider;
 import com.study.jeonggiju.security.principal.LifeUserDetails;
 
 import lombok.RequiredArgsConstructor;

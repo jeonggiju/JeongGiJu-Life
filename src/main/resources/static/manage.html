@@ -1900,8 +1900,9 @@
 
         <div class="right-content">
             <div class="category-header-wrapper" style="display: none;" id="categoryHeaderWrapper">
-                <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;"><span data-lang-ko="라벨" data-lang-en="Labels">라벨</span></button>
+                <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;">📅 <span data-lang-ko="라벨" data-lang-en="Labels">라벨</span></button>
                 <div class="category-description" id="categoryDescription"></div>
+                <span class="category-like-count" id="categoryLikeCount" style="display: none; margin-left: auto; padding: 4px 10px; background: #f5f5f5; border: 1px solid #ddd; font-size: 12px; color: #666;"></span>
             </div>
 
             <div class="records-section" id="recordsSection">
@@ -2062,7 +2063,10 @@
         'wed': { ko: '수', en: 'Wed' },
         'thu': { ko: '목', en: 'Thu' },
         'fri': { ko: '금', en: 'Fri' },
-        'sat': { ko: '토', en: 'Sat' }
+        'sat': { ko: '토', en: 'Sat' },
+
+        // 좋아요
+        'likes': { ko: '좋아요', en: 'Likes' }
     };
 
     // 언어 전환 함수
@@ -3017,6 +3021,7 @@
         const categoryDescription = document.getElementById('categoryDescription');
         const categoryHeaderWrapper = document.getElementById('categoryHeaderWrapper');
         const globalLabelToggle = document.getElementById('globalCalendarLabelToggle');
+        const categoryLikeCount = document.getElementById('categoryLikeCount');
 
         // 카테고리 설명과 라벨 버튼 표시
         if (category && category.description) {
@@ -3025,6 +3030,15 @@
         } else {
             categoryDescription.textContent = '';
             categoryHeaderWrapper.style.display = 'none';
+        }
+
+        // PUBLIC 카테고리일 때 좋아요 개수 표시
+        if (category && category.visibility === 'PUBLIC') {
+            loadLikeCountForManage(category.id);
+            categoryLikeCount.style.display = 'block';
+            categoryHeaderWrapper.style.display = 'flex';
+        } else {
+            categoryLikeCount.style.display = 'none';
         }
 
         if (!records || records.length === 0) {
@@ -6497,6 +6511,27 @@
         setTimeout(() => {
             element.innerHTML = '';
         }, 5000);
+    }
+
+    // ==================== 좋아요 기능 ====================
+
+    // 좋아요 개수 로드 (manage.html용)
+    async function loadLikeCountForManage(categoryId) {
+        try {
+            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const count = await response.json();
+                const likeElement = document.getElementById('categoryLikeCount');
+                if (likeElement) {
+                    likeElement.textContent = `❤️ ${count} ${translations.likes[currentLang]}`;
+                }
+            }
+        } catch (error) {
+            console.error('좋아요 개수 로드 오류:', error);
+        }
     }
 
     // 모달 외부 클릭 시 닫기

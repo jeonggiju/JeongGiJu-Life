@@ -3,8 +3,6 @@ package com.study.jeonggiju.domain.checkRecord.entity;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import org.springframework.data.annotation.CreatedDate;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.study.jeonggiju.domain.category.entity.Category;
 
