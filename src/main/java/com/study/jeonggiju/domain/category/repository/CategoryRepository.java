@@ -21,4 +21,5 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     		order by u.id, c.id
     """)
 	List<Category> findPublicCategoriesWithOwner();
+	boolean existsByIdAndUserId(UUID categoryId, UUID userId);
 }

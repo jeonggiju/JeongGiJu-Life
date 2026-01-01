@@ -1,52 +1,67 @@
 package com.study.jeonggiju.domain.category.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.study.jeonggiju.domain.user.entity.User;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+@Table
 @Entity
-@Table(name = "category_like",
-	uniqueConstraints = @UniqueConstraint(name = "uk_user_category",columnNames = {"user_id", "category_id"})
-)
+@Builder
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class CategoryLike {
+public class Comment {
 
 	@Id
 	@GeneratedValue(generator = "UUID")
 	private UUID id;
 
-	@ManyToOne
-	@JoinColumn(name="user_id")
-	private User user;
+	private String comment;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_id")
+	private Comment parent;
+
+	@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Comment> children = new ArrayList<>();
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="category_id")
 	private Category category;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_id")
+	private User user;
+
+	@UpdateTimestamp
+	@Column
+	private LocalDateTime updatedAt;
+
 	@CreatedDate
+	@Column(nullable = false, updatable = false)
 	public LocalDateTime createdAt;
 
-
-	public static CategoryLike of(User user, Category category) {
-		return new CategoryLike(null, user, category, null);
-	}
+	protected Comment() {}
 }

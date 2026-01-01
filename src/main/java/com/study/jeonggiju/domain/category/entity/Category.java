@@ -80,6 +80,12 @@ public class Category {
 	@ToString.Exclude
 	private List<TimeRecord> timeRecords = new ArrayList<>();
 
+
+	@OneToMany(mappedBy = "category",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true)
+	private List<Comment> comments = new ArrayList<>();
+
 	@OneToMany(
 		mappedBy = "category",
 		cascade = CascadeType.ALL,

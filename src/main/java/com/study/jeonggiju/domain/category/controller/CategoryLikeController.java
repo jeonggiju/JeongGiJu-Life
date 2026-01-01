@@ -20,21 +20,21 @@ import com.study.jeonggiju.security.principal.LifeUserDetails;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/categories/likes")
 @RequiredArgsConstructor
 public class CategoryLikeController {
 
 	private final CategoryLikeService categoryLikeService;
 
 
-	@GetMapping("/likes/count/{categoryId}")
+	@GetMapping("/count/{categoryId}")
 	public ResponseEntity<Integer> count(
 		@PathVariable UUID categoryId
 	){
 		return ResponseEntity.ok(categoryLikeService.countByCategoryId(categoryId));
 	}
 
-	@PostMapping("/likes")
+	@PostMapping
 	public ResponseEntity<Void> add(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@RequestBody AddLikeDto dto
@@ -44,7 +44,7 @@ public class CategoryLikeController {
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping("/likes")
+	@DeleteMapping
 	public ResponseEntity<Void> delete(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@RequestBody DeleteLikeDto dto
