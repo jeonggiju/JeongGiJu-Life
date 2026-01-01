@@ -19,9 +19,9 @@ services:
 
   app:
     build:
-      context: .
+      context: ./spring
       dockerfile: Dockerfile
-    image: my-spring-app:latest  # 로컬 이미지 이름
+    image: my-spring-app:latest
     depends_on:
       db:
         condition: service_healthy
@@ -31,7 +31,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
     expose:
-      - "8080"
+      - "8080"   # API
+      - "8081"   # actuator/prometheus (추천: management 포트)
     networks:
       - app-network
     restart: unless-stopped
@@ -51,8 +52,35 @@ services:
       - app-network
     restart: unless-stopped
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    depends_on:
+      - app
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - app-network
+    restart: unless-stopped
+
 volumes:
   pgdata:
+  grafana-data:
 
 networks:
   app-network:
