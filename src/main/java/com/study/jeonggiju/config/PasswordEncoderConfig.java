@@ -10,8 +10,8 @@ public class PasswordEncoderConfig {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		// return new PlainTextPasswordEncoder();
-		return new BCryptPasswordEncoder();
+		return new PlainTextPasswordEncoder();
+		// return new BCryptPasswordEncoder();
 	}
 
 	public static class PlainTextPasswordEncoder implements PasswordEncoder {

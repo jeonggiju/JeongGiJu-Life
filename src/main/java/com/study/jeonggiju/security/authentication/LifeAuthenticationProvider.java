@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class LifeAuthenticationProvider implements AuthenticationProvider {
 
 	private final LifeUserDetailService userDetailService;
-	private final PasswordEncoder passwordEncoder;
+	// private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public @Nullable Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -26,9 +26,9 @@ public class LifeAuthenticationProvider implements AuthenticationProvider {
 
 		UserDetails userDetails = userDetailService.loadUserByUsername(email);
 
-		if(!passwordEncoder.matches(password, userDetails.getPassword())) {
-			throw new BadCredentialsException("비밀번호 불일치");
-		}
+		// if(!passwordEncoder.matches(password, userDetails.getPassword())) {
+		// 	throw new BadCredentialsException("비밀번호 불일치");
+		// }
 		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	}
 
