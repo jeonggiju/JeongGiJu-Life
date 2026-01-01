@@ -1,4 +1,4 @@
-package com.study.jeonggiju.domain.categoryLike.service;
+package com.study.jeonggiju.domain.category.service;
 
 import java.util.UUID;
 
@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.study.jeonggiju.domain.category.entity.Category;
 import com.study.jeonggiju.domain.category.repository.CategoryRepository;
-import com.study.jeonggiju.domain.categoryLike.entity.CategoryLike;
-import com.study.jeonggiju.domain.categoryLike.repository.CategoryLikeRepository;
+import com.study.jeonggiju.domain.category.entity.CategoryLike;
+import com.study.jeonggiju.domain.category.repository.CategoryLikeRepository;
 import com.study.jeonggiju.domain.user.entity.User;
 import com.study.jeonggiju.domain.user.repository.UserRepository;
 

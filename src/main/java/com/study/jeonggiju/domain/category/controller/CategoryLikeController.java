@@ -1,4 +1,4 @@
-package com.study.jeonggiju.domain.categoryLike.controller;
+package com.study.jeonggiju.domain.category.controller;
 
 import java.util.UUID;
 
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.study.jeonggiju.domain.categoryLike.dto.AddLikeDto;
-import com.study.jeonggiju.domain.categoryLike.dto.DeleteLikeDto;
-import com.study.jeonggiju.domain.categoryLike.service.CategoryLikeService;
+import com.study.jeonggiju.domain.category.dto.AddLikeDto;
+import com.study.jeonggiju.domain.category.dto.DeleteLikeDto;
+import com.study.jeonggiju.domain.category.service.CategoryLikeService;
 import com.study.jeonggiju.security.principal.LifeUserDetails;
 
 import lombok.RequiredArgsConstructor;

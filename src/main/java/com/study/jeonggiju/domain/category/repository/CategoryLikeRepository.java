@@ -1,11 +1,11 @@
-package com.study.jeonggiju.domain.categoryLike.repository;
+package com.study.jeonggiju.domain.category.repository;
 
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.study.jeonggiju.domain.categoryLike.entity.CategoryLike;
+import com.study.jeonggiju.domain.category.entity.CategoryLike;
 
 @Repository
 public interface CategoryLikeRepository extends JpaRepository<CategoryLike, UUID> {

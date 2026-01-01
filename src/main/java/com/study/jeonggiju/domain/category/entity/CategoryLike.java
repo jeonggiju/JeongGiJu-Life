@@ -1,16 +1,14 @@
-package com.study.jeonggiju.domain.categoryLike.entity;
+package com.study.jeonggiju.domain.category.entity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
 
-import com.study.jeonggiju.domain.category.entity.Category;
 import com.study.jeonggiju.domain.user.entity.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -28,7 +26,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoryLike {
 
-	@Id
 	@GeneratedValue(generator = "UUID")
 	private UUID id;
 

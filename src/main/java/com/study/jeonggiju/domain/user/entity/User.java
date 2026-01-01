@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.study.jeonggiju.domain.category.entity.Category;
-import com.study.jeonggiju.domain.categoryLike.entity.CategoryLike;
+import com.study.jeonggiju.domain.category.entity.CategoryLike;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -1,4 +1,4 @@
-package com.study.jeonggiju.domain.categoryLike.dto;
+package com.study.jeonggiju.domain.category.dto;
 
 import java.util.UUID;
 
@@ -7,6 +7,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class DeleteLikeDto {
-	UUID categoryId;
+public class AddLikeDto {
+	private UUID categoryId;
 }

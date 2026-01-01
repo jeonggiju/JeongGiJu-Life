@@ -16,7 +16,7 @@ import com.study.jeonggiju.domain.category.dto.PublicCategoryResponse;
 import com.study.jeonggiju.domain.category.dto.UpdateCategory;
 import com.study.jeonggiju.domain.category.entity.Category;
 import com.study.jeonggiju.domain.category.repository.CategoryRepository;
-import com.study.jeonggiju.domain.categoryLike.entity.CategoryLike;
+import com.study.jeonggiju.domain.category.entity.CategoryLike;
 import com.study.jeonggiju.domain.user.entity.User;
 import com.study.jeonggiju.domain.user.repository.UserRepository;
 
