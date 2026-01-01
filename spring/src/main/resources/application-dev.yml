@@ -21,6 +21,7 @@ server:
 management:
   server:
     port: 8081 # metric은 따로 관리
+    address: 0.0.0.0
   endpoints:
     web:
       exposure:

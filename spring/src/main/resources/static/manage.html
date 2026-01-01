@@ -82,41 +82,169 @@
             background: #f0f0f0;
         }
 
+        /* 메인 레이아웃 */
+        .main-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 0;
+            height: calc(100vh - 140px);
+            margin-left: 0;
+        }
+
+        /* 사이드바 - LEFT EDGE DRAWER */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 140px;
+            bottom: 0;
+            width: 0;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .sidebar-tabs {
+            position: relative;
+            height: 100%;
+            width: 0;
+            pointer-events: auto;
+        }
+
+        .sidebar-tab {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        /* HANDLE - 항상 고정 */
+        .tab-label {
+            position: fixed;
+            left: 0;
+            width: 28px;
+            height: 120px;
+            background: linear-gradient(135deg, #c8c8c8 0%, #d8d8d8 100%);
+            border-radius: 0 14px 14px 0;
+            cursor: pointer;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.12);
+            z-index: 1002;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            letter-spacing: 1px;
+            transition: background 0.2s ease;
+        }
+
+        .tab-label:hover {
+            background: linear-gradient(135deg, #b8b8b8 0%, #c8c8c8 100%);
+        }
+
+        /* DRAWER PANEL - 슬라이드 */
+        .tab-content {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 300px;
+            height: 120px;
+            background: white;
+            border-right: 1px solid #d0d0d0;
+            box-shadow: 3px 0 12px rgba(0,0,0,0.15);
+            transform: translateX(-300px);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            overflow: hidden;
+        }
+
+        .sidebar-tab:hover .tab-content {
+            transform: translateX(0);
+        }
+
+        /* Panel이 열릴 때 handle 스타일 */
+        .sidebar-tab:hover .tab-label {
+            z-index: 1003;
+        }
+
+        .tab-content-inner {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-left: 28px;
+        }
+
+        .tab-content-inner::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .tab-content-inner::-webkit-scrollbar-track {
+            background: #f8f8f8;
+        }
+
+        .tab-content-inner::-webkit-scrollbar-thumb {
+            background: #d0d0d0;
+            border-radius: 3px;
+        }
+
+        .tab-header {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #f2f2f2 0%, #f8f8f8 100%);
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tab-count {
+            background: #999;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .sidebar::before {
+            content: '';
+            display: none;
+        }
+
+        .sidebar-header {
+            display: none;
+        }
+
         .categories {
+            display: none;
+        }
+
+        /* 메인 콘텐츠 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-left: 0;
+        }
+
+        .content-toolbar {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background: #fafafa;
-        }
-
-        .categories::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .categories::-webkit-scrollbar-track {
-            background: #f0f0f0;
-        }
-
-        .categories::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 4px;
-        }
-
-        .categories::-webkit-scrollbar-thumb:hover {
-            background: #999;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            background: white;
+            align-items: center;
+            flex-wrap: nowrap;
         }
 
         .view-toggle {
             display: none;
-            flex-direction: column;
+            flex-direction: row;
             gap: 4px;
             flex-shrink: 0;
-            min-width: 80px;
+            flex-wrap: nowrap;
         }
 
         .view-toggle.active {
@@ -131,7 +259,8 @@
             cursor: pointer;
             font-size: 12px;
             text-align: center;
-            margin-top: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .add-record-btn:hover {
@@ -175,45 +304,84 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 8px;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            background: white;
         }
 
         .category-header-wrapper .label-toggle-btn {
             flex-shrink: 0;
         }
 
-        .content-with-sidebar {
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
-        }
-
-        .right-content {
+        .records-section {
             flex: 1;
-            min-width: 0;
+            overflow-y: auto;
+            padding: 15px;
         }
 
         .records-section {
             width: 100%;
         }
 
-        .category-btn {
-            padding: 8px 16px;
-            border: 1px solid #ccc;
+        /* 카테고리 아이템 */
+        .category-group {
+            display: none;
+        }
+
+        .category-item {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border: none;
+            border-bottom: 1px solid #e8e8e8;
             background: white;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
+            text-align: left;
+            transition: all 0.2s ease;
         }
 
-        .category-btn:hover {
-            background: #f0f0f0;
+        .category-item:hover {
+            background: #f5f5f5;
         }
 
-        .category-btn.active {
-            background: #333;
+        .category-item.active {
+            background: #e8e8e8;
+            font-weight: 600;
+        }
+
+        .category-item.active .category-type-badge {
+            background: #888;
             color: white;
-            border-color: #333;
-            font-weight: bold;
+        }
+
+        .category-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #555;
+        }
+
+        .category-item:hover .category-title {
+            color: #333;
+        }
+
+        .category-item.active .category-title {
+            color: #333;
+        }
+
+        .category-type-badge {
+            padding: 3px 7px;
+            background: #e0e0e0;
+            color: #666;
+            font-size: 9px;
+            font-weight: 600;
+            margin-left: 10px;
+            flex-shrink: 0;
+            border-radius: 4px;
         }
 
         .date-group {
@@ -1766,18 +1934,70 @@
                 padding-right: 5px;
             }
 
-            .content-with-sidebar {
+            .main-layout {
                 flex-direction: column;
+                height: auto;
+                margin-left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+                width: 100%;
+                height: auto;
+                border-bottom: 1px solid #d0d0d0;
+            }
+
+            .sidebar-tabs {
+                flex-direction: row;
+                width: 100%;
+                height: auto;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .sidebar-tab {
+                flex: 1;
+                height: 60px;
+            }
+
+            .tab-label {
+                position: static;
+                width: 100%;
+                height: 100%;
+                border-radius: 12px;
+            }
+
+            .tab-content {
+                position: static;
+                width: 100%;
+                height: 0;
+                border: 1px solid #d0d0d0;
+                border-radius: 12px;
+                margin-top: 5px;
+            }
+
+            .sidebar-tab:hover .tab-content {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+            }
+
+            .tab-content-inner {
+                width: 100%;
             }
 
             .view-toggle {
                 flex-direction: row;
                 flex-wrap: wrap;
-                min-width: 100%;
             }
 
-            .right-content {
-                width: 100%;
+            .content-toolbar {
+                flex-wrap: wrap;
             }
         }
 
@@ -1966,20 +2186,22 @@
         <div class="user-desc" id="userDesc"></div>
     </div>
 
-    <div class="categories" id="categoryButtons"></div>
-
-    <div class="content-with-sidebar">
-        <div>
-            <div class="view-toggle" id="viewToggle"></div>
-            <button class="add-record-btn" id="addRecordBtn" style="display: none;" onclick="openAddRecordModal()">
-                <span data-lang-ko="추가" data-lang-en="Add">추가</span>
-            </button>
-            <button class="add-record-btn" id="commentManagementBtn" style="display: none;" onclick="showCommentManagement()">
-                <span data-lang-ko="댓글 관리" data-lang-en="Comments">댓글 관리</span>
-            </button>
+    <div class="main-layout">
+        <div class="sidebar">
+            <div class="sidebar-tabs" id="categoryTabs"></div>
         </div>
 
-        <div class="right-content">
+        <div class="main-content">
+            <div class="content-toolbar">
+                <div class="view-toggle" id="viewToggle"></div>
+                <button class="add-record-btn" id="addRecordBtn" style="display: none;" onclick="openAddRecordModal()">
+                    <span data-lang-ko="추가" data-lang-en="Add">추가</span>
+                </button>
+                <button class="add-record-btn" id="commentManagementBtn" style="display: none;" onclick="showCommentManagement()">
+                    <span data-lang-ko="댓글 관리" data-lang-en="Comments">댓글 관리</span>
+                </button>
+            </div>
+
             <div class="category-header-wrapper" style="display: none;" id="categoryHeaderWrapper">
                 <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;"><span data-lang-ko="라벨" data-lang-en="Labels">라벨</span></button>
                 <div class="category-description" id="categoryDescription"></div>
@@ -1987,7 +2209,7 @@
             </div>
 
             <div class="records-section" id="recordsSection">
-                <div class="empty-state" data-lang-ko="카테고리를 선택하세요" data-lang-en="Select a category">Select a category</div>
+                <div class="empty-state" data-lang-ko="카테고리를 선택하세요" data-lang-en="Select a category">카테고리를 선택하세요</div>
             </div>
         </div>
     </div>
@@ -3003,36 +3225,78 @@
 
     // 카테고리 표시
     function displayCategories(categories) {
-        const container = document.getElementById('categoryButtons');
+        const container = document.getElementById('categoryTabs');
 
         if (!categories || categories.length === 0) {
             const message = currentLang === 'ko' ? '등록된 카테고리가 없습니다.' : 'No categories registered.';
-            container.innerHTML = `<div style="color: #999;">${message}</div>`;
+            container.innerHTML = `<div style="padding: 10px; color: #999; font-size: 12px;">${message}</div>`;
             return;
         }
 
-        container.innerHTML = categories.map(category => {
-            const visibilityBadge = category.visibility === 'PUBLIC'
-                ? '<span style="display: inline-block; padding: 2px 6px; background: #000; color: #fff; font-size: 10px; font-weight: 600; margin-left: 6px; vertical-align: middle;">PUBLIC</span>'
-                : '<span style="display: inline-block; padding: 2px 6px; background: #e5e5e5; color: #666; font-size: 10px; font-weight: 600; margin-left: 6px; vertical-align: middle;">PRIVATE</span>';
+        // PUBLIC과 PRIVATE로 분리
+        const publicCategories = categories.filter(c => c.visibility === 'PUBLIC');
+        const privateCategories = categories.filter(c => c.visibility === 'PRIVATE');
 
-            return `
-                <button class="category-btn" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}" data-visibility="${category.visibility}">
-                    ${category.title}${visibilityBadge}
-                </button>
+        let html = '';
+
+        // PUBLIC 탭
+        if (publicCategories.length > 0) {
+            html += `
+                <div class="sidebar-tab" data-tab="public">
+                    <div class="tab-label" style="top: 30px;">${currentLang === 'ko' ? '공개' : 'PUBLIC'}</div>
+                    <div class="tab-content" style="top: 30px;">
+                        <div class="tab-content-inner">
+                            <div class="tab-header">
+                                <span data-lang-ko="공개" data-lang-en="PUBLIC">${currentLang === 'ko' ? '공개' : 'PUBLIC'}</span>
+                                <span class="tab-count">${publicCategories.length}</span>
+                            </div>
+                            ${publicCategories.map(category => `
+                                <button class="category-item" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}" data-visibility="${category.visibility}">
+                                    <span class="category-title">${category.title}</span>
+                                    <span class="category-type-badge">${category.recordType}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
             `;
-        }).join('');
+        }
+
+        // PRIVATE 탭
+        if (privateCategories.length > 0) {
+            html += `
+                <div class="sidebar-tab" data-tab="private">
+                    <div class="tab-label" style="top: 160px;">${currentLang === 'ko' ? '비공개' : 'PRIVATE'}</div>
+                    <div class="tab-content" style="top: 160px;">
+                        <div class="tab-content-inner">
+                            <div class="tab-header">
+                                <span data-lang-ko="비공개" data-lang-en="PRIVATE">${currentLang === 'ko' ? '비공개' : 'PRIVATE'}</span>
+                                <span class="tab-count">${privateCategories.length}</span>
+                            </div>
+                            ${privateCategories.map(category => `
+                                <button class="category-item" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}" data-visibility="${category.visibility}">
+                                    <span class="category-title">${category.title}</span>
+                                    <span class="category-type-badge">${category.recordType}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        container.innerHTML = html;
 
         // 카테고리 클릭 이벤트
-        container.querySelectorAll('.category-btn').forEach(btn => {
+        container.querySelectorAll('.category-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                container.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                container.querySelectorAll('.category-item').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
                 currentCategory = {
                     id: btn.dataset.id,
                     type: btn.dataset.type,
-                    title: btn.textContent.trim().replace(/PUBLIC|PRIVATE/g, '').trim(),
+                    title: btn.querySelector('.category-title').textContent.trim(),
                     description: btn.dataset.description,
                     visibility: btn.dataset.visibility
                 };
@@ -3055,6 +3319,9 @@
                 loadRecords(currentCategory);
             });
         });
+
+        // 언어 적용
+        applyLanguage();
     }
 
     // 레코드 로드

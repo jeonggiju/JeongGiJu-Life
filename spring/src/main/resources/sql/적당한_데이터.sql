@@ -7,13 +7,14 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 -- =========================================================
 TRUNCATE TABLE
     category_like,
-  check_list_record,
-  check_record,
-  number_record,
-  text_record,
-  time_record,
-  category,
-  users
+    "comment",
+    check_list_record,
+    check_record,
+    number_record,
+    text_record,
+    time_record,
+    category,
+    users
 CASCADE;
 
 -- =========================================================
@@ -21,6 +22,7 @@ CASCADE;
 -- users:        10
 -- categories:  500
 -- likes:      8000
+-- comments:   root 6000 + depth2~5 가변 (확률 기반)
 -- =========================================================
 
 DROP TABLE IF EXISTS tmp_users;
@@ -64,24 +66,24 @@ INSERT INTO category (id, user_id, description, record_type, title, visibility)
 SELECT
     gen_random_uuid(),
     (u.ids)[(((gs - 1) % u.n) + 1)] AS user_id,
-    '더미 카테고리 설명 ' || gs,
-    CASE (gs % 5)
-      WHEN 0 THEN 'CHECK'
-      WHEN 1 THEN 'CHECKLIST'
-      WHEN 2 THEN 'TEXT'
-      WHEN 3 THEN 'TIME'
-      ELSE 'NUMBER'
+        '더미 카테고리 설명 ' || gs,
+        CASE (gs % 5)
+          WHEN 0 THEN 'CHECK'
+          WHEN 1 THEN 'CHECKLIST'
+          WHEN 2 THEN 'TEXT'
+          WHEN 3 THEN 'TIME'
+          ELSE 'NUMBER'
 END AS record_type,
-    CASE (gs % 5)
-      WHEN 0 THEN '습관체크-' || gs
-      WHEN 1 THEN '할일-' || gs
-      WHEN 2 THEN '일기-' || gs
-      WHEN 3 THEN '시간기록-' || gs
-      ELSE '숫자기록-' || gs
+        CASE (gs % 5)
+          WHEN 0 THEN '습관체크-' || gs
+          WHEN 1 THEN '할일-' || gs
+          WHEN 2 THEN '일기-' || gs
+          WHEN 3 THEN '시간기록-' || gs
+          ELSE '숫자기록-' || gs
 END AS title,
-    CASE WHEN random() < 0.6 THEN 'PUBLIC' ELSE 'PRIVATE' END AS visibility
-  FROM generate_series(1, 500) gs, u
-  RETURNING id, record_type
+        CASE WHEN random() < 0.6 THEN 'PUBLIC' ELSE 'PRIVATE' END AS visibility
+    FROM generate_series(1, 500) gs, u
+    RETURNING id, record_type
 )
 INSERT INTO tmp_categories(id, record_type)
 SELECT id, record_type FROM ins;
@@ -103,6 +105,163 @@ INSERT INTO category_like (id, created_at, category_id, user_id)
 SELECT id, created_at, category_id, user_id
 FROM pairs
     ON CONFLICT (user_id, category_id) DO NOTHING;
+
+-- =========================================================
+-- 3.5) comment 더미데이터 (다양 + 최대 5단)
+-- - 루트 6000개
+-- - 각 댓글은 확률적으로 0~N개의 자식을 가지며, 깊어질수록 자식 수가 줄어듦
+-- - 최대 depth=5 (루트=1, ... , 5단)
+-- =========================================================
+
+DROP TABLE IF EXISTS tmp_level1;
+DROP TABLE IF EXISTS tmp_level2;
+DROP TABLE IF EXISTS tmp_level3;
+DROP TABLE IF EXISTS tmp_level4;
+DROP TABLE IF EXISTS tmp_level5;
+
+CREATE TEMP TABLE tmp_level1 (id UUID PRIMARY KEY, category_id UUID NOT NULL, depth int NOT NULL) ON COMMIT DROP;
+CREATE TEMP TABLE tmp_level2 (id UUID PRIMARY KEY, category_id UUID NOT NULL, depth int NOT NULL) ON COMMIT DROP;
+CREATE TEMP TABLE tmp_level3 (id UUID PRIMARY KEY, category_id UUID NOT NULL, depth int NOT NULL) ON COMMIT DROP;
+CREATE TEMP TABLE tmp_level4 (id UUID PRIMARY KEY, category_id UUID NOT NULL, depth int NOT NULL) ON COMMIT DROP;
+CREATE TEMP TABLE tmp_level5 (id UUID PRIMARY KEY, category_id UUID NOT NULL, depth int NOT NULL) ON COMMIT DROP;
+
+-- (1) depth=1 루트 댓글 6000개
+WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
+     c AS (SELECT array_agg(id) AS cids FROM tmp_categories),
+     ins AS (
+INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+SELECT
+    gen_random_uuid(),
+    '댓글(d1) - ' || gs,
+    NULL::uuid,
+    (c.cids)[floor(random()*array_length(c.cids,1))::int + 1] AS category_id,
+             (u.uids)[floor(random()*array_length(u.uids,1))::int + 1] AS user_id,
+             ts,
+             ts
+FROM generate_series(1, 6000) gs, u, c,
+    LATERAL (
+    SELECT now() - (floor(random() * 60 * 24 * 60)::int * interval '1 minute') AS ts
+    ) t
+    RETURNING id, category_id
+    )
+INSERT INTO tmp_level1(id, category_id, depth)
+SELECT id, category_id, 1 FROM ins;
+
+-- (2) depth=2: 루트당 0~4개 (70% 확률로 생성, 생성 시 1~4개)
+WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
+     ins AS (
+INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+SELECT
+    gen_random_uuid(),
+    '댓글(d2) - ' || p.id || '-' || k,
+    p.id AS parent_id,
+    p.category_id,
+    (u.uids)[floor(random()*array_length(u.uids,1))::int + 1] AS user_id,
+             ts,
+             ts
+FROM tmp_level1 p
+    CROSS JOIN u
+    CROSS JOIN LATERAL (
+    SELECT CASE
+    WHEN random() < 0.70 THEN (floor(random()*4)::int + 1)
+    ELSE 0
+    END AS cnt
+    ) r
+    CROSS JOIN LATERAL generate_series(1, r.cnt) k
+    CROSS JOIN LATERAL (
+    SELECT now() - (floor(random() * 60 * 24 * 60)::int * interval '1 minute') AS ts
+    ) t
+    RETURNING id, category_id
+    )
+INSERT INTO tmp_level2(id, category_id, depth)
+SELECT id, category_id, 2 FROM ins;
+
+-- (3) depth=3: depth2당 0~3개 (50% 확률로 생성, 생성 시 1~3개)
+WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
+     ins AS (
+INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+SELECT
+    gen_random_uuid(),
+    '댓글(d3) - ' || p.id || '-' || k,
+    p.id AS parent_id,
+    p.category_id,
+    (u.uids)[floor(random()*array_length(u.uids,1))::int + 1] AS user_id,
+             ts,
+             ts
+FROM tmp_level2 p
+    CROSS JOIN u
+    CROSS JOIN LATERAL (
+    SELECT CASE
+    WHEN random() < 0.50 THEN (floor(random()*3)::int + 1)
+    ELSE 0
+    END AS cnt
+    ) r
+    CROSS JOIN LATERAL generate_series(1, r.cnt) k
+    CROSS JOIN LATERAL (
+    SELECT now() - (floor(random() * 60 * 24 * 60)::int * interval '1 minute') AS ts
+    ) t
+    RETURNING id, category_id
+    )
+INSERT INTO tmp_level3(id, category_id, depth)
+SELECT id, category_id, 3 FROM ins;
+
+-- (4) depth=4: depth3당 0~2개 (35% 확률로 생성, 생성 시 1~2개)
+WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
+     ins AS (
+INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+SELECT
+    gen_random_uuid(),
+    '댓글(d4) - ' || p.id || '-' || k,
+    p.id AS parent_id,
+    p.category_id,
+    (u.uids)[floor(random()*array_length(u.uids,1))::int + 1] AS user_id,
+             ts,
+             ts
+FROM tmp_level3 p
+    CROSS JOIN u
+    CROSS JOIN LATERAL (
+    SELECT CASE
+    WHEN random() < 0.35 THEN (floor(random()*2)::int + 1)
+    ELSE 0
+    END AS cnt
+    ) r
+    CROSS JOIN LATERAL generate_series(1, r.cnt) k
+    CROSS JOIN LATERAL (
+    SELECT now() - (floor(random() * 60 * 24 * 60)::int * interval '1 minute') AS ts
+    ) t
+    RETURNING id, category_id
+    )
+INSERT INTO tmp_level4(id, category_id, depth)
+SELECT id, category_id, 4 FROM ins;
+
+-- (5) depth=5: depth4당 0~1개 (20% 확률로 1개 생성)
+WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
+     ins AS (
+INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+SELECT
+    gen_random_uuid(),
+    '댓글(d5) - ' || p.id || '-1',
+    p.id AS parent_id,
+    p.category_id,
+    (u.uids)[floor(random()*array_length(u.uids,1))::int + 1] AS user_id,
+             ts,
+             ts
+FROM tmp_level4 p
+    CROSS JOIN u
+    CROSS JOIN LATERAL (
+    SELECT CASE
+    WHEN random() < 0.20 THEN 1
+    ELSE 0
+    END AS cnt
+    ) r
+    CROSS JOIN LATERAL generate_series(1, r.cnt) k
+    CROSS JOIN LATERAL (
+    SELECT now() - (floor(random() * 60 * 24 * 60)::int * interval '1 minute') AS ts
+    ) t
+    RETURNING id, category_id
+    )
+INSERT INTO tmp_level5(id, category_id, depth)
+SELECT id, category_id, 5 FROM ins;
 
 -- =========================================================
 -- 4) check_record: CHECK 카테고리당 최근 120일
@@ -150,11 +309,8 @@ INSERT INTO time_record (id, date, time, category_id)
 SELECT
     gen_random_uuid(),
     (current_date - d)::date,
-    (
-        time '00:00:00'
-            + ((floor(random()* (6*3600))::int) * interval '1 second')
-    )::time,
-  cat.id
+    (time '00:00:00' + ((floor(random()* (6*3600))::int) * interval '1 second'))::time,
+    cat.id
 FROM (SELECT id FROM tmp_categories WHERE record_type = 'TIME') cat
     CROSS JOIN generate_series(0, 89) d;
 
