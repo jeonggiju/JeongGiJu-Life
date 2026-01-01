@@ -1,4 +1,3 @@
 rootProject.name = "jeonggiju"
 include("spring")
 
-include 'monitoring'
