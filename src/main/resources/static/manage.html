@@ -1780,6 +1780,83 @@
                 width: 100%;
             }
         }
+
+        /* 댓글 관리 스타일 */
+        .comments-container {
+            padding: 20px;
+        }
+
+        .comment-item {
+            border-bottom: 1px solid #ddd;
+            padding: 12px 0;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .comment-author {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .comment-date {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .comment-content {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .comment-action-btn {
+            padding: 4px 8px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .comment-action-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .comment-action-btn.delete {
+            color: #cc0000;
+            border-color: #cc0000;
+        }
+
+        .comment-action-btn.delete:hover {
+            background: #ffe0e0;
+        }
+
+        .reply-item {
+            padding-left: 15px;
+            border-left: 2px solid #ddd;
+        }
+
+        .no-comments {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -1896,6 +1973,9 @@
             <div class="view-toggle" id="viewToggle"></div>
             <button class="add-record-btn" id="addRecordBtn" style="display: none;" onclick="openAddRecordModal()">
                 <span data-lang-ko="추가" data-lang-en="Add">추가</span>
+            </button>
+            <button class="add-record-btn" id="commentManagementBtn" style="display: none;" onclick="showCommentManagement()">
+                <span data-lang-ko="댓글 관리" data-lang-en="Comments">댓글 관리</span>
             </button>
         </div>
 
@@ -2937,7 +3017,7 @@
                 : '<span style="display: inline-block; padding: 2px 6px; background: #e5e5e5; color: #666; font-size: 10px; font-weight: 600; margin-left: 6px; vertical-align: middle;">PRIVATE</span>';
 
             return `
-                <button class="category-btn" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}">
+                <button class="category-btn" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}" data-visibility="${category.visibility}">
                     ${category.title}${visibilityBadge}
                 </button>
             `;
@@ -2945,7 +3025,7 @@
 
         // 카테고리 클릭 이벤트
         container.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
                 container.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
@@ -2953,8 +3033,15 @@
                     id: btn.dataset.id,
                     type: btn.dataset.type,
                     title: btn.textContent.trim().replace(/PUBLIC|PRIVATE/g, '').trim(),
-                    description: btn.dataset.description
+                    description: btn.dataset.description,
+                    visibility: btn.dataset.visibility
                 };
+
+                // 댓글 관리 버튼 표시 여부 (PUBLIC 카테고리만)
+                const commentBtn = document.getElementById('commentManagementBtn');
+                if (commentBtn) {
+                    commentBtn.style.display = currentCategory.visibility === 'PUBLIC' ? 'block' : 'none';
+                }
 
                 // 타입별 기본 뷰 설정
                 if (currentCategory.type === 'CHECK') {
@@ -6541,6 +6628,399 @@
             closeAddRecordModal();
         }
     });
+
+    // ==================== 댓글 관리 기능 ====================
+
+    let currentManagementCategoryId = null;
+    let allComments = [];
+    let currentEditingManagementCommentId = null;
+    let currentReplyToManagementCommentId = null;
+
+    // 댓글 관리 화면 표시
+    async function showCommentManagement() {
+        if (!currentCategory) {
+            alert(currentLang === 'ko' ? '카테고리를 먼저 선택하세요.' : 'Please select a category first.');
+            return;
+        }
+
+        if (currentCategory.visibility !== 'PUBLIC') {
+            alert(currentLang === 'ko' ? 'PUBLIC 카테고리만 댓글 관리가 가능합니다.' : 'Only PUBLIC categories can manage comments.');
+            return;
+        }
+
+        currentManagementCategoryId = currentCategory.id;
+
+        // 중앙 화면에 댓글 관리 UI 표시
+        const recordsSection = document.getElementById('recordsSection');
+        recordsSection.innerHTML = `
+            <div style="padding: 20px;">
+                <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">
+                    <span data-lang-ko="댓글 관리" data-lang-en="Comment Management">${currentLang === 'ko' ? '댓글 관리' : 'Comment Management'}</span>
+                </h2>
+                <div style="padding: 15px; background: #fafafa; border: 1px solid #ddd; margin-bottom: 20px;">
+                    <div style="font-size: 13px; color: #666; margin-bottom: 8px;">
+                        <span data-lang-ko="카테고리" data-lang-en="Category">${currentLang === 'ko' ? '카테고리' : 'Category'}</span>:
+                        <span style="font-weight: bold; color: #333;">${currentCategory.title}</span>
+                    </div>
+                    <div style="font-size: 13px; color: #666;">
+                        <span data-lang-ko="총 댓글 수" data-lang-en="Total Comments">${currentLang === 'ko' ? '총 댓글 수' : 'Total Comments'}</span>:
+                        <span id="totalCommentCount" style="font-weight: bold; color: #333;">0</span>
+                    </div>
+                </div>
+                <div id="managementCommentsContainer" style="border: 1px solid #ddd; padding: 20px; background: white; margin-bottom: 20px;">
+                    <div class="no-comments" data-lang-ko="댓글을 불러오는 중..." data-lang-en="Loading comments...">${currentLang === 'ko' ? '댓글을 불러오는 중...' : 'Loading comments...'}</div>
+                </div>
+                <div style="border: 1px solid #ddd; padding: 15px; background: #fafafa;">
+                    <div style="font-size: 13px; font-weight: bold; margin-bottom: 10px;" id="commentFormTitle">
+                        <span data-lang-ko="댓글 작성" data-lang-en="Write a comment">${currentLang === 'ko' ? '댓글 작성' : 'Write a comment'}</span>
+                    </div>
+                    <textarea id="managementCommentInput" style="width: 100%; padding: 8px; border: 1px solid #ccc; font-size: 13px; resize: vertical; min-height: 60px; margin-bottom: 10px;" placeholder="${currentLang === 'ko' ? '댓글을 입력하세요...' : 'Write a comment...'}"></textarea>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="submitManagementComment()" style="padding: 6px 12px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;">
+                            <span data-lang-ko="작성" data-lang-en="Submit">${currentLang === 'ko' ? '작성' : 'Submit'}</span>
+                        </button>
+                        <button id="cancelCommentBtn" onclick="cancelManagementComment()" style="padding: 6px 12px; border: 1px solid #ccc; background: white; cursor: pointer; font-size: 13px; display: none;">
+                            <span data-lang-ko="취소" data-lang-en="Cancel">${currentLang === 'ko' ? '취소' : 'Cancel'}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 댓글 불러오기
+        await loadManagementComments(currentManagementCategoryId);
+
+        // 언어 적용
+        applyLanguage();
+    }
+
+    // 댓글 불러오기
+    async function loadManagementComments(categoryId) {
+        try {
+            console.log('댓글 불러오기 시작:', categoryId);
+            const response = await fetch(`${API_BASE}/category/comment/${categoryId}`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                allComments = await response.json();
+                console.log('API 응답 댓글:', allComments);
+                renderManagementComments(allComments);
+            } else {
+                console.error('댓글 불러오기 실패:', response.status);
+                const container = document.getElementById('managementCommentsContainer');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="no-comments">
+                            ${currentLang === 'ko' ? '댓글을 불러올 수 없습니다.' : 'Failed to load comments.'}
+                        </div>
+                    `;
+                }
+            }
+        } catch (error) {
+            console.error('댓글 불러오기 오류:', error);
+            const container = document.getElementById('managementCommentsContainer');
+            if (container) {
+                container.innerHTML = `
+                    <div class="no-comments">
+                        ${currentLang === 'ko' ? '네트워크 오류가 발생했습니다.' : 'Network error occurred.'}
+                    </div>
+                `;
+            }
+        }
+    }
+
+    // 댓글 렌더링
+    function renderManagementComments(comments) {
+        const container = document.getElementById('managementCommentsContainer');
+        if (!container) return;
+
+        console.log('전체 댓글:', comments);
+
+        if (!comments || comments.length === 0) {
+            container.innerHTML = `
+                <div class="no-comments">
+                    ${currentLang === 'ko' ? '댓글이 없습니다.' : 'No comments yet.'}
+                </div>
+            `;
+            const countElement = document.getElementById('totalCommentCount');
+            if (countElement) countElement.textContent = '0';
+            return;
+        }
+
+        // 전체 댓글 개수 계산 (재귀적으로)
+        function countAllComments(comments) {
+            let count = comments.length;
+            comments.forEach(comment => {
+                if (comment.children && comment.children.length > 0) {
+                    count += countAllComments(comment.children);
+                }
+            });
+            return count;
+        }
+
+        const totalCount = countAllComments(comments);
+        const countElement = document.getElementById('totalCommentCount');
+        if (countElement) countElement.textContent = totalCount;
+
+        // API가 중첩된 children 구조로 반환하므로 직접 렌더링
+        container.innerHTML = comments.map(comment => renderManagementComment(comment, 0)).join('');
+
+        applyLanguage();
+    }
+
+    // 개별 댓글 렌더링 (재귀적으로 children 처리)
+    function renderManagementComment(comment, depth = 0) {
+        const date = new Date(comment.createdAt).toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US');
+        const isUpdated = comment.updated;
+        const updatedText = currentLang === 'ko' ? '(수정됨)' : '(edited)';
+        const isMine = comment.mine || comment.canUpdate; // 본인 댓글 확인
+
+        // depth에 따라 들여쓰기 클래스 및 스타일 적용
+        const itemClass = depth > 0 ? 'comment-item reply-item' : 'comment-item';
+        const marginLeft = depth > 0 ? `margin-left: ${depth * 30}px;` : '';
+
+        // 본인 댓글이면 배경색 변경
+        const myCommentStyle = isMine ? 'background: #fffacd;' : '';
+
+        let html = `
+            <div class="${itemClass}" style="${marginLeft} ${myCommentStyle} padding: 12px; border-bottom: 1px solid #ddd;">
+                <div class="comment-header">
+                    <span class="comment-author" style="font-weight: bold; color: #333;">
+                        ${comment.authorEmail}
+                        ${isMine ? '<span style="margin-left: 6px; padding: 2px 6px; background: #4CAF50; color: white; font-size: 10px; border-radius: 3px;">ME</span>' : ''}
+                    </span>
+                    <span class="comment-date" style="font-size: 11px; color: #999;">${date} ${isUpdated ? updatedText : ''}</span>
+                </div>
+                <div class="comment-content" style="font-size: 13px; color: #333; margin: 8px 0;">${escapeHtml(comment.comment)}</div>
+                <div class="comment-actions" style="display: flex; gap: 8px;">
+                    <button class="comment-action-btn" onclick="startReplyManagementComment('${comment.commentId}')" style="padding: 4px 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-size: 11px;">
+                        <span data-lang-ko="답글" data-lang-en="Reply">${currentLang === 'ko' ? '답글' : 'Reply'}</span>
+                    </button>
+                    ${comment.canUpdate ? `
+                        <button class="comment-action-btn" onclick="startEditManagementComment('${comment.commentId}', \`${escapeHtml(comment.comment).replace(/`/g, '\\`')}\`)" style="padding: 4px 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-size: 11px;">
+                            <span data-lang-ko="수정" data-lang-en="Edit">${currentLang === 'ko' ? '수정' : 'Edit'}</span>
+                        </button>
+                    ` : ''}
+                    ${comment.canDelete ? `
+                        <button class="comment-action-btn delete" onclick="deleteManagementComment('${comment.commentId}')" style="padding: 4px 8px; border: 1px solid #cc0000; color: #cc0000; background: white; cursor: pointer; font-size: 11px;">
+                            <span data-lang-ko="삭제" data-lang-en="Delete">${currentLang === 'ko' ? '삭제' : 'Delete'}</span>
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+
+        // children이 있으면 재귀적으로 렌더링
+        if (comment.children && comment.children.length > 0) {
+            console.log(`댓글 ${comment.commentId}의 children:`, comment.children);
+            html += comment.children.map(child => renderManagementComment(child, depth + 1)).join('');
+        }
+
+        return html;
+    }
+
+    // HTML 이스케이프
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // 댓글 작성/수정/답글 제출
+    async function submitManagementComment() {
+        const input = document.getElementById('managementCommentInput');
+        const comment = input.value.trim();
+
+        if (!comment) {
+            alert(currentLang === 'ko' ? '댓글을 입력하세요.' : 'Please enter a comment.');
+            return;
+        }
+
+        try {
+            let url, method, body;
+
+            if (currentEditingManagementCommentId) {
+                // 수정
+                url = `${API_BASE}/category/comment`;
+                method = 'PATCH';
+                body = JSON.stringify({
+                    commentId: currentEditingManagementCommentId,
+                    comment: comment
+                });
+            } else if (currentReplyToManagementCommentId) {
+                // 대댓글
+                url = `${API_BASE}/category/comment/replies`;
+                method = 'POST';
+                body = JSON.stringify({
+                    categoryId: currentManagementCategoryId,
+                    parentId: currentReplyToManagementCommentId,
+                    comment: comment
+                });
+            } else {
+                // 일반 댓글
+                url = `${API_BASE}/category/comment`;
+                method = 'POST';
+                body = JSON.stringify({
+                    categoryId: currentManagementCategoryId,
+                    comment: comment
+                });
+            }
+
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: body
+            });
+
+            if (response.ok) {
+                input.value = '';
+                currentEditingManagementCommentId = null;
+                currentReplyToManagementCommentId = null;
+
+                // 폼 제목 초기화
+                const formTitle = document.getElementById('commentFormTitle');
+                if (formTitle) {
+                    formTitle.innerHTML = `<span data-lang-ko="댓글 작성" data-lang-en="Write a comment">${currentLang === 'ko' ? '댓글 작성' : 'Write a comment'}</span>`;
+                }
+
+                // 취소 버튼 숨기기
+                const cancelBtn = document.getElementById('cancelCommentBtn');
+                if (cancelBtn) {
+                    cancelBtn.style.display = 'none';
+                }
+
+                // 플레이스홀더 초기화
+                input.placeholder = currentLang === 'ko' ? '댓글을 입력하세요...' : 'Write a comment...';
+
+                // 댓글 목록 새로고침
+                await loadManagementComments(currentManagementCategoryId);
+
+                const successMsg = currentLang === 'ko' ? '댓글이 작성되었습니다.' : 'Comment posted successfully.';
+                alert(successMsg);
+            } else if (response.status === 401 || response.status === 403) {
+                alert(currentLang === 'ko' ? '권한이 없습니다.' : 'Permission denied.');
+            } else {
+                const errorText = currentLang === 'ko'
+                    ? `댓글 작성에 실패했습니다. (오류 코드: ${response.status})`
+                    : `Failed to submit comment. (Error code: ${response.status})`;
+                alert(errorText);
+            }
+        } catch (error) {
+            console.error('댓글 작성 오류:', error);
+            const errorMsg = currentLang === 'ko'
+                ? '네트워크 오류가 발생했습니다.'
+                : 'Network error occurred.';
+            alert(errorMsg);
+        }
+    }
+
+    // 댓글 수정 시작
+    function startEditManagementComment(commentId, commentText) {
+        currentEditingManagementCommentId = commentId;
+        currentReplyToManagementCommentId = null;
+
+        const input = document.getElementById('managementCommentInput');
+        if (input) {
+            input.value = commentText;
+            input.focus();
+        }
+
+        // 폼 제목 변경
+        const formTitle = document.getElementById('commentFormTitle');
+        if (formTitle) {
+            formTitle.innerHTML = `<span data-lang-ko="댓글 수정" data-lang-en="Edit Comment">${currentLang === 'ko' ? '댓글 수정' : 'Edit Comment'}</span>`;
+        }
+
+        // 취소 버튼 표시
+        const cancelBtn = document.getElementById('cancelCommentBtn');
+        if (cancelBtn) {
+            cancelBtn.style.display = 'block';
+        }
+    }
+
+    // 답글 작성 시작
+    function startReplyManagementComment(parentId) {
+        currentReplyToManagementCommentId = parentId;
+        currentEditingManagementCommentId = null;
+
+        const input = document.getElementById('managementCommentInput');
+        if (input) {
+            input.value = '';
+            input.focus();
+            input.placeholder = currentLang === 'ko' ? '답글을 입력하세요...' : 'Write a reply...';
+        }
+
+        // 폼 제목 변경
+        const formTitle = document.getElementById('commentFormTitle');
+        if (formTitle) {
+            formTitle.innerHTML = `<span data-lang-ko="답글 작성" data-lang-en="Write Reply">${currentLang === 'ko' ? '답글 작성' : 'Write Reply'}</span>`;
+        }
+
+        // 취소 버튼 표시
+        const cancelBtn = document.getElementById('cancelCommentBtn');
+        if (cancelBtn) {
+            cancelBtn.style.display = 'block';
+        }
+    }
+
+    // 댓글 작성 취소
+    function cancelManagementComment() {
+        currentEditingManagementCommentId = null;
+        currentReplyToManagementCommentId = null;
+
+        const input = document.getElementById('managementCommentInput');
+        if (input) {
+            input.value = '';
+            input.placeholder = currentLang === 'ko' ? '댓글을 입력하세요...' : 'Write a comment...';
+        }
+
+        // 폼 제목 초기화
+        const formTitle = document.getElementById('commentFormTitle');
+        if (formTitle) {
+            formTitle.innerHTML = `<span data-lang-ko="댓글 작성" data-lang-en="Write a comment">${currentLang === 'ko' ? '댓글 작성' : 'Write a comment'}</span>`;
+        }
+
+        // 취소 버튼 숨기기
+        const cancelBtn = document.getElementById('cancelCommentBtn');
+        if (cancelBtn) {
+            cancelBtn.style.display = 'none';
+        }
+    }
+
+    // 댓글 삭제 (카테고리 소유자 권한)
+    async function deleteManagementComment(commentId) {
+        if (!confirm(currentLang === 'ko' ? '이 댓글을 삭제하시겠습니까?' : 'Delete this comment?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/category/comment/${commentId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                // 댓글 목록 새로고침
+                await loadManagementComments(currentManagementCategoryId);
+
+                const successMsg = currentLang === 'ko' ? '댓글이 삭제되었습니다.' : 'Comment deleted successfully.';
+                alert(successMsg);
+            } else if (response.status === 401 || response.status === 403) {
+                alert(currentLang === 'ko' ? '권한이 없습니다.' : 'Permission denied.');
+            } else {
+                alert(currentLang === 'ko' ? '댓글 삭제에 실패했습니다.' : 'Failed to delete comment.');
+            }
+        } catch (error) {
+            console.error('댓글 삭제 오류:', error);
+            alert(currentLang === 'ko' ? '네트워크 오류가 발생했습니다.' : 'Network error occurred.');
+        }
+    }
 </script>
+
+
 </body>
 </html>

@@ -726,6 +726,151 @@
         .modal-close:hover {
             color: #333;
         }
+
+        /* 댓글 버튼 */
+        .comment-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .comment-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .category-card.active .comment-btn {
+            background: #ddd;
+            border-color: #999;
+        }
+
+        .category-card.active .comment-btn:hover {
+            background: #ccc;
+        }
+
+        /* 댓글 모달 */
+        .comments-container {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            border-bottom: 1px solid #ddd;
+            padding: 12px 0;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .comment-author {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .comment-date {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .comment-content {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .comment-action-btn {
+            padding: 4px 8px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .comment-action-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .comment-action-btn.delete {
+            color: #cc0000;
+            border-color: #cc0000;
+        }
+
+        .comment-action-btn.delete:hover {
+            background: #ffe0e0;
+        }
+
+        .reply-item {
+            padding-left: 15px;
+            border-left: 2px solid #ddd;
+        }
+
+        .comment-form {
+            padding: 15px 20px;
+            border-top: 1px solid #ddd;
+            background: #fafafa;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .comment-submit {
+            padding: 6px 12px;
+            border: 1px solid #999;
+            background: #e0e0e0;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .comment-submit:hover {
+            background: #d0d0d0;
+        }
+
+        .comment-cancel {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+
+        .comment-cancel:hover {
+            background: #f0f0f0;
+        }
+
+        .no-comments {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -853,6 +998,28 @@
     </div>
 </div>
 
+<!-- 댓글 모달 -->
+<div id="commentsModal" class="modal">
+    <div class="modal-content" style="max-width: 700px; width: 90%;">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title" data-lang-ko="댓글" data-lang-en="Comments">댓글</div>
+                <div id="categoryInfo" style="font-size: 12px; color: #666; margin-top: 4px;"></div>
+            </div>
+            <button class="modal-close" onclick="closeCommentModal()">×</button>
+        </div>
+        <div class="comments-container" id="commentsContainer">
+            <div class="no-comments" data-lang-ko="댓글이 없습니다." data-lang-en="No comments yet.">댓글이 없습니다.</div>
+        </div>
+        <div class="comment-form">
+            <textarea id="commentInput" class="comment-input" placeholder="댓글을 입력하세요..." data-lang-ko-placeholder="댓글을 입력하세요..." data-lang-en-placeholder="Write a comment..."></textarea>
+            <button class="comment-submit" onclick="submitComment()">
+                <span data-lang-ko="작성" data-lang-en="Submit">작성</span>
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
     const API_BASE = 'http://localhost:8080/api';
     let currentUser = null;
@@ -861,6 +1028,9 @@
     let currentView = 'table';
     let currentWeekStart = null;
     let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
+    let currentCommentCategoryId = null;
+    let currentEditingCommentId = null;
+    let currentReplyToCommentId = null;
 
     // 번역 데이터
     const translations = {
@@ -900,6 +1070,13 @@
             const ko = element.getAttribute('data-lang-ko');
             const en = element.getAttribute('data-lang-en');
             element.textContent = currentLang === 'ko' ? ko : en;
+        });
+
+        // placeholder 업데이트
+        document.querySelectorAll('[data-lang-ko-placeholder]').forEach(element => {
+            const ko = element.getAttribute('data-lang-ko-placeholder');
+            const en = element.getAttribute('data-lang-en-placeholder');
+            element.placeholder = currentLang === 'ko' ? ko : en;
         });
     }
 
@@ -1071,8 +1248,11 @@
             }
         } catch (error) {
             console.error('카테고리 로드 오류:', error);
+            const errorMsg = currentLang === 'ko'
+                ? '서버에 연결할 수 없습니다. 백엔드 서버(localhost:8080)가 실행 중인지 확인하세요.'
+                : 'Cannot connect to server. Please check if backend server (localhost:8080) is running.';
             document.getElementById('categoriesGrid').innerHTML =
-                '<div class="empty-state">오류가 발생했습니다.</div>';
+                `<div class="empty-state">${errorMsg}</div>`;
         }
     }
 
@@ -1093,7 +1273,7 @@
             const email = category.email;
 
             return `
-                <div class="category-card" data-id="${id}" data-type="${recordType}">
+                <div class="category-card" data-id="${id}" data-type="${recordType}" data-title="${title}" data-email="${email}">
                     <div class="category-title">${title}</div>
                     <div class="category-type">${recordType}</div>
                     <div class="category-meta"><span data-lang-ko="작성자" data-lang-en="Author">작성자</span>: ${email}</div>
@@ -1103,6 +1283,10 @@
                             <span data-lang-ko="좋아요" data-lang-en="Like">좋아요</span>
                         </button>
                         <span class="like-count" data-category-id="${id}">0</span>
+                        <button class="comment-btn" onclick="openCommentModal(event, '${id}')">
+                            <span>💬</span>
+                            <span data-lang-ko="댓글" data-lang-en="Comments">댓글</span>
+                        </button>
                     </div>
                 </div>
             `;
@@ -1119,8 +1303,8 @@
         // 카테고리 클릭 이벤트
         grid.querySelectorAll('.category-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                // 좋아요 버튼 클릭 시 카테고리 선택 방지
-                if (e.target.closest('.like-btn')) {
+                // 좋아요 버튼이나 댓글 버튼 클릭 시 카테고리 선택 방지
+                if (e.target.closest('.like-btn') || e.target.closest('.comment-btn')) {
                     return;
                 }
 
@@ -2183,9 +2367,14 @@
                 if (countElement) {
                     countElement.textContent = count;
                 }
+            } else {
+                // 서버 응답 에러 (404, 500 등)
+                console.warn(`좋아요 개수 로드 실패 (${response.status}):`, categoryId);
             }
         } catch (error) {
-            console.error('좋아요 개수 로드 오류:', error);
+            // 네트워크 에러 (서버 미실행, CORS 등)
+            console.warn('좋아요 개수 로드 불가 (서버 연결 실패):', categoryId);
+            // 에러가 발생해도 페이지는 정상 작동하도록 무시
         }
 
         // 좋아요 상태 확인
@@ -2268,6 +2457,298 @@
             alert('네트워크 오류가 발생했습니다.');
         }
     }
+
+    // ==================== 댓글 기능 ====================
+
+    // 댓글 모달 열기
+    async function openCommentModal(event, categoryId) {
+        event.stopPropagation();
+        currentCommentCategoryId = categoryId;
+        currentEditingCommentId = null;
+        currentReplyToCommentId = null;
+
+        const modal = document.getElementById('commentsModal');
+        modal.classList.add('active');
+
+        // 카테고리 정보 표시
+        const categoryCard = document.querySelector(`.category-card[data-id="${categoryId}"]`);
+        if (categoryCard) {
+            const title = categoryCard.getAttribute('data-title');
+            const type = categoryCard.getAttribute('data-type');
+            const email = categoryCard.getAttribute('data-email');
+
+            const categoryInfo = document.getElementById('categoryInfo');
+            categoryInfo.innerHTML = `
+                <span style="font-weight: bold;">${title}</span>
+                <span style="margin: 0 8px;">|</span>
+                <span style="background: #e5e5e5; padding: 2px 6px; font-size: 10px; border: 1px solid #ddd;">${type}</span>
+                <span style="margin: 0 8px;">|</span>
+                <span>${email}</span>
+            `;
+        }
+
+        // 댓글 입력창 상태 설정
+        const commentInput = document.getElementById('commentInput');
+        commentInput.value = '';
+
+        if (!currentUser) {
+            // 로그인하지 않은 경우
+            commentInput.placeholder = currentLang === 'ko'
+                ? '댓글을 작성하려면 로그인이 필요합니다.'
+                : 'Please log in to write a comment.';
+            commentInput.disabled = true;
+        } else {
+            // 로그인한 경우
+            commentInput.placeholder = currentLang === 'ko'
+                ? '댓글을 입력하세요...'
+                : 'Write a comment...';
+            commentInput.disabled = false;
+        }
+
+        // 댓글 불러오기
+        await loadComments(categoryId);
+
+        // 언어 적용
+        applyLanguage();
+    }
+
+    // 댓글 모달 닫기
+    function closeCommentModal() {
+        const modal = document.getElementById('commentsModal');
+        modal.classList.remove('active');
+        currentCommentCategoryId = null;
+        currentEditingCommentId = null;
+        currentReplyToCommentId = null;
+    }
+
+    // 댓글 불러오기
+    async function loadComments(categoryId) {
+        try {
+            console.log('댓글 불러오기 시작:', categoryId);
+            const response = await fetch(`${API_BASE}/category/comment/${categoryId}`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const comments = await response.json();
+                console.log('API 응답 댓글:', comments);
+                renderComments(comments);
+            } else {
+                console.error('댓글 불러오기 실패:', response.status);
+            }
+        } catch (error) {
+            console.error('댓글 불러오기 오류:', error);
+        }
+    }
+
+    // 댓글 렌더링
+    function renderComments(comments) {
+        const container = document.getElementById('commentsContainer');
+
+        console.log('전체 댓글:', comments);
+
+        if (!comments || comments.length === 0) {
+            container.innerHTML = `
+                <div class="no-comments" data-lang-ko="댓글이 없습니다." data-lang-en="No comments yet.">
+                    ${currentLang === 'ko' ? '댓글이 없습니다.' : 'No comments yet.'}
+                </div>
+            `;
+            return;
+        }
+
+        // API가 중첩된 children 구조로 반환하므로 직접 렌더링
+        container.innerHTML = comments.map(comment => renderComment(comment)).join('');
+
+        applyLanguage();
+    }
+
+    // 개별 댓글 렌더링 (재귀적으로 children 처리)
+    function renderComment(comment, depth = 0) {
+        const date = new Date(comment.createdAt).toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US');
+        const canEdit = comment.canUpdate;
+        const canDelete = comment.canDelete;
+        const isUpdated = comment.updated;
+        const updatedText = currentLang === 'ko' ? '(수정됨)' : '(edited)';
+
+        // depth에 따라 들여쓰기 클래스 및 스타일 적용
+        const itemClass = depth > 0 ? 'comment-item reply-item' : 'comment-item';
+        const marginLeft = depth > 0 ? `margin-left: ${depth * 30}px;` : '';
+
+        let html = `
+            <div class="${itemClass}" style="${marginLeft}">
+                <div class="comment-header">
+                    <span class="comment-author">${comment.authorEmail}</span>
+                    <span class="comment-date">${date} ${isUpdated ? updatedText : ''}</span>
+                </div>
+                <div class="comment-content">${escapeHtml(comment.comment)}</div>
+                <div class="comment-actions">
+                    <button class="comment-action-btn" onclick="startReply('${comment.commentId}')">
+                        <span data-lang-ko="답글" data-lang-en="Reply">${currentLang === 'ko' ? '답글' : 'Reply'}</span>
+                    </button>
+                    ${canEdit ? `
+                        <button class="comment-action-btn" onclick="startEditComment('${comment.commentId}', \`${escapeHtml(comment.comment).replace(/`/g, '\\`')}\`)">
+                            <span data-lang-ko="수정" data-lang-en="Edit">${currentLang === 'ko' ? '수정' : 'Edit'}</span>
+                        </button>
+                    ` : ''}
+                    ${canDelete ? `
+                        <button class="comment-action-btn delete" onclick="deleteComment('${comment.commentId}')">
+                            <span data-lang-ko="삭제" data-lang-en="Delete">${currentLang === 'ko' ? '삭제' : 'Delete'}</span>
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+
+        // children이 있으면 재귀적으로 렌더링
+        if (comment.children && comment.children.length > 0) {
+            console.log(`댓글 ${comment.commentId}의 children:`, comment.children);
+            html += comment.children.map(child => renderComment(child, depth + 1)).join('');
+        }
+
+        return html;
+    }
+
+    // HTML 이스케이프
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // 댓글 작성
+    async function submitComment() {
+        const input = document.getElementById('commentInput');
+        const comment = input.value.trim();
+
+        if (!comment) {
+            alert(currentLang === 'ko' ? '댓글을 입력하세요.' : 'Please enter a comment.');
+            return;
+        }
+
+        // 로그인 체크 (수정은 제외)
+        if (!currentEditingCommentId && !currentUser) {
+            alert(currentLang === 'ko' ? '댓글을 작성하려면 로그인이 필요합니다.' : 'Please log in to write a comment.');
+            return;
+        }
+
+        try {
+            let url, method, body;
+
+            if (currentEditingCommentId) {
+                // 수정
+                url = `${API_BASE}/category/comment`;
+                method = 'PATCH';
+                body = JSON.stringify({
+                    commentId: currentEditingCommentId,
+                    comment: comment
+                });
+            } else if (currentReplyToCommentId) {
+                // 대댓글
+                url = `${API_BASE}/category/comment/replies`;
+                method = 'POST';
+                body = JSON.stringify({
+                    categoryId: currentCommentCategoryId,
+                    parentId: currentReplyToCommentId,
+                    comment: comment
+                });
+            } else {
+                // 일반 댓글
+                url = `${API_BASE}/category/comment`;
+                method = 'POST';
+                body = JSON.stringify({
+                    categoryId: currentCommentCategoryId,
+                    comment: comment
+                });
+            }
+
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: body
+            });
+
+            if (response.ok) {
+                input.value = '';
+                currentEditingCommentId = null;
+                currentReplyToCommentId = null;
+                await loadComments(currentCommentCategoryId);
+            } else if (response.status === 401 || response.status === 403) {
+                alert(currentLang === 'ko' ? '로그인이 필요합니다.' : 'Login required.');
+            } else {
+                console.error('댓글 작성 실패:', response.status);
+                const errorText = currentLang === 'ko'
+                    ? `댓글 작성에 실패했습니다. (오류 코드: ${response.status})`
+                    : `Failed to submit comment. (Error code: ${response.status})`;
+                alert(errorText);
+            }
+        } catch (error) {
+            console.error('댓글 작성 오류:', error);
+            const errorMsg = currentLang === 'ko'
+                ? '네트워크 오류가 발생했습니다. 로그인 상태를 확인해주세요.'
+                : 'Network error occurred. Please check your login status.';
+            alert(errorMsg);
+        }
+    }
+
+    // 댓글 수정 시작
+    function startEditComment(commentId, commentText) {
+        currentEditingCommentId = commentId;
+        currentReplyToCommentId = null;
+        document.getElementById('commentInput').value = commentText;
+        document.getElementById('commentInput').focus();
+    }
+
+    // 답글 시작
+    function startReply(parentId) {
+        // 로그인 체크
+        if (!currentUser) {
+            alert(currentLang === 'ko' ? '답글을 작성하려면 로그인이 필요합니다.' : 'Please log in to write a reply.');
+            return;
+        }
+
+        currentReplyToCommentId = parentId;
+        currentEditingCommentId = null;
+        document.getElementById('commentInput').value = '';
+        document.getElementById('commentInput').focus();
+        document.getElementById('commentInput').placeholder = currentLang === 'ko'
+            ? '답글을 입력하세요...'
+            : 'Write a reply...';
+    }
+
+    // 댓글 삭제
+    async function deleteComment(commentId) {
+        if (!confirm(currentLang === 'ko' ? '댓글을 삭제하시겠습니까?' : 'Delete this comment?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/category/comment/${commentId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                await loadComments(currentCommentCategoryId);
+            } else if (response.status === 401 || response.status === 403) {
+                alert(currentLang === 'ko' ? '권한이 없습니다.' : 'Permission denied.');
+            } else {
+                alert(currentLang === 'ko' ? '댓글 삭제에 실패했습니다.' : 'Failed to delete comment.');
+            }
+        } catch (error) {
+            console.error('댓글 삭제 오류:', error);
+            alert(currentLang === 'ko' ? '네트워크 오류가 발생했습니다.' : 'Network error occurred.');
+        }
+    }
+
+    // 모달 외부 클릭시 닫기
+    document.getElementById('commentsModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeCommentModal();
+        }
+    });
 </script>
 </body>
 </html>
