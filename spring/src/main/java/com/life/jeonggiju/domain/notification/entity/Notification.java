@@ -1,0 +1,63 @@
+package com.life.jeonggiju.domain.notification.entity;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.github.f4b6a3.uuid.UuidCreator;
+import com.life.jeonggiju.domain.notification.event.NotificationCreatedEvent;
+import com.life.jeonggiju.domain.user.entity.User;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@Builder
+@Table
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
+public class Notification {
+
+	@Id
+	@Column(name = "id", updatable = false, nullable = false)
+	private UUID id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "receiver_id", nullable = false)
+	private User receiver;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sender_id", nullable = false)
+	private User sender;
+
+	private NotificationType type;
+
+	private String content;
+
+	@CreatedDate
+	@Column(nullable = false)
+	private LocalDateTime createdAt;
+
+	@PrePersist
+	protected void generateIdIfAbsent() {
+		if (this.id == null) {
+			this.id = UuidCreator.getTimeOrderedEpoch();
+		}
+	}
+}
