@@ -2,10 +2,8 @@ BEGIN;
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- =========================================================
--- 0) 기존 데이터 비우기 (여러번 실행 가능)
--- =========================================================
 TRUNCATE TABLE
+    notification,
     friends,
     category_like,
     "comment",
@@ -18,428 +16,430 @@ TRUNCATE TABLE
     users
 CASCADE;
 
+-- =========================================================
+-- 1) 파라미터 (공평 분배 전제: category_count % user_count = 0, like_target % user_count = 0)
+-- =========================================================
+DROP TABLE IF EXISTS tmp_params;
+CREATE TEMP TABLE tmp_params (
+    user_count      int NOT NULL,
+    category_count  int NOT NULL,
+    like_target     int NOT NULL,
+    friend_target   int NOT NULL
+) ON COMMIT DROP;
+
+-- users=50, categories=500(=10/user), likes=8000(=160/user), friends=120(=2~3/user)
+INSERT INTO tmp_params(user_count, category_count, like_target, friend_target)
+VALUES (50, 500, 8000, 120);
 
 -- =========================================================
--- 파라미터
--- users:        10
--- categories:  500
--- likes:      8000
--- comments:   root 6000 + depth2~5 가변 (확률 기반)
+-- 2) users (rn 1..N 보장)
 -- =========================================================
-
 DROP TABLE IF EXISTS tmp_users;
+CREATE TEMP TABLE tmp_users (
+    rn    int PRIMARY KEY,
+    id    uuid NOT NULL,
+    email varchar(255) NOT NULL
+) ON COMMIT DROP;
+
+WITH src AS (
+    SELECT gs AS rn
+    FROM generate_series(1, (SELECT user_count FROM tmp_params)) gs
+),
+     ins AS (
+INSERT INTO users (
+    id, authority, birth_day, birth_month, birth_year,
+    description, email, "password", title, username
+)
+SELECT
+    gen_random_uuid(),
+    (CASE WHEN rn % 10 = 0 THEN 0 ELSE 1 END)::int2,         -- 10명 중 1명만 authority=0
+    (1 + (rn % 28))::int,
+    (1 + (rn % 12))::int,
+    (1990 + (rn % 15))::int,
+    'dummy user desc ' || rn,
+    'user' || rn || '@example.com',
+    'pw' || rn,
+    'title ' || rn,
+    'username' || rn
+FROM src
+         RETURNING id, email
+)
+INSERT INTO tmp_users(rn, id, email)
+SELECT
+    s.rn,
+    i.id,
+    i.email
+FROM src s
+         JOIN LATERAL (
+    SELECT id, email
+    FROM ins
+    ORDER BY email
+    OFFSET (s.rn - 1) LIMIT 1
+    ) i ON true;
+
+-- =========================================================
+-- 3) category (유저당 정확히 10개 분배, record_type/visibility도 균등 순환)
+-- =========================================================
 DROP TABLE IF EXISTS tmp_categories;
+CREATE TEMP TABLE tmp_categories (
+    rn         int PRIMARY KEY,
+    id         uuid NOT NULL,
+    user_id    uuid NOT NULL,
+    record_type varchar(255) NOT NULL,
+    title      varchar(255) NOT NULL,
+    visibility varchar(255) NOT NULL
+) ON COMMIT DROP;
 
-CREATE TEMP TABLE tmp_users (id UUID PRIMARY KEY) ON COMMIT DROP;
-CREATE TEMP TABLE tmp_categories (id UUID PRIMARY KEY, record_type TEXT NOT NULL) ON COMMIT DROP;
-
--- =========================================================
--- 1) users 10명
--- =========================================================
-WITH ins AS (
-INSERT INTO users (id, authority, birth_day, birth_month, birth_year, description, email, password, title, username)
+WITH src AS (
+    SELECT gs AS rn
+    FROM generate_series(1, (SELECT category_count FROM tmp_params)) gs
+),
+     mapped AS (
+         SELECT
+             s.rn,
+             u.id AS user_id,
+             (ARRAY['CHECK','TIME','TEXT','NUMBER','CHECKLIST'])[1 + ((s.rn - 1) % 5)] AS record_type,
+    (CASE WHEN s.rn % 2 = 0 THEN 'PUBLIC' ELSE 'PRIVATE' END) AS visibility,
+    'category ' || s.rn AS title
+FROM src s
+    JOIN tmp_users u
+ON u.rn = 1 + ((s.rn - 1) % (SELECT user_count FROM tmp_params))
+    ),
+    ins AS (
+INSERT INTO category(id, user_id, description, record_type, title, visibility)
 SELECT
     gen_random_uuid(),
-    1,
-    (floor(random() * 28) + 1)::int,
-    (floor(random() * 12) + 1)::int,
-    (floor(random() * 10) + 1995)::int,
-    '더미 사용자 ' || gs,
-    'user' || lpad(gs::text, 2, '0') || '@example.com',
-    'pass1234',
-    'USER',
-    'user' || lpad(gs::text, 2, '0')
-FROM generate_series(1, 10) gs
-    RETURNING id
-)
-INSERT INTO tmp_users(id)
-SELECT id FROM ins;
-
+    m.user_id,
+    'dummy category desc ' || m.rn,
+    m.record_type,
+    m.title,
+    m.visibility
+FROM mapped m
+    RETURNING id, user_id, record_type, title, visibility
+    ),
+    numbered AS (
+SELECT row_number() OVER (ORDER BY title) AS rn,
+    id, user_id, record_type, title, visibility
+FROM ins
+    )
+INSERT INTO tmp_categories(rn, id, user_id, record_type, title, visibility)
+SELECT rn, id, user_id, record_type, title, visibility FROM numbered;
 
 -- =========================================================
--- 1.5) friends 더미데이터 (10명 기준: 45쌍 생성)
--- - requester_id < addressee_id 형태로 한 번만 넣어서 (유니크 충돌 방지)
--- - 상태 분포: ACCEPTED 55%, PENDING 25%, REJECTED 10%, BLOCKED 10%
--- - created_at: 최근 90일 랜덤
+-- 4) records (카테고리 단위로 동일 개수 생성 = 자연스럽게 유저에게도 공평)
 -- =========================================================
-WITH u AS (
-    SELECT id, row_number() OVER (ORDER BY id) AS rn
-    FROM tmp_users
+INSERT INTO check_record(id, category_id, "date", success)
+SELECT
+    gen_random_uuid(),
+    c.id,
+    (current_date - (d-1))::date,
+    ((d % 10) <> 0)  -- 10개 중 1개만 false
+FROM tmp_categories c
+         JOIN LATERAL generate_series(1, 20) d ON true
+WHERE c.record_type = 'CHECK';
+
+INSERT INTO time_record(id, category_id, "date", "time")
+SELECT
+    gen_random_uuid(),
+    c.id,
+    (current_date - (d-1))::date,
+    make_time((d % 24), (d * 7) % 60, (d * 13) % 60)::time(6)
+FROM tmp_categories c
+         JOIN LATERAL generate_series(1, 20) d ON true
+WHERE c.record_type = 'TIME';
+
+INSERT INTO number_record(id, category_id, "date", "number")
+SELECT
+    gen_random_uuid(),
+    c.id,
+    (current_date - (d-1))::date,
+    ((c.rn % 100) * 10 + d)::float8
+FROM tmp_categories c
+         JOIN LATERAL generate_series(1, 20) d ON true
+WHERE c.record_type = 'NUMBER';
+
+INSERT INTO text_record(id, category_id, "date", title, text)
+SELECT
+    gen_random_uuid(),
+    c.id,
+    (current_date - ((gs-1) % 30))::date,
+    'text title ' || gs || ' / ' || c.title,
+    'dummy text body #' || gs || ' for ' || c.title
+FROM tmp_categories c
+    JOIN LATERAL generate_series(1, 15) gs ON true
+WHERE c.record_type = 'TEXT';
+
+INSERT INTO check_list_record(id, category_id, "date", todo, success)
+SELECT
+    gen_random_uuid(),
+    c.id,
+    (current_date - (day-1))::date,
+    'todo ' || todo_i || ' / ' || c.title,
+    ((todo_i + day) % 5 <> 0)
+FROM tmp_categories c
+    JOIN LATERAL generate_series(1, 10) day ON true
+    JOIN LATERAL generate_series(1, 3) todo_i ON true
+WHERE c.record_type = 'CHECKLIST';
+
+-- =========================================================
+-- 5) category_like (유저당 정확히 160개, 자기 카테고리 제외, UNIQUE 보장)
+-- =========================================================
+DROP TABLE IF EXISTS tmp_public_categories;
+CREATE TEMP TABLE tmp_public_categories AS
+SELECT
+    row_number() OVER (ORDER BY rn) AS prn,
+    id,
+    user_id,
+    title
+FROM tmp_categories
+WHERE visibility = 'PUBLIC';
+
+WITH p AS (
+    SELECT (SELECT count(*) FROM tmp_public_categories) AS public_cnt,
+           (SELECT user_count FROM tmp_params) AS user_cnt,
+           (SELECT like_target FROM tmp_params) AS like_target
 ),
-     pairs AS (
-         SELECT a.id AS requester_id, b.id AS addressee_id
-         FROM u a
-                  JOIN u b ON a.rn < b.rn
+     likes_per_user AS (
+         SELECT (SELECT like_target FROM tmp_params) / (SELECT user_count FROM tmp_params) AS v
      ),
-     src AS (
-         SELECT
-             requester_id,
-             addressee_id,
-             random() AS r,
-             now()
-                 - (floor(random()*90)::int * interval '1 day')
-                 - (floor(random()*86400)::int * interval '1 second') AS created_at
-         FROM pairs
-     )
-INSERT INTO friends (id, requester_id, addressee_id, created_at, status)
-SELECT
-    gen_random_uuid(),
-    requester_id,
-    addressee_id,
-    created_at,
-    CASE
-        WHEN r < 0.55 THEN 'ACCEPTED'
-        WHEN r < 0.80 THEN 'PENDING'
-        WHEN r < 0.90 THEN 'REJECTED'
-        ELSE 'BLOCKED'
-        END AS status
-FROM src;
-
--- =========================================================
--- 1.6) notification 더미데이터 (COMMENT/LIKE/REPLY)
--- - notifications 또는 notification 테이블 자동 감지 후 insert
--- - 1500개
--- - type 분포: COMMENT(55%), REPLY(20%), LIKE(25%)
--- - data(jsonb):
---    * COMMENT={senderEmail, comment}
---    * REPLY  ={senderEmail, comment}
---    * LIKE   ={senderEmail}
--- - read: 35% true
--- - created_at: 최근 60일 랜덤
--- =========================================================
-DO $$
-DECLARE
-t regclass;
-BEGIN
-  t := to_regclass('public.notifications');
-  IF t IS NULL THEN
-    t := to_regclass('public.notification');
-END IF;
-
-  IF t IS NULL THEN
-    RAISE NOTICE 'notifications/notification 테이블을 찾지 못했습니다. (스킵)';
-    RETURN;
-END IF;
-
-EXECUTE format($SQL$
-                   INSERT INTO %s (id, receiver_id, sender_id, type, data, read, created_at)
-    WITH pairs AS (
-      SELECT
-        gs,
-        gen_random_uuid() AS id,
-        r.id AS receiver_id,
-        s.id AS sender_id,
-        random() AS rr,
-        (random() < 0.35) AS read,
-        now()
-          - (floor(random()*60)::int * interval '1 day')
-          - (floor(random()*86400)::int * interval '1 second') AS created_at
-      FROM generate_series(1, 1500) gs
-      CROSS JOIN LATERAL (SELECT id FROM tmp_users ORDER BY random() LIMIT 1) r
-      CROSS JOIN LATERAL (SELECT id FROM tmp_users WHERE id <> r.id ORDER BY random() LIMIT 1) s
-    )
-    SELECT
-      p.id,
-               p.receiver_id,
-               p.sender_id,
-               CASE
-                   WHEN p.rr < 0.55 THEN 'COMMENT'
-                   WHEN p.rr < 0.75 THEN 'REPLY'
-                   ELSE 'LIKE'
-                   END AS type,
-               CASE
-                   WHEN p.rr < 0.55 THEN jsonb_build_object(
-                           'senderEmail', su.email,
-                           'comment', '더미 댓글 알림 - ' || p.gs
-                                         )
-                   WHEN p.rr < 0.75 THEN jsonb_build_object(
-                           'senderEmail', su.email,
-                           'comment', '더미 답글 알림 - ' || p.gs
-                                         )
-                   ELSE jsonb_build_object(
-                           'senderEmail', su.email
-                        )
-                   END AS data,
-               p.read,
-               p.created_at
-                   FROM pairs p
-    JOIN users su ON su.id = p.sender_id;
-$SQL$, t);
-
-END $$;
-
-
--- =========================================================
--- 2) category 500개 (record_type 5종 균등)
--- record_type: CHECK, CHECKLIST, TEXT, TIME, NUMBER
--- =========================================================
-WITH u AS (
-    SELECT array_agg(id ORDER BY id) AS ids, count(*) AS n
-    FROM tmp_users
-),
-     ins AS (
-INSERT INTO category (id, user_id, description, record_type, title, visibility)
-SELECT
-    gen_random_uuid(),
-    (u.ids)[(((gs - 1) % u.n) + 1)] AS user_id,
-        '더미 카테고리 설명 ' || gs,
-        CASE (gs % 5)
-          WHEN 0 THEN 'CHECK'
-          WHEN 1 THEN 'CHECKLIST'
-          WHEN 2 THEN 'TEXT'
-          WHEN 3 THEN 'TIME'
-          ELSE 'NUMBER'
-END AS record_type,
-        CASE (gs % 5)
-          WHEN 0 THEN '습관체크-' || gs
-          WHEN 1 THEN '할일-' || gs
-          WHEN 2 THEN '일기-' || gs
-          WHEN 3 THEN '시간기록-' || gs
-          ELSE '숫자기록-' || gs
-END AS title,
-        CASE WHEN random() < 0.6 THEN 'PUBLIC' ELSE 'PRIVATE' END AS visibility
-    FROM generate_series(1, 500) gs, u
-    RETURNING id, record_type
-)
-INSERT INTO tmp_categories(id, record_type)
-SELECT id, record_type FROM ins;
-
--- =========================================================
--- 3) category_like 8000개 (중복은 유니크 제약 있으면 무시)
--- =========================================================
-WITH u AS (SELECT array_agg(id) AS ids FROM tmp_users),
-     c AS (SELECT array_agg(id) AS ids FROM tmp_categories),
      pairs AS (
          SELECT
-             gen_random_uuid() AS id,
-             now() - (floor(random()*90)::int * interval '1 day') AS created_at,
-             (c.ids)[floor(random()*array_length(c.ids,1))::int + 1] AS category_id,
-    (u.ids)[floor(random()*array_length(u.ids,1))::int + 1] AS user_id
-FROM generate_series(1, 8000), u, c
+             u.id AS user_id,
+             -- 각 유저별 "자기 것 제외한 PUBLIC 카테고리"에서 offset으로 고름
+             (
+                 SELECT pc.id
+                 FROM tmp_public_categories pc
+                 WHERE pc.user_id <> u.id
+                 ORDER BY pc.prn
+                 OFFSET (
+             ((u.rn - 1) * (SELECT v FROM likes_per_user) + (i - 1))
+    %
+    (SELECT count(*) FROM tmp_public_categories pc2 WHERE pc2.user_id <> u.id)
     )
-INSERT INTO category_like (id, created_at, category_id, user_id)
-SELECT id, created_at, category_id, user_id
+    LIMIT 1
+    ) AS category_id,
+    (now() - ((i - 1) % 30) * interval '1 day') AS created_at
+FROM tmp_users u
+    JOIN LATERAL generate_series(1, (SELECT v FROM likes_per_user)) i ON true
+    )
+INSERT INTO category_like(id, user_id, category_id, created_at)
+SELECT gen_random_uuid(), user_id, category_id, created_at
 FROM pairs
-    ON CONFLICT (user_id, category_id) DO NOTHING;
+WHERE category_id IS NOT NULL;
 
 -- =========================================================
--- 3.5) comment 더미데이터 (다양 + 최대 5단)
--- - 루트 6000개
--- - 각 댓글은 확률적으로 0~N개의 자식을 가지며, 깊어질수록 자식 수가 줄어듦
--- - 최대 depth=5 (루트=1, ... , 5단)
+-- 6) friends (총 120 row: 앞 20명은 3개, 나머지 2개 = 최대한 공평)
 -- =========================================================
-
-DROP TABLE IF EXISTS tmp_level1;
-DROP TABLE IF EXISTS tmp_level2;
-DROP TABLE IF EXISTS tmp_level3;
-DROP TABLE IF EXISTS tmp_level4;
-DROP TABLE IF EXISTS tmp_level5;
-
-CREATE TEMP TABLE tmp_level1 (id UUID PRIMARY KEY, category_id UUID NOT NULL, depth int NOT NULL) ON COMMIT DROP;
-CREATE TEMP TABLE tmp_level2 (id UUID PRIMARY KEY, category_id UUID NOT NULL, depth int NOT NULL) ON COMMIT DROP;
-CREATE TEMP TABLE tmp_level3 (id UUID PRIMARY KEY, category_id UUID NOT NULL, depth int NOT NULL) ON COMMIT DROP;
-CREATE TEMP TABLE tmp_level4 (id UUID PRIMARY KEY, category_id UUID NOT NULL, depth int NOT NULL) ON COMMIT DROP;
-CREATE TEMP TABLE tmp_level5 (id UUID PRIMARY KEY, category_id UUID NOT NULL, depth int NOT NULL) ON COMMIT DROP;
-
--- (1) depth=1 루트 댓글 6000개
-WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
-     c AS (SELECT array_agg(id) AS cids FROM tmp_categories),
-     ins AS (
-INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+WITH base AS (
+    SELECT
+        (SELECT friend_target FROM tmp_params) / (SELECT user_count FROM tmp_params) AS base_n,  -- 2
+        (SELECT friend_target FROM tmp_params) % (SELECT user_count FROM tmp_params) AS rem     -- 20
+    ),
+    pairs AS (
 SELECT
-    gen_random_uuid(),
-    '댓글(d1) - ' || gs,
-    NULL::uuid,
-    (c.cids)[floor(random()*array_length(c.cids,1))::int + 1] AS category_id,
-             (u.uids)[floor(random()*array_length(u.uids,1))::int + 1] AS user_id,
-             ts,
-             ts
-FROM generate_series(1, 6000) gs, u, c,
-    LATERAL (
-    SELECT now() - (floor(random() * 60 * 24 * 60)::int * interval '1 minute') AS ts
-    ) t
-    RETURNING id, category_id
+    u.id AS requester_id,
+    a.id AS addressee_id,
+    (ARRAY['PENDING','ACCEPTED','REJECTED','BLOCKED'])[1 + ((k - 1) % 4)] AS status,
+    (now() - (k % 60) * interval '1 day') AS created_at
+FROM tmp_users u
+    JOIN LATERAL generate_series(
+    1,
+    (SELECT base_n FROM base) + (CASE WHEN u.rn <= (SELECT rem FROM base) THEN 1 ELSE 0 END)
+    ) k ON true
+    JOIN tmp_users a
+    ON a.rn = 1 + ((u.rn - 1 + k) % (SELECT user_count FROM tmp_params))  -- 다음 유저들로 순환
     )
-INSERT INTO tmp_level1(id, category_id, depth)
-SELECT id, category_id, 1 FROM ins;
+INSERT INTO friends(id, requester_id, addressee_id, status, created_at)
+SELECT gen_random_uuid(), requester_id, addressee_id, status, created_at
+FROM pairs;
 
--- (2) depth=2: 루트당 0~4개 (70% 확률로 생성, 생성 시 1~4개)
-WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
-     ins AS (
-INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+-- =========================================================
+-- 7) comments (depth 최대 5, 규칙 기반으로 분산)
+-- =========================================================
+DROP TABLE IF EXISTS tmp_comments;
+CREATE TEMP TABLE tmp_comments (
+    seq        int NOT NULL,
+    id         uuid PRIMARY KEY,
+    category_id uuid NOT NULL,
+    user_id    uuid NOT NULL,
+    depth      int NOT NULL
+) ON COMMIT DROP;
+
+-- depth 1: 카테고리당 3개 (댓글 작성자도 유저에 골고루)
+WITH src AS (
+    SELECT
+        c.rn AS category_rn,
+        c.id AS category_id,
+        gs AS idx
+    FROM tmp_categories c
+             JOIN LATERAL generate_series(1, 3) gs ON true
+    ),
+    ins AS (
+INSERT INTO "comment"(id, category_id, parent_id, user_id, "comment", created_at, updated_at)
 SELECT
     gen_random_uuid(),
-    '댓글(d2) - ' || p.id || '-' || k,
-    p.id AS parent_id,
+    s.category_id,
+    NULL,
+    u.id,
+    'root comment #' || s.idx || ' on cat ' || s.category_rn,
+    (now() - ((s.idx + s.category_rn) % 30) * interval '1 day'),
+    NULL
+FROM src s
+    JOIN tmp_users u
+ON u.rn = 1 + ((s.category_rn + s.idx - 1) % (SELECT user_count FROM tmp_params))
+    RETURNING id, category_id, user_id
+    ),
+    numbered AS (
+SELECT row_number() OVER (ORDER BY id) AS seq, id, category_id, user_id
+FROM ins
+    )
+INSERT INTO tmp_comments(seq, id, category_id, user_id, depth)
+SELECT seq, id, category_id, user_id, 1 FROM numbered;
+
+-- depth 2: 각 depth1에 2개
+WITH parents AS (SELECT * FROM tmp_comments WHERE depth = 1),
+     ins AS (
+INSERT INTO "comment"(id, category_id, parent_id, user_id, "comment", created_at, updated_at)
+SELECT
+    gen_random_uuid(),
     p.category_id,
-    (u.uids)[floor(random()*array_length(u.uids,1))::int + 1] AS user_id,
-             ts,
-             ts
-FROM tmp_level1 p
-    CROSS JOIN u
-    CROSS JOIN LATERAL (
-    SELECT CASE
-    WHEN random() < 0.70 THEN (floor(random()*4)::int + 1)
-    ELSE 0
-    END AS cnt
-    ) r
-    CROSS JOIN LATERAL generate_series(1, r.cnt) k
-    CROSS JOIN LATERAL (
-    SELECT now() - (floor(random() * 60 * 24 * 60)::int * interval '1 minute') AS ts
-    ) t
-    RETURNING id, category_id
+    p.id,
+    u.id,
+    'reply d2 #' || k,
+    (now() - ((p.seq + k) % 30) * interval '1 day'),
+    NULL
+FROM parents p
+    JOIN LATERAL generate_series(1, 2) k ON true
+    JOIN tmp_users u
+    ON u.rn = 1 + ((p.seq + k - 1) % (SELECT user_count FROM tmp_params))
+    RETURNING id, category_id, user_id
+    ),
+    numbered AS (
+SELECT row_number() OVER (ORDER BY id) AS seq, id, category_id, user_id
+FROM ins
     )
-INSERT INTO tmp_level2(id, category_id, depth)
-SELECT id, category_id, 2 FROM ins;
+INSERT INTO tmp_comments(seq, id, category_id, user_id, depth)
+SELECT seq, id, category_id, user_id, 2 FROM numbered;
 
--- (3) depth=3: depth2당 0~3개 (50% 확률로 생성, 생성 시 1~3개)
-WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
+-- depth 3: depth2 중 60% (seq % 10 < 6)
+WITH parents AS (SELECT * FROM tmp_comments WHERE depth = 2 AND (seq % 10) < 6),
      ins AS (
-INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+INSERT INTO "comment"(id, category_id, parent_id, user_id, "comment", created_at, updated_at)
 SELECT
     gen_random_uuid(),
-    '댓글(d3) - ' || p.id || '-' || k,
-    p.id AS parent_id,
     p.category_id,
-    (u.uids)[floor(random()*array_length(u.uids,1))::int + 1] AS user_id,
-             ts,
-             ts
-FROM tmp_level2 p
-    CROSS JOIN u
-    CROSS JOIN LATERAL (
-    SELECT CASE
-    WHEN random() < 0.50 THEN (floor(random()*3)::int + 1)
-    ELSE 0
-    END AS cnt
-    ) r
-    CROSS JOIN LATERAL generate_series(1, r.cnt) k
-    CROSS JOIN LATERAL (
-    SELECT now() - (floor(random() * 60 * 24 * 60)::int * interval '1 minute') AS ts
-    ) t
-    RETURNING id, category_id
+    p.id,
+    u.id,
+    'reply d3',
+    (now() - (p.seq % 30) * interval '1 day'),
+    NULL
+FROM parents p
+         JOIN tmp_users u
+              ON u.rn = 1 + ((p.seq - 1) % (SELECT user_count FROM tmp_params))
+    RETURNING id, category_id, user_id
+    ),
+    numbered AS (
+SELECT row_number() OVER (ORDER BY id) AS seq, id, category_id, user_id
+FROM ins
     )
-INSERT INTO tmp_level3(id, category_id, depth)
-SELECT id, category_id, 3 FROM ins;
+INSERT INTO tmp_comments(seq, id, category_id, user_id, depth)
+SELECT seq, id, category_id, user_id, 3 FROM numbered;
 
--- (4) depth=4: depth3당 0~2개 (35% 확률로 생성, 생성 시 1~2개)
-WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
+-- depth 4: depth3 중 35% (seq % 20 < 7)
+WITH parents AS (SELECT * FROM tmp_comments WHERE depth = 3 AND (seq % 20) < 7),
      ins AS (
-INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+INSERT INTO "comment"(id, category_id, parent_id, user_id, "comment", created_at, updated_at)
 SELECT
     gen_random_uuid(),
-    '댓글(d4) - ' || p.id || '-' || k,
-    p.id AS parent_id,
     p.category_id,
-    (u.uids)[floor(random()*array_length(u.uids,1))::int + 1] AS user_id,
-             ts,
-             ts
-FROM tmp_level3 p
-    CROSS JOIN u
-    CROSS JOIN LATERAL (
-    SELECT CASE
-    WHEN random() < 0.35 THEN (floor(random()*2)::int + 1)
-    ELSE 0
-    END AS cnt
-    ) r
-    CROSS JOIN LATERAL generate_series(1, r.cnt) k
-    CROSS JOIN LATERAL (
-    SELECT now() - (floor(random() * 60 * 24 * 60)::int * interval '1 minute') AS ts
-    ) t
-    RETURNING id, category_id
+    p.id,
+    u.id,
+    'reply d4',
+    (now() - (p.seq % 30) * interval '1 day'),
+    NULL
+FROM parents p
+         JOIN tmp_users u
+              ON u.rn = 1 + ((p.seq + 3) % (SELECT user_count FROM tmp_params))
+    RETURNING id, category_id, user_id
+    ),
+    numbered AS (
+SELECT row_number() OVER (ORDER BY id) AS seq, id, category_id, user_id
+FROM ins
     )
-INSERT INTO tmp_level4(id, category_id, depth)
-SELECT id, category_id, 4 FROM ins;
+INSERT INTO tmp_comments(seq, id, category_id, user_id, depth)
+SELECT seq, id, category_id, user_id, 4 FROM numbered;
 
--- (5) depth=5: depth4당 0~1개 (20% 확률로 1개 생성)
-WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
+-- depth 5: depth4 중 20% (seq % 10 < 2)
+WITH parents AS (SELECT * FROM tmp_comments WHERE depth = 4 AND (seq % 10) < 2),
      ins AS (
-INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+INSERT INTO "comment"(id, category_id, parent_id, user_id, "comment", created_at, updated_at)
 SELECT
     gen_random_uuid(),
-    '댓글(d5) - ' || p.id || '-1',
-    p.id AS parent_id,
     p.category_id,
-    (u.uids)[floor(random()*array_length(u.uids,1))::int + 1] AS user_id,
-             ts,
-             ts
-FROM tmp_level4 p
-    CROSS JOIN u
-    CROSS JOIN LATERAL (
-    SELECT CASE
-    WHEN random() < 0.20 THEN 1
-    ELSE 0
-    END AS cnt
-    ) r
-    CROSS JOIN LATERAL generate_series(1, r.cnt) k
-    CROSS JOIN LATERAL (
-    SELECT now() - (floor(random() * 60 * 24 * 60)::int * interval '1 minute') AS ts
-    ) t
-    RETURNING id, category_id
+    p.id,
+    u.id,
+    'reply d5',
+    (now() - (p.seq % 30) * interval '1 day'),
+    NULL
+FROM parents p
+         JOIN tmp_users u
+              ON u.rn = 1 + ((p.seq + 7) % (SELECT user_count FROM tmp_params))
+    RETURNING id, category_id, user_id
+    ),
+    numbered AS (
+SELECT row_number() OVER (ORDER BY id) AS seq, id, category_id, user_id
+FROM ins
     )
-INSERT INTO tmp_level5(id, category_id, depth)
-SELECT id, category_id, 5 FROM ins;
+INSERT INTO tmp_comments(seq, id, category_id, user_id, depth)
+SELECT seq, id, category_id, user_id, 5 FROM numbered;
 
 -- =========================================================
--- 4) check_record: CHECK 카테고리당 최근 120일
+-- 8) notifications (LIKE/COMMENT/REPLY)
 -- =========================================================
-INSERT INTO check_record (id, date, success, category_id)
+INSERT INTO notification(id, receiver_id, sender_id, "type", "data", "read", created_at)
 SELECT
     gen_random_uuid(),
-    (current_date - d)::date,
-    (random() < 0.75),
-    cat.id
-FROM (SELECT id FROM tmp_categories WHERE record_type = 'CHECK') cat
-         CROSS JOIN generate_series(0, 119) d;
+    c.user_id AS receiver_id,
+    cl.user_id AS sender_id,
+    'LIKE',
+    jsonb_build_object('senderEmail', su.email, 'categoryTitle', c.title),
+    ((cl.user_id::text > c.user_id::text)),  -- 규칙적으로 read 분산
+    COALESCE(cl.created_at, now())
+FROM category_like cl
+         JOIN category c ON c.id = cl.category_id
+         JOIN users su ON su.id = cl.user_id
+WHERE c.user_id <> cl.user_id;
 
--- =========================================================
--- 5) check_list_record: CHECKLIST 카테고리당 최근 60일 * 하루 4개
--- =========================================================
-INSERT INTO check_list_record (id, date, success, category_id, todo)
+INSERT INTO notification(id, receiver_id, sender_id, "type", "data", "read", created_at)
 SELECT
     gen_random_uuid(),
-    (current_date - d)::date,
-    (random() < 0.6),
-    cat.id,
-    'TODO-' || d || '-' || t
-FROM (SELECT id FROM tmp_categories WHERE record_type = 'CHECKLIST') cat
-         CROSS JOIN generate_series(0, 59) d
-         CROSS JOIN generate_series(1, 4) t;
+    c.user_id AS receiver_id,
+    cm.user_id AS sender_id,
+    'COMMENT',
+    jsonb_build_object('senderEmail', su.email, 'comment', cm."comment", 'categoryTitle', c.title),
+    (cm.created_at::text < now()::text),
+    cm.created_at
+FROM "comment" cm
+         JOIN category c ON c.id = cm.category_id
+         JOIN users su ON su.id = cm.user_id
+WHERE cm.parent_id IS NULL
+  AND c.user_id <> cm.user_id;
 
--- =========================================================
--- 6) text_record: TEXT 카테고리당 최근 90일
--- =========================================================
-INSERT INTO text_record (id, date, category_id, text, title)
+INSERT INTO notification(id, receiver_id, sender_id, "type", "data", "read", created_at)
 SELECT
     gen_random_uuid(),
-    (current_date - d)::date,
-    cat.id,
-    '더미 텍스트 내용 - day ' || d,
-    '제목-' || d
-FROM (SELECT id FROM tmp_categories WHERE record_type = 'TEXT') cat
-         CROSS JOIN generate_series(0, 89) d;
+    parent.user_id AS receiver_id,
+    child.user_id AS sender_id,
+    'REPLY',
+    jsonb_build_object('senderEmail', su.email, 'comment', child."comment"),
+    (child.created_at::text < now()::text),
+    child.created_at
+FROM "comment" child
+         JOIN "comment" parent ON parent.id = child.parent_id
+         JOIN users su ON su.id = child.user_id
+WHERE parent.user_id <> child.user_id;
 
--- =========================================================
--- 7) time_record: TIME 카테고리당 최근 90일 (0~6시간 랜덤)
--- =========================================================
-INSERT INTO time_record (id, date, time, category_id)
-SELECT
-    gen_random_uuid(),
-    (current_date - d)::date,
-    (time '00:00:00' + ((floor(random()* (6*3600))::int) * interval '1 second'))::time,
-    cat.id
-FROM (SELECT id FROM tmp_categories WHERE record_type = 'TIME') cat
-    CROSS JOIN generate_series(0, 89) d;
+UPDATE notification SET "read" = false;
 
--- =========================================================
--- 8) number_record: NUMBER 카테고리당 최근 120일 (0~100)
--- =========================================================
-INSERT INTO number_record (id, date, number, category_id)
-SELECT
-    gen_random_uuid(),
-    (current_date - d)::date,
-    (floor(random()*101))::int,
-    cat.id
-FROM (SELECT id FROM tmp_categories WHERE record_type = 'NUMBER') cat
-         CROSS JOIN generate_series(0, 119) d;
 
 COMMIT;
