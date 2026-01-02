@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.entity.Comment;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
+import com.life.jeonggiju.domain.common.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,11 +25,7 @@ import lombok.ToString;
 @Builder @Data
 @AllArgsConstructor
 @ToString(exclude = "categories")
-public class User {
-
-	@Id
-	@GeneratedValue(generator = "UUID")
-	private UUID id;
+public class User extends BaseEntity {
 
 	@Column(unique = true)
 	private String email;

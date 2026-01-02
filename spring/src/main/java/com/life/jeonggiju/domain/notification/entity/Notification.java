@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.github.f4b6a3.uuid.UuidCreator;
+import com.life.jeonggiju.domain.common.entity.BaseEntity;
 import com.life.jeonggiju.domain.notification.event.NotificationCreatedEvent;
 import com.life.jeonggiju.domain.user.entity.User;
 
@@ -37,11 +38,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Notification {
+public class Notification extends BaseEntity {
 
-	@Id
-	@Column(name = "id", updatable = false, nullable = false)
-	private UUID id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "receiver_id", nullable = false)
@@ -65,13 +63,6 @@ public class Notification {
 	@CreatedDate
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
-
-	@PrePersist
-	protected void generateIdIfAbsent() {
-		if (this.id == null) {
-			this.id = UuidCreator.getTimeOrderedEpoch();
-		}
-	}
 
 	public void read(){
 		this.read = true;

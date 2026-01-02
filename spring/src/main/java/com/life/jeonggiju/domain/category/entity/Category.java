@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.life.jeonggiju.domain.checkRecord.entity.CheckRecord;
+import com.life.jeonggiju.domain.common.entity.BaseEntity;
 import com.life.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.life.jeonggiju.domain.timeRecord.entity.TimeRecord;
 import com.life.jeonggiju.domain.user.entity.User;
@@ -31,12 +32,7 @@ import lombok.ToString;
 @Builder
 @Data
 @AllArgsConstructor
-public class Category {
-
-	@Id
-	@GeneratedValue(generator = "UUID")
-	private UUID id;
-
+public class Category extends BaseEntity {
 
 	@Column(columnDefinition = "TEXT")
 	private String description;

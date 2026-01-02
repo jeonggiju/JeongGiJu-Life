@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.life.jeonggiju.domain.category.entity.Category;
+import com.life.jeonggiju.domain.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,11 +23,7 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class TextRecord {
-
-	@Id
-	@GeneratedValue(generator = "UUID")
-	private UUID id;
+public class TextRecord extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name="category_id", nullable = false)

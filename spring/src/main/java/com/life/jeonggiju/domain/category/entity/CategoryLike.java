@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.life.jeonggiju.domain.common.entity.BaseEntity;
 import com.life.jeonggiju.domain.user.entity.User;
 
 import jakarta.persistence.Entity;
@@ -28,11 +29,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class CategoryLike {
-
-	@Id
-	@GeneratedValue(generator = "UUID")
-	private UUID id;
+public class CategoryLike extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name="user_id")
@@ -47,6 +44,6 @@ public class CategoryLike {
 
 
 	public static CategoryLike of(User user, Category category) {
-		return new CategoryLike(null, user, category, null);
+		return new CategoryLike(user, category, null);
 	}
 }

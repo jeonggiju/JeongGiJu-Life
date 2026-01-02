@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.life.jeonggiju.domain.common.entity.BaseEntity;
 import com.life.jeonggiju.domain.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -35,11 +36,7 @@ import lombok.Data;
 )
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Friend {
-
-	@Id
-	@GeneratedValue(generator = "UUID")
-	private UUID id;
+public class Friend extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "requester_id", nullable = false)
