@@ -46,13 +46,12 @@ public class CategoryLikeService {
 
 		categoryLikeRepository.save(CategoryLike.of(user, category));
 
-		//
 		UUID receiverId = category.getUser().getId();
 		UUID senderId = user.getId();
 		NotificationCreatedDto dto = NotificationCreatedDto.builder()
 			.receiverId(receiverId)
 			.senderId(senderId)
-			.data(Map.of( "senderEmail",user.getEmail()))
+			.data(Map.of( "categoryTitle", category.getTitle(),"senderEmail",user.getEmail()))
 			.type(NotificationType.LIKE)
 			.build();
 		notificationService.notify(dto);

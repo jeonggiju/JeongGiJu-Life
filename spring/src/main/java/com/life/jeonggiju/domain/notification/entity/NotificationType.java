@@ -1,5 +1,5 @@
 package com.life.jeonggiju.domain.notification.entity;
 
 public enum NotificationType {
-	COMMENT, LIKE
+	COMMENT, LIKE, REPLY
 }

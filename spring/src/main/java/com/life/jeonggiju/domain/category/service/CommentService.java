@@ -103,7 +103,7 @@ public class CommentService {
 		NotificationCreatedDto notificationCreatedDto = NotificationCreatedDto.builder()
 			.receiverId(category.getUser().getId())
 			.senderId(user.getId())
-			.data(Map.of( "senderEmail",user.getEmail(), "comment", saved.getComment()))
+			.data(Map.of("categoryTitle", category.getTitle(),"senderEmail",user.getEmail(), "comment", saved.getComment()))
 			.type(NotificationType.COMMENT)
 			.build();
 		notificationService.notify(notificationCreatedDto);
@@ -133,6 +133,15 @@ public class CommentService {
 				.parent(parent)
 				.build()
 		);
+
+		NotificationCreatedDto notificationCreatedDto = NotificationCreatedDto.builder()
+			.receiverId(parent.getUser().getId())
+			.senderId(user.getId())
+			.data(Map.of("categoryTitle", category.getTitle(),"myComment",content,"senderEmail",user.getEmail(), "comment", saved.getComment()))
+			.type(NotificationType.REPLY)
+			.build();
+		notificationService.notify(notificationCreatedDto);
+
 
 		return saved.getId();
 	}

@@ -2073,6 +2073,258 @@
             color: #999;
             font-size: 13px;
         }
+
+        /* ========== NOTIFICATION SYSTEM ========== */
+
+        /* 알림 벨 아이콘 */
+        .notification-bell {
+            position: relative;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .notification-bell:hover {
+            background: #f0f0f0;
+        }
+
+        /* 읽지 않은 알림 배지 */
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ff0000;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* 토스트 알림 컨테이너 */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        /* 토스트 알림 */
+        .toast-notification {
+            background: white;
+            border: 1px solid #ddd;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideInRight 0.3s ease-out;
+            cursor: pointer;
+        }
+
+        .toast-notification.comment {
+            border-left-color: #2196F3;
+        }
+
+        .toast-notification.reply {
+            border-left-color: #9C27B0;
+        }
+
+        .toast-notification.like {
+            border-left-color: #ff4081;
+        }
+
+        .toast-notification:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .toast-message {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* 알림 목록 모달 */
+        .notification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .notification-modal.active {
+            display: flex;
+        }
+
+        .notification-modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 0;
+            position: relative;
+        }
+
+        .notification-modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+
+        .notification-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .notification-modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            line-height: 1;
+        }
+
+        .notification-modal-close:hover {
+            color: #333;
+        }
+
+        .mark-all-read-btn {
+            padding: 4px 10px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .mark-all-read-btn:hover {
+            background: #000;
+        }
+
+        .mark-all-read-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .notification-list {
+            padding: 0;
+        }
+
+        .notification-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: #f9f9f9;
+        }
+
+        .notification-item.unread {
+            background: #f0f8ff;
+        }
+
+        .notification-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .notification-item-type {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .notification-item-type.comment {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .notification-item-type.reply {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .notification-item-type.like {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .notification-item-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .notification-item-content {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .notification-item-sender {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .notification-empty {
+            padding: 60px 20px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -2173,6 +2425,10 @@
         <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
         <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
         <a href="insert.html" class="btn" data-lang-ko="카테고리 관리" data-lang-en="Manage Categories">카테고리 관리</a>
+        <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()">
+            🔔
+            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+        </button>
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
         <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
     </div>
@@ -3085,7 +3341,7 @@
                         currentUser.birthDay = userData.birthDay;
                     }
                 } catch (error) {
-                    console.error('User 정보 로드 실패:', error);
+                    // 에러 무시
                 }
 
                 showMainSection();
@@ -3094,7 +3350,6 @@
                 showLoginSection();
             }
         } catch (error) {
-            console.error('인증 확인 실패:', error);
             showLoginSection();
         }
     }
@@ -6627,6 +6882,12 @@
                 document.getElementById('userDesc').textContent = `${year}.${month}.${day}`;
             }
         }
+
+        // 알림 시스템 초기화
+        (async () => {
+            await loadUnreadNotifications();
+            connectSSE();
+        })();
     }
 
     // 프로필 수정 모달 열기
@@ -6977,17 +7238,14 @@
     // 댓글 불러오기
     async function loadManagementComments(categoryId) {
         try {
-            console.log('댓글 불러오기 시작:', categoryId);
             const response = await fetch(`${API_BASE}/category/comment/${categoryId}`, {
                 credentials: 'include'
             });
 
             if (response.ok) {
                 allComments = await response.json();
-                console.log('API 응답 댓글:', allComments);
                 renderManagementComments(allComments);
             } else {
-                console.error('댓글 불러오기 실패:', response.status);
                 const container = document.getElementById('managementCommentsContainer');
                 if (container) {
                     container.innerHTML = `
@@ -6998,7 +7256,6 @@
                 }
             }
         } catch (error) {
-            console.error('댓글 불러오기 오류:', error);
             const container = document.getElementById('managementCommentsContainer');
             if (container) {
                 container.innerHTML = `
@@ -7014,8 +7271,6 @@
     function renderManagementComments(comments) {
         const container = document.getElementById('managementCommentsContainer');
         if (!container) return;
-
-        console.log('전체 댓글:', comments);
 
         if (!comments || comments.length === 0) {
             container.innerHTML = `
@@ -7093,7 +7348,6 @@
 
         // children이 있으면 재귀적으로 렌더링
         if (comment.children && comment.children.length > 0) {
-            console.log(`댓글 ${comment.commentId}의 children:`, comment.children);
             html += comment.children.map(child => renderManagementComment(child, depth + 1)).join('');
         }
 
@@ -7299,6 +7553,416 @@
             alert(currentLang === 'ko' ? '네트워크 오류가 발생했습니다.' : 'Network error occurred.');
         }
     }
+</script>
+
+<!-- 토스트 알림 컨테이너 -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- 알림 목록 모달 -->
+<div class="notification-modal" id="notificationModal">
+    <div class="notification-modal-content">
+        <div class="notification-modal-header">
+            <div class="notification-modal-title" data-lang-ko="알림" data-lang-en="Notifications">알림</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="mark-all-read-btn" onclick="markAllAsRead()" data-lang-ko="모두 읽음" data-lang-en="Mark all as read">모두 읽음</button>
+                <button class="notification-modal-close" onclick="toggleNotificationModal()">×</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <div class="notification-empty" data-lang-ko="알림이 없습니다" data-lang-en="No notifications">알림이 없습니다</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== NOTIFICATION SYSTEM ==========
+
+    let eventSource = null;
+    let notifications = [];
+    let unreadCount = 0;
+    let isInitialized = false; // 초기화 완료 플래그
+
+    // 페이지 로드 시 읽지 않은 알림 가져오기
+    async function loadUnreadNotifications() {
+        console.log('>>> loadUnreadNotifications 시작 (manage.html)');
+        isInitialized = false; // 초기화 시작
+
+        try {
+            const response = await fetch(`${API_BASE}/notification/unread`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                notifications = data || [];
+                console.log('읽지 않은 알림 로드:', notifications.length, '개');
+                console.log('알림 데이터:', notifications);
+
+                // 읽지 않은 개수 가져오기
+                await loadUnreadCount();
+
+                isInitialized = true; // 초기화 완료
+                console.log('>>> loadUnreadNotifications 완료 (manage.html) - unreadCount:', unreadCount);
+            }
+        } catch (error) {
+            isInitialized = true; // 오류여도 초기화 완료로 표시
+        }
+    }
+
+    // 읽지 않은 알림 개수 가져오기
+    async function loadUnreadCount() {
+        console.log('>>> loadUnreadCount 시작 (manage.html)');
+        try {
+            const response = await fetch(`${API_BASE}/notification/unread/count`, {
+                credentials: 'include'
+            });
+
+            console.log('loadUnreadCount response status:', response.status);
+
+            if (response.ok) {
+                const count = await response.json();
+                console.log('API에서 받은 count:', count, '(타입:', typeof count, ')');
+
+                // 객체 또는 숫자 처리 (API가 {count: 4} 형태로 반환)
+                let actualCount = 0;
+                if (typeof count === 'object' && count !== null && 'count' in count) {
+                    actualCount = count.count;
+                    console.log('객체에서 count 추출:', actualCount);
+                } else if (typeof count === 'number') {
+                    actualCount = count;
+                }
+
+                // 강력한 타입 체크 - 숫자로 변환
+                unreadCount = Number(actualCount) || 0;
+                console.log('설정된 unreadCount:', unreadCount, '(타입:', typeof unreadCount, ')');
+
+                updateNotificationBadge();
+                console.log('>>> loadUnreadCount 완료 (manage.html)');
+            } else {
+                unreadCount = 0;
+            }
+        } catch (error) {
+            unreadCount = 0; // 오류 시 0으로 초기화
+        }
+    }
+
+    // 알림을 읽음 처리
+    async function markNotificationsAsRead(notificationIds) {
+        try {
+            const response = await fetch(`${API_BASE}/notification/unread`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    notificationIds: notificationIds
+                })
+            });
+
+            if (response.ok) {
+                console.log('알림 읽음 처리 완료:', notificationIds.length);
+                // 읽음 처리 후 개수 업데이트
+                await loadUnreadCount();
+            }
+        } catch (error) {
+            console.error('알림 읽음 처리 오류:', error);
+        }
+    }
+
+    // SSE 연결
+    function connectSSE() {
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        eventSource = new EventSource(`${API_BASE}/sse/subscribe`, {
+            withCredentials: true
+        });
+
+        eventSource.addEventListener('connected', (event) => {
+            console.log('SSE 연결됨:', event.data);
+        });
+
+        eventSource.addEventListener('ping', (event) => {
+            console.log('SSE ping:', event.data);
+        });
+
+        eventSource.addEventListener('notification', (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                handleNotification(data.body);
+            } catch (error) {
+                console.error('알림 파싱 오류:', error);
+            }
+        });
+
+        eventSource.onerror = (error) => {
+            console.error('SSE 오류:', error);
+            eventSource.close();
+            // 5초 후 재연결
+            setTimeout(connectSSE, 5000);
+        };
+    }
+
+    // 알림 처리
+    function handleNotification(notification) {
+        // 알림 저장 (맨 앞에 추가)
+        notifications.unshift(notification);
+
+        // NaN 방지 - 현재 값이 숫자가 아니면 0으로 초기화
+        if (isNaN(unreadCount)) {
+            console.warn('unreadCount가 NaN입니다! 0으로 초기화합니다.');
+            unreadCount = 0;
+        }
+
+        unreadCount++;
+
+        console.log('새 알림 수신:', notification.type, '/ 현재 읽지 않은 알림:', unreadCount, '(타입:', typeof unreadCount, ')');
+
+        // 배지 업데이트
+        updateNotificationBadge();
+
+        // 토스트 표시
+        showToast(notification);
+
+        // 알림 목록 업데이트 (모달이 열려있으면)
+        if (document.getElementById('notificationModal').classList.contains('active')) {
+            renderNotificationList();
+            updateMarkAllReadButton();
+        }
+    }
+
+    // 배지 업데이트
+    function updateNotificationBadge() {
+        const badge = document.getElementById('notificationBadge');
+        const bell = document.getElementById('notificationBell');
+
+        console.log('=== 배지 업데이트 디버깅 ===');
+        console.log('unreadCount:', unreadCount, '(타입:', typeof unreadCount, ', NaN?', isNaN(unreadCount), ')');
+        console.log('badge 요소:', badge);
+        console.log('bell 요소:', bell);
+
+        if (!badge) {
+            console.error('배지 요소를 찾을 수 없습니다!');
+            return;
+        }
+
+        // NaN 체크
+        if (isNaN(unreadCount)) {
+            console.error('unreadCount가 NaN입니다! 0으로 초기화합니다.');
+            unreadCount = 0;
+        }
+
+        if (unreadCount > 0) {
+            const displayCount = unreadCount > 99 ? '99+' : unreadCount;
+            badge.textContent = displayCount;
+            badge.style.display = 'block';
+            console.log('배지 표시:', displayCount);
+        } else {
+            badge.style.display = 'none';
+            console.log('배지 숨김');
+        }
+    }
+
+    // 토스트 알림 표시
+    function showToast(notification) {
+        const container = document.getElementById('toastContainer');
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${notification.type.toLowerCase()}`;
+
+        // 타입별 제목
+        let title = '';
+        if (notification.type === 'COMMENT') {
+            title = currentLang === 'ko' ? '새 댓글' : 'New Comment';
+        } else if (notification.type === 'REPLY') {
+            title = currentLang === 'ko' ? '새 대댓글' : 'New Reply';
+        } else {
+            title = currentLang === 'ko' ? '새 좋아요' : 'New Like';
+        }
+
+        const categoryTitle = notification.data.categoryTitle || '';
+        const categoryPrefix = categoryTitle ? `[${categoryTitle}] ` : '';
+
+        // 타입별 메시지
+        let message = '';
+        if (notification.type === 'COMMENT') {
+            message = `${categoryPrefix}${notification.data.senderEmail}: ${notification.data.comment}`;
+        } else if (notification.type === 'REPLY') {
+            const myComment = notification.data.myComment || '';
+            const myCommentPreview = myComment.length > 20 ? myComment.substring(0, 20) + '...' : myComment;
+            message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied'}: "${myCommentPreview}" → ${notification.data.comment}`;
+        } else {
+            message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+        }
+
+        const time = new Date(notification.createdAt).toLocaleTimeString(currentLang === 'ko' ? 'ko-KR' : 'en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        toast.innerHTML = `
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+            <div class="toast-time">${time}</div>
+        `;
+
+        toast.onclick = () => {
+            toggleNotificationModal();
+            toast.remove();
+        };
+
+        container.appendChild(toast);
+
+        // 5초 후 자동 제거
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(400px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
+    // 알림 모달 토글
+    function toggleNotificationModal() {
+        const modal = document.getElementById('notificationModal');
+        modal.classList.toggle('active');
+
+        if (modal.classList.contains('active')) {
+            renderNotificationList();
+            updateMarkAllReadButton();
+        }
+    }
+
+    // 모두 읽음 처리
+    async function markAllAsRead() {
+        if (notifications.length === 0) return;
+
+        const btn = document.querySelector('.mark-all-read-btn');
+        btn.disabled = true;
+        btn.textContent = currentLang === 'ko' ? '처리 중...' : 'Processing...';
+
+        try {
+            // 읽지 않은 알림 ID 수집
+            const unreadIds = notifications
+                .filter(n => n.id)
+                .map(n => n.id);
+
+            if (unreadIds.length > 0) {
+                // 알림 읽음 처리
+                await markNotificationsAsRead(unreadIds);
+
+                // 알림 배열 비우기 (중요!)
+                notifications = [];
+
+                // UI 업데이트
+                unreadCount = 0;
+                updateNotificationBadge();
+
+                // 버튼 업데이트
+                updateMarkAllReadButton();
+
+                // 성공 메시지
+                console.log('모든 알림을 읽음 처리했습니다');
+
+                // 모달 닫기
+                toggleNotificationModal();
+            }
+        } catch (error) {
+            console.error('알림 읽음 처리 오류:', error);
+            alert(currentLang === 'ko' ? '알림 처리에 실패했습니다' : 'Failed to mark as read');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = currentLang === 'ko' ? '모두 읽음' : 'Mark all as read';
+        }
+    }
+
+    // 모두 읽음 버튼 상태 업데이트
+    function updateMarkAllReadButton() {
+        const btn = document.querySelector('.mark-all-read-btn');
+        if (btn) {
+            const hasUnread = notifications.some(n => n.id);
+            btn.disabled = !hasUnread || notifications.length === 0;
+        }
+    }
+
+    // 알림 목록 렌더링
+    function renderNotificationList() {
+        const listContainer = document.getElementById('notificationList');
+
+        if (notifications.length === 0) {
+            const emptyText = currentLang === 'ko' ? '알림이 없습니다' : 'No notifications';
+            listContainer.innerHTML = `<div class="notification-empty">${emptyText}</div>`;
+            return;
+        }
+
+        let html = '';
+        notifications.forEach((notif, index) => {
+            // 타입별 텍스트
+            let typeText = '';
+            if (notif.type === 'COMMENT') {
+                typeText = currentLang === 'ko' ? '댓글' : 'Comment';
+            } else if (notif.type === 'REPLY') {
+                typeText = currentLang === 'ko' ? '대댓글' : 'Reply';
+            } else {
+                typeText = currentLang === 'ko' ? '좋아요' : 'Like';
+            }
+
+            const categoryTitle = notif.data.categoryTitle || '';
+            const categoryBadge = categoryTitle
+                ? `<span style="background: #e8e8e8; padding: 2px 6px; font-size: 10px; font-weight: 600; color: #666; margin-right: 4px; border-radius: 2px;">${categoryTitle}</span>`
+                : '';
+
+            // 타입별 컨텐츠
+            let content = '';
+            if (notif.type === 'COMMENT') {
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>: ${notif.data.comment}`;
+            } else if (notif.type === 'REPLY') {
+                const myComment = notif.data.myComment || '';
+                const myCommentPreview = myComment.length > 30 ? myComment.substring(0, 30) + '...' : myComment;
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied to'}: "<span style="color: #666; font-style: italic;">${myCommentPreview}</span>" → ${notif.data.comment}`;
+            } else {
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+            }
+
+            const time = getRelativeTime(new Date(notif.createdAt));
+
+            html += `
+                <div class="notification-item ${index < unreadCount ? 'unread' : ''}">
+                    <div class="notification-item-header">
+                        <span class="notification-item-type ${notif.type.toLowerCase()}">${typeText}</span>
+                        <span class="notification-item-time">${time}</span>
+                    </div>
+                    <div class="notification-item-content">${content}</div>
+                </div>
+            `;
+        });
+
+        listContainer.innerHTML = html;
+    }
+
+    // 상대 시간 계산
+    function getRelativeTime(date) {
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000); // 초 단위
+
+        if (diff < 60) return currentLang === 'ko' ? '방금 전' : 'Just now';
+        if (diff < 3600) return `${Math.floor(diff / 60)}${currentLang === 'ko' ? '분 전' : 'm ago'}`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)}${currentLang === 'ko' ? '시간 전' : 'h ago'}`;
+        return `${Math.floor(diff / 86400)}${currentLang === 'ko' ? '일 전' : 'd ago'}`;
+    }
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('notificationModal').addEventListener('click', (e) => {
+        if (e.target.id === 'notificationModal') {
+            toggleNotificationModal();
+        }
+    });
+
+    // SSE 연결은 showMainSection()에서 처리됨
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 페이지 로드 완료 - 로그인 체크는 자동으로 실행됨
+    });
 </script>
 
 
