@@ -11,18 +11,20 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: #fff;
             color: #333;
             padding: 32px 36px;
-            min-height: 100vh;
         }
 
         .header {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+            padding-bottom: 0;
         }
 
         .greeting {
@@ -34,7 +36,7 @@
         .user-desc {
             font-size: 14px;
             color: #666;
-            margin-bottom: 20px;
+            margin-bottom: 0;
         }
 
         .top-actions {
@@ -87,106 +89,106 @@
             display: flex;
             flex-direction: row;
             gap: 0;
-            height: calc(100vh - 140px);
+            min-height: calc(100vh - 140px);
             margin-left: 0;
         }
 
-        /* 사이드바 - LEFT EDGE DRAWER */
-        .sidebar {
+        /* ========== DRAWER SYSTEM ========== */
+
+        /* Drawer Panel - 전체 컨테이너 */
+        .drawer-panel {
             position: fixed;
             left: 0;
-            top: 140px;
-            bottom: 0;
-            width: 0;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .sidebar-tabs {
-            position: relative;
-            height: 100%;
-            width: 0;
-            pointer-events: auto;
-        }
-
-        .sidebar-tab {
-            position: relative;
-            margin-bottom: 10px;
-        }
-
-        /* HANDLE - 항상 고정 */
-        .tab-label {
-            position: fixed;
-            left: 0;
-            width: 28px;
-            height: 120px;
-            background: linear-gradient(135deg, #c8c8c8 0%, #d8d8d8 100%);
-            border-radius: 0 14px 14px 0;
-            cursor: pointer;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.12);
-            z-index: 1002;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            writing-mode: vertical-rl;
-            font-size: 11px;
-            font-weight: 600;
-            color: #666;
-            letter-spacing: 1px;
-            transition: background 0.2s ease;
-        }
-
-        .tab-label:hover {
-            background: linear-gradient(135deg, #b8b8b8 0%, #c8c8c8 100%);
-        }
-
-        /* DRAWER PANEL - 슬라이드 */
-        .tab-content {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 300px;
-            height: 120px;
-            background: white;
-            border-right: 1px solid #d0d0d0;
-            box-shadow: 3px 0 12px rgba(0,0,0,0.15);
-            transform: translateX(-300px);
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 342px;  /* 320px(content) + 22px(handle) */
+            transform: translateX(-320px);  /* handle 22px만 보임 */
+            transition: transform 240ms cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1001;
-            overflow: hidden;
+            display: flex;
+            flex-direction: row;
         }
 
-        .sidebar-tab:hover .tab-content {
+        .drawer-panel:hover {
             transform: translateX(0);
+            z-index: 1002;  /* 열리면 위로 */
         }
 
-        /* Panel이 열릴 때 handle 스타일 */
-        .sidebar-tab:hover .tab-label {
-            z-index: 1003;
+        /* Panel Content - 왼쪽 (카테고리 목록) */
+        .drawer-panel-content {
+            width: 320px;
+            height: auto;
+            background: linear-gradient(135deg, #cfcfcf 0%, #dadada 100%);
+            border-radius: 0;
+            box-shadow: 4px 4px 16px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        .tab-content-inner {
-            width: 100%;
-            height: 100%;
+        /* PUBLIC drawer - top: 170px */
+        #drawer-public .drawer-panel-content {
+            max-height: calc(100vh - 170px);
+        }
+
+        /* PRIVATE drawer - top: 310px */
+        #drawer-private .drawer-panel-content {
+            max-height: calc(100vh - 310px);
+        }
+
+        /* Panel Inner - 스크롤 영역 */
+        .drawer-panel-inner {
+            flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding-left: 28px;
         }
 
-        .tab-content-inner::-webkit-scrollbar {
+        .drawer-panel-inner::-webkit-scrollbar {
             width: 5px;
         }
 
-        .tab-content-inner::-webkit-scrollbar-track {
+        .drawer-panel-inner::-webkit-scrollbar-track {
             background: #f8f8f8;
         }
 
-        .tab-content-inner::-webkit-scrollbar-thumb {
+        .drawer-panel-inner::-webkit-scrollbar-thumb {
             background: #d0d0d0;
             border-radius: 3px;
         }
 
-        .tab-header {
+        .drawer-panel-inner::-webkit-scrollbar-thumb:hover {
+            background: #b0b0b0;
+        }
+
+        /* Handle - 오른쪽 (고정 크기) */
+        .drawer-handle {
+            width: 22px;
+            height: 120px;
+            background: linear-gradient(135deg, #cfcfcf 0%, #dadada 100%);
+            border-radius: 0 18px 18px 0;
+            cursor: pointer;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            font-size: 10px;
+            font-weight: 600;
+            color: #666;
+            letter-spacing: 1.5px;
+            transition: background 0.2s ease;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .drawer-handle:hover {
+            background: linear-gradient(135deg, #bfbfbf 0%, #cacaca 100%);
+        }
+
+        .drawer-panel.open .drawer-handle {
+            background: linear-gradient(135deg, #b8b8b8 0%, #c3c3c3 100%);
+        }
+
+        /* Panel Header */
+        .drawer-header {
             padding: 12px 16px;
             background: linear-gradient(135deg, #f2f2f2 0%, #f8f8f8 100%);
             border-bottom: 1px solid #e0e0e0;
@@ -196,9 +198,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
 
-        .tab-count {
+        .drawer-count {
             background: #999;
             color: white;
             padding: 2px 8px;
@@ -207,8 +210,12 @@
             font-weight: 600;
         }
 
-        .sidebar::before {
-            content: '';
+        /* 기존 sidebar 제거 */
+        .sidebar {
+            display: none;
+        }
+
+        .sidebar-tabs {
             display: none;
         }
 
@@ -225,14 +232,13 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             margin-left: 0;
         }
 
         .content-toolbar {
             display: flex;
             gap: 8px;
-            padding: 10px 15px;
+            padding: 5px 15px 10px;
             border-bottom: 1px solid #ddd;
             background: white;
             align-items: center;
@@ -315,7 +321,6 @@
 
         .records-section {
             flex: 1;
-            overflow-y: auto;
             padding: 15px;
         }
 
@@ -1942,53 +1947,44 @@
 
             .main-content {
                 margin-left: 0;
+                padding-top: 80px;
             }
 
-            .sidebar {
-                position: relative;
-                top: 0;
+            .drawer-panel {
+                position: fixed;
+                top: 60px !important;
+                left: 0;
+                right: 0;
                 width: 100%;
                 height: auto;
-                border-bottom: 1px solid #d0d0d0;
+                flex-direction: column;
+                transform: none !important;
+                border-radius: 0;
             }
 
-            .sidebar-tabs {
-                flex-direction: row;
-                width: 100%;
-                height: auto;
-                gap: 10px;
-                padding: 10px;
-            }
-
-            .sidebar-tab {
-                flex: 1;
-                height: 60px;
-            }
-
-            .tab-label {
-                position: static;
-                width: 100%;
-                height: 100%;
-                border-radius: 12px;
-            }
-
-            .tab-content {
-                position: static;
+            .drawer-panel-content {
                 width: 100%;
                 height: 0;
-                border: 1px solid #d0d0d0;
-                border-radius: 12px;
-                margin-top: 5px;
+                border-radius: 0;
+                transition: height 240ms ease-out;
+                overflow: hidden;
             }
 
-            .sidebar-tab:hover .tab-content {
-                width: 100%;
+            .drawer-panel.open .drawer-panel-content {
                 height: auto;
                 max-height: 200px;
             }
 
-            .tab-content-inner {
+            .drawer-handle {
                 width: 100%;
+                height: 50px;
+                writing-mode: horizontal-tb;
+                border-radius: 0;
+                position: relative;
+            }
+
+            .drawer-panel-inner {
+                padding-left: 0;
             }
 
             .view-toggle {
@@ -2187,10 +2183,6 @@
     </div>
 
     <div class="main-layout">
-        <div class="sidebar">
-            <div class="sidebar-tabs" id="categoryTabs"></div>
-        </div>
-
         <div class="main-content">
             <div class="content-toolbar">
                 <div class="view-toggle" id="viewToggle"></div>
@@ -3225,11 +3217,10 @@
 
     // 카테고리 표시
     function displayCategories(categories) {
-        const container = document.getElementById('categoryTabs');
+        // 기존 drawer 제거
+        document.querySelectorAll('.drawer-panel').forEach(el => el.remove());
 
         if (!categories || categories.length === 0) {
-            const message = currentLang === 'ko' ? '등록된 카테고리가 없습니다.' : 'No categories registered.';
-            container.innerHTML = `<div style="padding: 10px; color: #999; font-size: 12px;">${message}</div>`;
             return;
         }
 
@@ -3237,60 +3228,82 @@
         const publicCategories = categories.filter(c => c.visibility === 'PUBLIC');
         const privateCategories = categories.filter(c => c.visibility === 'PRIVATE');
 
-        let html = '';
+        const startTop = 170; // 140(header) + 30(margin)
+        const gap = 20;
 
-        // PUBLIC 탭
+        let publicDrawer = null;
+        let privateDrawer = null;
+
+        // PUBLIC 생성
         if (publicCategories.length > 0) {
-            html += `
-                <div class="sidebar-tab" data-tab="public">
-                    <div class="tab-label" style="top: 30px;">${currentLang === 'ko' ? '공개' : 'PUBLIC'}</div>
-                    <div class="tab-content" style="top: 30px;">
-                        <div class="tab-content-inner">
-                            <div class="tab-header">
-                                <span data-lang-ko="공개" data-lang-en="PUBLIC">${currentLang === 'ko' ? '공개' : 'PUBLIC'}</span>
-                                <span class="tab-count">${publicCategories.length}</span>
-                            </div>
-                            ${publicCategories.map(category => `
-                                <button class="category-item" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}" data-visibility="${category.visibility}">
-                                    <span class="category-title">${category.title}</span>
-                                    <span class="category-type-badge">${category.recordType}</span>
-                                </button>
-                            `).join('')}
-                        </div>
+            publicDrawer = document.createElement('div');
+            publicDrawer.className = 'drawer-panel';
+            publicDrawer.id = 'drawer-public';
+            publicDrawer.dataset.drawer = 'public';
+            publicDrawer.style.top = `${startTop}px`;
+            publicDrawer.innerHTML = `
+                <div class="drawer-panel-content">
+                    <div class="drawer-header">
+                        <span>${currentLang === 'ko' ? '공개' : 'PUBLIC'}</span>
+                        <span class="drawer-count">${publicCategories.length}</span>
+                    </div>
+                    <div class="drawer-panel-inner">
+                        ${publicCategories.map(category => `
+                            <button class="category-item"
+                                    data-id="${category.id}"
+                                    data-type="${category.recordType}"
+                                    data-description="${category.description || ''}"
+                                    data-visibility="${category.visibility}">
+                                <span class="category-title">${category.title}</span>
+                                <span class="category-type-badge">${category.recordType}</span>
+                            </button>
+                        `).join('')}
                     </div>
                 </div>
+                <div class="drawer-handle">${currentLang === 'ko' ? '공개' : 'PUBLIC'}</div>
             `;
+
+            document.body.appendChild(publicDrawer);
         }
 
-        // PRIVATE 탭
+        // PRIVATE 생성
         if (privateCategories.length > 0) {
-            html += `
-                <div class="sidebar-tab" data-tab="private">
-                    <div class="tab-label" style="top: 160px;">${currentLang === 'ko' ? '비공개' : 'PRIVATE'}</div>
-                    <div class="tab-content" style="top: 160px;">
-                        <div class="tab-content-inner">
-                            <div class="tab-header">
-                                <span data-lang-ko="비공개" data-lang-en="PRIVATE">${currentLang === 'ko' ? '비공개' : 'PRIVATE'}</span>
-                                <span class="tab-count">${privateCategories.length}</span>
-                            </div>
-                            ${privateCategories.map(category => `
-                                <button class="category-item" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}" data-visibility="${category.visibility}">
-                                    <span class="category-title">${category.title}</span>
-                                    <span class="category-type-badge">${category.recordType}</span>
-                                </button>
-                            `).join('')}
-                        </div>
+            const privateTop = startTop + 120 + gap; // PUBLIC handle 높이 + gap
+
+            privateDrawer = document.createElement('div');
+            privateDrawer.className = 'drawer-panel';
+            privateDrawer.id = 'drawer-private';
+            privateDrawer.dataset.drawer = 'private';
+            privateDrawer.style.top = `${privateTop}px`;
+            privateDrawer.innerHTML = `
+                <div class="drawer-panel-content">
+                    <div class="drawer-header">
+                        <span>${currentLang === 'ko' ? '비공개' : 'PRIVATE'}</span>
+                        <span class="drawer-count">${privateCategories.length}</span>
+                    </div>
+                    <div class="drawer-panel-inner">
+                        ${privateCategories.map(category => `
+                            <button class="category-item"
+                                    data-id="${category.id}"
+                                    data-type="${category.recordType}"
+                                    data-description="${category.description || ''}"
+                                    data-visibility="${category.visibility}">
+                                <span class="category-title">${category.title}</span>
+                                <span class="category-type-badge">${category.recordType}</span>
+                            </button>
+                        `).join('')}
                     </div>
                 </div>
+                <div class="drawer-handle">${currentLang === 'ko' ? '비공개' : 'PRIVATE'}</div>
             `;
-        }
 
-        container.innerHTML = html;
+            document.body.appendChild(privateDrawer);
+        }
 
         // 카테고리 클릭 이벤트
-        container.querySelectorAll('.category-item').forEach(btn => {
+        document.querySelectorAll('.category-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                container.querySelectorAll('.category-item').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.category-item').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
                 currentCategory = {
@@ -3301,7 +3314,7 @@
                     visibility: btn.dataset.visibility
                 };
 
-                // 댓글 관리 버튼 표시 여부 (PUBLIC 카테고리만)
+                // 댓글 관리 버튼 표시 여부
                 const commentBtn = document.getElementById('commentManagementBtn');
                 if (commentBtn) {
                     commentBtn.style.display = currentCategory.visibility === 'PUBLIC' ? 'block' : 'none';
