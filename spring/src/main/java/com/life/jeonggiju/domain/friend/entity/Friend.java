@@ -50,6 +50,7 @@ public class Friend {
 	private User addressee;
 
 	@CreatedDate
+	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 
 	@Enumerated(EnumType.STRING)

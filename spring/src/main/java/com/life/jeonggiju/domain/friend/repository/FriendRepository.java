@@ -28,7 +28,7 @@ public interface FriendRepository extends JpaRepository<Friend, UUID> {
 	""")
 	List<Friend> findAllAcceptedOf(@Param("userId") UUID userId);
 
-	Friend findByIdAndAddressee_IdAndStatus(UUID id, UUID addresseeId, FriendStatus status);
+	Optional<Friend> findByIdAndAddressee_IdAndStatus(UUID id, UUID addresseeId, FriendStatus status);
 
 	@EntityGraph(attributePaths = {"requester", "addressee"})
 	List<Friend> findByRequester_IdAndStatus(UUID userId, FriendStatus status); // 내가 보낸..

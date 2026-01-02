@@ -128,6 +128,7 @@ public class CategoryService {
 
 			response.getCategories().add(
 				PublicCategoryResponse.PublicCategoryElement.builder()
+					.userId(user.getId())
 					.categoryId(category.getId())
 					.title(category.getTitle())
 					.recordType(category.getRecordType())

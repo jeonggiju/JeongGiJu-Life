@@ -18,6 +18,7 @@ public class PublicCategoryResponse{
 	@Data
 	@Builder
 	public static class PublicCategoryElement{
+		private UUID userId;
 		private UUID categoryId;
 		private String title;
 		private RecordType recordType;

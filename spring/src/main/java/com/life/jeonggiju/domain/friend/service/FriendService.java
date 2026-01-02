@@ -89,6 +89,7 @@ public class FriendService {
 		List<IncomingByStatusResponse> result = new ArrayList<>();
 		for (Friend friend : list) {
 			result.add(IncomingByStatusResponse.builder()
+					.id(friend.getId())
 				.email(friend.getRequester().getEmail())
 				.username(friend.getRequester().getUsername())
 				.createdAt(friend.getCreatedAt())
@@ -104,6 +105,7 @@ public class FriendService {
 		List<OutgoingByStatusResponse> result = new ArrayList<>();
 		for (Friend friend : list) {
 			result.add(OutgoingByStatusResponse.builder()
+					.id(friend.getId())
 				.email(friend.getAddressee().getEmail())
 				.username(friend.getAddressee().getUsername())
 				.createdAt(friend.getCreatedAt())
@@ -115,7 +117,7 @@ public class FriendService {
 	@Transactional
 	public void acceptFriend(UUID friendId, UUID accepterId){
 		Friend pendingFriend = friendRepository.findByIdAndAddressee_IdAndStatus(friendId, accepterId,
-			FriendStatus.PENDING);
+			FriendStatus.PENDING).orElseThrow();
 
 		pendingFriend.changeStatus(FriendStatus.ACCEPTED);
 	}
@@ -123,7 +125,7 @@ public class FriendService {
 	@Transactional
 	public void reject(UUID friendId, UUID accepterId){
 		Friend pendingFriend = friendRepository.findByIdAndAddressee_IdAndStatus(friendId, accepterId,
-			FriendStatus.PENDING);
+			FriendStatus.PENDING).orElseThrow();
 
 		pendingFriend.changeStatus(FriendStatus.REJECTED);
 	}
@@ -141,10 +143,6 @@ public class FriendService {
 	@Transactional
 	public void deleteFriendByStatus(UUID requesterId, UUID accepterId, FriendStatus status){
 		Friend friend = friendRepository.findBetweenByStatus(requesterId, accepterId, status).orElseThrow();
-		if(friend.getStatus() != status){
-			throw new IllegalArgumentException("관계가 적절하지 않습니다.");
-		}
 		friendRepository.delete(friend);
 	}
-
 }
