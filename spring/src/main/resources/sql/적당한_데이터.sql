@@ -6,6 +6,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 -- 0) 기존 데이터 비우기 (여러번 실행 가능)
 -- =========================================================
 TRUNCATE TABLE
+    friends,
     category_like,
     "comment",
     check_list_record,
@@ -16,6 +17,7 @@ TRUNCATE TABLE
     category,
     users
 CASCADE;
+
 
 -- =========================================================
 -- 파라미터
@@ -52,6 +54,120 @@ FROM generate_series(1, 10) gs
 )
 INSERT INTO tmp_users(id)
 SELECT id FROM ins;
+
+
+-- =========================================================
+-- 1.5) friends 더미데이터 (10명 기준: 45쌍 생성)
+-- - requester_id < addressee_id 형태로 한 번만 넣어서 (유니크 충돌 방지)
+-- - 상태 분포: ACCEPTED 55%, PENDING 25%, REJECTED 10%, BLOCKED 10%
+-- - created_at: 최근 90일 랜덤
+-- =========================================================
+WITH u AS (
+    SELECT id, row_number() OVER (ORDER BY id) AS rn
+    FROM tmp_users
+),
+     pairs AS (
+         SELECT a.id AS requester_id, b.id AS addressee_id
+         FROM u a
+                  JOIN u b ON a.rn < b.rn
+     ),
+     src AS (
+         SELECT
+             requester_id,
+             addressee_id,
+             random() AS r,
+             now()
+                 - (floor(random()*90)::int * interval '1 day')
+                 - (floor(random()*86400)::int * interval '1 second') AS created_at
+         FROM pairs
+     )
+INSERT INTO friends (id, requester_id, addressee_id, created_at, status)
+SELECT
+    gen_random_uuid(),
+    requester_id,
+    addressee_id,
+    created_at,
+    CASE
+        WHEN r < 0.55 THEN 'ACCEPTED'
+        WHEN r < 0.80 THEN 'PENDING'
+        WHEN r < 0.90 THEN 'REJECTED'
+        ELSE 'BLOCKED'
+        END AS status
+FROM src;
+
+-- =========================================================
+-- 1.6) notification 더미데이터 (COMMENT/LIKE/REPLY)
+-- - notifications 또는 notification 테이블 자동 감지 후 insert
+-- - 1500개
+-- - type 분포: COMMENT(55%), REPLY(20%), LIKE(25%)
+-- - data(jsonb):
+--    * COMMENT={senderEmail, comment}
+--    * REPLY  ={senderEmail, comment}
+--    * LIKE   ={senderEmail}
+-- - read: 35% true
+-- - created_at: 최근 60일 랜덤
+-- =========================================================
+DO $$
+DECLARE
+t regclass;
+BEGIN
+  t := to_regclass('public.notifications');
+  IF t IS NULL THEN
+    t := to_regclass('public.notification');
+END IF;
+
+  IF t IS NULL THEN
+    RAISE NOTICE 'notifications/notification 테이블을 찾지 못했습니다. (스킵)';
+    RETURN;
+END IF;
+
+EXECUTE format($SQL$
+                   INSERT INTO %s (id, receiver_id, sender_id, type, data, read, created_at)
+    WITH pairs AS (
+      SELECT
+        gs,
+        gen_random_uuid() AS id,
+        r.id AS receiver_id,
+        s.id AS sender_id,
+        random() AS rr,
+        (random() < 0.35) AS read,
+        now()
+          - (floor(random()*60)::int * interval '1 day')
+          - (floor(random()*86400)::int * interval '1 second') AS created_at
+      FROM generate_series(1, 1500) gs
+      CROSS JOIN LATERAL (SELECT id FROM tmp_users ORDER BY random() LIMIT 1) r
+      CROSS JOIN LATERAL (SELECT id FROM tmp_users WHERE id <> r.id ORDER BY random() LIMIT 1) s
+    )
+    SELECT
+      p.id,
+               p.receiver_id,
+               p.sender_id,
+               CASE
+                   WHEN p.rr < 0.55 THEN 'COMMENT'
+                   WHEN p.rr < 0.75 THEN 'REPLY'
+                   ELSE 'LIKE'
+                   END AS type,
+               CASE
+                   WHEN p.rr < 0.55 THEN jsonb_build_object(
+                           'senderEmail', su.email,
+                           'comment', '더미 댓글 알림 - ' || p.gs
+                                         )
+                   WHEN p.rr < 0.75 THEN jsonb_build_object(
+                           'senderEmail', su.email,
+                           'comment', '더미 답글 알림 - ' || p.gs
+                                         )
+                   ELSE jsonb_build_object(
+                           'senderEmail', su.email
+                        )
+                   END AS data,
+               p.read,
+               p.created_at
+                   FROM pairs p
+    JOIN users su ON su.id = p.sender_id;
+$SQL$, t);
+
+END $$;
+
 
 -- =========================================================
 -- 2) category 500개 (record_type 5종 균등)
