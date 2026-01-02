@@ -21,7 +21,9 @@ import com.life.jeonggiju.domain.user.entity.User;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -66,6 +68,11 @@ public class CategoryService {
 		Category category = categoryRepository.findById(categoryId).orElseThrow();
 
 		if(!category.getUser().getId().equals(userId)) {
+			log.info(category.getTitle());
+			log.info(String.valueOf(category.getUser().getId()));
+			log.info(String.valueOf(category.getUser().getEmail()));
+			log.info(String.valueOf(userId));
+
 			throw new RuntimeException("잘못된 사용자입니다.");
 		};
 

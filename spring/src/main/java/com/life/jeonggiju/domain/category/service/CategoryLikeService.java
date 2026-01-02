@@ -1,11 +1,13 @@
 package com.life.jeonggiju.domain.category.service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.life.jeonggiju.domain.category.dto.CheckCountCategoryResponse;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
@@ -56,8 +58,24 @@ public class CategoryLikeService {
 		notificationService.notify(dto);
 	}
 
+	@Transactional(readOnly = true)
+	public CheckCountCategoryResponse checkCount(UUID userId ,UUID categoryId){
+		Optional<CategoryLike> categoryLikeOpt = categoryLikeRepository.findByUserIdAndCategoryId(userId,
+			categoryId);
+		boolean isCheck = categoryLikeOpt.isPresent();
+		Integer count = categoryLikeRepository.countByCategoryId(categoryId);
+
+		return CheckCountCategoryResponse.builder()
+			.isChecked(isCheck)
+			.count(count)
+			.categoryId(categoryId)
+			.build();
+	}
+
 	@Transactional
 	public void delete(UUID userId, UUID categoryId) {
 		categoryLikeRepository.deleteByUserIdAndCategoryId(userId, categoryId);
 	}
+
+
 }

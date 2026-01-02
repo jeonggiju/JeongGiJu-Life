@@ -3,12 +3,14 @@ package com.life.jeonggiju.sse.controller;
 import java.awt.*;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.life.jeonggiju.domain.notification.dto.NotificationPayload;
@@ -67,7 +69,10 @@ public class SseController {
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@RequestHeader(value = "Last-Event-ID", required = false) String lastEventId
 	){
-		UUID userId = userDetails.getId();
-		return sseService.connect(userId, lastEventId);
+		if (userDetails == null) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+		}
+			UUID userId = userDetails.getId();
+			return sseService.connect(userId, lastEventId);
 	}
 }
