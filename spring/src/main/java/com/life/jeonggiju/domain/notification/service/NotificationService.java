@@ -34,6 +34,7 @@ public class NotificationService {
 			.build();
 
 		Notification save = notificationRepository.save(notification);
+
 		NotificationCreatedEvent event = NotificationCreatedEvent.builder()
 			.id(save.getId())
 			.receiverId(dto.getReceiverId())

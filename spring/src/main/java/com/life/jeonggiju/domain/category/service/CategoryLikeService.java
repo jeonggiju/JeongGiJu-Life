@@ -9,6 +9,9 @@ import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
 import com.life.jeonggiju.domain.category.repository.CategoryLikeRepository;
+import com.life.jeonggiju.domain.notification.dto.NotificationCreatedDto;
+import com.life.jeonggiju.domain.notification.entity.NotificationType;
+import com.life.jeonggiju.domain.notification.service.NotificationService;
 import com.life.jeonggiju.domain.user.entity.User;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
 
@@ -21,6 +24,8 @@ public class CategoryLikeService {
 	private final CategoryLikeRepository categoryLikeRepository;
 	private final UserRepository userRepository;
 	private final CategoryRepository categoryRepository;
+
+	private final NotificationService notificationService;
 
 	@Transactional(readOnly = true)
 	public int countByCategoryId(UUID categoryId){
@@ -37,6 +42,17 @@ public class CategoryLikeService {
 		Category category = categoryRepository.findById(categoryId).orElseThrow();
 
 		categoryLikeRepository.save(CategoryLike.of(user, category));
+
+		//
+		UUID receiverId = category.getUser().getId();
+		UUID senderId = user.getId();
+		NotificationCreatedDto dto = NotificationCreatedDto.builder()
+			.receiverId(receiverId)
+			.senderId(senderId)
+			.content(user.getEmail() + "님이 " + category.getTitle() + "에 좋아요를 누르셨습니다.")
+			.type(NotificationType.LIKE)
+			.build();
+		notificationService.notify(dto);
 	}
 
 	@Transactional

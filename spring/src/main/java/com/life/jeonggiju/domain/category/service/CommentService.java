@@ -15,9 +15,13 @@ import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.entity.Comment;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.category.repository.CommentRepository;
+import com.life.jeonggiju.domain.notification.dto.NotificationCreatedDto;
+import com.life.jeonggiju.domain.notification.entity.NotificationType;
+import com.life.jeonggiju.domain.notification.service.NotificationService;
 import com.life.jeonggiju.domain.user.dto.CreateCommentRequest;
 import com.life.jeonggiju.domain.user.entity.User;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
+import com.life.jeonggiju.sse.service.SseService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +32,8 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 	private final CategoryRepository categoryRepository;
 	private final UserRepository userRepository;
+
+	private final NotificationService notificationService;
 
 	@Transactional(readOnly = true)
 	public List<FindCommentResponse> find(UUID userId, UUID categoryId) {
@@ -93,6 +99,15 @@ public class CommentService {
 				.parent(null)
 				.build()
 		);
+
+		NotificationCreatedDto notificationCreatedDto = NotificationCreatedDto.builder()
+			.receiverId(category.getUser().getId())
+			.senderId(user.getId())
+			.content(dto.getComment())
+			.type(NotificationType.COMMENT)
+			.build();
+		notificationService.notify(notificationCreatedDto);
+
 		return saved.getId();
 	}
 
@@ -153,6 +168,7 @@ public class CommentService {
 
 		comment.setComment(dto.getComment());
 	}
+
 
 }
 
