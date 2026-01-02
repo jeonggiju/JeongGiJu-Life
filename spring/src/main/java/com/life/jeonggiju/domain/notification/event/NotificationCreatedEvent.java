@@ -1,6 +1,7 @@
 package com.life.jeonggiju.domain.notification.event;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 import com.life.jeonggiju.domain.notification.entity.Notification;
@@ -17,5 +18,5 @@ public class NotificationCreatedEvent {
 	private UUID receiverId;
 	private UUID senderId;
 	private NotificationType type;
-	private String content;
+	private Map<String, Object> data;
 }

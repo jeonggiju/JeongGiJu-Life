@@ -103,7 +103,7 @@ public class CommentService {
 		NotificationCreatedDto notificationCreatedDto = NotificationCreatedDto.builder()
 			.receiverId(category.getUser().getId())
 			.senderId(user.getId())
-			.content(dto.getComment())
+			.data(Map.of( "senderEmail",user.getEmail(), "comment", saved.getComment()))
 			.type(NotificationType.COMMENT)
 			.build();
 		notificationService.notify(notificationCreatedDto);

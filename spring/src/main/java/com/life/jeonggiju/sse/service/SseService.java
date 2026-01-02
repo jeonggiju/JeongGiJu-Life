@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.life.jeonggiju.domain.notification.dto.NotificationPayload;
+import com.life.jeonggiju.domain.notification.dto.SseNotificationMessage;
+import com.life.jeonggiju.domain.notification.dto.SsePingMessage;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -38,29 +42,28 @@ public class SseService {
 		return emitter;
 	}
 
-	public void notifyUser(UUID receiverUserId, String title, Object body){
-		Map<String, Object> data = Map.of(
-			"title", title,
-			"body", body,
-			"ts", System.currentTimeMillis()
-		);
+	public void notifyUser(UUID receiverUserId, String title, NotificationPayload body) {
+		SseNotificationMessage data = SseNotificationMessage.builder()
+			.title(title)
+			.body(body)
+			.ts(System.currentTimeMillis())
+			.build();
 
 		List<SseEmitter> list = emitters.get(receiverUserId);
 		if(list == null) return;
 
-		for(SseEmitter emitter : list){
+		for (SseEmitter emitter : list) {
 			sendToEmitter(emitter, "notification", data);
 		}
 	}
 
 	private void sendToEmitter(SseEmitter emitter, String eventName, Object data) {
-		try{
-			emitter.send(SseEmitter
-				.event()
+		try {
+			emitter.send(SseEmitter.event()
 				.name(eventName)
 				.data(data)
 				.id(UUID.randomUUID().toString()));
-		}catch(IOException e){
+		} catch (IOException e) {
 			emitter.completeWithError(e);
 		}
 	}
@@ -76,10 +79,9 @@ public class SseService {
 	}
 
 	public void pingAll(){
-		long ts = System.currentTimeMillis();
 		emitters.forEach((userId, list)->{
 			for(SseEmitter emitter: list){
-				sendToEmitter(emitter, "ping", Map.of("ts", ts));
+				sendToEmitter(emitter, "connected", SsePingMessage.builder().ts(System.currentTimeMillis()).build());
 			}
 		});
 	}

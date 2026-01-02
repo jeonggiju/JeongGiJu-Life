@@ -1,8 +1,11 @@
 package com.life.jeonggiju.domain.notification.entity;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -48,7 +51,12 @@ public class Notification {
 
 	private NotificationType type;
 
-	private String content;
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(columnDefinition = "jsonb")
+	private Map<String, Object> data;
+
+	@Column(nullable = false)
+	private boolean read;
 
 	@CreatedDate
 	@Column(nullable = false)

@@ -29,8 +29,9 @@ public class NotificationService {
 		Notification notification = Notification.builder()
 			.receiver(receiver)
 			.sender(sender)
-			.content(dto.getContent())
+			.data(dto.getData())
 			.type(dto.getType())
+			.read(false)
 			.build();
 
 		Notification save = notificationRepository.save(notification);
@@ -39,7 +40,7 @@ public class NotificationService {
 			.id(save.getId())
 			.receiverId(dto.getReceiverId())
 			.senderId(dto.getSenderId())
-			.content(dto.getContent())
+			.data(dto.getData())
 			.type(dto.getType()).build();
 		publisher.publishEvent(event);
 	}

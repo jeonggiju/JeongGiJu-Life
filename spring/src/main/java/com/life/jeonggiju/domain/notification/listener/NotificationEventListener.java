@@ -27,7 +27,7 @@ public class NotificationEventListener {
 			.id(notification.getId())
 			.receiverId(notification.getReceiver().getId())
 			.senderId(notification.getSender().getId())
-			.content(notification.getContent())
+			.data(event.getData())
 			.type(notification.getType())
 			.createdAt(notification.getCreatedAt())
 			.build();

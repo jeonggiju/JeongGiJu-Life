@@ -1,5 +1,6 @@
 package com.life.jeonggiju.domain.category.service;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class CategoryLikeService {
 		NotificationCreatedDto dto = NotificationCreatedDto.builder()
 			.receiverId(receiverId)
 			.senderId(senderId)
-			.content(user.getEmail() + "님이 " + category.getTitle() + "에 좋아요를 누르셨습니다.")
+			.data(Map.of( "senderEmail",user.getEmail()))
 			.type(NotificationType.LIKE)
 			.build();
 		notificationService.notify(dto);
