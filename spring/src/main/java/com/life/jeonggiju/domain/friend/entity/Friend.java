@@ -57,10 +57,6 @@ public class Friend {
 
 	protected Friend() {}
 
-	public void accept() {
-		this.status = FriendStatus.ACCEPTED;
-	}
-
 	public void changeStatus(FriendStatus status) {
 		this.status = status;
 	}

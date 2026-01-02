@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.life.jeonggiju.domain.friend.dto.FriendInfo;
 import com.life.jeonggiju.domain.friend.dto.IncomingByStatusResponse;
 import com.life.jeonggiju.domain.friend.dto.OutgoingByStatusResponse;
 import com.life.jeonggiju.domain.friend.entity.Friend;
@@ -23,6 +24,29 @@ public class FriendService {
 
 	private final UserRepository userRepository;
 	private final FriendRepository friendRepository;
+
+	@Transactional(readOnly = true)
+	public List<FriendInfo> findFriends(UUID userId) {
+		List<Friend> allFriend = friendRepository.findAllAcceptedOf(userId);
+
+		List<FriendInfo> result = new ArrayList<>();
+		for (Friend friend : allFriend) {
+
+			User other = friend.getRequester().getId().equals(userId)
+				? friend.getAddressee()
+				: friend.getRequester();
+
+			FriendInfo info = FriendInfo.builder()
+				.friendId(friend.getId())
+				.userId(other.getId())
+				.email(other.getEmail())
+				.username(other.getUsername())
+				.build();
+
+			result.add(info);
+		}
+		return result;
+	}
 
 	@Transactional
 	public void requestFriend(UUID fromId, UUID toId){
@@ -42,7 +66,7 @@ public class FriendService {
 
 		friendRepository.findByRequester_IdAndAddressee_IdAndStatus(toId, fromId, FriendStatus.PENDING)
 			.ifPresentOrElse(
-				Friend::accept,
+				friend -> friend.changeStatus(FriendStatus.ACCEPTED),
 				() -> {
 					User fromUser = userRepository.findById(fromId).orElseThrow();
 					User toUser = userRepository.findById(toId).orElseThrow();
@@ -88,5 +112,39 @@ public class FriendService {
 		return result;
 	}
 
+	@Transactional
+	public void acceptFriend(UUID friendId, UUID accepterId){
+		Friend pendingFriend = friendRepository.findByIdAndAddressee_IdAndStatus(friendId, accepterId,
+			FriendStatus.PENDING);
+
+		pendingFriend.changeStatus(FriendStatus.ACCEPTED);
+	}
+
+	@Transactional
+	public void reject(UUID friendId, UUID accepterId){
+		Friend pendingFriend = friendRepository.findByIdAndAddressee_IdAndStatus(friendId, accepterId,
+			FriendStatus.PENDING);
+
+		pendingFriend.changeStatus(FriendStatus.REJECTED);
+	}
+
+	@Transactional
+	public void removeRequest(UUID id, UUID requesterId){
+		Friend friend = friendRepository.findById(id).orElseThrow();
+		if(!friend.getRequester().getId().equals(requesterId)){
+			throw new IllegalArgumentException("잘못된 요청입니다.");
+		}
+
+		friendRepository.deleteById(id);
+	}
+
+	@Transactional
+	public void deleteFriendByStatus(UUID requesterId, UUID accepterId, FriendStatus status){
+		Friend friend = friendRepository.findBetweenByStatus(requesterId, accepterId, status).orElseThrow();
+		if(friend.getStatus() != status){
+			throw new IllegalArgumentException("관계가 적절하지 않습니다.");
+		}
+		friendRepository.delete(friend);
+	}
 
 }
