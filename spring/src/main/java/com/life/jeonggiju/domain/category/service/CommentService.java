@@ -21,7 +21,6 @@ import com.life.jeonggiju.domain.notification.service.NotificationService;
 import com.life.jeonggiju.domain.user.dto.CreateCommentRequest;
 import com.life.jeonggiju.domain.user.entity.User;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
-import com.life.jeonggiju.sse.service.SseService;
 
 import lombok.RequiredArgsConstructor;
 

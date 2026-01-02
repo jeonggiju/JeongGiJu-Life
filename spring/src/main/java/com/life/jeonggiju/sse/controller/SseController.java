@@ -1,6 +1,5 @@
 package com.life.jeonggiju.sse.controller;
 
-import java.awt.*;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import com.life.jeonggiju.domain.notification.dto.NotificationPayload;
 import com.life.jeonggiju.domain.notification.dto.SseNotificationMessage;
 import com.life.jeonggiju.domain.notification.dto.SsePingMessage;
 import com.life.jeonggiju.security.principal.LifeUserDetails;

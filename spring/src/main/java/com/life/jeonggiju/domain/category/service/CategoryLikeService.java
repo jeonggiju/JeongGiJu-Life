@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.life.jeonggiju.domain.category.dto.CheckCountCategoryResponse;
 import com.life.jeonggiju.domain.category.entity.Category;
-import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
 import com.life.jeonggiju.domain.category.repository.CategoryLikeRepository;
+import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.notification.dto.NotificationCreatedDto;
 import com.life.jeonggiju.domain.notification.entity.NotificationType;
 import com.life.jeonggiju.domain.notification.service.NotificationService;

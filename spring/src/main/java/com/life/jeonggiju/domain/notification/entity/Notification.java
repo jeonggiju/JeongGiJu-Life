@@ -2,16 +2,13 @@ package com.life.jeonggiju.domain.notification.entity;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.github.f4b6a3.uuid.UuidCreator;
 import com.life.jeonggiju.domain.common.entity.BaseEntity;
-import com.life.jeonggiju.domain.notification.event.NotificationCreatedEvent;
 import com.life.jeonggiju.domain.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -20,10 +17,8 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

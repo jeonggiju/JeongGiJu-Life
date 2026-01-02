@@ -15,8 +15,8 @@ import com.life.jeonggiju.domain.category.dto.LikeEmailCategoryResponse;
 import com.life.jeonggiju.domain.category.dto.PublicCategoryResponse;
 import com.life.jeonggiju.domain.category.dto.UpdateCategory;
 import com.life.jeonggiju.domain.category.entity.Category;
-import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
+import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.user.entity.User;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
 
