@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class SseService {
 
 	private final ConcurrentHashMap<UUID, CopyOnWriteArrayList<SseEmitter>> emitters = new ConcurrentHashMap<>();
-
 	private static final long TIMEOUT = 60 * 60 * 1000L;
 
 	public SseEmitter connect(UUID userId, String lastEventId){
