@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>JeongGiJu - 친구 관리</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+            color: #333;
+            padding: 32px 36px;
+            min-height: 100vh;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .greeting {
+            font-size: 32px;
+            font-weight: normal;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .top-actions {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: #333;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #f0f0f0;
+        }
+
+        .btn-primary {
+            background: #e0e0e0;
+            border-color: #999;
+        }
+
+        .btn-primary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-danger {
+            background: #fff;
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-success {
+            background: #fff;
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        .btn-success:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        .language-toggle {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .language-toggle:hover {
+            background: #f0f0f0;
+        }
+
+        /* 탭 네비게이션 */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover {
+            color: #333;
+            background: #f9f9f9;
+        }
+
+        .tab.active {
+            color: #000;
+            font-weight: 600;
+            border-bottom-color: #333;
+        }
+
+        /* 탭 콘텐츠 */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 친구 추가 섹션 */
+        .add-friend-section {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .add-friend-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #000;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 8px;
+            max-width: 600px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #999;
+        }
+
+        /* 친구/요청 리스트 */
+        .friend-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: #fff;
+            border: 1px solid #ddd;
+            transition: all 0.2s;
+        }
+
+        .friend-item:hover {
+            background: #fafafa;
+            border-color: #999;
+        }
+
+        .friend-info {
+            flex: 1;
+        }
+
+        .friend-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 4px;
+        }
+
+        .friend-email {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .friend-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .friend-btn {
+            padding: 6px 14px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .friend-btn:hover {
+            background: #f0f0f0;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        /* 검색 결과 */
+        .search-results {
+            margin-top: 20px;
+            max-width: 600px;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #ddd;
+            margin-bottom: 8px;
+        }
+
+        .search-result-info {
+            flex: 1;
+        }
+
+        .search-result-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 2px;
+        }
+
+        .search-result-email {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 알림 메시지 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 14px 20px;
+            background: #333;
+            color: white;
+            font-size: 13px;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            background: #10b981;
+        }
+
+        .notification.error {
+            background: #ef4444;
+        }
+
+        /* 뱃지 */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #e0e0e0;
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            margin-left: 8px;
+        }
+
+        .badge.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* 로딩 상태 */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        }
+
+        /* ========== NOTIFICATION SYSTEM ========== */
+
+        /* 알림 벨 아이콘 */
+        .notification-bell {
+            position: relative;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .notification-bell:hover {
+            background: #f0f0f0;
+        }
+
+        /* 읽지 않은 알림 배지 */
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ff0000;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* 토스트 알림 컨테이너 */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        /* 토스트 알림 */
+        .toast-notification {
+            background: white;
+            border: 1px solid #ddd;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideInRight 0.3s ease-out;
+            cursor: pointer;
+        }
+
+        .toast-notification.comment {
+            border-left-color: #2196F3;
+        }
+
+        .toast-notification.reply {
+            border-left-color: #9C27B0;
+        }
+
+        .toast-notification.like {
+            border-left-color: #ff4081;
+        }
+
+        .toast-notification.friend_request {
+            border-left-color: #10b981;
+        }
+
+        .toast-notification.friend_accept {
+            border-left-color: #3b82f6;
+        }
+
+        .toast-notification.friend_reject {
+            border-left-color: #ef4444;
+        }
+
+        .toast-notification:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .toast-message {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* 알림 목록 모달 */
+        .notification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .notification-modal.active {
+            display: flex;
+        }
+
+        .notification-modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 0;
+            position: relative;
+        }
+
+        .notification-modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+
+        .notification-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .notification-modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            line-height: 1;
+        }
+
+        .notification-modal-close:hover {
+            color: #333;
+        }
+
+        .mark-all-read-btn {
+            padding: 4px 10px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .mark-all-read-btn:hover {
+            background: #000;
+        }
+
+        .mark-all-read-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .notification-list {
+            padding: 0;
+        }
+
+        .notification-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: #f9f9f9;
+        }
+
+        .notification-item.unread {
+            background: #f0f8ff;
+        }
+
+        .notification-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .notification-item-type {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .notification-item-type.comment {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .notification-item-type.reply {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .notification-item-type.like {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .notification-item-type.friend_request {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .notification-item-type.friend_accept {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .notification-item-type.friend_reject {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .notification-item-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .notification-item-content {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .notification-item-sender {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .notification-empty {
+            padding: 60px 20px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+<!-- 로그인 섹션 -->
+<div id="loginSection" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="simple-auth-container">
+        <div class="simple-auth-box">
+            <div style="text-align: left; margin-bottom: 10px;">
+                <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign In</h2>
+            <div id="loginError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <form id="loginForm">
+                <table style="margin: 0 auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
+                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding-top: 15px;">
+                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Sign In</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div style="text-align: center; margin-top: 20px; font-size: 12px;">
+                New account? <a href="#" id="showSignup" style="color: #0066cc; text-decoration: underline;">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 회원가입 섹션 -->
+<div id="signupSection" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="simple-auth-container">
+        <div class="simple-auth-box">
+            <div style="text-align: left; margin-bottom: 10px;">
+                <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign Up</h2>
+            <div id="signupError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <form id="signupForm">
+                </style>
+                </head>
+                <body>
+                <div class="top-actions">
+                    <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
+                    <a href="manage.html" class="btn" data-lang-ko="데이터 관리" data-lang-en="View Data">데이터 관리</a>
+                    <a href="insert.html" class="btn" data-lang-ko="카테고리 관리" data-lang-en="Manage Categories">카테고리 관리</a>
+                    <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()">
+                        🔔
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    <button class="language-toggle" onclick="toggleLanguage()" data-lang-ko="EN" data-lang-en="KO">EN</button>
+                    <button class="btn btn-primary" onclick="logout()" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
+                </div>
+
+                <div class="header">
+                    <h1 class="greeting" data-lang-ko="친구 관리" data-lang-en="Friends">친구 관리</h1>
+                    <p class="subtitle" data-lang-ko="친구를 추가하고 요청을 관리하세요" data-lang-en="Add friends and manage requests">친구를 추가하고 요청을 관리하세요</p>
+                </div>
+
+                <!-- 탭 네비게이션 -->
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('friends', event)" data-lang-ko="내 친구" data-lang-en="My Friends">내 친구</button>
+                    <button class="tab" onclick="showTab('incoming', event)" data-lang-ko="받은 요청" data-lang-en="Received Requests">받은 요청</button>
+                    <button class="tab" onclick="showTab('outgoing', event)" data-lang-ko="보낸 요청" data-lang-en="Sent Requests">보낸 요청</button>
+                    <button class="tab" onclick="showTab('add', event)" data-lang-ko="친구 추가" data-lang-en="Add Friend">친구 추가</button>
+                </div>
+
+                <!-- 내 친구 탭 -->
+                <div id="friends-tab" class="tab-content active">
+                    <div id="friends-list" class="friend-list">
+                        <div class="loading" data-lang-ko="친구 목록을 불러오는 중" data-lang-en="Loading friends">친구 목록을 불러오는 중</div>
+                    </div>
+                </div>
+
+                <!-- 받은 요청 탭 -->
+                <div id="incoming-tab" class="tab-content">
+                    <div id="incoming-list" class="friend-list">
+                        <div class="loading" data-lang-ko="받은 요청을 불러오는 중" data-lang-en="Loading incoming requests">받은 요청을 불러오는 중</div>
+                    </div>
+                </div>
+
+                <!-- 보낸 요청 탭 -->
+                <div id="outgoing-tab" class="tab-content">
+                    <div id="outgoing-list" class="friend-list">
+                        <div class="loading" data-lang-ko="보낸 요청을 불러오는 중" data-lang-en="Loading outgoing requests">보낸 요청을 불러오는 중</div>
+                    </div>
+                </div>
+
+                <!-- 친구 추가 탭 -->
+                <div id="add-tab" class="tab-content">
+                    <div class="add-friend-section">
+                        <h2 class="add-friend-title" data-lang-ko="이메일로 친구 찾기" data-lang-en="Find Friend by Email">이메일로 친구 찾기</h2>
+                        <form class="search-form" onsubmit="searchUser(event)">
+                            <input
+                                    type="email"
+                                    class="search-input"
+                                    id="search-email"
+                                    placeholder="friend@example.com"
+                                    required
+                            />
+                            <button type="submit" class="btn btn-primary" data-lang-ko="검색" data-lang-en="Search">검색</button>
+                        </form>
+                        <div id="search-results" class="search-results"></div>
+                    </div>
+                </div>
+
+                <script>
+                    const API_BASE = 'http://localhost:8080/api';
+                    let currentLanguage = 'ko';
+
+                    // Notification system variables
+                    let notifications = [];
+                    let unreadCount = 0;
+                    let eventSource = null;
+                    let sseReconnectAttempts = 0;
+                    const MAX_SSE_RECONNECT = 3;
+
+                    // 언어 전환
+                    function toggleLanguage() {
+                        currentLanguage = currentLanguage === 'ko' ? 'en' : 'ko';
+                        applyLanguage();
+                    }
+
+                    function applyLanguage() {
+                        const elements = document.querySelectorAll('[data-lang-ko]');
+                        elements.forEach(el => {
+                            const text = el.getAttribute(`data-lang-${currentLanguage}`);
+                            if (text) {
+                                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                                    el.placeholder = text;
+                                } else {
+                                    el.textContent = text;
+                                }
+                            }
+                        });
+                    }
+
+                    // 탭 전환
+                    function showTab(tabName, event) {
+                        // 모든 탭 버튼과 콘텐츠 비활성화
+                        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+                        // 선택된 탭 활성화
+                        if (event) {
+                            event.target.classList.add('active');
+                        }
+                        document.getElementById(`${tabName}-tab`).classList.add('active');
+
+                        // 탭별 데이터 로드
+                        if (tabName === 'friends') {
+                            loadFriends();
+                        } else if (tabName === 'incoming') {
+                            loadIncomingRequests();
+                        } else if (tabName === 'outgoing') {
+                            loadOutgoingRequests();
+                        }
+                    }
+
+                    // 알림 표시
+                    function showNotification(message, type = 'success') {
+                        const notification = document.createElement('div');
+                        notification.className = `notification ${type}`;
+                        notification.textContent = message;
+                        document.body.appendChild(notification);
+
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 3000);
+                    }
+
+                    // API 헬퍼
+                    async function apiCall(endpoint, options = {}) {
+                        const response = await fetch(`${API_BASE}${endpoint}`, {
+                            ...options,
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                ...options.headers,
+                            }
+                        });
+
+                        if (response.status === 401) {
+                            window.location.href = 'index.html';
+                            return;
+                        }
+
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(errorText || 'API 요청 실패');
+                        }
+
+                        const contentType = response.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            return await response.json();
+                        }
+                        return await response.text();
+                    }
+
+                    // 친구 목록 로드
+                    async function loadFriends() {
+                        const container = document.getElementById('friends-list');
+                        container.innerHTML = '<div class="loading" data-lang-ko="친구 목록을 불러오는 중" data-lang-en="Loading friends">친구 목록을 불러오는 중</div>';
+                        applyLanguage();
+
+                        try {
+                            const friends = await apiCall('/friend');
+
+                            if (!friends || friends.length === 0) {
+                                container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👥</div>
+                            <div data-lang-ko="아직 친구가 없습니다" data-lang-en="No friends yet">아직 친구가 없습니다</div>
+                        </div>
+                    `;
+                                applyLanguage();
+                                return;
+                            }
+
+                            let html = '';
+                            friends.forEach(friend => {
+                                html += `
+                        <div class="friend-item">
+                            <div class="friend-info">
+                                <div class="friend-name">${friend.username || friend.email}</div>
+                                <div class="friend-email">${friend.email}</div>
+                            </div>
+                            <div class="friend-actions">
+                                <button class="friend-btn btn-danger" onclick="removeFriend('${friend.friendId}')"
+                                    data-lang-ko="삭제" data-lang-en="Remove">삭제</button>
+                            </div>
+                        </div>
+                    `;
+                            });
+
+                            container.innerHTML = html;
+                            applyLanguage();
+                        } catch (error) {
+                            console.error('친구 목록 로드 실패:', error);
+                            container.innerHTML = `
+                    <div class="empty-state">
+                        <div data-lang-ko="친구 목록을 불러오는 데 실패했습니다" data-lang-en="Failed to load friends">친구 목록을 불러오는 데 실패했습니다</div>
+                    </div>
+                `;
+                            applyLanguage();
+                        }
+                    }
+
+                    // 받은 친구 요청 로드
+                    async function loadIncomingRequests() {
+                        const container = document.getElementById('incoming-list');
+                        container.innerHTML = '<div class="loading" data-lang-ko="받은 요청을 불러오는 중" data-lang-en="Loading incoming requests">받은 요청을 불러오는 중</div>';
+                        applyLanguage();
+
+                        try {
+                            const requests = await apiCall('/friend/requests/incoming?status=PENDING');
+
+                            if (!requests || requests.length === 0) {
+                                container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📬</div>
+                            <div data-lang-ko="받은 친구 요청이 없습니다" data-lang-en="No incoming requests">받은 친구 요청이 없습니다</div>
+                        </div>
+                    `;
+                                applyLanguage();
+                                return;
+                            }
+
+                            let html = '';
+                            requests.forEach(request => {
+                                const date = new Date(request.createdAt).toLocaleDateString('ko-KR');
+                                html += `
+                        <div class="friend-item">
+                            <div class="friend-info">
+                                <div class="friend-name">${request.username || request.email}</div>
+                                <div class="friend-email">${request.email}</div>
+                                <div class="friend-date">${date}</div>
+                            </div>
+                            <div class="friend-actions">
+                                <button class="friend-btn btn-success" onclick="acceptRequest('${request.id}')"
+                                    data-lang-ko="수락" data-lang-en="Accept">수락</button>
+                                <button class="friend-btn btn-danger" onclick="rejectRequest('${request.id}')"
+                                    data-lang-ko="거절" data-lang-en="Reject">거절</button>
+                            </div>
+                        </div>
+                    `;
+                            });
+
+                            container.innerHTML = html;
+                            applyLanguage();
+                        } catch (error) {
+                            console.error('받은 요청 로드 실패:', error);
+                            container.innerHTML = `
+                    <div class="empty-state">
+                        <div data-lang-ko="받은 요청을 불러오는 데 실패했습니다" data-lang-en="Failed to load incoming requests">받은 요청을 불러오는 데 실패했습니다</div>
+                    </div>
+                `;
+                            applyLanguage();
+                        }
+                    }
+
+                    // 보낸 친구 요청 로드
+                    async function loadOutgoingRequests() {
+                        const container = document.getElementById('outgoing-list');
+                        container.innerHTML = '<div class="loading" data-lang-ko="보낸 요청을 불러오는 중" data-lang-en="Loading outgoing requests">보낸 요청을 불러오는 중</div>';
+                        applyLanguage();
+
+                        try {
+                            const requests = await apiCall('/friend/requests/outgoing?status=PENDING');
+
+                            if (!requests || requests.length === 0) {
+                                container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <div data-lang-ko="보낸 친구 요청이 없습니다" data-lang-en="No outgoing requests">보낸 친구 요청이 없습니다</div>
+                        </div>
+                    `;
+                                applyLanguage();
+                                return;
+                            }
+
+                            let html = '';
+                            requests.forEach(request => {
+                                const date = new Date(request.createdAt).toLocaleDateString('ko-KR');
+                                html += `
+                        <div class="friend-item">
+                            <div class="friend-info">
+                                <div class="friend-name">${request.username || request.email}</div>
+                                <div class="friend-email">${request.email}</div>
+                                <div class="friend-date">${date}</div>
+                            </div>
+                            <div class="friend-actions">
+                                <button class="friend-btn btn-danger" onclick="cancelRequest('${request.id}')"
+                                    data-lang-ko="취소" data-lang-en="Cancel">취소</button>
+                            </div>
+                        </div>
+                    `;
+                            });
+
+                            container.innerHTML = html;
+                            applyLanguage();
+                        } catch (error) {
+                            console.error('보낸 요청 로드 실패:', error);
+                            container.innerHTML = `
+                    <div class="empty-state">
+                        <div data-lang-ko="보낸 요청을 불러오는 데 실패했습니다" data-lang-en="Failed to load outgoing requests">보낸 요청을 불러오는 데 실패했습니다</div>
+                    </div>
+                `;
+                            applyLanguage();
+                        }
+                    }
+
+                    // 사용자 검색
+                    async function searchUser(event) {
+                        event.preventDefault();
+                        const email = document.getElementById('search-email').value.trim();
+                        const resultsContainer = document.getElementById('search-results');
+
+                        if (!email) return;
+
+                        resultsContainer.innerHTML = '<div class="loading" data-lang-ko="검색 중" data-lang-en="Searching">검색 중</div>';
+                        applyLanguage();
+
+                        try {
+                            // 백엔드에 사용자 검색 API가 있다고 가정
+                            // 실제로는 /api/user/search?email=xxx 같은 엔드포인트가 필요
+                            const user = await apiCall(`/user/search?email=${encodeURIComponent(email)}`);
+
+                            if (!user) {
+                                resultsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <div data-lang-ko="사용자를 찾을 수 없습니다" data-lang-en="User not found">사용자를 찾을 수 없습니다</div>
+                        </div>
+                    `;
+                                applyLanguage();
+                                return;
+                            }
+
+                            resultsContainer.innerHTML = `
+                    <div class="search-result-item">
+                        <div class="search-result-info">
+                            <div class="search-result-name">${user.username || user.email}</div>
+                            <div class="search-result-email">${user.email}</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="sendFriendRequest('${user.id}')"
+                            data-lang-ko="친구 요청" data-lang-en="Send Request">친구 요청</button>
+                    </div>
+                `;
+                            applyLanguage();
+                        } catch (error) {
+                            console.error('사용자 검색 실패:', error);
+                            resultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div data-lang-ko="검색에 실패했습니다" data-lang-en="Search failed">검색에 실패했습니다</div>
+                    </div>
+                `;
+                            applyLanguage();
+                        }
+                    }
+
+                    // 친구 요청 보내기
+                    async function sendFriendRequest(userId) {
+                        try {
+                            await apiCall('/friend/requests', {
+                                method: 'POST',
+                                body: JSON.stringify({ toUserId: userId })
+                            });
+
+                            showNotification(
+                                currentLanguage === 'ko' ? '친구 요청을 보냈습니다' : 'Friend request sent',
+                                'success'
+                            );
+
+                            // 검색 결과 초기화
+                            document.getElementById('search-email').value = '';
+                            document.getElementById('search-results').innerHTML = '';
+                        } catch (error) {
+                            console.error('친구 요청 실패:', error);
+                            showNotification(
+                                currentLanguage === 'ko' ? '친구 요청을 보내는 데 실패했습니다' : 'Failed to send friend request',
+                                'error'
+                            );
+                        }
+                    }
+
+                    // 친구 요청 수락
+                    async function acceptRequest(requestId) {
+                        try {
+                            await apiCall(`/friend/requests/${requestId}/accept`, {
+                                method: 'POST'
+                            });
+
+                            showNotification(
+                                currentLanguage === 'ko' ? '친구 요청을 수락했습니다' : 'Friend request accepted',
+                                'success'
+                            );
+                            loadIncomingRequests();
+                        } catch (error) {
+                            console.error('친구 요청 수락 실패:', error);
+                            showNotification(
+                                currentLanguage === 'ko' ? '친구 요청 수락에 실패했습니다' : 'Failed to accept friend request',
+                                'error'
+                            );
+                        }
+                    }
+
+                    // 친구 요청 거절
+                    async function rejectRequest(requestId) {
+                        if (!confirm(currentLanguage === 'ko' ? '이 친구 요청을 거절하시겠습니까?' : 'Reject this friend request?')) {
+                            return;
+                        }
+
+                        try {
+                            await apiCall(`/friend/requests/${requestId}/reject`, {
+                                method: 'POST'
+                            });
+
+                            showNotification(
+                                currentLanguage === 'ko' ? '친구 요청을 거절했습니다' : 'Friend request rejected',
+                                'success'
+                            );
+                            loadIncomingRequests();
+                        } catch (error) {
+                            console.error('친구 요청 거절 실패:', error);
+                            showNotification(
+                                currentLanguage === 'ko' ? '친구 요청 거절에 실패했습니다' : 'Failed to reject friend request',
+                                'error'
+                            );
+                        }
+                    }
+
+                    // 친구 요청 취소
+                    async function cancelRequest(requestId) {
+                        if (!confirm(currentLanguage === 'ko' ? '이 친구 요청을 취소하시겠습니까?' : 'Cancel this friend request?')) {
+                            return;
+                        }
+
+                        try {
+                            await apiCall(`/friend/requests/${requestId}`, {
+                                method: 'DELETE'
+                            });
+
+                            showNotification(
+                                currentLanguage === 'ko' ? '친구 요청을 취소했습니다' : 'Friend request cancelled',
+                                'success'
+                            );
+                            loadOutgoingRequests();
+                        } catch (error) {
+                            console.error('친구 요청 취소 실패:', error);
+                            showNotification(
+                                currentLanguage === 'ko' ? '친구 요청 취소에 실패했습니다' : 'Failed to cancel friend request',
+                                'error'
+                            );
+                        }
+                    }
+
+                    // 친구 삭제
+                    async function removeFriend(friendId) {
+                        if (!confirm(currentLanguage === 'ko' ? '이 친구를 삭제하시겠습니까?' : 'Remove this friend?')) {
+                            return;
+                        }
+
+                        try {
+                            await apiCall(`/friend/${friendId}`, {
+                                method: 'DELETE'
+                            });
+
+                            showNotification(
+                                currentLanguage === 'ko' ? '친구를 삭제했습니다' : 'Friend removed',
+                                'success'
+                            );
+                            loadFriends();
+                        } catch (error) {
+                            console.error('친구 삭제 실패:', error);
+                            showNotification(
+                                currentLanguage === 'ko' ? '친구 삭제에 실패했습니다' : 'Failed to remove friend',
+                                'error'
+                            );
+                        }
+                    }
+
+                    // 로그아웃
+                    async function logout() {
+                        if (confirm(currentLanguage === 'ko' ? '로그아웃 하시겠습니까?' : 'Do you want to logout?')) {
+                            try {
+                                await fetch(`${API_BASE}/auth/logout`, {
+                                    method: 'POST',
+                                    credentials: 'include'
+                                });
+                            } catch (error) {
+                                console.error('로그아웃 오류:', error);
+                            }
+                            window.location.href = 'index.html';
+                        }
+                    }
+
+                    // 인증 확인
+                    async function checkAuth() {
+                        try {
+                            const response = await fetch(`${API_BASE}/auth/me`, {
+                                credentials: 'include'
+                            });
+
+                            if (response.ok) {
+                                return true;
+                            } else {
+                                window.location.href = 'index.html';
+                                return false;
+                            }
+                        } catch (error) {
+                            window.location.href = 'index.html';
+                            return false;
+                        }
+                    }
+
+                    // 페이지 로드 시 초기화
+                    document.addEventListener('DOMContentLoaded', async () => {
+                        // 로그인 확인
+                        const isLoggedIn = await checkAuth();
+                        if (!isLoggedIn) {
+                            return;
+                        }
+
+                        // 언어 적용
+                        applyLanguage();
+
+                        // 친구 목록 로드
+                        loadFriends();
+
+                        // 알림 시스템 초기화
+                        await loadUnreadNotifications();
+                        connectSSE();
+                    });
+
+                    // ========== NOTIFICATION SYSTEM ==========
+
+                    // SSE 연결
+                    function connectSSE() {
+                        if (eventSource) {
+                            eventSource.close();
+                        }
+
+                        // 최대 재연결 횟수 초과 시 중단
+                        if (sseReconnectAttempts >= MAX_SSE_RECONNECT) {
+                            console.warn('SSE 최대 재연결 횟수 초과. 알림 기능이 비활성화됩니다.');
+                            return;
+                        }
+
+                        console.log(`SSE 연결 시도 (${sseReconnectAttempts + 1}/${MAX_SSE_RECONNECT})`);
+
+                        try {
+                            eventSource = new EventSource(`${API_BASE}/sse/subscribe`, { withCredentials: true });
+
+                            eventSource.addEventListener('connected', (event) => {
+                                console.log('SSE 연결 성공');
+                                sseReconnectAttempts = 0; // 연결 성공 시 카운터 리셋
+                            });
+
+                            eventSource.addEventListener('ping', (event) => {
+                                console.log('SSE ping 수신');
+                            });
+
+                            eventSource.addEventListener('notification', (event) => {
+                                try {
+                                    const data = JSON.parse(event.data);
+                                    handleNotification(data.body);
+                                } catch (error) {
+                                    console.error('알림 파싱 오류:', error);
+                                }
+                            });
+
+                            eventSource.onerror = (error) => {
+                                console.error('SSE 연결 오류:', error);
+                                eventSource.close();
+
+                                sseReconnectAttempts++;
+
+                                if (sseReconnectAttempts < MAX_SSE_RECONNECT) {
+                                    console.log(`${5}초 후 재연결 시도...`);
+                                    setTimeout(connectSSE, 5000);
+                                } else {
+                                    console.warn('SSE 재연결 실패. 알림 기능을 사용할 수 없습니다.');
+                                }
+                            };
+                        } catch (error) {
+                            console.error('SSE 초기화 오류:', error);
+                            sseReconnectAttempts++;
+                        }
+                    }
+
+                    // 알림 처리
+                    function handleNotification(notification) {
+                        notifications.unshift(notification);
+
+                        if (isNaN(unreadCount)) {
+                            unreadCount = 0;
+                        }
+
+                        unreadCount++;
+                        updateNotificationBadge();
+                        showToast(notification);
+
+                        if (document.getElementById('notificationModal').classList.contains('active')) {
+                            renderNotificationList();
+                        }
+                    }
+
+                    // 배지 업데이트
+                    function updateNotificationBadge() {
+                        const badge = document.getElementById('notificationBadge');
+                        if (!badge) return;
+
+                        if (isNaN(unreadCount)) {
+                            unreadCount = 0;
+                        }
+
+                        if (unreadCount > 0) {
+                            const displayCount = unreadCount > 99 ? '99+' : unreadCount;
+                            badge.textContent = displayCount;
+                            badge.style.display = 'block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    }
+
+                    // 토스트 알림 표시
+                    function showToast(notification) {
+                        const container = document.getElementById('toastContainer');
+                        const toast = document.createElement('div');
+                        toast.className = `toast-notification ${notification.type.toLowerCase()}`;
+
+                        let title = '';
+                        if (notification.type === 'COMMENT') title = currentLang === 'ko' ? '새 댓글' : 'New Comment';
+                        else if (notification.type === 'REPLY') title = currentLang === 'ko' ? '새 대댓글' : 'New Reply';
+                        else if (notification.type === 'LIKE') title = currentLang === 'ko' ? '새 좋아요' : 'New Like';
+                        else if (notification.type === 'FRIEND_REQUEST') title = currentLang === 'ko' ? '친구 요청' : 'Friend Request';
+                        else if (notification.type === 'FRIEND_ACCEPT') title = currentLang === 'ko' ? '친구 수락' : 'Friend Accepted';
+                        else if (notification.type === 'FRIEND_REJECT') title = currentLang === 'ko' ? '친구 거절' : 'Friend Rejected';
+
+                        let message = '';
+                        if (notification.type === 'COMMENT') {
+                            message = `${notification.data.categoryTitle ? '[' + notification.data.categoryTitle + '] ' : ''}${notification.data.senderEmail}: ${notification.data.comment}`;
+                        } else if (notification.type === 'REPLY') {
+                            const myCommentPreview = (notification.data.myComment || '').substring(0, 20) + '...';
+                            message = `${notification.data.categoryTitle ? '[' + notification.data.categoryTitle + '] ' : ''}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied'}: "${myCommentPreview}" → ${notification.data.comment}`;
+                        } else if (notification.type === 'LIKE') {
+                            message = `${notification.data.categoryTitle ? '[' + notification.data.categoryTitle + '] ' : ''}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+                        } else if (notification.type === 'FRIEND_REQUEST') {
+                            const requesterEmail = notification.data.requesterEmail || notification.senderEmail || '';
+                            message = currentLang === 'ko' ? `${requesterEmail}님이 친구 요청을 보냈습니다` : `${requesterEmail} sent you a friend request`;
+                        } else if (notification.type === 'FRIEND_ACCEPT') {
+                            const senderEmail = notification.senderEmail || '';
+                            message = currentLang === 'ko' ? `${senderEmail}님이 친구 요청을 수락했습니다` : `${senderEmail} accepted your friend request`;
+                        } else if (notification.type === 'FRIEND_REJECT') {
+                            const senderEmail = notification.senderEmail || '';
+                            message = currentLang === 'ko' ? `${senderEmail}님이 친구 요청을 거절했습니다` : `${senderEmail} rejected your friend request`;
+                        }
+
+                        const time = new Date(notification.createdAt).toLocaleTimeString(currentLang === 'ko' ? 'ko-KR' : 'en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        toast.innerHTML = `
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+            <div class="toast-time">${time}</div>
+        `;
+
+                        toast.onclick = () => {
+                            toggleNotificationModal();
+                            toast.remove();
+                        };
+
+                        container.appendChild(toast);
+
+                        setTimeout(() => {
+                            toast.style.opacity = '0';
+                            toast.style.transform = 'translateX(400px)';
+                            setTimeout(() => toast.remove(), 300);
+                        }, 5000);
+                    }
+
+                    // 알림 모달 토글
+                    function toggleNotificationModal() {
+                        const modal = document.getElementById('notificationModal');
+                        modal.classList.toggle('active');
+
+                        if (modal.classList.contains('active')) {
+                            renderNotificationList();
+                        }
+                    }
+
+                    // 알림 목록 렌더링
+                    function renderNotificationList() {
+                        const listContainer = document.getElementById('notificationList');
+
+                        if (notifications.length === 0) {
+                            const emptyText = currentLang === 'ko' ? '알림이 없습니다' : 'No notifications';
+                            listContainer.innerHTML = `<div class="notification-empty">${emptyText}</div>`;
+                            return;
+                        }
+
+                        let html = '';
+                        notifications.forEach((notif, index) => {
+                            let typeText = '';
+                            if (notif.type === 'COMMENT') typeText = currentLang === 'ko' ? '댓글' : 'Comment';
+                            else if (notif.type === 'REPLY') typeText = currentLang === 'ko' ? '대댓글' : 'Reply';
+                            else if (notif.type === 'LIKE') typeText = currentLang === 'ko' ? '좋아요' : 'Like';
+                            else if (notif.type === 'FRIEND_REQUEST') typeText = currentLang === 'ko' ? '친구 요청' : 'Friend Request';
+                            else if (notif.type === 'FRIEND_ACCEPT') typeText = currentLang === 'ko' ? '수락됨' : 'Accepted';
+                            else if (notif.type === 'FRIEND_REJECT') typeText = currentLang === 'ko' ? '거절됨' : 'Rejected';
+
+                            let content = '';
+                            if (notif.type === 'COMMENT') {
+                                content = `<span class="notification-item-sender">${notif.data.senderEmail}</span>: ${notif.data.comment}`;
+                            } else if (notif.type === 'REPLY') {
+                                const myCommentPreview = (notif.data.myComment || '').substring(0, 30) + '...';
+                                content = `<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied to'}: "${myCommentPreview}" → ${notif.data.comment}`;
+                            } else if (notif.type === 'LIKE') {
+                                content = `<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+                            } else if (notif.type === 'FRIEND_REQUEST') {
+                                const requesterEmail = notif.data.requesterEmail || notif.senderEmail || '';
+                                content = `<span class="notification-item-sender">${requesterEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 보냈습니다' : ' sent you a friend request'}`;
+                            } else if (notif.type === 'FRIEND_ACCEPT') {
+                                const senderEmail = notif.senderEmail || '';
+                                content = `<span class="notification-item-sender">${senderEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 수락했습니다' : ' accepted your friend request'}`;
+                            } else if (notif.type === 'FRIEND_REJECT') {
+                                const senderEmail = notif.senderEmail || '';
+                                content = `<span class="notification-item-sender">${senderEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 거절했습니다' : ' rejected your friend request'}`;
+                            }
+
+                            const time = getRelativeTime(new Date(notif.createdAt));
+
+                            html += `
+                <div class="notification-item ${index < unreadCount ? 'unread' : ''}">
+                    <div class="notification-item-header">
+                        <span class="notification-item-type ${notif.type.toLowerCase()}">${typeText}</span>
+                        <span class="notification-item-time">${time}</span>
+                    </div>
+                    <div class="notification-item-content">${content}</div>
+                </div>
+            `;
+                        });
+
+                        listContainer.innerHTML = html;
+                    }
+
+                    // 상대 시간 계산
+                    function getRelativeTime(date) {
+                        const now = new Date();
+                        const diff = Math.floor((now - date) / 1000);
+
+                        if (diff < 60) return currentLang === 'ko' ? '방금 전' : 'Just now';
+                        if (diff < 3600) return `${Math.floor(diff / 60)}${currentLang === 'ko' ? '분 전' : 'm ago'}`;
+                        if (diff < 86400) return `${Math.floor(diff / 3600)}${currentLang === 'ko' ? '시간 전' : 'h ago'}`;
+                        return `${Math.floor(diff / 86400)}${currentLang === 'ko' ? '일 전' : 'd ago'}`;
+                    }
+
+                    // 모두 읽음 처리
+                    async function markAllAsRead() {
+                        if (notifications.length === 0) return;
+
+                        const unreadIds = notifications.slice(0, unreadCount).map(n => n.id).filter(id => id);
+
+                        if (unreadIds.length === 0) return;
+
+                        try {
+                            const response = await fetch(`${API_BASE}/notification/unread`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                credentials: 'include',
+                                body: JSON.stringify({ notificationIds: unreadIds })
+                            });
+
+                            if (response.ok) {
+                                unreadCount = 0;
+                                updateNotificationBadge();
+                                renderNotificationList();
+                            }
+                        } catch (error) {
+                            console.error('읽음 처리 오류:', error);
+                        }
+                    }
+
+                    // 읽지 않은 알림 로드
+                    async function loadUnreadNotifications() {
+                        try {
+                            const response = await fetch(`${API_BASE}/notification/unread`, {
+                                credentials: 'include'
+                            });
+
+                            if (response.ok) {
+                                const unreadNotifications = await response.json();
+                                notifications = unreadNotifications;
+                                unreadCount = unreadNotifications.length;
+                                updateNotificationBadge();
+                            }
+                        } catch (error) {
+                            console.error('알림 로드 오류:', error);
+                        }
+                    }
+
+                    // 모달 외부 클릭 시 닫기
+                    document.getElementById('notificationModal').addEventListener('click', (e) => {
+                        if (e.target.id === 'notificationModal') {
+                            toggleNotificationModal();
+                        }
+                    });
+                </script>
+                </script>
+                <!-- 토스트 알림 컨테이너 -->
+                <div class="toast-container" id="toastContainer"></div>
+
+                <!-- 알림 모달 -->
+                <div class="notification-modal" id="notificationModal">
+                    <div class="notification-modal-content">
+                        <div class="notification-modal-header">
+                            <div class="notification-modal-title" data-lang-ko="알림" data-lang-en="Notifications">알림</div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <button class="mark-all-read-btn" onclick="markAllAsRead()" data-lang-ko="모두 읽음" data-lang-en="Mark all read">모두 읽음</button>
+                                <button class="notification-modal-close" onclick="toggleNotificationModal()">×</button>
+                            </div>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <div class="notification-empty" data-lang-ko="알림이 없습니다" data-lang-en="No notifications">알림이 없습니다</div>
+                        </div>
+                    </div>
+                </div>
+
+                </body>
+</html>
+

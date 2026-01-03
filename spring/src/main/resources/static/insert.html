@@ -397,6 +397,240 @@
                 padding: 20px;
             }
         }
+
+        /* ========== NOTIFICATION SYSTEM ========== */
+        .notification-bell {
+            position: relative;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .notification-bell:hover {
+            background: #f0f0f0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ff0000;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        .toast-notification {
+            background: white;
+            border: 1px solid #ddd;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideInRight 0.3s ease-out;
+            cursor: pointer;
+        }
+
+        .toast-notification.comment { border-left-color: #2196F3; }
+        .toast-notification.reply { border-left-color: #9C27B0; }
+        .toast-notification.like { border-left-color: #ff4081; }
+        .toast-notification.friend_request { border-left-color: #10b981; }
+        .toast-notification.friend_accept { border-left-color: #3b82f6; }
+        .toast-notification.friend_reject { border-left-color: #ef4444; }
+
+        .toast-notification:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .toast-message {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .notification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .notification-modal.active {
+            display: flex;
+        }
+
+        .notification-modal-content {
+            background: white;
+            width: 90%;
+            max-width: 550px;
+            max-height: 75vh;
+            overflow-y: auto;
+            padding: 0;
+            border: 1px solid #ccc;
+        }
+
+        .notification-modal-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: #fafafa;
+            z-index: 1;
+        }
+
+        .notification-modal-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .notification-modal-close {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 26px;
+            height: 26px;
+            line-height: 1;
+        }
+
+        .notification-modal-close:hover {
+            color: #333;
+        }
+
+        .mark-all-read-btn {
+            padding: 4px 10px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .mark-all-read-btn:hover {
+            background: #000;
+        }
+
+        .mark-all-read-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .notification-list {
+            padding: 0;
+        }
+
+        .notification-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: #f5f5f5;
+        }
+
+        .notification-item.unread {
+            background: #f0f8ff;
+        }
+
+        .notification-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .notification-item-type {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .notification-item-type.comment { background: #e3f2fd; color: #1976d2; }
+        .notification-item-type.reply { background: #f3e5f5; color: #7b1fa2; }
+        .notification-item-type.like { background: #fce4ec; color: #c2185b; }
+        .notification-item-type.friend_request { background: #d1fae5; color: #065f46; }
+        .notification-item-type.friend_accept { background: #dbeafe; color: #1e40af; }
+        .notification-item-type.friend_reject { background: #fee2e2; color: #991b1b; }
+
+        .notification-item-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .notification-item-content {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .notification-item-sender {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .notification-empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -485,6 +719,11 @@
         <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
         <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
         <a href="manage.html" class="btn" data-lang-ko="데이터 관리" data-lang-en="View Data">데이터 관리</a>
+        <a href="friend.html" class="btn" data-lang-ko="친구 관리" data-lang-en="Friends">친구 관리</a>
+        <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()">
+            🔔
+            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+        </button>
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
         <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
     </div>
@@ -632,6 +871,13 @@
     let categories = [];
     let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
 
+    // ========== NOTIFICATION SYSTEM ==========
+    let notifications = [];
+    let unreadCount = 0;
+    let eventSource = null;
+    let sseReconnectAttempts = 0;
+    const MAX_SSE_RECONNECT = 3;
+
     // 번역 데이터
     const translations = {
         // 버튼
@@ -752,7 +998,10 @@
                 showMainSection();
                 console.log('7. loadCategories() 호출');
                 await loadCategories();
-                console.log('8. 모든 초기화 완료');
+                console.log('8. 알림 시스템 초기화');
+                await loadUnreadNotifications();
+                connectSSE();
+                console.log('9. 모든 초기화 완료');
             } else {
                 console.log('인증 실패 - 로그인 필요');
                 showLoginSection();
@@ -1287,6 +1536,304 @@
             console.error('좋아요 개수 로드 오류:', error);
         }
     }
+
+    // ========== NOTIFICATION SYSTEM ==========
+
+    // SSE 연결
+    function connectSSE() {
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        // 최대 재연결 횟수 초과 시 중단
+        if (sseReconnectAttempts >= MAX_SSE_RECONNECT) {
+            console.warn('SSE 최대 재연결 횟수 초과. 알림 기능이 비활성화됩니다.');
+            return;
+        }
+
+        console.log(`SSE 연결 시도 (${sseReconnectAttempts + 1}/${MAX_SSE_RECONNECT})`);
+
+        try {
+            eventSource = new EventSource(`${API_BASE}/sse/subscribe`, { withCredentials: true });
+
+            eventSource.addEventListener('connected', (event) => {
+                console.log('SSE 연결 성공');
+                sseReconnectAttempts = 0; // 연결 성공 시 카운터 리셋
+            });
+
+            eventSource.addEventListener('ping', (event) => {
+                console.log('SSE ping 수신');
+            });
+
+            eventSource.addEventListener('notification', (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    handleNotification(data.body);
+                } catch (error) {
+                    console.error('알림 파싱 오류:', error);
+                }
+            });
+
+            eventSource.onerror = (error) => {
+                console.error('SSE 연결 오류:', error);
+                eventSource.close();
+
+                sseReconnectAttempts++;
+
+                if (sseReconnectAttempts < MAX_SSE_RECONNECT) {
+                    console.log(`${5}초 후 재연결 시도...`);
+                    setTimeout(connectSSE, 5000);
+                } else {
+                    console.warn('SSE 재연결 실패. 알림 기능을 사용할 수 없습니다.');
+                }
+            };
+        } catch (error) {
+            console.error('SSE 초기화 오류:', error);
+            sseReconnectAttempts++;
+        }
+    }
+    };
+    }
+
+    // 알림 처리
+    function handleNotification(notification) {
+        notifications.unshift(notification);
+
+        if (isNaN(unreadCount)) {
+            unreadCount = 0;
+        }
+
+        unreadCount++;
+        updateNotificationBadge();
+        showToast(notification);
+
+        if (document.getElementById('notificationModal').classList.contains('active')) {
+            renderNotificationList();
+        }
+    }
+
+    // 배지 업데이트
+    function updateNotificationBadge() {
+        const badge = document.getElementById('notificationBadge');
+        if (!badge) return;
+
+        if (isNaN(unreadCount)) {
+            unreadCount = 0;
+        }
+
+        if (unreadCount > 0) {
+            const displayCount = unreadCount > 99 ? '99+' : unreadCount;
+            badge.textContent = displayCount;
+            badge.style.display = 'block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    // 토스트 알림 표시
+    function showToast(notification) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${notification.type.toLowerCase()}`;
+
+        let title = '';
+        if (notification.type === 'COMMENT') title = currentLang === 'ko' ? '새 댓글' : 'New Comment';
+        else if (notification.type === 'REPLY') title = currentLang === 'ko' ? '새 대댓글' : 'New Reply';
+        else if (notification.type === 'LIKE') title = currentLang === 'ko' ? '새 좋아요' : 'New Like';
+        else if (notification.type === 'FRIEND_REQUEST') title = currentLang === 'ko' ? '친구 요청' : 'Friend Request';
+        else if (notification.type === 'FRIEND_ACCEPT') title = currentLang === 'ko' ? '친구 수락' : 'Friend Accepted';
+        else if (notification.type === 'FRIEND_REJECT') title = currentLang === 'ko' ? '친구 거절' : 'Friend Rejected';
+
+        let message = '';
+        if (notification.type === 'COMMENT') {
+            message = `${notification.data.categoryTitle ? '[' + notification.data.categoryTitle + '] ' : ''}${notification.data.senderEmail}: ${notification.data.comment}`;
+        } else if (notification.type === 'REPLY') {
+            const myCommentPreview = (notification.data.myComment || '').substring(0, 20) + '...';
+            message = `${notification.data.categoryTitle ? '[' + notification.data.categoryTitle + '] ' : ''}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied'}: "${myCommentPreview}" → ${notification.data.comment}`;
+        } else if (notification.type === 'LIKE') {
+            message = `${notification.data.categoryTitle ? '[' + notification.data.categoryTitle + '] ' : ''}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+        } else if (notification.type === 'FRIEND_REQUEST') {
+            const requesterEmail = notification.data.requesterEmail || notification.senderEmail || '';
+            message = currentLang === 'ko' ? `${requesterEmail}님이 친구 요청을 보냈습니다` : `${requesterEmail} sent you a friend request`;
+        } else if (notification.type === 'FRIEND_ACCEPT') {
+            const senderEmail = notification.senderEmail || '';
+            message = currentLang === 'ko' ? `${senderEmail}님이 친구 요청을 수락했습니다` : `${senderEmail} accepted your friend request`;
+        } else if (notification.type === 'FRIEND_REJECT') {
+            const senderEmail = notification.senderEmail || '';
+            message = currentLang === 'ko' ? `${senderEmail}님이 친구 요청을 거절했습니다` : `${senderEmail} rejected your friend request`;
+        }
+
+        const time = new Date(notification.createdAt).toLocaleTimeString(currentLang === 'ko' ? 'ko-KR' : 'en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        toast.innerHTML = `
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+            <div class="toast-time">${time}</div>
+        `;
+
+        toast.onclick = () => {
+            toggleNotificationModal();
+            toast.remove();
+        };
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(400px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
+    // 알림 모달 토글
+    function toggleNotificationModal() {
+        const modal = document.getElementById('notificationModal');
+        modal.classList.toggle('active');
+
+        if (modal.classList.contains('active')) {
+            renderNotificationList();
+        }
+    }
+
+    // 알림 목록 렌더링
+    function renderNotificationList() {
+        const listContainer = document.getElementById('notificationList');
+
+        if (notifications.length === 0) {
+            const emptyText = currentLang === 'ko' ? '알림이 없습니다' : 'No notifications';
+            listContainer.innerHTML = `<div class="notification-empty">${emptyText}</div>`;
+            return;
+        }
+
+        let html = '';
+        notifications.forEach((notif, index) => {
+            let typeText = '';
+            if (notif.type === 'COMMENT') typeText = currentLang === 'ko' ? '댓글' : 'Comment';
+            else if (notif.type === 'REPLY') typeText = currentLang === 'ko' ? '대댓글' : 'Reply';
+            else if (notif.type === 'LIKE') typeText = currentLang === 'ko' ? '좋아요' : 'Like';
+            else if (notif.type === 'FRIEND_REQUEST') typeText = currentLang === 'ko' ? '친구 요청' : 'Friend Request';
+            else if (notif.type === 'FRIEND_ACCEPT') typeText = currentLang === 'ko' ? '수락됨' : 'Accepted';
+            else if (notif.type === 'FRIEND_REJECT') typeText = currentLang === 'ko' ? '거절됨' : 'Rejected';
+
+            let content = '';
+            if (notif.type === 'COMMENT') {
+                content = `<span class="notification-item-sender">${notif.data.senderEmail}</span>: ${notif.data.comment}`;
+            } else if (notif.type === 'REPLY') {
+                const myCommentPreview = (notif.data.myComment || '').substring(0, 30) + '...';
+                content = `<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied to'}: "${myCommentPreview}" → ${notif.data.comment}`;
+            } else if (notif.type === 'LIKE') {
+                content = `<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+            } else if (notif.type === 'FRIEND_REQUEST') {
+                const requesterEmail = notif.data.requesterEmail || notif.senderEmail || '';
+                content = `<span class="notification-item-sender">${requesterEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 보냈습니다' : ' sent you a friend request'}`;
+            } else if (notif.type === 'FRIEND_ACCEPT') {
+                const senderEmail = notif.senderEmail || '';
+                content = `<span class="notification-item-sender">${senderEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 수락했습니다' : ' accepted your friend request'}`;
+            } else if (notif.type === 'FRIEND_REJECT') {
+                const senderEmail = notif.senderEmail || '';
+                content = `<span class="notification-item-sender">${senderEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 거절했습니다' : ' rejected your friend request'}`;
+            }
+
+            const time = getRelativeTime(new Date(notif.createdAt));
+
+            html += `
+                <div class="notification-item ${index < unreadCount ? 'unread' : ''}">
+                    <div class="notification-item-header">
+                        <span class="notification-item-type ${notif.type.toLowerCase()}">${typeText}</span>
+                        <span class="notification-item-time">${time}</span>
+                    </div>
+                    <div class="notification-item-content">${content}</div>
+                </div>
+            `;
+        });
+
+        listContainer.innerHTML = html;
+    }
+
+    // 상대 시간 계산
+    function getRelativeTime(date) {
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000);
+
+        if (diff < 60) return currentLang === 'ko' ? '방금 전' : 'Just now';
+        if (diff < 3600) return `${Math.floor(diff / 60)}${currentLang === 'ko' ? '분 전' : 'm ago'}`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)}${currentLang === 'ko' ? '시간 전' : 'h ago'}`;
+        return `${Math.floor(diff / 86400)}${currentLang === 'ko' ? '일 전' : 'd ago'}`;
+    }
+
+    // 모두 읽음 처리
+    async function markAllAsRead() {
+        if (notifications.length === 0) return;
+
+        const unreadIds = notifications.slice(0, unreadCount).map(n => n.id).filter(id => id);
+
+        if (unreadIds.length === 0) return;
+
+        try {
+            const response = await fetch(`${API_BASE}/notification/unread`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ notificationIds: unreadIds })
+            });
+
+            if (response.ok) {
+                unreadCount = 0;
+                updateNotificationBadge();
+                renderNotificationList();
+            }
+        } catch (error) {
+            console.error('읽음 처리 오류:', error);
+        }
+    }
+
+    // 읽지 않은 알림 로드
+    async function loadUnreadNotifications() {
+        try {
+            const response = await fetch(`${API_BASE}/notification/unread`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const unreadNotifications = await response.json();
+                notifications = unreadNotifications;
+                unreadCount = unreadNotifications.length;
+                updateNotificationBadge();
+            }
+        } catch (error) {
+            console.error('알림 로드 오류:', error);
+        }
+    }
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('notificationModal').addEventListener('click', (e) => {
+        if (e.target.id === 'notificationModal') {
+            toggleNotificationModal();
+        }
+    });
 </script>
+
+<!-- 토스트 알림 컨테이너 -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- 알림 모달 -->
+<div class="notification-modal" id="notificationModal">
+    <div class="notification-modal-content">
+        <div class="notification-modal-header">
+            <div class="notification-modal-title" data-lang-ko="알림" data-lang-en="Notifications">알림</div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button class="mark-all-read-btn" onclick="markAllAsRead()" data-lang-ko="모두 읽음" data-lang-en="Mark all read">모두 읽음</button>
+                <button class="notification-modal-close" onclick="toggleNotificationModal()">×</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <div class="notification-empty" data-lang-ko="알림이 없습니다" data-lang-en="No notifications">알림이 없습니다</div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

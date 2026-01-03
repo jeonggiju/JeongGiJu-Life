@@ -27,7 +27,6 @@ public class CategoryLikeController {
 
 	private final CategoryLikeService categoryLikeService;
 
-
 	@GetMapping("/count/{categoryId}")
 	public ResponseEntity<Integer> count(
 		@PathVariable UUID categoryId

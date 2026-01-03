@@ -887,6 +887,18 @@
             border-left-color: #ff4081;
         }
 
+        .toast-notification.friend_request {
+            border-left-color: #10b981;
+        }
+
+        .toast-notification.friend_accept {
+            border-left-color: #3b82f6;
+        }
+
+        .toast-notification.friend_reject {
+            border-left-color: #ef4444;
+        }
+
         .toast-notification:hover {
             box-shadow: 0 6px 16px rgba(0,0,0,0.2);
         }
@@ -1050,6 +1062,21 @@
         .notification-item-type.like {
             background: #fdeef3;
             color: #c2185b;
+        }
+
+        .notification-item-type.friend_request {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .notification-item-type.friend_accept {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .notification-item-type.friend_reject {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
         .notification-item-time {
@@ -1306,6 +1333,7 @@
                 <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
                 <a href="manage.html" class="btn" data-lang-ko="내 관리" data-lang-en="My Page">내 관리</a>
                 <a href="insert.html" class="btn" data-lang-ko="데이터 입력" data-lang-en="Insert Data">데이터 입력</a>
+                <a href="friend.html" class="btn" data-lang-ko="친구 관리" data-lang-en="Friends">친구 관리</a>
                 <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()">
                     🔔
                     <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
@@ -1470,7 +1498,7 @@
             }
 
             return `
-                <div class="category-card" data-id="${id}" data-type="${recordType}">
+                <div class="category-card" data-id="${id}" data-type="${recordType}" data-author-email="${email}">
                     <div class="category-title">${title}</div>
                     <div class="category-type">${recordType}</div>
                     <div class="category-meta"><span data-lang-ko="작성자" data-lang-en="Author">작성자</span>: ${email}</div>
@@ -1482,6 +1510,11 @@
                         <button class="category-action-btn comment-btn" onclick="openCommentModal(event, '${id}', '${title.replace(/'/g, "\\'")}')">
                             💬 <span data-lang-ko="댓글" data-lang-en="Comments">댓글</span>
                         </button>
+                        ${currentUser && currentUser.email !== email ? `
+                        <button class="category-action-btn" onclick="sendFriendRequest(event, '${email}')" style="background: #f0f8ff; border-color: #3b82f6;">
+                            👤+ <span data-lang-ko="친구 요청" data-lang-en="Add Friend">친구 요청</span>
+                        </button>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -2765,8 +2798,14 @@
             title = currentLang === 'ko' ? '새 댓글' : 'New Comment';
         } else if (notification.type === 'REPLY') {
             title = currentLang === 'ko' ? '새 대댓글' : 'New Reply';
-        } else {
+        } else if (notification.type === 'LIKE') {
             title = currentLang === 'ko' ? '새 좋아요' : 'New Like';
+        } else if (notification.type === 'FRIEND_REQUEST') {
+            title = currentLang === 'ko' ? '친구 요청' : 'Friend Request';
+        } else if (notification.type === 'FRIEND_ACCEPT') {
+            title = currentLang === 'ko' ? '친구 수락' : 'Friend Accepted';
+        } else if (notification.type === 'FRIEND_REJECT') {
+            title = currentLang === 'ko' ? '친구 거절' : 'Friend Rejected';
         }
 
         const categoryTitle = notification.data.categoryTitle || '';
@@ -2780,8 +2819,23 @@
             const myComment = notification.data.myComment || '';
             const myCommentPreview = myComment.length > 20 ? myComment.substring(0, 20) + '...' : myComment;
             message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied'}: "${myCommentPreview}" → ${notification.data.comment}`;
-        } else {
+        } else if (notification.type === 'LIKE') {
             message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+        } else if (notification.type === 'FRIEND_REQUEST') {
+            const requesterEmail = notification.data.requesterEmail || notification.senderEmail || '';
+            message = currentLang === 'ko'
+                ? `${requesterEmail}님이 친구 요청을 보냈습니다`
+                : `${requesterEmail} sent you a friend request`;
+        } else if (notification.type === 'FRIEND_ACCEPT') {
+            const senderEmail = notification.senderEmail || '';
+            message = currentLang === 'ko'
+                ? `${senderEmail}님이 친구 요청을 수락했습니다`
+                : `${senderEmail} accepted your friend request`;
+        } else if (notification.type === 'FRIEND_REJECT') {
+            const senderEmail = notification.senderEmail || '';
+            message = currentLang === 'ko'
+                ? `${senderEmail}님이 친구 요청을 거절했습니다`
+                : `${senderEmail} rejected your friend request`;
         }
 
         const time = new Date(notification.createdAt).toLocaleTimeString(currentLang === 'ko' ? 'ko-KR' : 'en-US', {
@@ -2890,8 +2944,14 @@
                 typeText = currentLang === 'ko' ? '댓글' : 'Comment';
             } else if (notif.type === 'REPLY') {
                 typeText = currentLang === 'ko' ? '대댓글' : 'Reply';
-            } else {
+            } else if (notif.type === 'LIKE') {
                 typeText = currentLang === 'ko' ? '좋아요' : 'Like';
+            } else if (notif.type === 'FRIEND_REQUEST') {
+                typeText = currentLang === 'ko' ? '친구 요청' : 'Friend Request';
+            } else if (notif.type === 'FRIEND_ACCEPT') {
+                typeText = currentLang === 'ko' ? '수락됨' : 'Accepted';
+            } else if (notif.type === 'FRIEND_REJECT') {
+                typeText = currentLang === 'ko' ? '거절됨' : 'Rejected';
             }
 
             const categoryTitle = notif.data.categoryTitle || '';
@@ -2907,8 +2967,17 @@
                 const myComment = notif.data.myComment || '';
                 const myCommentPreview = myComment.length > 30 ? myComment.substring(0, 30) + '...' : myComment;
                 content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied to'}: "<span style="color: #666; font-style: italic;">${myCommentPreview}</span>" → ${notif.data.comment}`;
-            } else {
+            } else if (notif.type === 'LIKE') {
                 content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+            } else if (notif.type === 'FRIEND_REQUEST') {
+                const requesterEmail = notif.data.requesterEmail || notif.senderEmail || '';
+                content = `<span class="notification-item-sender">${requesterEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 보냈습니다' : ' sent you a friend request'}`;
+            } else if (notif.type === 'FRIEND_ACCEPT') {
+                const senderEmail = notif.senderEmail || '';
+                content = `<span class="notification-item-sender">${senderEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 수락했습니다' : ' accepted your friend request'}`;
+            } else if (notif.type === 'FRIEND_REJECT') {
+                const senderEmail = notif.senderEmail || '';
+                content = `<span class="notification-item-sender">${senderEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 거절했습니다' : ' rejected your friend request'}`;
             }
 
             const time = getRelativeTime(new Date(notif.createdAt));
@@ -3328,6 +3397,58 @@
             closeCommentModal();
         }
     });
+
+    // 친구 요청 보내기 (이메일 기반)
+    async function sendFriendRequest(event, email) {
+        event.stopPropagation(); // 카테고리 카드 클릭 이벤트 방지
+
+        if (!currentUser) {
+            alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
+            return;
+        }
+
+        if (!confirm(currentLang === 'ko' ? `${email}에게 친구 요청을 보내시겠습니까?` : `Send friend request to ${email}?`)) {
+            return;
+        }
+
+        try {
+            // 먼저 이메일로 사용자 ID를 조회
+            const userSearchResponse = await fetch(`${API_BASE}/user/search?email=${encodeURIComponent(email)}`, {
+                credentials: 'include'
+            });
+
+            if (!userSearchResponse.ok) {
+                alert(currentLang === 'ko' ? '사용자를 찾을 수 없습니다' : 'User not found');
+                return;
+            }
+
+            const user = await userSearchResponse.json();
+
+            // 친구 요청 보내기
+            const response = await fetch(`${API_BASE}/friend/requests`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ toUserId: user.id })
+            });
+
+            if (response.ok) {
+                alert(currentLang === 'ko' ? '친구 요청을 보냈습니다' : 'Friend request sent');
+            } else if (response.status === 400) {
+                const errorText = await response.text();
+                if (errorText.includes('already')) {
+                    alert(currentLang === 'ko' ? '이미 친구이거나 요청을 보낸 사용자입니다' : 'Already friends or request already sent');
+                } else {
+                    alert(currentLang === 'ko' ? '친구 요청을 보낼 수 없습니다' : 'Cannot send friend request');
+                }
+            } else {
+                alert(currentLang === 'ko' ? '친구 요청에 실패했습니다' : 'Failed to send friend request');
+            }
+        } catch (error) {
+            console.error('친구 요청 오류:', error);
+            alert(currentLang === 'ko' ? '친구 요청에 실패했습니다' : 'Failed to send friend request');
+        }
+    }
 </script>
 
 </body>

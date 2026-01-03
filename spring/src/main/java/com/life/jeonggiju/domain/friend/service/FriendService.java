@@ -2,6 +2,7 @@ package com.life.jeonggiju.domain.friend.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ import com.life.jeonggiju.domain.friend.dto.OutgoingByStatusResponse;
 import com.life.jeonggiju.domain.friend.entity.Friend;
 import com.life.jeonggiju.domain.friend.entity.FriendStatus;
 import com.life.jeonggiju.domain.friend.repository.FriendRepository;
+import com.life.jeonggiju.domain.notification.dto.NotificationCreatedDto;
+import com.life.jeonggiju.domain.notification.entity.NotificationType;
+import com.life.jeonggiju.domain.notification.service.NotificationService;
 import com.life.jeonggiju.domain.user.entity.User;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
 
@@ -24,6 +28,8 @@ public class FriendService {
 
 	private final UserRepository userRepository;
 	private final FriendRepository friendRepository;
+
+	private final NotificationService notificationService;
 
 	@Transactional(readOnly = true)
 	public List<FriendInfo> findFriends(UUID userId) {
@@ -79,6 +85,17 @@ public class FriendService {
 					friendRepository.save(friend);
 				}
 			);
+
+		UUID receiverId = toId;
+		UUID senderId = fromId;
+		User sender = userRepository.findById(senderId).orElseThrow();
+		NotificationCreatedDto dto = NotificationCreatedDto.builder()
+			.receiverId(receiverId)
+			.senderId(senderId)
+			.data(Map.of(
+				"requesterEmail", sender.getEmail()
+			)).type(NotificationType.FRIEND_REQUEST).build();
+		notificationService.notify(dto);
 	}
 
 
@@ -120,6 +137,15 @@ public class FriendService {
 			FriendStatus.PENDING).orElseThrow();
 
 		pendingFriend.changeStatus(FriendStatus.ACCEPTED);
+
+		//
+		UUID receiverId = pendingFriend.getRequester().getId();
+		UUID senderId = pendingFriend.getAddressee().getId();
+		NotificationCreatedDto dto = NotificationCreatedDto.builder()
+			.receiverId(receiverId)
+			.senderId(senderId)
+			.data(Map.of()).type(NotificationType.FRIEND_ACCEPT).build();
+		notificationService.notify(dto);
 	}
 
 	@Transactional
@@ -128,6 +154,16 @@ public class FriendService {
 			FriendStatus.PENDING).orElseThrow();
 
 		pendingFriend.changeStatus(FriendStatus.REJECTED);
+
+		//
+		UUID receiverId = pendingFriend.getRequester().getId();
+		UUID senderId = pendingFriend.getAddressee().getId();
+		NotificationCreatedDto dto = NotificationCreatedDto.builder()
+			.receiverId(receiverId)
+			.senderId(senderId)
+			.data(Map.of()).type(NotificationType.FRIEND_REJECT).build();
+		notificationService.notify(dto);
+
 	}
 
 	@Transactional

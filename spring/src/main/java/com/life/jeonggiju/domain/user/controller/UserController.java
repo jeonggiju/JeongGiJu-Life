@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.life.jeonggiju.domain.user.dto.SearchByEmailResponse;
 import com.life.jeonggiju.domain.user.dto.UpdateUser;
 import com.life.jeonggiju.domain.user.service.UserService;
 import com.life.jeonggiju.security.principal.LifeUserDetails;
@@ -20,6 +22,13 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
+
+	@GetMapping("/search")
+	public ResponseEntity<SearchByEmailResponse> searchByEmail(
+		@RequestParam String email
+	){
+		return ResponseEntity.ok(userService.searchByEmail(email));
+	}
 
 	@GetMapping
 	public ResponseEntity<?> find(
