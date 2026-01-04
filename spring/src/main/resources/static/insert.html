@@ -634,8 +634,16 @@
     </style>
 </head>
 <body>
+<!-- 로딩 섹션 -->
+<div id="loadingSection" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; background: #fff; justify-content: center; align-items: center;">
+    <div style="text-align: center;">
+        <div style="font-size: 24px; margin-bottom: 10px;">⏳</div>
+        <div style="font-size: 14px; color: #666;" data-lang-ko="로딩 중..." data-lang-en="Loading...">로딩 중...</div>
+    </div>
+</div>
+
 <!-- 로그인 섹션 -->
-<div id="loginSection" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+<div id="loginSection" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
@@ -697,6 +705,14 @@
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Description:</td>
                         <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Birth Date:</td>
+                        <td style="padding: 5px 0;">
+                            <input type="number" id="signupBirthYear" placeholder="YYYY" min="1900" max="2024" style="width: 60px; padding: 6px; border: 1px solid #ccc; font-size: 13px; margin-right: 3px;">
+                            <input type="number" id="signupBirthMonth" placeholder="MM" min="1" max="12" style="width: 45px; padding: 6px; border: 1px solid #ccc; font-size: 13px; margin-right: 3px;">
+                            <input type="number" id="signupBirthDay" placeholder="DD" min="1" max="31" style="width: 45px; padding: 6px; border: 1px solid #ccc; font-size: 13px;">
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
@@ -956,64 +972,55 @@
         console.log('=== INSERT.HTML 페이지 로드 시작 ===');
         console.log('API_BASE:', API_BASE);
         applyLanguage(); // 언어 적용
+
+        // 이벤트 리스너 등록
+        setupEventListeners();
+
+        // 인증 확인
         await checkAuth();
     });
 
-    // 인증 확인
-    async function checkAuth() {
-        console.log('1. checkAuth() 함수 시작');
-        try {
-            console.log('2. API 요청:', `${API_BASE}/auth/me`);
-            const response = await fetch(`${API_BASE}/auth/me`, {
-                credentials: 'include'
-            });
+    // 이벤트 리스너 설정
+    function setupEventListeners() {
+        // 로그인 폼
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
 
-            console.log('3. 응답 상태:', response.status, response.ok);
+        // 회원가입 링크
+        document.getElementById('showSignup').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('signupSection').style.display = 'block';
+        });
 
-            if (response.ok) {
-                currentUser = await response.json();
-                console.log('4. 사용자 정보:', currentUser);
+        document.getElementById('showLogin').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signupSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+        });
 
-                // /api/user 호출하여 title, description 가져오기
-                try {
-                    const userResponse = await fetch(`${API_BASE}/user`, {
-                        credentials: 'include'
-                    });
+        document.getElementById('cancelSignup').addEventListener('click', () => {
+            document.getElementById('signupSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+        });
 
-                    if (userResponse.ok) {
-                        const userData = await userResponse.json();
-                        // title, description, birthYear, birthMonth, birthDay 업데이트
-                        currentUser.title = userData.title;
-                        currentUser.description = userData.description;
-                        currentUser.birthYear = userData.birthYear;
-                        currentUser.birthMonth = userData.birthMonth;
-                        currentUser.birthDay = userData.birthDay;
-                        console.log('5. 사용자 상세 정보 로드 완료');
-                    }
-                } catch (error) {
-                    console.error('User 정보 로드 실패:', error);
-                }
+        // 회원가입 폼
+        document.getElementById('signupForm').addEventListener('submit', handleSignup);
 
-                console.log('6. showMainSection() 호출');
-                showMainSection();
-                console.log('7. loadCategories() 호출');
-                await loadCategories();
-                console.log('8. 알림 시스템 초기화');
-                await loadUnreadNotifications();
-                connectSSE();
-                console.log('9. 모든 초기화 완료');
-            } else {
-                console.log('인증 실패 - 로그인 필요');
-                showLoginSection();
+        // 로그아웃 버튼
+        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+        // 프로필 수정 버튼
+        document.getElementById('editProfileBtn').addEventListener('click', () => {
+            if (currentUser) {
+                document.getElementById('profileTitle').value = currentUser.title || '';
+                document.getElementById('profileDescription').value = currentUser.description || '';
+                document.getElementById('profileModal').classList.add('active');
             }
-        } catch (error) {
-            console.error('인증 확인 실패:', error);
-            showLoginSection();
-        }
+        });
     }
 
-    // 로그인
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    // 로그인 핸들러
+    async function handleLogin(e) {
         e.preventDefault();
 
         const email = document.getElementById('email').value;
@@ -1030,33 +1037,16 @@
             if (response.ok) {
                 await checkAuth();
             } else {
-                showError('loginError', '로그인에 실패했습니다.');
+                showError('loginError', currentLang === 'ko' ? '로그인에 실패했습니다.' : 'Login failed.');
             }
         } catch (error) {
             console.error('로그인 오류:', error);
-            showError('loginError', '로그인 중 오류가 발생했습니다.');
+            showError('loginError', currentLang === 'ko' ? '로그인 중 오류가 발생했습니다.' : 'Error during login.');
         }
-    });
+    }
 
-    // 회원가입
-    document.getElementById('showSignup').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('signupSection').style.display = 'block';
-    });
-
-    document.getElementById('showLogin').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('signupSection').style.display = 'none';
-        document.getElementById('loginSection').style.display = 'block';
-    });
-
-    document.getElementById('cancelSignup').addEventListener('click', () => {
-        document.getElementById('signupSection').style.display = 'none';
-        document.getElementById('loginSection').style.display = 'block';
-    });
-
-    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    // 회원가입 핸들러
+    async function handleSignup(e) {
         e.preventDefault();
 
         const signupData = {
@@ -1064,7 +1054,10 @@
             email: document.getElementById('signupEmail').value,
             password: document.getElementById('signupPassword').value,
             title: document.getElementById('signupTitle').value || '',
-            description: document.getElementById('signupDescription').value || ''
+            description: document.getElementById('signupDescription').value || '',
+            birthYear: parseInt(document.getElementById('signupBirthYear').value) || null,
+            birthMonth: parseInt(document.getElementById('signupBirthMonth').value) || null,
+            birthDay: parseInt(document.getElementById('signupBirthDay').value) || null
         };
 
         try {
@@ -1075,33 +1068,117 @@
             });
 
             if (response.ok) {
-                showSuccess('signupError', '회원가입이 완료되었습니다.');
+                showSuccess('signupError', currentLang === 'ko' ? '회원가입이 완료되었습니다.' : 'Signup successful.');
                 setTimeout(() => {
                     document.getElementById('signupSection').style.display = 'none';
                     document.getElementById('loginSection').style.display = 'block';
                 }, 1500);
             } else {
-                showError('signupError', '회원가입에 실패했습니다.');
+                showError('signupError', currentLang === 'ko' ? '회원가입에 실패했습니다.' : 'Signup failed.');
             }
         } catch (error) {
             console.error('회원가입 오류:', error);
-            showError('signupError', '회원가입 중 오류가 발생했습니다.');
+            showError('signupError', currentLang === 'ko' ? '회원가입 중 오류가 발생했습니다.' : 'Error during signup.');
         }
-    });
+    }
 
-    // 로그아웃
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
+    // 로그아웃 핸들러
+    async function handleLogout() {
         try {
             await fetch(`${API_BASE}/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
             currentUser = null;
+            disconnectSSE();
             showLoginSection();
         } catch (error) {
             console.error('로그아웃 오류:', error);
         }
-    });
+    }
+
+    // SSE 연결 해제
+    function disconnectSSE() {
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+            sseReconnectAttempts = 0;
+            console.log('SSE 연결 해제');
+        }
+    }
+
+    // 인증 확인
+    async function checkAuth() {
+        console.log('=== checkAuth 시작 ===');
+        console.log('현재 URL:', window.location.href);
+        console.log('API_BASE:', API_BASE);
+
+        try {
+            const url = `${API_BASE}/auth/me`;
+            console.log('요청 URL:', url);
+
+            const response = await fetch(url, {
+                credentials: 'include'
+            });
+
+            console.log('응답 상태:', response.status);
+            console.log('응답 OK:', response.ok);
+            console.log('응답 헤더:', [...response.headers.entries()]);
+
+            // 쿠키 확인
+            console.log('현재 쿠키:', document.cookie);
+
+            if (response.ok) {
+                currentUser = await response.json();
+                console.log('✅ 인증 성공 - 사용자 정보:', currentUser);
+
+                // /api/user 호출하여 title, description 가져오기
+                try {
+                    const userResponse = await fetch(`${API_BASE}/user`, {
+                        credentials: 'include'
+                    });
+
+                    if (userResponse.ok) {
+                        const userData = await userResponse.json();
+                        currentUser.title = userData.title;
+                        currentUser.description = userData.description;
+                        currentUser.birthYear = userData.birthYear;
+                        currentUser.birthMonth = userData.birthMonth;
+                        currentUser.birthDay = userData.birthDay;
+                        console.log('✅ 사용자 상세 정보 로드 완료');
+                    }
+                } catch (error) {
+                    console.error('❌ User 정보 로드 실패:', error);
+                }
+
+                console.log('→ showMainSection() 호출');
+                showMainSection();
+
+                console.log('→ loadCategories() 호출');
+                await loadCategories();
+
+                console.log('→ 알림 시스템 초기화');
+                await loadUnreadNotifications();
+                connectSSE();
+
+                console.log('✅ 모든 초기화 완료');
+            } else {
+                const errorText = await response.text();
+                console.error('❌ 인증 실패');
+                console.error('응답 상태:', response.status);
+                console.error('응답 내용:', errorText);
+                console.log('→ showLoginSection() 호출');
+                showLoginSection();
+            }
+        } catch (error) {
+            console.error('❌ 인증 확인 중 오류 발생:', error);
+            console.error('오류 상세:', error.message);
+            console.error('오류 스택:', error.stack);
+            console.log('→ showLoginSection() 호출');
+            showLoginSection();
+        }
+    }
+
 
     // 카테고리 로드
     async function loadCategories() {
@@ -1240,16 +1317,19 @@
     // UI 표시 함수
     function showLoginSection() {
         console.log('>>> showLoginSection() 호출됨');
+        const loadingSection = document.getElementById('loadingSection');
         const loginSection = document.getElementById('loginSection');
         const signupSection = document.getElementById('signupSection');
         const mainSection = document.getElementById('mainSection');
 
         console.log('>>> DOM 요소 존재 확인:', {
+            loadingSection: !!loadingSection,
             loginSection: !!loginSection,
             signupSection: !!signupSection,
             mainSection: !!mainSection
         });
 
+        if (loadingSection) loadingSection.style.display = 'none';
         if (loginSection) loginSection.style.display = 'block';
         if (signupSection) signupSection.style.display = 'none';
         if (mainSection) mainSection.style.display = 'none';
@@ -1258,16 +1338,19 @@
 
     function showMainSection() {
         console.log('>>> showMainSection() 호출됨');
+        const loadingSection = document.getElementById('loadingSection');
         const loginSection = document.getElementById('loginSection');
         const signupSection = document.getElementById('signupSection');
         const mainSection = document.getElementById('mainSection');
 
         console.log('>>> DOM 요소 존재 확인:', {
+            loadingSection: !!loadingSection,
             loginSection: !!loginSection,
             signupSection: !!signupSection,
             mainSection: !!mainSection
         });
 
+        if (loadingSection) loadingSection.style.display = 'none';
         if (loginSection) loginSection.style.display = 'none';
         if (signupSection) signupSection.style.display = 'none';
         if (mainSection) mainSection.style.display = 'block';
@@ -1591,8 +1674,6 @@
             console.error('SSE 초기화 오류:', error);
             sseReconnectAttempts++;
         }
-    }
-    };
     }
 
     // 알림 처리
