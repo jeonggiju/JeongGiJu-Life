@@ -4,12 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import com.life.jeonggiju.security.dto.UserDto;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.life.jeonggiju.domain.user.entity.User;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LifeUserDetails implements UserDetails {
 
-	private final User user;
+	private final UserDto userDto;
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -42,25 +41,25 @@ public class LifeUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(user.getAuthority().name());
+		SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(userDto.getAuthority().name());
 		return List.of(simpleGrantedAuthority);
 	}
 
 	@Override
 	public @Nullable String getPassword() {
-		return user.getPassword();
+		return userDto.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
-		return user.getEmail();
+		return userDto.getEmail();
 	}
 
 	public String getEmail(){
-		return user.getEmail();
+		return userDto.getEmail();
 	}
 
 	public UUID getId(){
-		return user.getId();
+		return userDto.getId();
 	}
 }

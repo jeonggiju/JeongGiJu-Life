@@ -5,3 +5,10 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
 
+security:
+  jwt:
+    issuer: life-project
+    access-secret-key: ${JWT_ACCESS_KEY}
+    refresh-secret-key: ${JWT_REFRESH_KEY}
+    access-token-validity-seconds: 900
+    refresh-token-validity-seconds: 86400

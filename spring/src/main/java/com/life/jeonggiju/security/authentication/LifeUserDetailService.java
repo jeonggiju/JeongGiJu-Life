@@ -1,5 +1,6 @@
 package com.life.jeonggiju.security.authentication;
 
+import com.life.jeonggiju.security.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +23,20 @@ public class LifeUserDetailService implements UserDetailsService {
 		User user = userRepository.findByEmail(email)
 			.orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
 
-		return new LifeUserDetails(user);
+		UserDto dto = UserDto.builder()
+				.id(user.getId())
+				.title(user.getTitle())
+				.description(user.getDescription())
+				.email(user.getEmail())
+				.birthYear(user.getBirthYear())
+				.birthMonth(user.getBirthMonth())
+				.birthDay(user.getBirthDay())
+				.username(user.getUsername())
+				.password(user.getPassword())
+				.authority(user.getAuthority())
+				.build();
+
+		return new LifeUserDetails(dto);
 
 	}
 }
