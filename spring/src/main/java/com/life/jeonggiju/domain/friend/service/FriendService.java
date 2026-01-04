@@ -141,10 +141,11 @@ public class FriendService {
 		//
 		UUID receiverId = pendingFriend.getRequester().getId();
 		UUID senderId = pendingFriend.getAddressee().getId();
+		User sender = userRepository.findById(senderId).orElseThrow();
 		NotificationCreatedDto dto = NotificationCreatedDto.builder()
 			.receiverId(receiverId)
 			.senderId(senderId)
-			.data(Map.of()).type(NotificationType.FRIEND_ACCEPT).build();
+			.data(Map.of("senderEmail", sender.getEmail(), "senderName", sender.getUsername())).type(NotificationType.FRIEND_ACCEPT).build();
 		notificationService.notify(dto);
 	}
 
@@ -154,16 +155,15 @@ public class FriendService {
 			FriendStatus.PENDING).orElseThrow();
 
 		friendRepository.delete(pendingFriend);
-
 		//
 		UUID receiverId = pendingFriend.getRequester().getId();
 		UUID senderId = pendingFriend.getAddressee().getId();
+		User sender = userRepository.findById(senderId).orElseThrow();
 		NotificationCreatedDto dto = NotificationCreatedDto.builder()
 			.receiverId(receiverId)
 			.senderId(senderId)
-			.data(Map.of()).type(NotificationType.FRIEND_REJECT).build();
+			.data(Map.of("senderEmail", sender.getEmail(), "senderName", sender.getUsername())).type(NotificationType.FRIEND_REJECT).build();
 		notificationService.notify(dto);
-
 	}
 
 	@Transactional

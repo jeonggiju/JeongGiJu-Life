@@ -23,8 +23,8 @@ public class NotificationPayload {
 		+ "type이 COMMENT일 경우, categoryTitle ,senderEmail, comment를 키 값으로 가짐. "
 		+ "type이 LIKE일 경우 categoryTitle,senderEmail를 키 값으로 가짐"
 		+ "type이 FRIEND_REQUEST일 경우 requesterEmail를 키값으로 가짐 "
-		+ "type이 FRIEND_ACCEPT일 경우 키가 없음"
-		+ "type이 FRIEND_REJECT일 경우 키가 없음")
+		+ "type이 FRIEND_ACCEPT일 경우 senderName, senderEmail를 키값으로 가짐 "
+		+ "type이 FRIEND_REJECT일 경우 senderName, senderEmail를 키값으로 가짐 ")
 	Map<String, Object> data;
 	LocalDateTime createdAt;
 }

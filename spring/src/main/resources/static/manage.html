@@ -7835,15 +7835,15 @@
                 ? `${requesterEmail}님이 친구 요청을 보냈습니다`
                 : `${requesterEmail} sent you a friend request`;
         } else if (notification.type === 'FRIEND_ACCEPT') {
-            const senderEmail = notification.senderEmail || '';
+            const senderName = notification.data.senderName || notification.data.senderEmail || '';
             message = currentLang === 'ko'
-                ? `${senderEmail}님이 친구 요청을 수락했습니다`
-                : `${senderEmail} accepted your friend request`;
+                ? `${senderName}님이 친구 요청을 수락했습니다`
+                : `${senderName} accepted your friend request`;
         } else if (notification.type === 'FRIEND_REJECT') {
-            const senderEmail = notification.senderEmail || '';
+            const senderName = notification.data.senderName || notification.data.senderEmail || '';
             message = currentLang === 'ko'
-                ? `${senderEmail}님이 친구 요청을 거절했습니다`
-                : `${senderEmail} rejected your friend request`;
+                ? `${senderName}님이 친구 요청을 거절했습니다`
+                : `${senderName} rejected your friend request`;
         }
 
         const time = new Date(notification.createdAt).toLocaleTimeString(currentLang === 'ko' ? 'ko-KR' : 'en-US', {
@@ -7982,11 +7982,11 @@
                 const requesterEmail = notif.data.requesterEmail || notif.senderEmail || '';
                 content = `<span class="notification-item-sender">${requesterEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 보냈습니다' : ' sent you a friend request'}`;
             } else if (notif.type === 'FRIEND_ACCEPT') {
-                const senderEmail = notif.senderEmail || '';
-                content = `<span class="notification-item-sender">${senderEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 수락했습니다' : ' accepted your friend request'}`;
+                const senderName = notif.data.senderName || notif.data.senderEmail || '';
+                content = `<span class="notification-item-sender">${senderName}</span>${currentLang === 'ko' ? '님이 친구 요청을 수락했습니다' : ' accepted your friend request'}`;
             } else if (notif.type === 'FRIEND_REJECT') {
-                const senderEmail = notif.senderEmail || '';
-                content = `<span class="notification-item-sender">${senderEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 거절했습니다' : ' rejected your friend request'}`;
+                const senderName = notif.data.senderName || notif.data.senderEmail || '';
+                content = `<span class="notification-item-sender">${senderName}</span>${currentLang === 'ko' ? '님이 친구 요청을 거절했습니다' : ' rejected your friend request'}`;
             }
 
             const time = getRelativeTime(new Date(notif.createdAt));
