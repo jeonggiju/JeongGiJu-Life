@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.life.jeonggiju.domain.user.dto.SearchByEmailResponse;
 import com.life.jeonggiju.domain.user.dto.SignUpRequest;
 import com.life.jeonggiju.domain.user.dto.UpdateUser;
 import com.life.jeonggiju.domain.user.dto.UserInfo;
@@ -20,6 +21,16 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+
+
+	public SearchByEmailResponse searchByEmail(String email){
+		User user = userRepository.findByEmail(email).orElseThrow();
+		return SearchByEmailResponse.builder()
+			.id(user.getId())
+			.username(user.getUsername())
+			.email(user.getEmail())
+			.build();
+	}
 
 	public void signup(SignUpRequest dto){
 		User user = User.builder()

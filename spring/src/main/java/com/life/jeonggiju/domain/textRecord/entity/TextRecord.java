@@ -1,15 +1,13 @@
 package com.life.jeonggiju.domain.textRecord.entity;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.life.jeonggiju.domain.category.entity.Category;
+import com.life.jeonggiju.domain.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -22,11 +20,7 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class TextRecord {
-
-	@Id
-	@GeneratedValue(generator = "UUID")
-	private UUID id;
+public class TextRecord extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name="category_id", nullable = false)

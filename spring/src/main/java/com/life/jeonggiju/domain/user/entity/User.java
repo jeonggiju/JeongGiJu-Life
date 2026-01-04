@@ -1,34 +1,29 @@
 package com.life.jeonggiju.domain.user.entity;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.life.jeonggiju.domain.category.entity.Category;
-import com.life.jeonggiju.domain.category.entity.Comment;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
+import com.life.jeonggiju.domain.category.entity.Comment;
+import com.life.jeonggiju.domain.common.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(name = "uk_email",columnNames = "email"))
 @Builder @Data
 @AllArgsConstructor
 @ToString(exclude = "categories")
-public class User {
-
-	@Id
-	@GeneratedValue(generator = "UUID")
-	private UUID id;
+public class User extends BaseEntity {
 
 	@Column(unique = true)
 	private String email;

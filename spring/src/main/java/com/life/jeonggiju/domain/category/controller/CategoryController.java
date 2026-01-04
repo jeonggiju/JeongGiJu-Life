@@ -40,7 +40,6 @@ public class CategoryController {
 		);
 	}
 
-
 	@GetMapping("/{categoryId}/email")
 	public ResponseEntity<List<LikeEmailCategoryResponse>> getEmails(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
@@ -49,7 +48,6 @@ public class CategoryController {
 		List<LikeEmailCategoryResponse> emailLikeUser = categoryService.findEmailLikeUser(categoryId, userDetails.getId());
 		return ResponseEntity.ok(emailLikeUser);
 	}
-
 
 	@GetMapping
 	public ResponseEntity<?> find(UUID id){

@@ -20,9 +20,7 @@
         }
 
         .header {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
         }
 
         .greeting {
@@ -32,9 +30,9 @@
         }
 
         .subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
-            margin-bottom: 20px;
+            font-weight: normal;
         }
 
         .top-actions {
@@ -43,6 +41,7 @@
             right: 60px;
             display: flex;
             gap: 8px;
+            align-items: center;
         }
 
         .btn {
@@ -51,6 +50,7 @@
             background: white;
             cursor: pointer;
             font-size: 13px;
+            transition: all 0.2s;
             text-decoration: none;
             color: #333;
             display: inline-block;
@@ -75,7 +75,6 @@
             background: white;
             cursor: pointer;
             font-size: 13px;
-            min-width: 50px;
         }
 
         .language-toggle:hover {
@@ -85,25 +84,26 @@
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
+            gap: 16px;
             margin-top: 20px;
         }
 
         .category-card {
             border: 1px solid #ddd;
-            padding: 15px;
-            background: #fafafa;
+            padding: 16px;
+            background: #fff;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .category-card:hover {
-            background: #f0f0f0;
+            background: #fafafa;
             border-color: #999;
         }
 
         .category-card.active {
-            background: #e8e8e8;
-            border-color: #999;
+            background: #f5f5f5;
+            border-color: #666;
         }
 
         .category-card.active .category-meta {
@@ -112,99 +112,107 @@
 
         .category-title {
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             margin-bottom: 6px;
+            color: #000;
         }
 
         .category-type {
             display: inline-block;
             padding: 3px 8px;
-            background: #e5e5e5;
-            font-size: 11px;
-            font-weight: normal;
+            background: #e8e8e8;
+            font-size: 10px;
+            font-weight: 600;
             margin-bottom: 8px;
-            border: 1px solid #ddd;
+            color: #666;
+            text-transform: uppercase;
         }
 
         .category-card.active .category-type {
             background: #d0d0d0;
-            border-color: #999;
+            color: #333;
         }
 
         .category-meta {
             font-size: 12px;
-            color: #666;
+            color: #888;
             margin-top: 8px;
         }
 
-        /* 좋아요 버튼 */
-        .like-section {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .category-actions {
             margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #ddd;
-        }
-
-        .category-card.active .like-section {
-            border-top-color: #ccc;
-        }
-
-        .like-btn {
             display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
+            gap: 6px;
+            padding-top: 8px;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .category-card.active .category-actions {
+            border-top-color: #d0d0d0;
+        }
+
+        .category-action-btn {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
             background: white;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
 
-        .like-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .like-btn.liked {
-            background: #ff3b30;
-            color: white;
-            border-color: #ff3b30;
-        }
-
-        .like-btn.liked:hover {
-            background: #e02020;
-            border-color: #e02020;
-        }
-
-        .category-card.active .like-btn {
-            background: #ddd;
+        .category-action-btn:hover {
+            background: #f5f5f5;
             border-color: #999;
         }
 
-        .category-card.active .like-btn:hover {
-            background: #ccc;
+        .category-card.active .category-action-btn {
+            background: #fff;
+            border-color: #ccc;
         }
 
-        .category-card.active .like-btn.liked {
-            background: #ff3b30;
-            border-color: #ff3b30;
+        .category-card.active .category-action-btn:hover {
+            background: #fafafa;
+            border-color: #999;
+        }
+
+        .like-btn.liked .like-icon {
+            color: #ff0000;
+        }
+
+        .like-icon {
+            font-size: 15px;
+            line-height: 1;
+            transition: color 0.2s;
+            display: inline-block;
+            vertical-align: middle;
         }
 
         .like-count {
-            font-size: 12px;
+            font-size: 11px;
+            color: #666;
+            vertical-align: middle;
+        }
+
+        .comment-btn {
+            border-color: #ddd;
             color: #666;
         }
 
-        .category-card.active .like-count {
-            color: #666;
+        .comment-btn:hover {
+            background: #f5f5f5;
+            border-color: #999;
         }
 
         .category-description {
-            font-size: 13px;
+            font-size: 14px;
             color: #666;
-            margin-top: 6px;
-            line-height: 1.4;
+            margin-top: 8px;
+            line-height: 1.5;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -213,15 +221,15 @@
         }
 
         .records-section {
-            margin-top: 30px;
-            padding: 20px;
+            margin-top: 40px;
+            padding: 30px;
             background: #f9f9f9;
-            border: 1px solid #ddd;
+            border: 1px solid #e0e0e0;
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
             color: #999;
             font-size: 14px;
         }
@@ -229,24 +237,28 @@
         .view-toggle {
             display: flex;
             gap: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .toggle-btn {
-            padding: 6px 12px;
+            padding: 6px 14px;
             border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
         .toggle-btn:hover {
             background: #f0f0f0;
+            border-color: #999;
         }
 
         .toggle-btn.active {
-            background: #e0e0e0;
-            border-color: #999;
+            background: #333;
+            color: #fff;
+            border-color: #333;
         }
 
         /* 로그인 섹션 스타일 */
@@ -261,17 +273,17 @@
 
         .simple-auth-box {
             background: white;
-            padding: 40px;
+            padding: 35px 45px;
             border: 1px solid #ddd;
-            min-width: 400px;
-            max-width: 500px;
+            min-width: 420px;
+            max-width: 480px;
         }
 
         /* 테이블 스타일 */
         .check-table, .time-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .check-table td, .time-table td {
@@ -281,18 +293,18 @@
         }
 
         .date-cell {
-            font-weight: normal;
+            font-weight: 500;
             font-size: 13px;
             color: #333;
         }
 
         .result-cell {
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 16px;
         }
 
         .result-success {
-            color: #cc0000;
+            color: #ef4444;
         }
 
         .result-fail {
@@ -300,34 +312,35 @@
         }
 
         .time-cell {
-            font-weight: normal;
+            font-weight: 500;
         }
 
         /* 날짜 그룹 */
         .date-group {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .date-group-header {
-            font-size: 13px;
+            font-size: 14px;
             color: #666;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         /* TEXT 리스트 */
         .text-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .text-item {
-            padding: 12px;
+            padding: 15px;
             background: white;
-            border: 1px solid #ddd;
+            border: 1px solid #e0e0e0;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .text-item:hover {
@@ -338,12 +351,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .text-item-title {
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 16px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -351,42 +364,42 @@
         }
 
         .text-item-date {
-            font-size: 12px;
+            font-size: 13px;
             color: #666;
         }
 
         /* CHECKLIST */
         .checklist-group {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .checklist-date {
-            font-size: 13px;
+            font-size: 14px;
             color: #666;
-            margin-bottom: 8px;
-            padding-bottom: 4px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .checklist-items {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-        }
-
-        .checklist-item {
-            padding: 10px;
-            background: white;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
             gap: 8px;
         }
 
+        .checklist-item {
+            padding: 12px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .checklist-checkbox {
-            width: 16px;
-            height: 16px;
-            border: 2px solid #333;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -394,18 +407,18 @@
         }
 
         .checklist-checkbox.checked {
-            background: #333;
+            background: #000;
         }
 
         .checklist-checkbox.checked::after {
             content: '✓';
-            font-weight: bold;
-            font-size: 12px;
+            font-weight: 700;
+            font-size: 14px;
             color: white;
         }
 
         .checklist-todo {
-            font-size: 13px;
+            font-size: 14px;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -416,8 +429,8 @@
         /* 그래프 컨테이너 */
         .graph-container {
             background: white;
-            padding: 15px;
-            margin-bottom: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         .view-toggle {
@@ -431,39 +444,61 @@
             display: flex;
         }
 
+        .toggle-btn {
+            padding: 8px 16px;
+            border: 1px solid #000;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: center;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .toggle-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .toggle-btn.active {
+            background: #000;
+            color: #fff;
+        }
+
         .empty-cell {
             border: none;
         }
 
         /* 달력 스타일 */
         .calendar-year {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .calendar-year-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #333;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #000;
         }
 
         .calendar-months {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 20px;
         }
 
         .calendar-month {
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
             background: #fafafa;
         }
 
         .calendar-month-title {
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
             text-align: center;
         }
 
@@ -474,8 +509,8 @@
         }
 
         .calendar-weekday {
-            font-size: 10px;
-            font-weight: bold;
+            font-size: 11px;
+            font-weight: 600;
             text-align: center;
             padding: 4px 0;
             color: #666;
@@ -497,15 +532,15 @@
         }
 
         .calendar-day.has-data-success {
-            background: #cc0000;
+            background: #ef4444;
             color: white;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .calendar-day.has-data-fail {
-            background: #333;
+            background: #000;
             color: white;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         /* 주간 뷰 스타일 */
@@ -513,91 +548,95 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            padding: 12px;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
             background: #f9f9f9;
-            border: 1px solid #ddd;
+            border: 1px solid #e0e0e0;
         }
 
         .weekly-nav-btn {
-            padding: 6px 12px;
+            padding: 6px 14px;
             border: 1px solid #ccc;
             background: white;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
         }
 
         .weekly-nav-btn:hover {
-            background: #f0f0f0;
+            background: #333;
+            color: white;
+            border-color: #333;
         }
 
         .weekly-title {
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .weekly-title-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .week-date-picker {
             padding: 4px 8px;
             border: 1px solid #ccc;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
         }
 
         .weekly-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
+            gap: 10px;
         }
 
         .weekly-day {
-            border: 1px solid #ddd;
+            border: 1px solid #e0e0e0;
             background: white;
-            min-height: 180px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
         }
 
         .weekly-day-header {
-            padding: 8px;
+            padding: 10px;
             background: #f5f5f5;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e0e0e0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .weekly-day-name {
-            font-size: 11px;
-            font-weight: bold;
+            font-size: 12px;
+            font-weight: 600;
             color: #666;
         }
 
         .weekly-day-num {
-            font-size: 14px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 700;
         }
 
         .weekly-day-content {
-            padding: 8px;
+            padding: 10px;
             flex: 1;
             overflow-y: auto;
         }
 
         .weekly-todo-item {
-            padding: 6px;
-            margin-bottom: 5px;
+            padding: 8px;
+            margin-bottom: 6px;
             background: #f5f5f5;
             font-size: 13px;
             display: flex;
-            gap: 6px;
+            gap: 8px;
             align-items: flex-start;
         }
 
@@ -610,16 +649,16 @@
         }
 
         .weekly-todo-status {
-            font-weight: bold;
+            font-weight: 700;
             flex-shrink: 0;
         }
 
         .weekly-todo-item.completed .weekly-todo-status {
-            color: #cc0000;
+            color: #ef4444;
         }
 
         .weekly-todo-item.incomplete .weekly-todo-status {
-            color: #333;
+            color: #000;
         }
 
         .weekly-todo-text {
@@ -635,7 +674,7 @@
         .weekly-empty {
             color: #ccc;
             text-align: center;
-            padding: 15px;
+            padding: 20px;
         }
 
         .weekly-has-data {
@@ -644,16 +683,16 @@
 
         /* TEXT 주간 뷰 스타일 */
         .text-weekly-item {
-            padding: 8px;
-            margin-bottom: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
             background: #f5f5f5;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .text-weekly-title {
-            font-weight: bold;
-            margin-bottom: 3px;
-            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 14px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -661,7 +700,7 @@
 
         .text-weekly-text {
             color: #666;
-            line-height: 1.3;
+            line-height: 1.4;
             word-break: break-word;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -679,7 +718,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.4);
             align-items: center;
             justify-content: center;
         }
@@ -696,19 +735,22 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            border: 1px solid #ccc;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            padding: 16px 20px;
             border-bottom: 1px solid #ddd;
+            background: #fafafa;
         }
 
         .modal-title {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
         }
 
         .modal-close {
@@ -716,7 +758,7 @@
             border: none;
             font-size: 28px;
             cursor: pointer;
-            color: #666;
+            color: #999;
             line-height: 1;
             padding: 0;
             width: 28px;
@@ -727,149 +769,337 @@
             color: #333;
         }
 
-        /* 댓글 버튼 */
-        .comment-btn {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            background: white;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .comment-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .category-card.active .comment-btn {
-            background: #ddd;
-            border-color: #999;
-        }
-
-        .category-card.active .comment-btn:hover {
-            background: #ccc;
-        }
-
         /* 댓글 모달 */
-        .comments-container {
-            padding: 20px;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-
-        .comment-item {
-            border-bottom: 1px solid #ddd;
-            padding: 12px 0;
-        }
-
-        .comment-item:last-child {
-            border-bottom: none;
-        }
-
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .comment-author {
-            font-size: 12px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .comment-date {
-            font-size: 11px;
-            color: #999;
+        .comment-modal-content {
+            max-width: 650px;
         }
 
         .comment-content {
-            font-size: 13px;
-            color: #333;
-            margin-bottom: 6px;
-            line-height: 1.4;
+            max-height: 450px;
+            overflow-y: auto;
+            padding: 16px;
         }
 
-        .comment-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .comment-action-btn {
-            padding: 4px 8px;
-            border: 1px solid #ccc;
-            background: white;
-            cursor: pointer;
-            font-size: 11px;
-        }
-
-        .comment-action-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .comment-action-btn.delete {
-            color: #cc0000;
-            border-color: #cc0000;
-        }
-
-        .comment-action-btn.delete:hover {
-            background: #ffe0e0;
-        }
-
-        .reply-item {
-            padding-left: 15px;
-            border-left: 2px solid #ddd;
-        }
-
-        .comment-form {
-            padding: 15px 20px;
+        .comment-input-area {
+            padding: 12px 16px;
             border-top: 1px solid #ddd;
             background: #fafafa;
         }
 
-        .comment-input {
+        .comment-textarea {
             width: 100%;
             padding: 8px;
-            border: 1px solid #ccc;
-            font-size: 13px;
+            border: 1px solid #ddd;
             resize: vertical;
-            min-height: 60px;
-            margin-bottom: 10px;
+            min-height: 50px;
+            font-size: 12px;
+            font-family: Arial, sans-serif;
         }
 
-        .comment-submit {
-            padding: 6px 12px;
-            border: 1px solid #999;
-            background: #e0e0e0;
+        .comment-textarea:focus {
+            outline: none;
+            border-color: #999;
+        }
+
+        .comment-submit-area {
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .comment-submit-btn {
+            padding: 6px 16px;
+            background: #333;
+            color: white;
+            border: none;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        .comment-submit:hover {
-            background: #d0d0d0;
+        .comment-submit-btn:hover {
+            background: #000;
         }
 
-        .comment-cancel {
-            padding: 6px 12px;
+        /* ========== NOTIFICATION SYSTEM ========== */
+
+        /* 알림 벨 아이콘 */
+        .notification-bell {
+            position: relative;
+            padding: 6px 14px;
             border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 13px;
-            margin-left: 8px;
+            font-size: 16px;
+            line-height: 1;
         }
 
-        .comment-cancel:hover {
+        .notification-bell:hover {
             background: #f0f0f0;
+            border-color: #999;
         }
 
-        .no-comments {
+        /* 읽지 않은 알림 배지 */
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ff0000;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
             text-align: center;
-            padding: 40px 20px;
-            color: #999;
+        }
+
+        /* 토스트 알림 컨테이너 */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        /* 토스트 알림 */
+        .toast-notification {
+            background: white;
+            border: 1px solid #ddd;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideInRight 0.3s ease-out;
+            cursor: pointer;
+        }
+
+        .toast-notification.comment {
+            border-left-color: #2196F3;
+        }
+
+        .toast-notification.reply {
+            border-left-color: #9C27B0;
+        }
+
+        .toast-notification.like {
+            border-left-color: #ff4081;
+        }
+
+        .toast-notification.friend_request {
+            border-left-color: #10b981;
+        }
+
+        .toast-notification.friend_accept {
+            border-left-color: #3b82f6;
+        }
+
+        .toast-notification.friend_reject {
+            border-left-color: #ef4444;
+        }
+
+        .toast-notification:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-title {
             font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .toast-message {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* 알림 목록 모달 */
+        .notification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .notification-modal.active {
+            display: flex;
+        }
+
+        .notification-modal-content {
+            background: white;
+            width: 90%;
+            max-width: 550px;
+            max-height: 75vh;
+            overflow-y: auto;
+            padding: 0;
+            position: relative;
+            border: 1px solid #ccc;
+        }
+
+        .notification-modal-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: #fafafa;
+            z-index: 1;
+        }
+
+        .notification-modal-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .notification-modal-close {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 26px;
+            height: 26px;
+            line-height: 1;
+        }
+
+        .notification-modal-close:hover {
+            color: #333;
+        }
+
+        .mark-all-read-btn {
+            padding: 4px 10px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .mark-all-read-btn:hover {
+            background: #000;
+        }
+
+        .mark-all-read-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .notification-list {
+            padding: 0;
+        }
+
+        .notification-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: #f5f5f5;
+        }
+
+        .notification-item.unread {
+            background: #f0f8ff;
+        }
+
+        .notification-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .notification-item-type {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .notification-item-type.comment {
+            background: #e8f4fd;
+            color: #1976d2;
+        }
+
+        .notification-item-type.reply {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .notification-item-type.like {
+            background: #fdeef3;
+            color: #c2185b;
+        }
+
+        .notification-item-type.friend_request {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .notification-item-type.friend_accept {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .notification-item-type.friend_reject {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .notification-item-time {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .notification-item-content {
+            font-size: 12px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .notification-item-sender {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .notification-empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -881,21 +1111,21 @@
             <div style="text-align: left; margin-bottom: 10px;">
                 <a href="#" onclick="showMainSection(); return false;" style="color: #666; text-decoration: none; font-size: 13px;" data-lang-ko="← 홈으로" data-lang-en="← Back to Home">← Back to Home</a>
             </div>
-            <h2 style="text-align: center; margin-bottom: 25px; font-size: 18px; font-weight: normal;" data-lang-ko="로그인" data-lang-en="Sign In">Sign In</h2>
-            <div id="loginError" style="color: #cc0000; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;" data-lang-ko="로그인" data-lang-en="Sign In">Sign In</h2>
+            <div id="loginError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="loginForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;" data-lang-ko="이메일:" data-lang-en="Email:">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;" data-lang-ko="이메일:" data-lang-en="Email:">Email:</td>
+                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;" data-lang-ko="비밀번호:" data-lang-en="Password:">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;" data-lang-ko="비밀번호:" data-lang-en="Password:">Password:</td>
+                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;" data-lang-ko="로그인" data-lang-en="Sign In">Sign In</button>
+                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;" data-lang-ko="로그인" data-lang-en="Sign In">Sign In</button>
                         </td>
                     </tr>
                 </table>
@@ -914,46 +1144,46 @@
             <div style="text-align: left; margin-bottom: 10px;">
                 <a href="#" onclick="showMainSection(); return false;" style="color: #666; text-decoration: none; font-size: 13px;" data-lang-ko="← 홈으로" data-lang-en="← Back to Home">← Back to Home</a>
             </div>
-            <h2 style="text-align: center; margin-bottom: 25px; font-size: 18px; font-weight: normal;" data-lang-ko="회원가입" data-lang-en="Sign Up">Sign Up</h2>
-            <div id="signupError" style="color: #cc0000; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;" data-lang-ko="회원가입" data-lang-en="Sign Up">Sign Up</h2>
+            <div id="signupError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="signupForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;" data-lang-ko="사용자명:" data-lang-en="Username:">Username:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupUsername" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;" data-lang-ko="사용자명:" data-lang-en="Username:">Username:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupUsername" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;" data-lang-ko="이메일:" data-lang-en="Email:">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="signupEmail" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;" data-lang-ko="이메일:" data-lang-en="Email:">Email:</td>
+                        <td style="padding: 5px 0;"><input type="email" id="signupEmail" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;" data-lang-ko="비밀번호:" data-lang-en="Password:">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="signupPassword" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;" data-lang-ko="비밀번호:" data-lang-en="Password:">Password:</td>
+                        <td style="padding: 5px 0;"><input type="password" id="signupPassword" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;" data-lang-ko="직함:" data-lang-en="Title:">Title:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupTitle" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;" data-lang-ko="직함:" data-lang-en="Title:">Title:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupTitle" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;" data-lang-ko="설명:" data-lang-en="Description:">Description:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;" data-lang-ko="설명:" data-lang-en="Description:">Description:</td>
+                        <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;" data-lang-ko="생년:" data-lang-en="Birth Year:">Birth Year:</td>
-                        <td style="padding: 5px 0;"><input type="number" id="signupBirthYear" placeholder="YYYY" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;" data-lang-ko="생년:" data-lang-en="Birth Year:">Birth Year:</td>
+                        <td style="padding: 5px 0;"><input type="number" id="signupBirthYear" placeholder="YYYY" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;" data-lang-ko="생월:" data-lang-en="Birth Month:">Birth Month:</td>
-                        <td style="padding: 5px 0;"><input type="number" id="signupBirthMonth" placeholder="MM" min="1" max="12" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;" data-lang-ko="생월:" data-lang-en="Birth Month:">Birth Month:</td>
+                        <td style="padding: 5px 0;"><input type="number" id="signupBirthMonth" placeholder="MM" min="1" max="12" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;" data-lang-ko="생일:" data-lang-en="Birth Day:">Birth Day:</td>
-                        <td style="padding: 5px 0;"><input type="number" id="signupBirthDay" placeholder="DD" min="1" max="31" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;" data-lang-ko="생일:" data-lang-en="Birth Day:">Birth Day:</td>
+                        <td style="padding: 5px 0;"><input type="number" id="signupBirthDay" placeholder="DD" min="1" max="31" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px; margin-right: 10px;" data-lang-ko="회원가입" data-lang-en="Sign Up">Sign Up</button>
-                            <button type="button" id="cancelSignup" style="padding: 8px 24px; border: 1px solid #999; background: #fff; cursor: pointer; font-size: 13px;" data-lang-ko="취소" data-lang-en="Cancel">Cancel</button>
+                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;" data-lang-ko="회원가입" data-lang-en="Sign Up">Sign Up</button>
+                            <button type="button" id="cancelSignup" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;" data-lang-ko="취소" data-lang-en="Cancel">Cancel</button>
                         </td>
                     </tr>
                 </table>
@@ -999,23 +1229,22 @@
 </div>
 
 <!-- 댓글 모달 -->
-<div id="commentsModal" class="modal">
-    <div class="modal-content" style="max-width: 700px; width: 90%;">
+<div id="commentModal" class="modal">
+    <div class="modal-content comment-modal-content">
         <div class="modal-header">
-            <div>
-                <div class="modal-title" data-lang-ko="댓글" data-lang-en="Comments">댓글</div>
-                <div id="categoryInfo" style="font-size: 12px; color: #666; margin-top: 4px;"></div>
-            </div>
+            <div class="modal-title" id="commentModalTitle">댓글</div>
             <button class="modal-close" onclick="closeCommentModal()">×</button>
         </div>
-        <div class="comments-container" id="commentsContainer">
-            <div class="no-comments" data-lang-ko="댓글이 없습니다." data-lang-en="No comments yet.">댓글이 없습니다.</div>
+        <div id="commentContent" class="comment-content">
+            <div class="empty-state" data-lang-ko="댓글을 불러오는 중..." data-lang-en="Loading comments...">댓글을 불러오는 중...</div>
         </div>
-        <div class="comment-form">
-            <textarea id="commentInput" class="comment-input" placeholder="댓글을 입력하세요..." data-lang-ko-placeholder="댓글을 입력하세요..." data-lang-en-placeholder="Write a comment..."></textarea>
-            <button class="comment-submit" onclick="submitComment()">
-                <span data-lang-ko="작성" data-lang-en="Submit">작성</span>
-            </button>
+        <div class="comment-input-area">
+            <textarea id="commentInput" class="comment-textarea" placeholder="댓글을 입력하세요..."></textarea>
+            <div class="comment-submit-area">
+                <button onclick="submitComment()" class="comment-submit-btn">
+                    <span data-lang-ko="등록" data-lang-en="Submit">등록</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -1028,9 +1257,6 @@
     let currentView = 'table';
     let currentWeekStart = null;
     let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
-    let currentCommentCategoryId = null;
-    let currentEditingCommentId = null;
-    let currentReplyToCommentId = null;
 
     // 번역 데이터
     const translations = {
@@ -1071,13 +1297,6 @@
             const en = element.getAttribute('data-lang-en');
             element.textContent = currentLang === 'ko' ? ko : en;
         });
-
-        // placeholder 업데이트
-        document.querySelectorAll('[data-lang-ko-placeholder]').forEach(element => {
-            const ko = element.getAttribute('data-lang-ko-placeholder');
-            const en = element.getAttribute('data-lang-en-placeholder');
-            element.placeholder = currentLang === 'ko' ? ko : en;
-        });
     }
 
 
@@ -1102,23 +1321,34 @@
                 updateAuthUI(false);
             }
         } catch (error) {
-            console.error('인증 확인 실패:', error);
             updateAuthUI(false);
         }
     }
 
     // 인증 UI 업데이트
-    function updateAuthUI(isLoggedIn) {
+    async function updateAuthUI(isLoggedIn) {
         const topActions = document.getElementById('topActions');
         if (isLoggedIn) {
             topActions.innerHTML = `
                 <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
                 <a href="manage.html" class="btn" data-lang-ko="내 관리" data-lang-en="My Page">내 관리</a>
-                <a href="insert.html" class="btn" data-lang-ko="카테고리 관리" data-lang-en="Manage Categories">카테고리 관리</a>
+                <a href="insert.html" class="btn" data-lang-ko="데이터 입력" data-lang-en="Insert Data">데이터 입력</a>
+                <a href="friend.html" class="btn" data-lang-ko="친구 관리" data-lang-en="Friends">친구 관리</a>
+                <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()">
+                    🔔
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                </button>
                 <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
             `;
             document.getElementById('logoutBtn').addEventListener('click', logout);
             applyLanguage();
+
+            // DOM 업데이트 대기 (중요!)
+            await new Promise(resolve => setTimeout(resolve, 0));
+
+            // ⭐ 중요: 순서 변경 - 먼저 알림 로드, 그 다음 SSE 연결
+            await loadUnreadNotifications();
+            connectSSE();
         } else {
             topActions.innerHTML = `
                 <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
@@ -1158,7 +1388,6 @@
                 showError('loginError', '로그인에 실패했습니다.');
             }
         } catch (error) {
-            console.error('로그인 오류:', error);
             showError('loginError', '로그인 중 오류가 발생했습니다.');
         }
     }
@@ -1195,7 +1424,6 @@
                 showError('signupError', '회원가입에 실패했습니다.');
             }
         } catch (error) {
-            console.error('회원가입 오류:', error);
             showError('signupError', '회원가입 중 오류가 발생했습니다.');
         }
     }
@@ -1210,7 +1438,7 @@
             currentUser = null;
             location.reload();
         } catch (error) {
-            console.error('로그아웃 오류:', error);
+            // 에러 무시
         }
     }
 
@@ -1223,7 +1451,6 @@
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('공개 카테고리 응답:', data);
 
                 // 새로운 구조: [{email, categories: [...]}, ...]
                 // 모든 카테고리를 평탄화하고 email 정보 추가
@@ -1238,21 +1465,14 @@
                     });
                 });
 
-                console.log('평탄화된 카테고리:', allCategories);
                 displayCategories(allCategories);
             } else {
-                const errorText = await response.text();
-                console.error('카테고리 로드 실패:', response.status, errorText);
                 document.getElementById('categoriesGrid').innerHTML =
                     '<div class="empty-state">공개 카테고리를 불러올 수 없습니다.</div>';
             }
         } catch (error) {
-            console.error('카테고리 로드 오류:', error);
-            const errorMsg = currentLang === 'ko'
-                ? '서버에 연결할 수 없습니다. 백엔드 서버(localhost:8080)가 실행 중인지 확인하세요.'
-                : 'Cannot connect to server. Please check if backend server (localhost:8080) is running.';
             document.getElementById('categoriesGrid').innerHTML =
-                `<div class="empty-state">${errorMsg}</div>`;
+                '<div class="empty-state">오류가 발생했습니다.</div>';
         }
     }
 
@@ -1267,26 +1487,34 @@
         }
 
         grid.innerHTML = categories.map(category => {
-            const id = category.categoryId;
+            const id = category.categoryId || category.id; // fallback 추가
             const title = category.title;
             const recordType = category.recordType;
             const email = category.email;
 
+            // id가 없으면 건너뛰기
+            if (!id) {
+                return '';
+            }
+
             return `
-                <div class="category-card" data-id="${id}" data-type="${recordType}" data-title="${title}" data-email="${email}">
+                <div class="category-card" data-id="${id}" data-type="${recordType}" data-author-email="${email}">
                     <div class="category-title">${title}</div>
                     <div class="category-type">${recordType}</div>
                     <div class="category-meta"><span data-lang-ko="작성자" data-lang-en="Author">작성자</span>: ${email}</div>
-                    <div class="like-section">
-                        <button class="like-btn" data-category-id="${id}" onclick="toggleLike(event, '${id}')">
-                            <span class="like-icon">♡</span>
-                            <span data-lang-ko="좋아요" data-lang-en="Like">좋아요</span>
+                    <div class="category-actions">
+                        <button class="category-action-btn like-btn" data-category-id="${id}" onclick="toggleLike(event, '${id}')" style="min-width: 60px;">
+                            <span class="like-icon" style="display: inline-block;">♡</span>
+                            <span class="like-count" id="like-count-${id}" style="display: inline-block;">0</span>
                         </button>
-                        <span class="like-count" data-category-id="${id}">0</span>
-                        <button class="comment-btn" onclick="openCommentModal(event, '${id}')">
-                            <span>💬</span>
+                        <button class="category-action-btn comment-btn" onclick="openCommentModal(event, '${id}', '${title.replace(/'/g, "\\'")}')">
                             <span data-lang-ko="댓글" data-lang-en="Comments">댓글</span>
                         </button>
+                        ${currentUser && currentUser.email !== email ? `
+                        <button class="category-action-btn" onclick="sendFriendRequest(event, '${email}')" style="background: #f0f8ff; border-color: #3b82f6; flex: 0 1 auto;">
+                            <span data-lang-ko="친구 요청" data-lang-en="Add Friend">친구 요청</span>
+                        </button>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -1295,19 +1523,20 @@
         // 언어 적용
         applyLanguage();
 
-        // 좋아요 개수 로드
+        // 좋아요 개수 및 상태 로드
         categories.forEach(category => {
-            loadLikeCount(category.categoryId);
+            const categoryId = category.categoryId || category.id;
+            if (categoryId) {
+                loadLikeCount(categoryId);
+                if (currentUser) {
+                    loadLikeStatus(categoryId);
+                }
+            }
         });
 
         // 카테고리 클릭 이벤트
         grid.querySelectorAll('.category-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                // 좋아요 버튼이나 댓글 버튼 클릭 시 카테고리 선택 방지
-                if (e.target.closest('.like-btn') || e.target.closest('.comment-btn')) {
-                    return;
-                }
-
+            card.addEventListener('click', () => {
                 grid.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
                 card.classList.add('active');
 
@@ -1317,7 +1546,6 @@
                     title: card.querySelector('.category-title').textContent
                 };
 
-                console.log('선택된 카테고리:', currentCategory);
                 openRecordsModal(currentCategory);
             });
         });
@@ -1377,8 +1605,6 @@
                     break;
             }
 
-            console.log('레코드 요청:', endpoint);
-
             const response = await fetch(endpoint, { credentials: 'include' });
 
             if (response.ok) {
@@ -1386,10 +1612,8 @@
 
                 if (contentType && contentType.includes('application/json')) {
                     allRecords = await response.json();
-                    console.log('레코드 수:', allRecords.length);
                     displayRecords(allRecords, category);
                 } else {
-                    console.error('JSON이 아닌 응답 (인증 필요?)');
                     recordsContent.innerHTML = `
                         <div class="empty-state">
                             <p>이 카테고리의 데이터를 조회할 권한이 없습니다.</p>
@@ -1400,7 +1624,6 @@
                     `;
                 }
             } else {
-                console.error('레코드 로드 실패:', response.status);
                 recordsContent.innerHTML = `
                     <div class="empty-state">
                         <p>데이터를 불러올 수 없습니다.</p>
@@ -1409,7 +1632,6 @@
                 `;
             }
         } catch (error) {
-            console.error('레코드 로드 오류:', error);
             recordsContent.innerHTML = `<div class="empty-state">오류: ${error.message}</div>`;
         }
     }
@@ -2351,378 +2573,800 @@
             closeRecordsModal();
         }
     });
+</script>
 
-    // ==================== 좋아요 기능 ====================
+<!-- 토스트 알림 컨테이너 -->
+<div class="toast-container" id="toastContainer"></div>
 
-    // 좋아요 개수 로드
-    async function loadLikeCount(categoryId) {
+<!-- 알림 목록 모달 -->
+<div class="notification-modal" id="notificationModal">
+    <div class="notification-modal-content">
+        <div class="notification-modal-header">
+            <div class="notification-modal-title" data-lang-ko="알림" data-lang-en="Notifications">알림</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="mark-all-read-btn" onclick="markAllAsRead()" data-lang-ko="모두 읽음" data-lang-en="Mark all as read">모두 읽음</button>
+                <button class="notification-modal-close" onclick="toggleNotificationModal()">×</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <div class="notification-empty" data-lang-ko="알림이 없습니다" data-lang-en="No notifications">알림이 없습니다</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== NOTIFICATION SYSTEM ==========
+
+    let eventSource = null;
+    let notifications = [];
+    let unreadCount = 0;
+    let isInitialized = false; // 초기화 완료 플래그
+
+    // 페이지 로드 시 읽지 않은 알림 가져오기
+    async function loadUnreadNotifications() {
+        console.log('>>> loadUnreadNotifications 시작');
+        isInitialized = false; // 초기화 시작
+
         try {
-            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
+            const response = await fetch(`${API_BASE}/notification/unread`, {
                 credentials: 'include'
             });
 
             if (response.ok) {
-                const count = await response.json();
-                const countElement = document.querySelector(`.like-count[data-category-id="${categoryId}"]`);
-                if (countElement) {
-                    countElement.textContent = count;
-                }
-            } else {
-                // 서버 응답 에러 (404, 500 등)
-                console.warn(`좋아요 개수 로드 실패 (${response.status}):`, categoryId);
+                const data = await response.json();
+                notifications = data || [];
+                console.log('읽지 않은 알림 로드:', notifications.length, '개');
+                console.log('알림 데이터:', notifications);
+
+                // 읽지 않은 개수 가져오기
+                await loadUnreadCount();
+
+                isInitialized = true; // 초기화 완료
+                console.log('>>> loadUnreadNotifications 완료 - unreadCount:', unreadCount);
             }
         } catch (error) {
-            // 네트워크 에러 (서버 미실행, CORS 등)
-            console.warn('좋아요 개수 로드 불가 (서버 연결 실패):', categoryId);
-            // 에러가 발생해도 페이지는 정상 작동하도록 무시
+            isInitialized = true; // 오류여도 초기화 완료로 표시
         }
-
-        // 좋아요 상태 확인
-        checkLikeStatus(categoryId);
     }
 
-    // 좋아요 상태 확인 (로컬스토리지)
-    function checkLikeStatus(categoryId) {
-        const likedCategories = JSON.parse(localStorage.getItem('likedCategories') || '[]');
-        const liked = likedCategories.includes(categoryId);
+    // 읽지 않은 알림 개수 가져오기
+    async function loadUnreadCount() {
+        console.log('>>> loadUnreadCount 시작');
+        try {
+            const response = await fetch(`${API_BASE}/notification/unread/count`, {
+                credentials: 'include'
+            });
 
-        const likeBtn = document.querySelector(`.like-btn[data-category-id="${categoryId}"]`);
-        if (likeBtn) {
-            if (liked) {
-                likeBtn.classList.add('liked');
-                likeBtn.querySelector('.like-icon').textContent = '♥';
+            console.log('loadUnreadCount response status:', response.status);
+
+            if (response.ok) {
+                const count = await response.json();
+                console.log('API에서 받은 count:', count, '(타입:', typeof count, ')');
+
+                // 객체 또는 숫자 처리 (API가 {count: 4} 형태로 반환)
+                let actualCount = 0;
+                if (typeof count === 'object' && count !== null && 'count' in count) {
+                    actualCount = count.count;
+                    console.log('객체에서 count 추출:', actualCount);
+                } else if (typeof count === 'number') {
+                    actualCount = count;
+                }
+
+                // 강력한 타입 체크 - 숫자로 변환
+                unreadCount = Number(actualCount) || 0;
+                console.log('설정된 unreadCount:', unreadCount, '(타입:', typeof unreadCount, ')');
+
+                updateNotificationBadge();
+                console.log('>>> loadUnreadCount 완료');
             } else {
-                likeBtn.classList.remove('liked');
-                likeBtn.querySelector('.like-icon').textContent = '♡';
+                unreadCount = 0;
             }
+        } catch (error) {
+            unreadCount = 0; // 오류 시 0으로 초기화
         }
     }
+
+    // 알림을 읽음 처리
+    async function markNotificationsAsRead(notificationIds) {
+        try {
+            const response = await fetch(`${API_BASE}/notification/unread`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    notificationIds: notificationIds
+                })
+            });
+
+            if (response.ok) {
+                console.log('알림 읽음 처리 완료:', notificationIds.length);
+                // 읽음 처리 후 개수 업데이트
+                await loadUnreadCount();
+            }
+        } catch (error) {
+            console.error('알림 읽음 처리 오류:', error);
+        }
+    }
+
+    // SSE 연결
+    function connectSSE() {
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        eventSource = new EventSource(`${API_BASE}/sse/subscribe`, {
+            withCredentials: true
+        });
+
+        eventSource.addEventListener('connected', (event) => {
+            console.log('SSE 연결됨:', event.data);
+        });
+
+        eventSource.addEventListener('ping', (event) => {
+            console.log('SSE ping:', event.data);
+        });
+
+        eventSource.addEventListener('notification', (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                handleNotification(data.body);
+            } catch (error) {
+                console.error('알림 파싱 오류:', error);
+            }
+        });
+
+        eventSource.onerror = (error) => {
+            console.error('SSE 오류:', error);
+            eventSource.close();
+            // 5초 후 재연결
+            setTimeout(connectSSE, 5000);
+        };
+    }
+
+    // 알림 처리
+    function handleNotification(notification) {
+        // 알림 저장 (맨 앞에 추가)
+        notifications.unshift(notification);
+
+        // NaN 방지 - 현재 값이 숫자가 아니면 0으로 초기화
+        if (isNaN(unreadCount)) {
+            console.warn('unreadCount가 NaN입니다! 0으로 초기화합니다.');
+            unreadCount = 0;
+        }
+
+        unreadCount++;
+
+        console.log('새 알림 수신:', notification.type, '/ 현재 읽지 않은 알림:', unreadCount, '(타입:', typeof unreadCount, ')');
+
+        // 배지 업데이트
+        updateNotificationBadge();
+
+        // 토스트 표시
+        showToast(notification);
+
+        // 알림 목록 업데이트 (모달이 열려있으면)
+        if (document.getElementById('notificationModal').classList.contains('active')) {
+            renderNotificationList();
+            updateMarkAllReadButton();
+        }
+    }
+
+    // 배지 업데이트
+    function updateNotificationBadge() {
+        const badge = document.getElementById('notificationBadge');
+        const bell = document.getElementById('notificationBell');
+
+        console.log('=== 배지 업데이트 디버깅 ===');
+        console.log('unreadCount:', unreadCount, '(타입:', typeof unreadCount, ', NaN?', isNaN(unreadCount), ')');
+        console.log('badge 요소:', badge);
+        console.log('bell 요소:', bell);
+
+        if (!badge) {
+            console.error('배지 요소를 찾을 수 없습니다!');
+            return;
+        }
+
+        // NaN 체크
+        if (isNaN(unreadCount)) {
+            console.error('unreadCount가 NaN입니다! 0으로 초기화합니다.');
+            unreadCount = 0;
+        }
+
+        if (unreadCount > 0) {
+            const displayCount = unreadCount > 99 ? '99+' : unreadCount;
+            badge.textContent = displayCount;
+            badge.style.display = 'block';
+            console.log('배지 표시:', displayCount);
+        } else {
+            badge.style.display = 'none';
+            console.log('배지 숨김');
+        }
+    }
+
+    // 토스트 알림 표시
+    function showToast(notification) {
+        const container = document.getElementById('toastContainer');
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${notification.type.toLowerCase()}`;
+
+        // 타입별 제목
+        let title = '';
+        if (notification.type === 'COMMENT') {
+            title = currentLang === 'ko' ? '새 댓글' : 'New Comment';
+        } else if (notification.type === 'REPLY') {
+            title = currentLang === 'ko' ? '새 대댓글' : 'New Reply';
+        } else if (notification.type === 'LIKE') {
+            title = currentLang === 'ko' ? '새 좋아요' : 'New Like';
+        } else if (notification.type === 'FRIEND_REQUEST') {
+            title = currentLang === 'ko' ? '친구 요청' : 'Friend Request';
+        } else if (notification.type === 'FRIEND_ACCEPT') {
+            title = currentLang === 'ko' ? '친구 수락' : 'Friend Accepted';
+        } else if (notification.type === 'FRIEND_REJECT') {
+            title = currentLang === 'ko' ? '친구 거절' : 'Friend Rejected';
+        }
+
+        const categoryTitle = notification.data.categoryTitle || '';
+        const categoryPrefix = categoryTitle ? `[${categoryTitle}] ` : '';
+
+        // 타입별 메시지
+        let message = '';
+        if (notification.type === 'COMMENT') {
+            message = `${categoryPrefix}${notification.data.senderEmail}: ${notification.data.comment}`;
+        } else if (notification.type === 'REPLY') {
+            const myComment = notification.data.myComment || '';
+            const myCommentPreview = myComment.length > 20 ? myComment.substring(0, 20) + '...' : myComment;
+            message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied'}: "${myCommentPreview}" → ${notification.data.comment}`;
+        } else if (notification.type === 'LIKE') {
+            message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+        } else if (notification.type === 'FRIEND_REQUEST') {
+            const requesterEmail = notification.data.requesterEmail || notification.senderEmail || '';
+            message = currentLang === 'ko'
+                ? `${requesterEmail}님이 친구 요청을 보냈습니다`
+                : `${requesterEmail} sent you a friend request`;
+        } else if (notification.type === 'FRIEND_ACCEPT') {
+            const senderName = notification.data.senderName || notification.data.senderEmail || '';
+            message = currentLang === 'ko'
+                ? `${senderName}님이 친구 요청을 수락했습니다`
+                : `${senderName} accepted your friend request`;
+        } else if (notification.type === 'FRIEND_REJECT') {
+            const senderName = notification.data.senderName || notification.data.senderEmail || '';
+            message = currentLang === 'ko'
+                ? `${senderName}님이 친구 요청을 거절했습니다`
+                : `${senderName} rejected your friend request`;
+        }
+
+        const time = new Date(notification.createdAt).toLocaleTimeString(currentLang === 'ko' ? 'ko-KR' : 'en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        toast.innerHTML = `
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+            <div class="toast-time">${time}</div>
+        `;
+
+        toast.onclick = () => {
+            toggleNotificationModal();
+            toast.remove();
+        };
+
+        container.appendChild(toast);
+
+        // 5초 후 자동 제거
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(400px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
+    // 알림 모달 토글
+    function toggleNotificationModal() {
+        const modal = document.getElementById('notificationModal');
+        modal.classList.toggle('active');
+
+        if (modal.classList.contains('active')) {
+            renderNotificationList();
+            updateMarkAllReadButton();
+        }
+    }
+
+    // 모두 읽음 처리
+    async function markAllAsRead() {
+        if (notifications.length === 0) return;
+
+        const btn = document.querySelector('.mark-all-read-btn');
+        btn.disabled = true;
+        btn.textContent = currentLang === 'ko' ? '처리 중...' : 'Processing...';
+
+        try {
+            // 읽지 않은 알림 ID 수집
+            const unreadIds = notifications
+                .filter(n => n.id)
+                .map(n => n.id);
+
+            if (unreadIds.length > 0) {
+                // 알림 읽음 처리
+                await markNotificationsAsRead(unreadIds);
+
+                // 알림 배열 비우기 (중요!)
+                notifications = [];
+
+                // UI 업데이트
+                unreadCount = 0;
+                updateNotificationBadge();
+
+                // 버튼 업데이트
+                updateMarkAllReadButton();
+
+                // 성공 메시지
+                console.log('모든 알림을 읽음 처리했습니다');
+
+                // 모달 닫기
+                toggleNotificationModal();
+            }
+        } catch (error) {
+            alert(currentLang === 'ko' ? '알림 처리에 실패했습니다' : 'Failed to mark as read');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = currentLang === 'ko' ? '모두 읽음' : 'Mark all as read';
+        }
+    }
+
+    // 모두 읽음 버튼 상태 업데이트
+    function updateMarkAllReadButton() {
+        const btn = document.querySelector('.mark-all-read-btn');
+        if (btn) {
+            const hasUnread = notifications.some(n => n.id);
+            btn.disabled = !hasUnread || notifications.length === 0;
+        }
+    }
+
+    // 알림 목록 렌더링
+    function renderNotificationList() {
+        const listContainer = document.getElementById('notificationList');
+
+        if (notifications.length === 0) {
+            const emptyText = currentLang === 'ko' ? '알림이 없습니다' : 'No notifications';
+            listContainer.innerHTML = `<div class="notification-empty">${emptyText}</div>`;
+            return;
+        }
+
+        let html = '';
+        notifications.forEach((notif, index) => {
+            // 타입별 텍스트
+            let typeText = '';
+            if (notif.type === 'COMMENT') {
+                typeText = currentLang === 'ko' ? '댓글' : 'Comment';
+            } else if (notif.type === 'REPLY') {
+                typeText = currentLang === 'ko' ? '대댓글' : 'Reply';
+            } else if (notif.type === 'LIKE') {
+                typeText = currentLang === 'ko' ? '좋아요' : 'Like';
+            } else if (notif.type === 'FRIEND_REQUEST') {
+                typeText = currentLang === 'ko' ? '친구 요청' : 'Friend Request';
+            } else if (notif.type === 'FRIEND_ACCEPT') {
+                typeText = currentLang === 'ko' ? '수락됨' : 'Accepted';
+            } else if (notif.type === 'FRIEND_REJECT') {
+                typeText = currentLang === 'ko' ? '거절됨' : 'Rejected';
+            }
+
+            const categoryTitle = notif.data.categoryTitle || '';
+            const categoryBadge = categoryTitle
+                ? `<span style="background: #e8e8e8; padding: 2px 6px; font-size: 10px; font-weight: 600; color: #666; margin-right: 4px; border-radius: 2px;">${categoryTitle}</span>`
+                : '';
+
+            // 타입별 컨텐츠
+            let content = '';
+            if (notif.type === 'COMMENT') {
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>: ${notif.data.comment}`;
+            } else if (notif.type === 'REPLY') {
+                const myComment = notif.data.myComment || '';
+                const myCommentPreview = myComment.length > 30 ? myComment.substring(0, 30) + '...' : myComment;
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied to'}: "<span style="color: #666; font-style: italic;">${myCommentPreview}</span>" → ${notif.data.comment}`;
+            } else if (notif.type === 'LIKE') {
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+            } else if (notif.type === 'FRIEND_REQUEST') {
+                const requesterEmail = notif.data.requesterEmail || notif.senderEmail || '';
+                content = `<span class="notification-item-sender">${requesterEmail}</span>${currentLang === 'ko' ? '님이 친구 요청을 보냈습니다' : ' sent you a friend request'}`;
+            } else if (notif.type === 'FRIEND_ACCEPT') {
+                const senderName = notif.data.senderName || notif.data.senderEmail || '';
+                content = `<span class="notification-item-sender">${senderName}</span>${currentLang === 'ko' ? '님이 친구 요청을 수락했습니다' : ' accepted your friend request'}`;
+            } else if (notif.type === 'FRIEND_REJECT') {
+                const senderName = notif.data.senderName || notif.data.senderEmail || '';
+                content = `<span class="notification-item-sender">${senderName}</span>${currentLang === 'ko' ? '님이 친구 요청을 거절했습니다' : ' rejected your friend request'}`;
+            }
+
+            const time = getRelativeTime(new Date(notif.createdAt));
+
+            html += `
+                <div class="notification-item ${index < unreadCount ? 'unread' : ''}">
+                    <div class="notification-item-header">
+                        <span class="notification-item-type ${notif.type.toLowerCase()}">${typeText}</span>
+                        <span class="notification-item-time">${time}</span>
+                    </div>
+                    <div class="notification-item-content">${content}</div>
+                </div>
+            `;
+        });
+
+        listContainer.innerHTML = html;
+    }
+
+    // 상대 시간 계산
+    function getRelativeTime(date) {
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000); // 초 단위
+
+        if (diff < 60) return currentLang === 'ko' ? '방금 전' : 'Just now';
+        if (diff < 3600) return `${Math.floor(diff / 60)}${currentLang === 'ko' ? '분 전' : 'm ago'}`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)}${currentLang === 'ko' ? '시간 전' : 'h ago'}`;
+        return `${Math.floor(diff / 86400)}${currentLang === 'ko' ? '일 전' : 'd ago'}`;
+    }
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('notificationModal').addEventListener('click', (e) => {
+        if (e.target.id === 'notificationModal') {
+            toggleNotificationModal();
+        }
+    });
+
+    // ========== LIKE & COMMENT SYSTEM ==========
+
+    let currentCommentCategoryId = null;
+    let currentCommentCategoryTitle = '';
+    let replyingToCommentId = null;
 
     // 좋아요 토글
     async function toggleLike(event, categoryId) {
         event.stopPropagation();
 
-        const likedCategories = JSON.parse(localStorage.getItem('likedCategories') || '[]');
-        const isLiked = likedCategories.includes(categoryId);
+        // 로그인 체크
+        if (!currentUser) {
+            alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
+            return;
+        }
+
+        const btn = event.currentTarget;
+
+        // 이미 처리 중이면 무시
+        if (btn.disabled) return;
+
+        const isLiked = btn.classList.contains('liked');
+
+        // 버튼 비활성화
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+        btn.style.cursor = 'wait';
 
         try {
             if (isLiked) {
                 // 좋아요 취소
                 const response = await fetch(`${API_BASE}/categories/likes`, {
                     method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
                     body: JSON.stringify({ categoryId })
                 });
 
                 if (response.ok) {
-                    // 로컬스토리지에서 제거
-                    const index = likedCategories.indexOf(categoryId);
-                    likedCategories.splice(index, 1);
-                    localStorage.setItem('likedCategories', JSON.stringify(likedCategories));
-
-                    // UI 업데이트
-                    loadLikeCount(categoryId);
+                    btn.classList.remove('liked');
+                    btn.querySelector('.like-icon').textContent = '♡';
+                    await loadLikeCount(categoryId);
+                } else if (response.status === 401) {
+                    alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
                 } else {
-                    alert('좋아요 취소에 실패했습니다.');
+                    // 에러 발생 시 상태 재로드 (조용히)
+                    console.log('좋아요 취소 실패, 서버 상태로 동기화');
+                    await loadLikeStatus(categoryId);
+                    await loadLikeCount(categoryId);
                 }
             } else {
                 // 좋아요 추가
                 const response = await fetch(`${API_BASE}/categories/likes`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
                     body: JSON.stringify({ categoryId })
                 });
 
                 if (response.ok) {
-                    // 로컬스토리지에 추가
-                    likedCategories.push(categoryId);
-                    localStorage.setItem('likedCategories', JSON.stringify(likedCategories));
-
-                    // UI 업데이트
-                    loadLikeCount(categoryId);
-                } else if (response.status === 401 || response.status === 403) {
-                    alert('좋아요를 누르려면 로그인이 필요합니다.');
+                    btn.classList.add('liked');
+                    btn.querySelector('.like-icon').textContent = '♥';
+                    await loadLikeCount(categoryId);
+                } else if (response.status === 401) {
+                    alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
                 } else {
-                    alert('좋아요에 실패했습니다.');
+                    // 중복 좋아요 등 에러 발생 시 상태 재로드 (조용히)
+                    console.log('좋아요 추가 실패, 서버 상태로 동기화');
+                    await loadLikeStatus(categoryId);
+                    await loadLikeCount(categoryId);
                 }
             }
         } catch (error) {
             console.error('좋아요 토글 오류:', error);
-            alert('네트워크 오류가 발생했습니다.');
+            // 네트워크 에러 등 발생 시 상태 재로드
+            await loadLikeStatus(categoryId);
+            await loadLikeCount(categoryId);
+        } finally {
+            // 버튼 다시 활성화
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
         }
     }
 
-    // ==================== 댓글 기능 ====================
+    // 좋아요 상태 로드 (새 API 사용)
+    async function loadLikeStatus(categoryId) {
+        if (!currentUser) return;
+
+        if (!categoryId) {
+            console.error('loadLikeStatus: categoryId is missing!');
+            return;
+        }
+
+        console.log(`loadLikeStatus 호출: ${categoryId}`);
+
+        try {
+            const response = await fetch(`${API_BASE}/categories/likes/checks/${categoryId}`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(`좋아요 상태 (${categoryId}):`, data.checked);
+
+                const btn = document.querySelector(`[data-category-id="${categoryId}"].like-btn`);
+                console.log(`버튼 찾기 (${categoryId}):`, btn ? '성공' : '실패');
+
+                if (btn) {
+                    const icon = btn.querySelector('.like-icon');
+                    console.log(`아이콘 찾기 (${categoryId}):`, icon ? '성공' : '실패');
+
+                    if (data.checked) {
+                        btn.classList.add('liked');
+                        if (icon) icon.textContent = '♥';
+                    } else {
+                        btn.classList.remove('liked');
+                        if (icon) icon.textContent = '♡';
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('좋아요 상태 로드 오류:', error);
+        }
+    }
+
+    // 좋아요 개수 로드
+    async function loadLikeCount(categoryId) {
+        if (!categoryId) {
+            console.error('loadLikeCount: categoryId is missing!');
+            return;
+        }
+
+        console.log(`loadLikeCount 호출: ${categoryId}`);
+        try {
+            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(`좋아요 개수 응답 (${categoryId}):`, data);
+
+                // 정수 또는 객체 응답 모두 지원
+                const count = typeof data === 'number' ? data : (data.count || 0);
+
+                const countElement = document.getElementById(`like-count-${categoryId}`);
+                if (countElement) {
+                    countElement.textContent = count;
+                    console.log(`좋아요 개수 업데이트 (${categoryId}): ${count}`);
+                }
+            }
+        } catch (error) {
+            console.error('좋아요 개수 로드 오류:', error);
+        }
+    }
 
     // 댓글 모달 열기
-    async function openCommentModal(event, categoryId) {
+    async function openCommentModal(event, categoryId, categoryTitle) {
         event.stopPropagation();
-        currentCommentCategoryId = categoryId;
-        currentEditingCommentId = null;
-        currentReplyToCommentId = null;
 
-        const modal = document.getElementById('commentsModal');
-        modal.classList.add('active');
-
-        // 카테고리 정보 표시
-        const categoryCard = document.querySelector(`.category-card[data-id="${categoryId}"]`);
-        if (categoryCard) {
-            const title = categoryCard.getAttribute('data-title');
-            const type = categoryCard.getAttribute('data-type');
-            const email = categoryCard.getAttribute('data-email');
-
-            const categoryInfo = document.getElementById('categoryInfo');
-            categoryInfo.innerHTML = `
-                <span style="font-weight: bold;">${title}</span>
-                <span style="margin: 0 8px;">|</span>
-                <span style="background: #e5e5e5; padding: 2px 6px; font-size: 10px; border: 1px solid #ddd;">${type}</span>
-                <span style="margin: 0 8px;">|</span>
-                <span>${email}</span>
-            `;
-        }
-
-        // 댓글 입력창 상태 설정
-        const commentInput = document.getElementById('commentInput');
-        commentInput.value = '';
-
+        // 로그인 체크
         if (!currentUser) {
-            // 로그인하지 않은 경우
-            commentInput.placeholder = currentLang === 'ko'
-                ? '댓글을 작성하려면 로그인이 필요합니다.'
-                : 'Please log in to write a comment.';
-            commentInput.disabled = true;
-        } else {
-            // 로그인한 경우
-            commentInput.placeholder = currentLang === 'ko'
-                ? '댓글을 입력하세요...'
-                : 'Write a comment...';
-            commentInput.disabled = false;
+            alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
+            return;
         }
 
-        // 댓글 불러오기
-        await loadComments(categoryId);
+        currentCommentCategoryId = categoryId;
+        currentCommentCategoryTitle = categoryTitle;
+        replyingToCommentId = null;
 
-        // 언어 적용
-        applyLanguage();
+        document.getElementById('commentModalTitle').textContent = `${categoryTitle} - ${currentLang === 'ko' ? '댓글' : 'Comments'}`;
+        document.getElementById('commentModal').classList.add('active');
+        document.getElementById('commentInput').value = '';
+
+        await loadComments();
     }
 
     // 댓글 모달 닫기
     function closeCommentModal() {
-        const modal = document.getElementById('commentsModal');
-        modal.classList.remove('active');
+        document.getElementById('commentModal').classList.remove('active');
         currentCommentCategoryId = null;
-        currentEditingCommentId = null;
-        currentReplyToCommentId = null;
+        replyingToCommentId = null;
     }
 
-    // 댓글 불러오기
-    async function loadComments(categoryId) {
+    // 댓글 목록 로드
+    async function loadComments() {
+        const container = document.getElementById('commentContent');
+
         try {
-            console.log('댓글 불러오기 시작:', categoryId);
-            const response = await fetch(`${API_BASE}/category/comment/${categoryId}`, {
+            const response = await fetch(`${API_BASE}/category/comment/${currentCommentCategoryId}`, {
                 credentials: 'include'
             });
 
             if (response.ok) {
                 const comments = await response.json();
-                console.log('API 응답 댓글:', comments);
-                renderComments(comments);
+
+                if (comments.length === 0) {
+                    const emptyText = currentLang === 'ko' ? '댓글이 없습니다' : 'No comments';
+                    container.innerHTML = `<div class="empty-state">${emptyText}</div>`;
+                } else {
+                    container.innerHTML = renderComments(comments);
+                    applyLanguage();
+                }
             } else {
-                console.error('댓글 불러오기 실패:', response.status);
+                throw new Error('Failed to load comments');
             }
         } catch (error) {
-            console.error('댓글 불러오기 오류:', error);
+            console.error('댓글 로드 오류:', error);
+            const errorText = currentLang === 'ko' ? '댓글을 불러올 수 없습니다' : 'Failed to load comments';
+            container.innerHTML = `<div class="empty-state">${errorText}</div>`;
         }
     }
 
     // 댓글 렌더링
-    function renderComments(comments) {
-        const container = document.getElementById('commentsContainer');
+    function renderComments(comments, depth = 0) {
+        return comments.map(comment => {
+            const indent = depth * 30;
+            const authorBadge = comment.mine ? '<span style="background: #ffd700; color: #000; padding: 2px 6px; font-size: 10px; margin-left: 5px; font-weight: 600;">ME</span>' : '';
+            const updatedBadge = comment.updated ? `<span style="color: #999; font-size: 11px; margin-left: 5px;">(${currentLang === 'ko' ? '수정됨' : 'edited'})</span>` : '';
 
-        console.log('전체 댓글:', comments);
-
-        if (!comments || comments.length === 0) {
-            container.innerHTML = `
-                <div class="no-comments" data-lang-ko="댓글이 없습니다." data-lang-en="No comments yet.">
-                    ${currentLang === 'ko' ? '댓글이 없습니다.' : 'No comments yet.'}
+            let html = `
+                <div style="margin-left: ${indent}px; margin-bottom: 15px; padding: 10px; background: ${comment.mine ? '#fffacd' : '#f9f9f9'}; border-left: 3px solid ${comment.mine ? '#ffd700' : '#ddd'};">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
+                        <strong>${comment.authorEmail}</strong>${authorBadge}${updatedBadge}
+                        <span style="margin-left: 10px; font-size: 11px; color: #999;">${new Date(comment.createdAt).toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US')}</span>
+                    </div>
+                    <div style="font-size: 13px; margin-bottom: 8px; line-height: 1.5;">${comment.comment}</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="startReply('${comment.commentId}', '${comment.authorEmail}')" style="padding: 4px 10px; border: 1px solid #999; background: white; cursor: pointer; font-size: 11px;">
+                            <span data-lang-ko="답글" data-lang-en="Reply">답글</span>
+                        </button>
+                        ${comment.canUpdate ? `<button onclick="editComment('${comment.commentId}', \`${comment.comment.replace(/`/g, '\\`')}\`)" style="padding: 4px 10px; border: 1px solid #999; background: white; cursor: pointer; font-size: 11px;"><span data-lang-ko="수정" data-lang-en="Edit">수정</span></button>` : ''}
+                        ${comment.canDelete ? `<button onclick="deleteComment('${comment.commentId}')" style="padding: 4px 10px; border: 1px solid #cc0000; color: #cc0000; background: white; cursor: pointer; font-size: 11px;"><span data-lang-ko="삭제" data-lang-en="Delete">삭제</span></button>` : ''}
+                    </div>
                 </div>
             `;
-            return;
-        }
 
-        // API가 중첩된 children 구조로 반환하므로 직접 렌더링
-        container.innerHTML = comments.map(comment => renderComment(comment)).join('');
+            if (comment.children && comment.children.length > 0) {
+                html += renderComments(comment.children, depth + 1);
+            }
 
-        applyLanguage();
-    }
-
-    // 개별 댓글 렌더링 (재귀적으로 children 처리)
-    function renderComment(comment, depth = 0) {
-        const date = new Date(comment.createdAt).toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US');
-        const canEdit = comment.canUpdate;
-        const canDelete = comment.canDelete;
-        const isUpdated = comment.updated;
-        const updatedText = currentLang === 'ko' ? '(수정됨)' : '(edited)';
-
-        // depth에 따라 들여쓰기 클래스 및 스타일 적용
-        const itemClass = depth > 0 ? 'comment-item reply-item' : 'comment-item';
-        const marginLeft = depth > 0 ? `margin-left: ${depth * 30}px;` : '';
-
-        let html = `
-            <div class="${itemClass}" style="${marginLeft}">
-                <div class="comment-header">
-                    <span class="comment-author">${comment.authorEmail}</span>
-                    <span class="comment-date">${date} ${isUpdated ? updatedText : ''}</span>
-                </div>
-                <div class="comment-content">${escapeHtml(comment.comment)}</div>
-                <div class="comment-actions">
-                    <button class="comment-action-btn" onclick="startReply('${comment.commentId}')">
-                        <span data-lang-ko="답글" data-lang-en="Reply">${currentLang === 'ko' ? '답글' : 'Reply'}</span>
-                    </button>
-                    ${canEdit ? `
-                        <button class="comment-action-btn" onclick="startEditComment('${comment.commentId}', \`${escapeHtml(comment.comment).replace(/`/g, '\\`')}\`)">
-                            <span data-lang-ko="수정" data-lang-en="Edit">${currentLang === 'ko' ? '수정' : 'Edit'}</span>
-                        </button>
-                    ` : ''}
-                    ${canDelete ? `
-                        <button class="comment-action-btn delete" onclick="deleteComment('${comment.commentId}')">
-                            <span data-lang-ko="삭제" data-lang-en="Delete">${currentLang === 'ko' ? '삭제' : 'Delete'}</span>
-                        </button>
-                    ` : ''}
-                </div>
-            </div>
-        `;
-
-        // children이 있으면 재귀적으로 렌더링
-        if (comment.children && comment.children.length > 0) {
-            console.log(`댓글 ${comment.commentId}의 children:`, comment.children);
-            html += comment.children.map(child => renderComment(child, depth + 1)).join('');
-        }
-
-        return html;
-    }
-
-    // HTML 이스케이프
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+            return html;
+        }).join('');
     }
 
     // 댓글 작성
     async function submitComment() {
+        // 로그인 체크
+        if (!currentUser) {
+            alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
+            return;
+        }
+
         const input = document.getElementById('commentInput');
         const comment = input.value.trim();
 
         if (!comment) {
-            alert(currentLang === 'ko' ? '댓글을 입력하세요.' : 'Please enter a comment.');
-            return;
-        }
-
-        // 로그인 체크 (수정은 제외)
-        if (!currentEditingCommentId && !currentUser) {
-            alert(currentLang === 'ko' ? '댓글을 작성하려면 로그인이 필요합니다.' : 'Please log in to write a comment.');
+            alert(currentLang === 'ko' ? '댓글 내용을 입력하세요' : 'Please enter comment');
             return;
         }
 
         try {
-            let url, method, body;
+            const url = replyingToCommentId
+                ? `${API_BASE}/category/comment/replies`
+                : `${API_BASE}/category/comment`;
 
-            if (currentEditingCommentId) {
-                // 수정
-                url = `${API_BASE}/category/comment`;
-                method = 'PATCH';
-                body = JSON.stringify({
-                    commentId: currentEditingCommentId,
-                    comment: comment
-                });
-            } else if (currentReplyToCommentId) {
-                // 대댓글
-                url = `${API_BASE}/category/comment/replies`;
-                method = 'POST';
-                body = JSON.stringify({
-                    categoryId: currentCommentCategoryId,
-                    parentId: currentReplyToCommentId,
-                    comment: comment
-                });
-            } else {
-                // 일반 댓글
-                url = `${API_BASE}/category/comment`;
-                method = 'POST';
-                body = JSON.stringify({
-                    categoryId: currentCommentCategoryId,
-                    comment: comment
-                });
-            }
+            const body = replyingToCommentId
+                ? { categoryId: currentCommentCategoryId, parentId: replyingToCommentId, comment }
+                : { categoryId: currentCommentCategoryId, comment };
 
             const response = await fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: body
+                body: JSON.stringify(body)
             });
 
             if (response.ok) {
                 input.value = '';
-                currentEditingCommentId = null;
-                currentReplyToCommentId = null;
-                await loadComments(currentCommentCategoryId);
-            } else if (response.status === 401 || response.status === 403) {
-                alert(currentLang === 'ko' ? '로그인이 필요합니다.' : 'Login required.');
+                replyingToCommentId = null;
+                input.placeholder = currentLang === 'ko' ? '댓글을 입력하세요...' : 'Enter comment...';
+                await loadComments();
+            } else if (response.status === 401) {
+                alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
             } else {
-                console.error('댓글 작성 실패:', response.status);
-                const errorText = currentLang === 'ko'
-                    ? `댓글 작성에 실패했습니다. (오류 코드: ${response.status})`
-                    : `Failed to submit comment. (Error code: ${response.status})`;
-                alert(errorText);
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.message || (currentLang === 'ko' ? '댓글 작성에 실패했습니다' : 'Failed to submit comment');
+                alert(errorMessage);
             }
         } catch (error) {
             console.error('댓글 작성 오류:', error);
-            const errorMsg = currentLang === 'ko'
-                ? '네트워크 오류가 발생했습니다. 로그인 상태를 확인해주세요.'
-                : 'Network error occurred. Please check your login status.';
-            alert(errorMsg);
+            alert(currentLang === 'ko' ? '댓글 작성에 실패했습니다' : 'Failed to submit comment');
         }
-    }
-
-    // 댓글 수정 시작
-    function startEditComment(commentId, commentText) {
-        currentEditingCommentId = commentId;
-        currentReplyToCommentId = null;
-        document.getElementById('commentInput').value = commentText;
-        document.getElementById('commentInput').focus();
     }
 
     // 답글 시작
-    function startReply(parentId) {
-        // 로그인 체크
+    function startReply(commentId, authorEmail) {
         if (!currentUser) {
-            alert(currentLang === 'ko' ? '답글을 작성하려면 로그인이 필요합니다.' : 'Please log in to write a reply.');
+            alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
             return;
         }
 
-        currentReplyToCommentId = parentId;
-        currentEditingCommentId = null;
-        document.getElementById('commentInput').value = '';
-        document.getElementById('commentInput').focus();
-        document.getElementById('commentInput').placeholder = currentLang === 'ko'
-            ? '답글을 입력하세요...'
-            : 'Write a reply...';
+        replyingToCommentId = commentId;
+        const input = document.getElementById('commentInput');
+        input.placeholder = `${authorEmail}${currentLang === 'ko' ? '님에게 답글...' : ' Reply to...'}`;
+        input.focus();
+    }
+
+    // 댓글 수정
+    async function editComment(commentId, currentComment) {
+        if (!currentUser) {
+            alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
+            return;
+        }
+
+        const newComment = prompt(currentLang === 'ko' ? '댓글 수정' : 'Edit comment', currentComment);
+
+        if (newComment === null || newComment.trim() === '') return;
+
+        try {
+            const response = await fetch(`${API_BASE}/category/comment`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ commentId, comment: newComment.trim() })
+            });
+
+            if (response.ok) {
+                await loadComments();
+            } else if (response.status === 401) {
+                alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
+            } else if (response.status === 403) {
+                alert(currentLang === 'ko' ? '권한이 없습니다' : 'Permission denied');
+            } else {
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.message || (currentLang === 'ko' ? '댓글 수정에 실패했습니다' : 'Failed to update comment');
+                alert(errorMessage);
+            }
+        } catch (error) {
+            console.error('댓글 수정 오류:', error);
+            alert(currentLang === 'ko' ? '댓글 수정에 실패했습니다' : 'Failed to update comment');
+        }
     }
 
     // 댓글 삭제
     async function deleteComment(commentId) {
-        if (!confirm(currentLang === 'ko' ? '댓글을 삭제하시겠습니까?' : 'Delete this comment?')) {
+        if (!currentUser) {
+            alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
             return;
         }
+
+        if (!confirm(currentLang === 'ko' ? '댓글을 삭제하시겠습니까?' : 'Delete this comment?')) return;
 
         try {
             const response = await fetch(`${API_BASE}/category/comment/${commentId}`, {
@@ -2731,24 +3375,81 @@
             });
 
             if (response.ok) {
-                await loadComments(currentCommentCategoryId);
-            } else if (response.status === 401 || response.status === 403) {
-                alert(currentLang === 'ko' ? '권한이 없습니다.' : 'Permission denied.');
+                await loadComments();
+            } else if (response.status === 401) {
+                alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
+            } else if (response.status === 403) {
+                alert(currentLang === 'ko' ? '권한이 없습니다' : 'Permission denied');
             } else {
-                alert(currentLang === 'ko' ? '댓글 삭제에 실패했습니다.' : 'Failed to delete comment.');
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.message || (currentLang === 'ko' ? '댓글 삭제에 실패했습니다' : 'Failed to delete comment');
+                alert(errorMessage);
             }
         } catch (error) {
             console.error('댓글 삭제 오류:', error);
-            alert(currentLang === 'ko' ? '네트워크 오류가 발생했습니다.' : 'Network error occurred.');
+            alert(currentLang === 'ko' ? '댓글 삭제에 실패했습니다' : 'Failed to delete comment');
         }
     }
 
-    // 모달 외부 클릭시 닫기
-    document.getElementById('commentsModal').addEventListener('click', function(e) {
-        if (e.target === this) {
+    // 댓글 모달 외부 클릭 시 닫기
+    document.getElementById('commentModal').addEventListener('click', (e) => {
+        if (e.target.id === 'commentModal') {
             closeCommentModal();
         }
     });
+
+    // 친구 요청 보내기 (이메일 기반)
+    async function sendFriendRequest(event, email) {
+        event.stopPropagation(); // 카테고리 카드 클릭 이벤트 방지
+
+        if (!currentUser) {
+            alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
+            return;
+        }
+
+        if (!confirm(currentLang === 'ko' ? `${email}에게 친구 요청을 보내시겠습니까?` : `Send friend request to ${email}?`)) {
+            return;
+        }
+
+        try {
+            // 먼저 이메일로 사용자 ID를 조회
+            const userSearchResponse = await fetch(`${API_BASE}/user/search?email=${encodeURIComponent(email)}`, {
+                credentials: 'include'
+            });
+
+            if (!userSearchResponse.ok) {
+                alert(currentLang === 'ko' ? '사용자를 찾을 수 없습니다' : 'User not found');
+                return;
+            }
+
+            const user = await userSearchResponse.json();
+
+            // 친구 요청 보내기
+            const response = await fetch(`${API_BASE}/friend/requests`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ toUserId: user.id })
+            });
+
+            if (response.ok) {
+                alert(currentLang === 'ko' ? '친구 요청을 보냈습니다' : 'Friend request sent');
+            } else if (response.status === 400) {
+                const errorText = await response.text();
+                if (errorText.includes('already')) {
+                    alert(currentLang === 'ko' ? '이미 친구이거나 요청을 보낸 사용자입니다' : 'Already friends or request already sent');
+                } else {
+                    alert(currentLang === 'ko' ? '친구 요청을 보낼 수 없습니다' : 'Cannot send friend request');
+                }
+            } else {
+                alert(currentLang === 'ko' ? '친구 요청에 실패했습니다' : 'Failed to send friend request');
+            }
+        } catch (error) {
+            console.error('친구 요청 오류:', error);
+            alert(currentLang === 'ko' ? '친구 요청에 실패했습니다' : 'Failed to send friend request');
+        }
+    }
 </script>
+
 </body>
 </html>

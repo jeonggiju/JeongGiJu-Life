@@ -1,5 +1,6 @@
 package com.life.jeonggiju.domain.category.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,6 @@ public interface CategoryLikeRepository extends JpaRepository<CategoryLike, UUID
 	Integer countByCategoryId(UUID categoryId);
 	void deleteByUserIdAndCategoryId(UUID userId, UUID categoryId);
 	boolean existsByUserIdAndCategoryId(UUID userId, UUID categoryId);
+
+	Optional<CategoryLike> findByUserIdAndCategoryId(UUID userId, UUID categoryId);
 }

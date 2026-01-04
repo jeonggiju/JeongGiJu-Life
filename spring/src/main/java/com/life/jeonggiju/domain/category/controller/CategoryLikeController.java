@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.life.jeonggiju.domain.category.dto.AddLikeDto;
+import com.life.jeonggiju.domain.category.dto.CheckCountCategoryResponse;
 import com.life.jeonggiju.domain.category.dto.DeleteLikeDto;
 import com.life.jeonggiju.domain.category.service.CategoryLikeService;
 import com.life.jeonggiju.security.principal.LifeUserDetails;
@@ -25,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class CategoryLikeController {
 
 	private final CategoryLikeService categoryLikeService;
-
 
 	@GetMapping("/count/{categoryId}")
 	public ResponseEntity<Integer> count(
@@ -42,6 +42,15 @@ public class CategoryLikeController {
 		UUID userId = userDetails.getId();
 		categoryLikeService.add(userId, dto.getCategoryId());
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/checks/{categoryId}")
+	public ResponseEntity<CheckCountCategoryResponse> check(
+		@AuthenticationPrincipal LifeUserDetails userDetails,
+		@PathVariable UUID categoryId
+	){
+		UUID userId = userDetails.getId();
+		return ResponseEntity.ok(categoryLikeService.checkCount(userId, categoryId));
 	}
 
 	@DeleteMapping
