@@ -1,4 +1,4 @@
-package com.life.jeonggiju.security.jwt;
+package com.life.jeonggiju.security.jwt.token;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -12,5 +12,12 @@ public class RefreshTokenJwt {
     private final String token;
     private final Instant issueTime;
     private final Instant expirationTime;
-    private final UUID userId;
+    private final RefreshTokenUserInfo user;
+
+    @Getter
+    @Builder
+    public static class RefreshTokenUserInfo {
+        private UUID userId;
+        private String username;
+    }
 }

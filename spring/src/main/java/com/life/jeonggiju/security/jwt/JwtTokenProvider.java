@@ -2,7 +2,8 @@ package com.life.jeonggiju.security.jwt;
 
 import com.github.f4b6a3.uuid.UuidCreator;
 import com.life.jeonggiju.domain.user.entity.Authority;
-import com.life.jeonggiju.security.dto.AccessTokenUserDto;
+import com.life.jeonggiju.security.jwt.token.AccessTokenJwt;
+import com.life.jeonggiju.security.jwt.token.RefreshTokenJwt;
 import com.life.jeonggiju.security.principal.LifeUserDetails;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -116,7 +117,7 @@ public class JwtTokenProvider {
             UUID userId = UUID.fromString(c.getStringClaim("userId"));
             Authority authority = Authority.valueOf(c.getStringClaim("authority"));
 
-            AccessTokenUserDto user = AccessTokenUserDto.builder()
+            AccessTokenJwt.AccessTokenUserInfo user = AccessTokenJwt.AccessTokenUserInfo.builder()
                     .userId(userId)
                     .username(c.getSubject())
                     .userEmail(c.getStringClaim("email"))
@@ -144,12 +145,16 @@ public class JwtTokenProvider {
 
             JWTClaimsSet c = jwt.getJWTClaimsSet();
             validateCommon(c, "refresh");
+            RefreshTokenJwt.RefreshTokenUserInfo user = RefreshTokenJwt.RefreshTokenUserInfo.builder()
+                    .userId(UUID.fromString(c.getStringClaim("userId")))
+                    .username(c.getStringClaim("username"))
+                    .build();
 
             return RefreshTokenJwt.builder()
                     .token(token)
                     .issueTime(c.getIssueTime().toInstant())
                     .expirationTime(c.getExpirationTime().toInstant())
-                    .userId(UUID.fromString(c.getStringClaim("userId")))
+                    .user(user)
                     .build();
 
         } catch (Exception e) {
