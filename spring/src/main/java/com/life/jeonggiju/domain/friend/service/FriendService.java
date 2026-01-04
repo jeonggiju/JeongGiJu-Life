@@ -1,10 +1,8 @@
 package com.life.jeonggiju.domain.friend.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +20,8 @@ import com.life.jeonggiju.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FriendService {
@@ -153,7 +153,7 @@ public class FriendService {
 		Friend pendingFriend = friendRepository.findByIdAndAddressee_IdAndStatus(friendId, accepterId,
 			FriendStatus.PENDING).orElseThrow();
 
-		pendingFriend.changeStatus(FriendStatus.REJECTED);
+		friendRepository.delete(pendingFriend);
 
 		//
 		UUID receiverId = pendingFriend.getRequester().getId();
@@ -177,8 +177,21 @@ public class FriendService {
 	}
 
 	@Transactional
-	public void deleteFriendByStatus(UUID requesterId, UUID accepterId, FriendStatus status){
-		Friend friend = friendRepository.findBetweenByStatus(requesterId, accepterId, status).orElseThrow();
+	public void deleteFriendById(UUID requesterId, UUID friendId, FriendStatus status){
+		Friend friend = friendRepository.findById(friendId).orElseThrow();
+		if(friend.getStatus() != status){
+			throw new IllegalArgumentException("잘못된 요청 입니다.: ACCEPT 관계 아님");
+		}
+		log.info(requesterId.toString());
+		log.info(friendId.toString());
+
+		log.info(friend.getAddressee().getId().toString());
+		log.info(friend.getRequester().getId().toString());
+
+		if(!friend.getAddressee().getId().equals(requesterId) &&!friend.getRequester().getId().equals(requesterId)){
+			throw new IllegalArgumentException("잘못된 요청 입니다.: deleteFriendById");
+		}
+
 		friendRepository.delete(friend);
 	}
 }

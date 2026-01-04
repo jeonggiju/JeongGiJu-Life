@@ -94,14 +94,14 @@ public class FriendController {
 		return ResponseEntity.ok(friends);
 	}
 
-	@DeleteMapping
+	@DeleteMapping("/{friendId}")
 	public ResponseEntity<Void> deleteFriend(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
-		@RequestParam UUID otherUserId
+		@PathVariable UUID friendId
 	) {
-		friendService.deleteFriendByStatus(
+		friendService.deleteFriendById(
 			userDetails.getId(),
-			otherUserId,
+				friendId ,
 			FriendStatus.ACCEPTED
 		);
 		return ResponseEntity.noContent().build();
