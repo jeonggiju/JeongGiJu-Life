@@ -1,9 +1,7 @@
-package com.life.jeonggiju.security.dto;
+package com.life.jeonggiju.domain.user.dto;
 
 import com.life.jeonggiju.domain.user.entity.Authority;
-import jakarta.persistence.Column;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 import java.util.UUID;

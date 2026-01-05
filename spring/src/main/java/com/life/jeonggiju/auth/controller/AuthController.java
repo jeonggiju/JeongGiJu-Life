@@ -28,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
 	private final AuthService authService;
-	private final UserService userService;
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@GetMapping("/csrf-token")
