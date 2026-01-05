@@ -86,7 +86,7 @@ public class AuthController {
 
 		if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(new ErrorResponse("로그인이 필요합니다"));
+				.body(new ErrorResponse("로그인이 필요합니다", "login Fail"));
 		}
 
 		LifeUserDetails userDetails = (LifeUserDetails) authentication.getPrincipal();
