@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class InMemoryJwtRegistry implements JwtRegistry{
 
     private final Map<UUID, Queue<JwtRegistryInformation>> origin = new ConcurrentHashMap<>();
-    private final Set<String> accessTokenIndexes = ConcurrentHashMap.newKeySet();
+    private final Set<String> accessTokenIndexes = ConcurrentHashMap.newKeySet(); // 강제 로그아웃을 위해 access, refresh 둘 다 보관
     private final Set<String> refreshTokenIndexes = ConcurrentHashMap.newKeySet();
 
     private final int maxActiveJwtCount;
@@ -92,7 +92,7 @@ public class InMemoryJwtRegistry implements JwtRegistry{
         origin.entrySet().removeIf(entry -> {
             Queue<JwtRegistryInformation> queue = entry.getValue();
             queue.removeIf(jwtInformation -> {
-                boolean isExpired = !jwtTokenProvider.validateRefreshToken(jwtInformation.getRefreshToken());
+                boolean isExpired = !jwtTokenProvider.validateRefreshToken(jwtInformation.getRefreshToken()); // 메모리 관리는 refresh로만
                 if (isExpired) {
                     removeTokenIndex(
                             jwtInformation.getAccessToken(),
