@@ -23,7 +23,7 @@ public class InMemoryJwtRegistry implements JwtRegistry{
     private final Set<String> accessTokenIndexes = ConcurrentHashMap.newKeySet(); // 강제 로그아웃을 위해 access, refresh 둘 다 보관
     private final Set<String> refreshTokenIndexes = ConcurrentHashMap.newKeySet();
 
-    private final int maxActiveJwtCount;
+    private final int maxActiveJwtCount = 3;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
