@@ -1421,7 +1421,7 @@
     // 좋아요 개수 로드 함수 (insert.html용)
     async function loadLikeCountForInsert(categoryId) {
         try {
-            const response = await apiCall('/categories/likes/count/${categoryId}');
+            const response = await apiCall(`/categories/likes/count/${categoryId}`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -1641,7 +1641,7 @@
         countDiv.textContent = '';
 
         try {
-            const response = await apiCall('/category/${categoryId}/email');
+            const response = await apiCall(`/category/${categoryId}/email`);
 
             if (response.ok) {
                 const emails = await response.json();
@@ -1775,7 +1775,7 @@
     // 좋아요 개수 로드 (insert.html용)
     async function loadLikeCountForInsert(categoryId) {
         try {
-            const response = await apiCall('/categories/likes/count/${categoryId}');
+            const response = await apiCall(`/categories/likes/count/${categoryId}`);
 
             if (response.ok) {
                 const count = await response.json();

@@ -50,7 +50,7 @@ public class SecurityConfigDev {
 	) throws Exception {
 		http
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers("*").permitAll()
+						.anyRequest().permitAll()
 				)
 				.csrf(csrf -> csrf
 						.ignoringRequestMatchers("/api/auth/logout")

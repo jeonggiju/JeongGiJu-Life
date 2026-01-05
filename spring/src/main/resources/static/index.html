@@ -1385,6 +1385,9 @@
         const fullUrl = url.startsWith('http') ? url : `${API_BASE}${url}`;
 
         const defaultOptions = {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
                 ...options.headers
             }
         };
@@ -1786,23 +1789,23 @@
             let endpoint = '';
             switch (category.type) {
                 case 'CHECK':
-                    endpoint = `${API_BASE}/check/all?categoryId=${category.id}`;
+                    endpoint = `/check/all?categoryId=${category.id}`;
                     break;
                 case 'TEXT':
-                    endpoint = `${API_BASE}/text/all?categoryId=${category.id}`;
+                    endpoint = `/text/all?categoryId=${category.id}`;
                     break;
                 case 'TIME':
-                    endpoint = `${API_BASE}/time/all?categoryId=${category.id}`;
+                    endpoint = `/time/all?categoryId=${category.id}`;
                     break;
                 case 'NUMBER':
-                    endpoint = `${API_BASE}/number/all?categoryId=${category.id}`;
+                    endpoint = `/number/all?categoryId=${category.id}`;
                     break;
                 case 'CHECKLIST':
-                    endpoint = `${API_BASE}/check-list/all?categoryId=${category.id}`;
+                    endpoint = `/check-list/all?categoryId=${category.id}`;
                     break;
             }
 
-            const response = await fetch(endpoint, { credentials: 'include' });
+            const response = await apiCall(endpoint);
 
             if (response.ok) {
                 const contentType = response.headers.get('content-type');
@@ -2910,7 +2913,10 @@
         try {
             await fetchEventSource(`${API_BASE}/sse/subscribe`, {
                 method: 'GET',
+                headers: {
                     'Authorization': `Bearer ${token}`
+                },
+                credentials: 'include',
                 signal: sseAbortController.signal,
 
                 onopen: async (response) => {
@@ -3359,7 +3365,7 @@
         console.log(`loadLikeStatus 호출: ${categoryId}`);
 
         try {
-            const response = await apiCall('/categories/likes/checks/${categoryId}');
+            const response = await apiCall(`/categories/likes/checks/${categoryId}`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -3395,7 +3401,7 @@
 
         console.log(`loadLikeCount 호출: ${categoryId}`);
         try {
-            const response = await apiCall('/categories/likes/count/${categoryId}');
+            const response = await apiCall(`/categories/likes/count/${categoryId}`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -3448,7 +3454,7 @@
         const container = document.getElementById('commentContent');
 
         try {
-            const response = await apiCall('/category/comment/${currentCommentCategoryId}');
+            const response = await apiCall(`/category/comment/${currentCommentCategoryId}`);
 
             if (response.ok) {
                 const comments = await response.json();
@@ -3607,9 +3613,8 @@
         if (!confirm(currentLang === 'ko' ? '댓글을 삭제하시겠습니까?' : 'Delete this comment?')) return;
 
         try {
-            const response = `await apiCall(`/category/comment/${commentId}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await apiCall(`/category/comment/${commentId}`, {
+                method: 'DELETE'
             });
 
             if (response.ok) {
@@ -3651,7 +3656,7 @@
 
         try {
             // 먼저 이메일로 사용자 ID를 조회
-            const userSearchResponse = await apiCall('/user/search?email=${encodeURIComponent(email)}');
+            const userSearchResponse = await apiCall(`/user/search?email=${encodeURIComponent(email)}`);
 
             if (!userSearchResponse.ok) {
                 alert(currentLang === 'ko' ? '사용자를 찾을 수 없습니다' : 'User not found');

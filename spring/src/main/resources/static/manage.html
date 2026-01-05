@@ -6718,7 +6718,7 @@
 
         // API로 해당 날짜의 최신 데이터 가져오기
         try {
-            const response = await apiCall('/text/date?categoryId=${currentCategory.id}&date=${date}');
+            const response = await apiCall(`/text/date?categoryId=${currentCategory.id}&date=${date}`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -7281,7 +7281,7 @@
     // 좋아요 개수 로드 (manage.html용)
     async function loadLikeCountForManage(categoryId) {
         try {
-            const response = await apiCall('/categories/likes/count/${categoryId}');
+            const response = await apiCall(`/categories/likes/count/${categoryId}`);
 
             if (response.ok) {
                 const count = await response.json();
@@ -7370,7 +7370,7 @@
     // 댓글 불러오기
     async function loadManagementComments(categoryId) {
         try {
-            const response = await apiCall('/category/comment/${categoryId}');
+            const response = await apiCall(`/category/comment/${categoryId}`);
 
             if (response.ok) {
                 allComments = await response.json();
