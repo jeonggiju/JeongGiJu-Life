@@ -28,6 +28,7 @@ public class LifeUserDetailService implements UserDetailsService {
 				.email(user.getEmail())
 				.username(user.getUsername())
 				.authority(user.getAuthority())
+				.password(user.getPassword())
 				.build();
 
 		return new LifeUserDetails(dto);

@@ -39,7 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return path.equals("/api/auth/refresh") || path.equals("/api/auth/login") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs");
     }
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
@@ -52,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             .id(user.getUserId())
                             .email(user.getUserEmail())
                             .authority(user.getAuthority())
+                            .password(null)
                             .username(user.getUsername()).build();
 
                     LifeUserDetails userDetails = new LifeUserDetails(principal);

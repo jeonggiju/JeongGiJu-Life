@@ -13,4 +13,5 @@ public class LifeUserDto {
     private final String email;
     private final String username;
     private final Authority authority;
+    private final String password;
 }

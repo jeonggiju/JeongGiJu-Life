@@ -37,6 +37,7 @@ public class AuthService {
             String newRefreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
 
             JwtRegistryInformation jwtInfo = JwtRegistryInformation.builder()
+                    .userId(userDetails.getId())
                     .accessToken(newAccessToken)
                     .refreshToken(newRefreshToken)
                     .build();

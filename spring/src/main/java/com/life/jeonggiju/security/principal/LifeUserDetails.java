@@ -46,12 +46,12 @@ public class LifeUserDetails implements UserDetails {
 
 	@Override
 	public @Nullable String getPassword() {
-		return null;
+		return userPrincipal.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
-		return userPrincipal.getEmail();
+		return userPrincipal.getUsername();
 	}
 
 	public String getEmail(){

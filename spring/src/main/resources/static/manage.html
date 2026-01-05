@@ -2580,6 +2580,7 @@
 
 <script>
     const API_BASE = 'http://localhost:8080/api';
+    const TOKEN_KEY = 'accessToken';
     let currentUser = null;
     let currentCategory = null;
     let allRecords = [];
@@ -2587,6 +2588,90 @@
     let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
     let currentWeekStart = null; // 주간 뷰에서 현재 표시 중인 주의 시작일
     let currentMonthStart = null; // 월간 뷰에서 현재 표시 중인 월의 시작일
+
+    // ========== 토큰 관리 ==========
+
+    function setAccessToken(token) {
+        if (token) {
+            localStorage.setItem(TOKEN_KEY, token);
+        } else {
+            localStorage.removeItem(TOKEN_KEY);
+        }
+    }
+
+    function getAccessToken() {
+        return localStorage.getItem(TOKEN_KEY);
+    }
+
+    function removeAccessToken() {
+        localStorage.removeItem(TOKEN_KEY);
+    }
+
+    async function refreshAccessToken() {
+        try {
+            const response = await fetch(`${API_BASE}/auth/refresh`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setAccessToken(data.accessToken);
+                console.log('✅ Access 토큰 갱신 성공');
+                return data.accessToken;
+            } else {
+                console.log('❌ Refresh 토큰 만료');
+                removeAccessToken();
+                return null;
+            }
+        } catch (error) {
+            console.error('토큰 갱신 오류:', error);
+            removeAccessToken();
+            return null;
+        }
+    }
+
+    async function apiCall(url, options = {}) {
+        const fullUrl = url.startsWith('http') ? url : `${API_BASE}${url}`;
+
+        const defaultOptions = {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        };
+
+        const token = getAccessToken();
+        if (token) {
+            defaultOptions.headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        const finalOptions = { ...defaultOptions, ...options };
+        if (options.headers) {
+            finalOptions.headers = { ...defaultOptions.headers, ...options.headers };
+        }
+
+        try {
+            let response = await fetch(fullUrl, finalOptions);
+
+            if (response.status === 401) {
+                console.log('🔄 토큰 만료, 갱신 시도...');
+                const newToken = await refreshAccessToken();
+
+                if (newToken) {
+                    finalOptions.headers['Authorization'] = `Bearer ${newToken}`;
+                    response = await fetch(fullUrl, finalOptions);
+                } else {
+                    throw new Error('LOGIN_REQUIRED');
+                }
+            }
+
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
 
     // 번역 데이터
     const translations = {
@@ -3345,40 +3430,61 @@
 
     // 인증 확인
     async function checkAuth() {
+        console.log('🔍 인증 상태 확인...');
+        const token = getAccessToken();
+
+        // 토큰이 없으면 refresh 시도
+        if (!token) {
+            console.log('토큰 없음, refresh 시도...');
+            const newToken = await refreshAccessToken();
+            if (newToken) {
+                console.log('✅ Refresh 성공');
+                await loadUserInfo();
+                return;
+            }
+        } else {
+            // 토큰이 있으면 유효성 검사
+            try {
+                const response = await apiCall('/user');
+                if (response.ok) {
+                    console.log('✅ 토큰 유효');
+                    await loadUserInfo();
+                    return;
+                }
+            } catch (error) {
+                if (error.message === 'LOGIN_REQUIRED') {
+                    console.log('❌ 토큰 만료');
+                } else {
+                    console.error('인증 확인 오류:', error);
+                }
+            }
+        }
+
+        console.log('📝 로그인 필요');
+        showLoginSection();
+    }
+
+    // 사용자 정보 로드 및 초기화
+    async function loadUserInfo() {
         try {
-            const response = await fetch(`${API_BASE}/auth/me`, {
-                credentials: 'include'
-            });
+            const response = await apiCall('/user');
 
             if (response.ok) {
                 currentUser = await response.json();
-
-                // /api/user 호출하여 title, description 가져오기
-                try {
-                    const userResponse = await fetch(`${API_BASE}/user`, {
-                        credentials: 'include'
-                    });
-
-                    if (userResponse.ok) {
-                        const userData = await userResponse.json();
-                        // title, description, birthYear, birthMonth, birthDay 업데이트
-                        currentUser.title = userData.title;
-                        currentUser.description = userData.description;
-                        currentUser.birthYear = userData.birthYear;
-                        currentUser.birthMonth = userData.birthMonth;
-                        currentUser.birthDay = userData.birthDay;
-                    }
-                } catch (error) {
-                    // 에러 무시
-                }
+                console.log('✅ 사용자 정보:', currentUser);
 
                 showMainSection();
                 loadCategories();
             } else {
+                console.error('❌ 사용자 정보 로드 실패');
                 showLoginSection();
             }
         } catch (error) {
-            showLoginSection();
+            console.error('❌ 사용자 정보 로드 중 오류:', error);
+            if (error.message === 'LOGIN_REQUIRED') {
+                removeAccessToken();
+                showLoginSection();
+            }
         }
     }
 
@@ -3485,9 +3591,7 @@
     // 카테고리 로드
     async function loadCategories() {
         try {
-            const response = await fetch(`${API_BASE}/category/all`, {
-                credentials: 'include'
-            });
+            const response = await apiCall('/category/all');
 
             if (response.ok) {
                 const categories = await response.json();
@@ -6614,9 +6718,7 @@
 
         // API로 해당 날짜의 최신 데이터 가져오기
         try {
-            const response = await fetch(`${API_BASE}/text/date?categoryId=${currentCategory.id}&date=${date}`, {
-                credentials: 'include'
-            });
+            const response = await apiCall('/text/date?categoryId=${currentCategory.id}&date=${date}');
 
             if (response.ok) {
                 const data = await response.json();
@@ -6947,9 +7049,8 @@
         params.append('description', description);
 
         try {
-            const response = await fetch(`${API_BASE}/user?${params.toString()}`, {
-                method: 'PUT',
-                credentials: 'include'
+            const response = await apiCall(`/user?${params.toString()}`, {
+                method: 'PUT'
             });
 
             if (response.ok) {
@@ -6977,6 +7078,11 @@
             }
         } catch (error) {
             console.error('프로필 수정 오류:', error);
+            if (error.message === 'LOGIN_REQUIRED') {
+                removeAccessToken();
+                window.location.href = 'index.html';
+                return;
+            }
             showProfileModalError('프로필 수정 중 오류가 발생했습니다.');
         }
     });
@@ -7175,9 +7281,7 @@
     // 좋아요 개수 로드 (manage.html용)
     async function loadLikeCountForManage(categoryId) {
         try {
-            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
-                credentials: 'include'
-            });
+            const response = await apiCall('/categories/likes/count/${categoryId}');
 
             if (response.ok) {
                 const count = await response.json();
@@ -7266,9 +7370,7 @@
     // 댓글 불러오기
     async function loadManagementComments(categoryId) {
         try {
-            const response = await fetch(`${API_BASE}/category/comment/${categoryId}`, {
-                credentials: 'include'
-            });
+            const response = await apiCall('/category/comment/${categoryId}');
 
             if (response.ok) {
                 allComments = await response.json();
@@ -7560,9 +7662,8 @@
         }
 
         try {
-            const response = await fetch(`${API_BASE}/category/comment/${commentId}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await apiCall(`/category/comment/${commentId}`, {
+                method: 'DELETE'
             });
 
             if (response.ok) {
@@ -7578,6 +7679,11 @@
             }
         } catch (error) {
             console.error('댓글 삭제 오류:', error);
+            if (error.message === 'LOGIN_REQUIRED') {
+                removeAccessToken();
+                window.location.href = 'index.html';
+                return;
+            }
             alert(currentLang === 'ko' ? '네트워크 오류가 발생했습니다.' : 'Network error occurred.');
         }
     }
@@ -7616,9 +7722,7 @@
         isInitialized = false; // 초기화 시작
 
         try {
-            const response = await fetch(`${API_BASE}/notification/unread`, {
-                credentials: 'include'
-            });
+            const response = await apiCall('/notification/unread');
 
             if (response.ok) {
                 const data = await response.json();
@@ -7641,9 +7745,7 @@
     async function loadUnreadCount() {
         console.log('>>> loadUnreadCount 시작 (manage.html)');
         try {
-            const response = await fetch(`${API_BASE}/notification/unread/count`, {
-                credentials: 'include'
-            });
+            const response = await apiCall('/notification/unread/count');
 
             console.log('loadUnreadCount response status:', response.status);
 
@@ -7677,12 +7779,8 @@
     // 알림을 읽음 처리
     async function markNotificationsAsRead(notificationIds) {
         try {
-            const response = await fetch(`${API_BASE}/notification/unread`, {
+            const response = await apiCall('/notification/unread', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
                 body: JSON.stringify({
                     notificationIds: notificationIds
                 })
@@ -7695,6 +7793,10 @@
             }
         } catch (error) {
             console.error('알림 읽음 처리 오류:', error);
+            if (error.message === 'LOGIN_REQUIRED') {
+                removeAccessToken();
+                window.location.href = 'index.html';
+            }
         }
     }
 

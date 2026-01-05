@@ -810,7 +810,180 @@
 
     <script>
         const API_BASE = 'http://localhost:8080/api';
+        const TOKEN_KEY = 'accessToken';
         let currentLanguage = 'ko';
+
+        // ========== fetchEventSource 자체 구현 ==========
+        window.fetchEventSource = async function(url, options) {
+            const {
+                onopen,
+                onmessage,
+                onerror,
+                onclose,
+                signal,
+                headers = {},
+                ...fetchOptions
+            } = options;
+
+            try {
+                const response = await fetch(url, {
+                    ...fetchOptions,
+                    headers: headers,
+                    signal: signal
+                });
+
+                // onopen 콜백 호출
+                if (onopen) {
+                    await onopen(response);
+                }
+
+                // 응답이 실패면 에러
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+
+                // ReadableStream으로 SSE 파싱
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+
+                    if (done) {
+                        if (onclose) onclose();
+                        break;
+                    }
+
+                    // 청크를 버퍼에 추가
+                    buffer += decoder.decode(value, { stream: true });
+
+                    // \n\n으로 이벤트 분리
+                    const lines = buffer.split('\n\n');
+                    buffer = lines.pop() || ''; // 마지막 불완전한 줄은 버퍼에 유지
+
+                    // 각 이벤트 처리
+                    for (const eventText of lines) {
+                        if (eventText.trim() === '') continue;
+
+                        const event = { event: 'message', data: '' };
+                        const eventLines = eventText.split('\n');
+
+                        for (const line of eventLines) {
+                            if (line.startsWith('event:')) {
+                                event.event = line.substring(6).trim();
+                            } else if (line.startsWith('data:')) {
+                                if (event.data) event.data += '\n';
+                                event.data += line.substring(5).trim();
+                            }
+                        }
+
+                        // onmessage 콜백 호출
+                        if (onmessage && event.data) {
+                            try {
+                                onmessage(event);
+                            } catch (err) {
+                                console.error('onmessage 에러:', err);
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.log('fetchEventSource: 연결이 중단되었습니다.');
+                } else {
+                    console.error('fetchEventSource 에러:', error);
+                    if (onerror) {
+                        onerror(error);
+                    }
+                }
+                throw error;
+            }
+        };
+
+        // ========== 토큰 관리 ==========
+
+        function setAccessToken(token) {
+            if (token) {
+                localStorage.setItem(TOKEN_KEY, token);
+            } else {
+                localStorage.removeItem(TOKEN_KEY);
+            }
+        }
+
+        function getAccessToken() {
+            return localStorage.getItem(TOKEN_KEY);
+        }
+
+        function removeAccessToken() {
+            localStorage.removeItem(TOKEN_KEY);
+        }
+
+        async function refreshAccessToken() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/refresh`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setAccessToken(data.accessToken);
+                    console.log('✅ Access 토큰 갱신 성공');
+                    return data.accessToken;
+                } else {
+                    console.log('❌ Refresh 토큰 만료');
+                    removeAccessToken();
+                    return null;
+                }
+            } catch (error) {
+                console.error('토큰 갱신 오류:', error);
+                removeAccessToken();
+                return null;
+            }
+        }
+
+        async function apiCall(url, options = {}) {
+            const fullUrl = url.startsWith('http') ? url : `${API_BASE}${url}`;
+
+            const defaultOptions = {
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            };
+
+            const token = getAccessToken();
+            if (token) {
+                defaultOptions.headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const finalOptions = { ...defaultOptions, ...options };
+            if (options.headers) {
+                finalOptions.headers = { ...defaultOptions.headers, ...options.headers };
+            }
+
+            try {
+                let response = await fetch(fullUrl, finalOptions);
+
+                if (response.status === 401) {
+                    console.log('🔄 토큰 만료, 갱신 시도...');
+                    const newToken = await refreshAccessToken();
+
+                    if (newToken) {
+                        finalOptions.headers['Authorization'] = `Bearer ${newToken}`;
+                        response = await fetch(fullUrl, finalOptions);
+                    } else {
+                        throw new Error('LOGIN_REQUIRED');
+                    }
+                }
+
+                return response;
+            } catch (error) {
+                throw error;
+            }
+        }
 
         // Notification system variables
         let notifications = [];
@@ -894,7 +1067,14 @@
                 });
 
                 if (response.ok) {
-                    showMainSection();
+                    // 로그인 성공 후 즉시 access 토큰 받기
+                    const newToken = await refreshAccessToken();
+                    if (newToken) {
+                        console.log('✅ 로그인 성공');
+                        showMainSection();
+                    } else {
+                        showError('loginError', currentLanguage === 'ko' ? '로그인에 실패했습니다.' : 'Login failed.');
+                    }
                 } else {
                     showError('loginError', currentLanguage === 'ko' ? '로그인에 실패했습니다.' : 'Login failed.');
                 }
@@ -943,36 +1123,53 @@
         // 로그아웃
         async function logout() {
             try {
-                const response = await fetch(`${API_BASE}/auth/logout`, {
+                await fetch(`${API_BASE}/auth/logout`, {
                     method: 'POST',
                     credentials: 'include'
                 });
-
-                if (response.ok) {
-                    disconnectSSE();
-                    showLoginSection();
-                }
             } catch (error) {
                 console.error('Logout error:', error);
+            } finally {
+                removeAccessToken();
+                disconnectSSE();
+                showLoginSection();
             }
         }
 
         // 페이지 로드 시 로그인 상태 확인
         async function checkLoginStatus() {
-            try {
-                const response = await fetch(`${API_BASE}/user`, {
-                    credentials: 'include'
-                });
+            console.log('🔍 로그인 상태 확인...');
+            const token = getAccessToken();
 
-                if (response.ok) {
+            // 토큰이 없으면 refresh 시도
+            if (!token) {
+                console.log('토큰 없음, refresh 시도...');
+                const newToken = await refreshAccessToken();
+                if (newToken) {
+                    console.log('✅ Refresh 성공');
                     showMainSection();
-                } else {
-                    showLoginSection();
+                    return;
                 }
-            } catch (error) {
-                console.error('Check login error:', error);
-                showLoginSection();
+            } else {
+                // 토큰이 있으면 유효성 검사
+                try {
+                    const response = await apiCall('/user');
+                    if (response.ok) {
+                        console.log('✅ 토큰 유효');
+                        showMainSection();
+                        return;
+                    }
+                } catch (error) {
+                    if (error.message === 'LOGIN_REQUIRED') {
+                        console.log('❌ 토큰 만료');
+                    } else {
+                        console.error('인증 확인 오류:', error);
+                    }
+                }
             }
+
+            console.log('📝 로그인 필요');
+            showLoginSection();
         }
 
 
@@ -1008,34 +1205,6 @@
             setTimeout(() => {
                 notification.remove();
             }, 3000);
-        }
-
-        // API 헬퍼
-        async function apiCall(endpoint, options = {}) {
-            const response = await fetch(`${API_BASE}${endpoint}`, {
-                ...options,
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...options.headers,
-                }
-            });
-
-            if (response.status === 401) {
-                window.location.href = 'index.html';
-                return;
-            }
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || 'API 요청 실패');
-            }
-
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('application/json')) {
-                return await response.json();
-            }
-            return await response.text();
         }
 
         // 친구 목록 로드
@@ -1194,17 +1363,19 @@
             const email = document.getElementById('search-email').value.trim();
             const resultsContainer = document.getElementById('search-results');
 
-            if (!email) return;
+            if (!email) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
 
             resultsContainer.innerHTML = '<div class="loading" data-lang-ko="검색 중" data-lang-en="Searching">검색 중</div>';
             applyLanguage();
 
             try {
-                // 백엔드에 사용자 검색 API가 있다고 가정
-                // 실제로는 /api/user/search?email=xxx 같은 엔드포인트가 필요
-                const user = await apiCall(`/user/search?email=${encodeURIComponent(email)}`);
+                const response = await apiCall(`/user/search?email=${encodeURIComponent(email)}`);
 
-                if (!user) {
+                // 응답이 없거나 비어있는 경우
+                if (!response || !response.ok) {
                     resultsContainer.innerHTML = `
             <div class="empty-state">
                 <div data-lang-ko="사용자를 찾을 수 없습니다" data-lang-en="User not found">사용자를 찾을 수 없습니다</div>
@@ -1214,11 +1385,28 @@
                     return;
                 }
 
+                const user = await response.json();
+
+                // user 객체가 없거나 비어있는 경우
+                if (!user || !user.id) {
+                    resultsContainer.innerHTML = `
+            <div class="empty-state">
+                <div data-lang-ko="검색 결과가 없습니다" data-lang-en="No results found">검색 결과가 없습니다</div>
+            </div>
+        `;
+                    applyLanguage();
+                    return;
+                }
+
+                // 유저 정보 표시
+                const userName = user.username || user.email || '이름 없음';
+                const userEmail = user.email || '이메일 없음';
+
                 resultsContainer.innerHTML = `
         <div class="search-result-item">
             <div class="search-result-info">
-                <div class="search-result-name">${user.username || user.email}</div>
-                <div class="search-result-email">${user.email}</div>
+                <div class="search-result-name">${userName}</div>
+                <div class="search-result-email">${userEmail}</div>
             </div>
             <button class="btn btn-primary" onclick="sendFriendRequest('${user.id}')"
                 data-lang-ko="친구 요청" data-lang-en="Send Request">친구 요청</button>
@@ -1351,27 +1539,10 @@
                     });
                 } catch (error) {
                     console.error('로그아웃 오류:', error);
+                } finally {
+                    removeAccessToken();
                 }
                 window.location.href = 'index.html';
-            }
-        }
-
-        // 인증 확인
-        async function checkAuth() {
-            try {
-                const response = await fetch(`${API_BASE}/auth/me`, {
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    return true;
-                } else {
-                    window.location.href = 'index.html';
-                    return false;
-                }
-            } catch (error) {
-                window.location.href = 'index.html';
-                return false;
             }
         }
 
@@ -1402,9 +1573,15 @@
         // ========== NOTIFICATION SYSTEM ==========
 
         // SSE 연결
-        function connectSSE() {
-            if (eventSource) {
-                eventSource.close();
+        // SSE 연결 중단 플래그
+        let sseAbortController = null;
+
+        // SSE 연결
+        async function connectSSE() {
+            // 기존 연결이 있으면 중단
+            if (sseAbortController) {
+                sseAbortController.abort();
+                sseAbortController = null;
             }
 
             // 최대 재연결 횟수 초과 시 중단
@@ -1413,55 +1590,109 @@
                 return;
             }
 
+            // Access Token 확인
+            const token = getAccessToken();
+            if (!token) {
+                console.warn('Access Token 없음, SSE 연결 불가');
+                return;
+            }
+
             console.log(`SSE 연결 시도 (${sseReconnectAttempts + 1}/${MAX_SSE_RECONNECT})`);
 
+            // AbortController 생성
+            sseAbortController = new AbortController();
+
             try {
-                eventSource = new EventSource(`${API_BASE}/sse/subscribe`, { withCredentials: true });
+                // @microsoft/fetch-event-source 사용
+                await fetchEventSource(`${API_BASE}/sse/subscribe`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`  // ✅ Authorization 헤더!
+                    },
+                    credentials: 'include',
+                    signal: sseAbortController.signal,
 
-                eventSource.addEventListener('connected', (event) => {
-                    console.log('SSE 연결 성공');
-                    sseReconnectAttempts = 0; // 연결 성공 시 카운터 리셋
-                });
+                    // 연결 열렸을 때
+                    onopen: async (response) => {
+                        if (response.ok) {
+                            console.log('✅ SSE 연결 성공 (Authorization header)');
+                            sseReconnectAttempts = 0; // 연결 성공 시 카운터 리셋
+                            return; // 정상 처리
+                        } else if (response.status === 401) {
+                            console.error('❌ SSE 인증 실패 (401)');
+                            throw new Error('Unauthorized');
+                        } else {
+                            console.error('❌ SSE 연결 실패:', response.status, response.statusText);
+                            throw new Error('Connection failed');
+                        }
+                    },
 
-                eventSource.addEventListener('ping', (event) => {
-                    console.log('SSE ping 수신');
-                });
+                    // 메시지 수신
+                    onmessage: (event) => {
+                        try {
+                            // event.event는 이벤트 타입 (connected, ping, notification 등)
+                            const eventType = event.event || 'message';
 
-                eventSource.addEventListener('notification', (event) => {
-                    try {
-                        const data = JSON.parse(event.data);
-                        handleNotification(data.body);
-                    } catch (error) {
-                        console.error('알림 파싱 오류:', error);
+                            if (eventType === 'connected') {
+                                console.log('SSE connected 이벤트 수신');
+                            } else if (eventType === 'ping') {
+                                console.log('SSE ping 수신');
+                            } else if (eventType === 'notification') {
+                                const data = JSON.parse(event.data);
+                                console.log('알림 수신:', data);
+                                handleNotification(data.body || data);
+                            }
+                        } catch (error) {
+                            console.error('알림 파싱 오류:', error);
+                        }
+                    },
+
+                    // 에러 발생
+                    onerror: (error) => {
+                        console.error('SSE 연결 오류:', error);
+
+                        sseReconnectAttempts++;
+
+                        // 재연결 시도
+                        if (sseReconnectAttempts < MAX_SSE_RECONNECT) {
+                            console.log(`${5}초 후 재연결 시도...`);
+                            // fetchEventSource는 자동으로 재연결하므로 수동 재연결은 필요 없음
+                            // 하지만 에러가 계속되면 중단하기 위해 throw
+                            throw error;
+                        } else {
+                            console.warn('SSE 재연결 실패. 알림 기능을 사용할 수 없습니다.');
+                            throw error; // 재연결 중단
+                        }
+                    },
+
+                    // 연결 닫힐 때
+                    onclose: () => {
+                        console.log('SSE 연결 종료');
                     }
                 });
-
-                eventSource.onerror = (error) => {
-                    console.error('SSE 연결 오류:', error);
-                    eventSource.close();
-
-                    sseReconnectAttempts++;
-
-                    if (sseReconnectAttempts < MAX_SSE_RECONNECT) {
-                        console.log(`${5}초 후 재연결 시도...`);
-                        setTimeout(connectSSE, 5000);
-                    } else {
-                        console.warn('SSE 재연결 실패. 알림 기능을 사용할 수 없습니다.');
-                    }
-                };
             } catch (error) {
-                console.error('SSE 초기화 오류:', error);
-                sseReconnectAttempts++;
+                if (error.name === 'AbortError') {
+                    console.log('SSE 연결이 수동으로 중단되었습니다.');
+                } else {
+                    console.error('SSE 초기화 오류:', error);
+
+                    // 재연결 시도
+                    if (sseReconnectAttempts < MAX_SSE_RECONNECT) {
+                        setTimeout(() => {
+                            connectSSE();
+                        }, 5000);
+                    }
+                }
             }
         }
 
         // SSE 연결 해제
         function disconnectSSE() {
-            if (eventSource) {
-                eventSource.close();
-                eventSource = null;
+            if (sseAbortController) {
+                console.log('SSE 연결 중단');
+                sseAbortController.abort();
+                sseAbortController = null;
                 sseReconnectAttempts = 0;
-                console.log('SSE 연결 해제');
             }
         }
 
@@ -1643,10 +1874,8 @@
             if (unreadIds.length === 0) return;
 
             try {
-                const response = await fetch(`${API_BASE}/notification/unread`, {
+                const response = await apiCall('/notification/unread', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
                     body: JSON.stringify({ notificationIds: unreadIds })
                 });
 
@@ -1664,9 +1893,7 @@
         async function loadUnreadNotifications() {
             console.log('>>> loadUnreadNotifications 시작');
             try {
-                const response = await fetch(`${API_BASE}/notification/unread`, {
-                    credentials: 'include'
-                });
+                const response = await apiCall('/notification/unread');
 
                 if (response.ok) {
                     const unreadNotifications = await response.json();
@@ -1693,7 +1920,6 @@
                 toggleNotificationModal();
             }
         });
-    </script>
     </script>
     <!-- 토스트 알림 컨테이너 -->
     <div class="toast-container" id="toastContainer"></div>

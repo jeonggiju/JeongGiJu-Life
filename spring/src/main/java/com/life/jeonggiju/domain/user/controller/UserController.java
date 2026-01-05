@@ -1,13 +1,10 @@
 package com.life.jeonggiju.domain.user.controller;
 
-import com.life.jeonggiju.domain.user.dto.SignUpRequest;
-import com.life.jeonggiju.domain.user.dto.SignUpResponse;
+import com.life.jeonggiju.domain.user.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import com.life.jeonggiju.domain.user.dto.SearchByEmailResponse;
-import com.life.jeonggiju.domain.user.dto.UpdateUser;
 import com.life.jeonggiju.domain.user.service.UserService;
 import com.life.jeonggiju.security.principal.LifeUserDetails;
 
@@ -39,14 +36,15 @@ public class UserController {
 	}
 
 	@GetMapping
-	public ResponseEntity<?> find(
+	public ResponseEntity<UserInfo> find(
 		@AuthenticationPrincipal LifeUserDetails userDetails
 	){
-		return ResponseEntity.ok(userService.find(userDetails.getId()));
+		UserInfo userInfo = userService.find(userDetails.getId());
+		return ResponseEntity.ok(userInfo);
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(
+	public ResponseEntity<Void> update(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		UpdateUser dto){
 		userService.update(userDetails.getId(),dto);
@@ -54,7 +52,7 @@ public class UserController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> delete(
+	public ResponseEntity<Void> delete(
 		@AuthenticationPrincipal LifeUserDetails userDetails
 	){
 		userService.delete(userDetails.getId());
