@@ -162,6 +162,42 @@ public class JwtTokenProvider {
         }
     }
 
+    public boolean validateAccessToken(String token) {
+        return validateToken(token, accessVerifier, "access");
+    }
+
+    public boolean validateRefreshToken(String token) {
+        return validateToken(token, refreshVerifier, "refresh");
+    }
+
+    private boolean validateToken(String token, JWSVerifier verifier, String expectedType) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+
+            if (!signedJWT.verify(verifier)) {
+                log.debug("JWT signature verification failed for {} token", expectedType);
+                return false;
+            }
+
+            String tokenType = (String) signedJWT.getJWTClaimsSet().getClaim("type");
+            if (!expectedType.equals(tokenType)) {
+                log.debug("JWT token type mismatch: expected {}, got {}", expectedType, tokenType);
+                return false;
+            }
+
+            Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            if (expirationTime == null || expirationTime.before(new Date())) {
+                log.debug("JWT {} token expired", expectedType);
+                return false;
+            }
+
+            return true;
+        } catch (Exception e) {
+            log.debug("JWT {} token validation failed: {}", expectedType, e.getMessage());
+            return false;
+        }
+    }
+
     private void validateCommon(JWTClaimsSet c, String expectedType) throws ParseException {
         if (!expectedType.equals(c.getStringClaim("type"))) {
             throw new IllegalArgumentException("JWT 타입 불일치");
