@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import com.life.jeonggiju.security.dto.UserDto;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LifeUserDetails implements UserDetails {
 
-	private final LifeUserPrincipal userPrincipal;
+	private final LifeUserDto userPrincipal;
 
 	@Override
 	public boolean isAccountNonExpired() {

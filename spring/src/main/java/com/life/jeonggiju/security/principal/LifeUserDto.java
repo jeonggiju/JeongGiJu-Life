@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @Builder
-public class LifeUserPrincipal {
+public class LifeUserDto {
     private final UUID id;
     private final String email;
     private final String username;

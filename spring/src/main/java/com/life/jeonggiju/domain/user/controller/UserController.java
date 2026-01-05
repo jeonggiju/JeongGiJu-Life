@@ -1,13 +1,10 @@
 package com.life.jeonggiju.domain.user.controller;
 
+import com.life.jeonggiju.domain.user.dto.SignUpRequest;
+import com.life.jeonggiju.domain.user.dto.SignUpResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.life.jeonggiju.domain.user.dto.SearchByEmailResponse;
 import com.life.jeonggiju.domain.user.dto.UpdateUser;
@@ -22,6 +19,17 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
+
+	@PostMapping("/signup")
+	public ResponseEntity<SignUpResponse> signup(@RequestBody SignUpRequest request) {
+		try {
+			userService.signup(request);
+			return ResponseEntity.ok(new SignUpResponse(true, "회원가입 성공"));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest()
+					.body(new SignUpResponse(false, "회원가입 실패: " + e.getMessage()));
+		}
+	}
 
 	@GetMapping("/search")
 	public ResponseEntity<SearchByEmailResponse> searchByEmail(

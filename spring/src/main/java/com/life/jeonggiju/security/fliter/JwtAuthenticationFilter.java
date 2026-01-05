@@ -6,7 +6,7 @@ import com.life.jeonggiju.security.jwt.provider.JwtTokenProvider;
 import com.life.jeonggiju.security.jwt.registry.JwtRegistry;
 import com.life.jeonggiju.security.jwt.token.AccessTokenJwt;
 import com.life.jeonggiju.security.principal.LifeUserDetails;
-import com.life.jeonggiju.security.principal.LifeUserPrincipal;
+import com.life.jeonggiju.security.principal.LifeUserDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getServletPath();
 
-        return path.equals("/api/auth/refresh") || path.equals("/api/auth/login");
+        return path.equals("/api/auth/refresh") || path.equals("/api/auth/login") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs");
     }
 
 
@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if(jwtTokenProvider.validateAccessToken(token) && jwtRegistry.hasActiveJwtInformationByAccessToken(token)){
                     AccessTokenJwt accessTokenJwt = jwtTokenProvider.parseAccessToken(token);
                     AccessTokenJwt.AccessTokenUserInfo user = accessTokenJwt.getUser();
-                    LifeUserPrincipal principal = LifeUserPrincipal.builder()
+                    LifeUserDto principal = LifeUserDto.builder()
                             .id(user.getUserId())
                             .email(user.getUserEmail())
                             .authority(user.getAuthority())

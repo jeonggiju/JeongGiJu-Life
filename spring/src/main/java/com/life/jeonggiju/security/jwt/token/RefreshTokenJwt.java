@@ -19,5 +19,6 @@ public class RefreshTokenJwt {
     public static class RefreshTokenUserInfo {
         private UUID userId;
         private String username;
+        private String userEmail;
     }
 }

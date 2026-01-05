@@ -25,7 +25,7 @@ import java.util.UUID;
 @Component
 public class JwtTokenProvider {
 
-    private static final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
+    public static final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
 
     private final long accessTokenExpirationMs;
     private final long refreshTokenExpirationMs;
@@ -89,6 +89,8 @@ public class JwtTokenProvider {
                 .expirationTime(Date.from(exp))
                 .claim("type", "refresh")
                 .claim("userId", user.getId().toString())
+                .claim("username", user.getUsername())
+                .claim("userEmail", user.getUserPrincipal().getEmail())
                 .build();
 
         SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claims);
@@ -148,6 +150,7 @@ public class JwtTokenProvider {
             RefreshTokenJwt.RefreshTokenUserInfo user = RefreshTokenJwt.RefreshTokenUserInfo.builder()
                     .userId(UUID.fromString(c.getStringClaim("userId")))
                     .username(c.getStringClaim("username"))
+                    .userEmail(c.getStringClaim("userEmail"))
                     .build();
 
             return RefreshTokenJwt.builder()
