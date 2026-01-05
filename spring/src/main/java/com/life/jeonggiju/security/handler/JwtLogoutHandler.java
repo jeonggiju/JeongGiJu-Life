@@ -1,6 +1,6 @@
-package com.life.jeonggiju.security.jwt.handler;
+package com.life.jeonggiju.security.handler;
 
-import com.life.jeonggiju.security.jwt.JwtTokenProvider;
+import com.life.jeonggiju.security.jwt.provider.JwtTokenProvider;
 import com.life.jeonggiju.security.jwt.registry.JwtRegistry;
 import com.life.jeonggiju.security.principal.LifeUserDetails;
 import jakarta.servlet.http.Cookie;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class jwtLogoutHandler implements LogoutHandler {
+public class JwtLogoutHandler implements LogoutHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtRegistry jwtRegistry;
 

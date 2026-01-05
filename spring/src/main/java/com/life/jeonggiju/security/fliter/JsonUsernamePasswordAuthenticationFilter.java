@@ -1,4 +1,4 @@
-package com.life.jeonggiju.security.jwt;
+package com.life.jeonggiju.security.fliter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.life.jeonggiju.domain.user.dto.LoginRequest;

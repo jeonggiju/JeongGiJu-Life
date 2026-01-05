@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LifeUserDetails implements UserDetails {
 
-	private final UserDto userDto;
+	private final LifeUserPrincipal userPrincipal;
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -41,25 +41,25 @@ public class LifeUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(userDto.getAuthority().name());
+		SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(userPrincipal.getAuthority().name());
 		return List.of(simpleGrantedAuthority);
 	}
 
 	@Override
 	public @Nullable String getPassword() {
-		return userDto.getPassword();
+		return null;
 	}
 
 	@Override
 	public String getUsername() {
-		return userDto.getEmail();
+		return userPrincipal.getEmail();
 	}
 
 	public String getEmail(){
-		return userDto.getEmail();
+		return userPrincipal.getEmail();
 	}
 
 	public UUID getId(){
-		return userDto.getId();
+		return userPrincipal.getId();
 	}
 }

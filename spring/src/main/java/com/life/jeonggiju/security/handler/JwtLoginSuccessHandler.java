@@ -1,14 +1,13 @@
-package com.life.jeonggiju.security.jwt.handler;
+package com.life.jeonggiju.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.life.jeonggiju.domain.user.dto.ErrorResponse;
+import com.life.jeonggiju.exception.dto.ErrorResponse;
 import com.life.jeonggiju.security.dto.JwtLoginSuccessDto;
-import com.life.jeonggiju.security.jwt.JwtTokenProvider;
+import com.life.jeonggiju.security.jwt.provider.JwtTokenProvider;
 import com.life.jeonggiju.security.jwt.registry.JwtRegistry;
 import com.life.jeonggiju.security.jwt.registry.JwtRegistryInformation;
 import com.life.jeonggiju.security.principal.LifeUserDetails;
 import com.nimbusds.jose.JOSEException;
-import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +20,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.lang.runtime.ObjectMethods;
 
 @Slf4j
 @Component
@@ -45,7 +43,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
                 Cookie refreshTokenCookie = jwtTokenProvider.generateRefreshTokenCookie(refreshToken);
                 response.addCookie(refreshTokenCookie);
 
-                JwtLoginSuccessDto dto = JwtLoginSuccessDto.builder().user(userDetails.getUserDto()).accessToken(accessToken).build();
+                JwtLoginSuccessDto dto = JwtLoginSuccessDto.builder().user(userDetails.getUserPrincipal()).accessToken(accessToken).build();
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write(objectMapper.writeValueAsString(dto));
 

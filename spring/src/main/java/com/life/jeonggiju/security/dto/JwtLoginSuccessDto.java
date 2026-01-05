@@ -1,5 +1,6 @@
 package com.life.jeonggiju.security.dto;
 
+import com.life.jeonggiju.security.principal.LifeUserPrincipal;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,5 +8,5 @@ import lombok.Getter;
 @Builder
 public class JwtLoginSuccessDto {
     private String accessToken;
-    private UserDto user;
+    private LifeUserPrincipal user;
 }

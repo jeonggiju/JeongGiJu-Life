@@ -1,4 +1,4 @@
-package com.life.jeonggiju.security.jwt;
+package com.life.jeonggiju.security.jwt.provider;
 
 import com.github.f4b6a3.uuid.UuidCreator;
 import com.life.jeonggiju.domain.user.entity.Authority;
@@ -68,8 +68,8 @@ public class JwtTokenProvider {
                 .expirationTime(Date.from(exp))
                 .claim("type", "access")
                 .claim("userId", user.getId().toString())
-                .claim("email", user.getUserDto().getEmail())
-                .claim("authority", user.getUserDto().getAuthority().name())
+                .claim("email", user.getUserPrincipal().getEmail())
+                .claim("authority", user.getUserPrincipal().getAuthority().name())
                 .build();
 
         SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claims);

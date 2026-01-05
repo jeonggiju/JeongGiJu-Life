@@ -1,4 +1,4 @@
-package com.life.jeonggiju.domain.user.dto;
+package com.life.jeonggiju.exception.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

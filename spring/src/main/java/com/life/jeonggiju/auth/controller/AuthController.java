@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.life.jeonggiju.domain.user.dto.ErrorResponse;
+import com.life.jeonggiju.exception.dto.ErrorResponse;
 import com.life.jeonggiju.domain.user.dto.LoginRequest;
 import com.life.jeonggiju.domain.user.dto.LoginResponse;
 import com.life.jeonggiju.domain.user.dto.LogoutResponse;

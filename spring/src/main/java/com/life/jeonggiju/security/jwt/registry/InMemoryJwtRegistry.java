@@ -1,7 +1,7 @@
 package com.life.jeonggiju.security.jwt.registry;
 
 
-import com.life.jeonggiju.security.jwt.JwtTokenProvider;
+import com.life.jeonggiju.security.jwt.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
