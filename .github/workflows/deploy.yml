@@ -66,5 +66,5 @@ jobs:
         run: aws deploy create-deployment
           --application-name jeonggiju-life
           --deployment-config-name CodeDeployDefault.AllAtOnce
-          --deployment-group-name Production
+          --deployment-group-name jeonggiju-deploy-group
           --s3-location bucket=jeongiju-life,bundleType=tgz,key=$GITHUB_SHA.tar.gz
