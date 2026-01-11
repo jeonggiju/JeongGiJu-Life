@@ -17,14 +17,12 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: env 주입
+      - name: env 주입 및 빌드
         env:
           SPRING_DATASOURCE_URL: ${{secrets.SPRING_DATASOURCE_URL}}
           SPRING_DATASOURCE_USERNAME: ${{secrets.SPRING_DATASOURCE_USERNAME}}
           SPRING_DATASOURCE_PASSWORD: ${{secrets.SPRING_DATASOURCE_PASSWORD}}
           JWT_ACCESS_KEY: ${{secrets.JWT_ACCESS_KEY}}
           JWT_REFRESH_KEY: ${{secrets.JWT_REFRESH_KEY}}
-
-      - name: 테스트 및 빌드하기
         run: ./gradlew clean build
 
