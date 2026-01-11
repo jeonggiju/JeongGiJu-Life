@@ -49,3 +49,9 @@ jobs:
 
       - name: Docker 이미지 생성
         run: docker build -t jeonggiju-life -f spring/Dockerfile-prod .
+
+      - name: Docker 이미지에 Tag 붙이기.
+        run: docker tag jeonggiju-life ${{steps.login-ecr.outputs.registry}}/jeonggiju-life:latest
+
+      - name: ECR에 Docker 이미지 Push
+        run: docker push ${{steps.login-ecr.outputs.registry}}/jeonggiju-life:latest
