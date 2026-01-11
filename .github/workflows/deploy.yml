@@ -16,7 +16,6 @@ jobs:
           POSTGRES_PASSWORD: ${{secrets.SPRING_DATASOURCE_PASSWORD}}
         ports:
           - 5432:5432
-
     steps:
       - name: GitHub Repository 파일 불러오기
         uses: actions/checkout@v4
