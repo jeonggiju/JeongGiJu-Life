@@ -33,7 +33,7 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: ${{secrets.SPRING_DATASOURCE_PASSWORD}}
           JWT_ACCESS_KEY: ${{secrets.JWT_ACCESS_KEY}}
           JWT_REFRESH_KEY: ${{secrets.JWT_REFRESH_KEY}}
-        run: ./gradlew clean build
+        run: ./gradlew :spring:clean :spring:build
 
       - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
         uses: aws-actions/configure-aws-credentials@v4
