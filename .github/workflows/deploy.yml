@@ -12,27 +12,27 @@ jobs:
         image: postgres:16
         env:
           POSTGRES_DB: app
-          POSTGRES_USER: app
-          POSTGRES_PASSWORD: pass1234   # ✅ 필수(비어있으면 안 됨)
+          POSTGRES_USER: ${{secrets.SPRING_DATASOURCE_USERNAME}}
+          POSTGRES_PASSWORD: ${{secrets.SPRING_DATASOURCE_PASSWORD}}
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U app -d app"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4
+      - name: GitHub Repository 파일 불러오기
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - name: JDK 17버전 설치
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Build with DB
+      - name: env 주입 및 빌드
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/app
-          SPRING_DATASOURCE_USERNAME: app
-          SPRING_DATASOURCE_PASSWORD: pass1234
+          SPRING_DATASOURCE_URL: ${{secrets.SPRING_DATASOURCE_URL}}
+          SPRING_DATASOURCE_USERNAME: ${{secrets.SPRING_DATASOURCE_USERNAME}}
+          SPRING_DATASOURCE_PASSWORD: ${{secrets.SPRING_DATASOURCE_PASSWORD}}
+          JWT_ACCESS_KEY: ${{secrets.JWT_ACCESS_KEY}}
+          JWT_REFRESH_KEY: ${{secrets.JWT_REFRESH_KEY}}
         run: ./gradlew clean build
+
