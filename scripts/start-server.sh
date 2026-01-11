@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "--------------- 서버 배포 시작 -----------------"
 docker stop jeonggiju-life-server || true
 docker rm jeonggiju-life-server || true
