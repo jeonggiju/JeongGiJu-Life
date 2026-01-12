@@ -1,4 +1,4 @@
-package com.life.jeonggiju.security.principal;
+package com.life.jeonggiju.security.core.principal;
 
 import java.util.Collection;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.life.jeonggiju.domain.user.entity.User;
+import com.life.jeonggiju.security.core.dto.UserPrincipal;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LifeUserDetails implements UserDetails {
 
-	private final User user;
+	private UserPrincipal principal;
+	private String password;
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -42,25 +43,26 @@ public class LifeUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(user.getAuthority().name());
+		SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(
+			this.principal.getAuthority().name());
 		return List.of(simpleGrantedAuthority);
 	}
 
 	@Override
 	public @Nullable String getPassword() {
-		return user.getPassword();
+		return this.password;
 	}
 
 	@Override
 	public String getUsername() {
-		return user.getEmail();
+		return principal.getUsername();
 	}
 
-	public String getEmail(){
-		return user.getEmail();
+	public String getEmail() {
+		return principal.getEmail();
 	}
 
-	public UUID getId(){
-		return user.getId();
+	public UUID getId() {
+		return principal.getUserId();
 	}
 }
