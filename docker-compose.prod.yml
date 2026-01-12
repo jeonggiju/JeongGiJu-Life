@@ -41,6 +41,8 @@ services:
       - ./postgres/init:/docker-entrypoint-initdb.d:ro
     networks:
       - app-network
+    depends_on:
+      - app
 
 networks:
   app-network:
