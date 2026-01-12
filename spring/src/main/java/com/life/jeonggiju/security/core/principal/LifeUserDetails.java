@@ -11,11 +11,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.life.jeonggiju.security.core.dto.UserPrincipal;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class LifeUserDetails implements UserDetails {
 
 	private UserPrincipal principal;
@@ -64,5 +64,9 @@ public class LifeUserDetails implements UserDetails {
 
 	public UUID getId() {
 		return principal.getUserId();
+	}
+
+	public void invalidatePassword() {
+		this.password = null;
 	}
 }
