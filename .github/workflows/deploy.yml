@@ -40,7 +40,6 @@ jobs:
           JWT_ACCESS_KEY=${{secrets.JWT_ACCESS_KEY}}
           JWT_REFRESH_KEY=${{secrets.JWT_REFRESH_KEY}}
           EOF
-
       - name: ECR에 로그인하기
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
