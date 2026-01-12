@@ -7,15 +7,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_DB: app
-          POSTGRES_USER: ${{secrets.SPRING_DATASOURCE_USERNAME}}
-          POSTGRES_PASSWORD: ${{secrets.SPRING_DATASOURCE_PASSWORD}}
-        ports:
-          - 5432:5432
     steps:
       - name: GitHub Repository 파일 불러오기
         uses: actions/checkout@v4
@@ -28,9 +19,7 @@ jobs:
 
       - name: env 주입 및 빌드
         env:
-          SPRING_DATASOURCE_URL: ${{secrets.SPRING_DATASOURCE_URL}}
-          SPRING_DATASOURCE_USERNAME: ${{secrets.SPRING_DATASOURCE_USERNAME}}
-          SPRING_DATASOURCE_PASSWORD: ${{secrets.SPRING_DATASOURCE_PASSWORD}}
+          SPRING_DATASOURCE_PASSWORD: test
           JWT_ACCESS_KEY: ${{secrets.JWT_ACCESS_KEY}}
           JWT_REFRESH_KEY: ${{secrets.JWT_REFRESH_KEY}}
         run: ./gradlew :spring:clean :spring:build
