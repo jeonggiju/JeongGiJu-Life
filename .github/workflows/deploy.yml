@@ -33,9 +33,12 @@ jobs:
       - name: .env 파일 생성
         run: |
           cat > .env << EOF
-          POSTGRES_DB=app
-          POSTGRES_USER=${{secrets.SPRING_DATASOURCE_USERNAME}}
-          POSTGRES_PASSWORD=${{secrets.SPRING_DATASOURCE_PASSWORD}}
+          SPRING_DATASOURCE_URL=${{secrets.SPRING_DATASOURCE_URL}}
+          SPRING_DATASOURCE_USERNAME=${{secrets.SPRING_DATASOURCE_USERNAME}}
+          SPRING_DATASOURCE_PASSWORD=${{secrets.SPRING_DATASOURCE_PASSWORD}}
+          
+          JWT_ACCESS_KEY=${{secrets.JWT_ACCESS_KEY}}
+          JWT_REFRESH_KEY${{secrets.JWT_REFRESH_KEY}}
           EOF
 
       - name: ECR에 로그인하기
