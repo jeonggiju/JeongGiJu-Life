@@ -5,6 +5,17 @@ services:
     image: 624545858643.dkr.ecr.ap-northeast-2.amazonaws.com/jeonggiju/life:latest
     container_name: jeonggiju-life-server
     restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - JWT_ACCESS_KEY=${JWT_ACCESS_KEY}
+      - JWT_REFRESH_KEY=${JWT_REFRESH_KEY}
+    depends_on:
+      - db
     networks:
       - app-network
   nginx:
