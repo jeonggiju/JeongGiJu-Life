@@ -1,12 +1,15 @@
-package com.life.jeonggiju.security.authentication;
+package com.life.jeonggiju.security.authentication.local.provider;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import com.life.jeonggiju.security.authentication.local.exception.InvalidCredentialsException;
+import com.life.jeonggiju.security.core.principal.LifeUserDetailService;
+import com.life.jeonggiju.security.core.principal.LifeUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,18 +18,20 @@ import lombok.RequiredArgsConstructor;
 public class LifeAuthenticationProvider implements AuthenticationProvider {
 
 	private final LifeUserDetailService userDetailService;
-	// private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
-	public @Nullable Authentication authenticate(Authentication authentication) throws AuthenticationException {
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String email = authentication.getName();
 		String password = authentication.getCredentials().toString();
+		LifeUserDetails userDetails = (LifeUserDetails)userDetailService.loadUserByUsername(email);
 
-		UserDetails userDetails = userDetailService.loadUserByUsername(email);
+		if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+			InvalidCredentialsException.withPassword();
+		}
 
-		// if(!passwordEncoder.matches(password, userDetails.getPassword())) {
-		// 	throw new BadCredentialsException("비밀번호 불일치");
-		// }
+		userDetails.invalidatePassword();
+
 		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	}
 
