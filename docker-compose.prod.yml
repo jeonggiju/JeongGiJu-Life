@@ -7,7 +7,6 @@ services:
     restart: unless-stopped
     networks:
       - app-network
-
   nginx:
     image: 624545858643.dkr.ecr.ap-northeast-2.amazonaws.com/jeonggiju/nginx:latest
     container_name: nginx-server
