@@ -27,7 +27,8 @@ services:
     restart: unless-stopped
     networks:
       - app-network
-
+    depends_on:
+      - app
   db:
     image: postgres:16
     environment:
@@ -41,8 +42,7 @@ services:
       - ./postgres/init:/docker-entrypoint-initdb.d:ro
     networks:
       - app-network
-    depends_on:
-      - app
+
 
 networks:
   app-network:
