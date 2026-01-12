@@ -16,4 +16,12 @@ management:
     web:
       exposure:
         include: prometheus
+jwt:
+  max-active: 1
+  access-token:
+    secret: ${JWT_ACCESS_KEY}
+    expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRCATION_MS}
+  refresh-token:
+    secret: ${JWT_REFRESH_KEY}
+    expiration-ms: ${JWT_REFRESH_TOKEN_EXPIRCATION_MS}
 
