@@ -38,7 +38,7 @@ jobs:
           SPRING_DATASOURCE_PASSWORD=${{secrets.SPRING_DATASOURCE_PASSWORD}}
           
           JWT_ACCESS_KEY=${{secrets.JWT_ACCESS_KEY}}
-          JWT_REFRESH_KEY${{secrets.JWT_REFRESH_KEY}}
+          JWT_REFRESH_KEY=${{secrets.JWT_REFRESH_KEY}}
           EOF
 
       - name: ECR에 로그인하기
