@@ -111,7 +111,8 @@ public class CategoryService {
 		SortDir sortDir,
 		String cursor,
 		UUID idAfter,
-		int size
+		int size,
+		String search
 	) {
 		List<CategorySummaryDto> categories = categoryRepository.findPublicCategoriesWithPagination(
 			userId,
@@ -119,14 +120,13 @@ public class CategoryService {
 			sortDir,
 			cursor,
 			idAfter,
-			size + 1
+			size + 1,
+			search
 		);
-
 		boolean hasNext = categories.size() > size;
 		if (hasNext) {
 			categories = categories.subList(0, size);
 		}
-
 		String nextCursor = null;
 		UUID nextIdAfter = null;
 		if (hasNext && !categories.isEmpty()) {
@@ -135,7 +135,7 @@ public class CategoryService {
 			nextIdAfter = lastCategory.getCategoryId();
 		}
 
-		long totalCount = categoryRepository.countPublicCategories();
+		long totalCount = categoryRepository.countPublicCategories(search);
 
 		List<PublicCategorySummaryResponse.Content> contents = categories.stream()
 			.map(category -> PublicCategorySummaryResponse.Content.builder()
@@ -167,6 +167,10 @@ public class CategoryService {
 	}
 
 	private String buildCursor(CategorySummaryDto category, List<PublicCategorySortKey> sortKeys) {
+		if (sortKeys == null || sortKeys.isEmpty()) {
+			sortKeys = List.of(PublicCategorySortKey.createdAt);
+		}
+
 		List<String> values = new ArrayList<>();
 
 		for (PublicCategorySortKey key : sortKeys) {
@@ -189,6 +193,7 @@ public class CategoryService {
 			}
 		}
 
-		return String.join("|", values);
+		String cursor = String.join("|", values);
+		return cursor;
 	}
 }

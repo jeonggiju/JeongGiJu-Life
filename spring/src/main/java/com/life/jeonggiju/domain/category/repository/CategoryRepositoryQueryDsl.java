@@ -15,9 +15,10 @@ public interface CategoryRepositoryQueryDsl {
 		SortDir sortDir,
 		String cursor,
 		UUID idAfter,
-		int size
+		int size,
+		String search
 	);
 
-	long countPublicCategories();
+	long countPublicCategories(String search);
 }
 

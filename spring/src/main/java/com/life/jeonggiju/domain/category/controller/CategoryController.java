@@ -87,7 +87,8 @@ public class CategoryController {
 		@RequestParam(required = false) SortDir sort,
 		@RequestParam(required = false) String cursor,
 		@RequestParam(required = false) UUID idAfter,
-		@RequestParam(defaultValue = "20") int size
+		@RequestParam(defaultValue = "20") int size,
+		@RequestParam(required = false) String search
 	) {
 		List<PublicCategorySortKey> sortKeys = (key == null || key.isEmpty())
 			? List.of(PublicCategorySortKey.createdAt)
@@ -102,7 +103,8 @@ public class CategoryController {
 			sortDir,
 			cursor,
 			idAfter,
-			size
+			size,
+			search
 		);
 
 		return ResponseEntity.ok(response);
@@ -114,7 +116,8 @@ public class CategoryController {
 		@RequestParam(required = false) SortDir sort,
 		@RequestParam(required = false) String cursor,
 		@RequestParam(required = false) UUID idAfter,
-		@RequestParam(defaultValue = "20") int size
+		@RequestParam(defaultValue = "20") int size,
+		@RequestParam(required = false) String search
 	) {
 		List<PublicCategorySortKey> sortKeys = (key == null || key.isEmpty())
 			? List.of(PublicCategorySortKey.createdAt)
@@ -127,7 +130,8 @@ public class CategoryController {
 			sortDir,
 			cursor,
 			idAfter,
-			size
+			size,
+			search
 		);
 
 		return ResponseEntity.ok(response);

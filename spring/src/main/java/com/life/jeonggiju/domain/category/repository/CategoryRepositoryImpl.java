@@ -41,14 +41,14 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 		SortDir sortDir,
 		String cursor,
 		UUID idAfter,
-		int size
+		int size,
+		String search
 	) {
 		QCategory category = QCategory.category;
 		QUser user = QUser.user;
 		QCategoryLike categoryLike = QCategoryLike.categoryLike;
 		QComment qComment = QComment.comment1;
 
-		// 서브쿼리를 NumberExpression으로 래핑 (coalesce 사용)
 		NumberExpression<Long> likeCountExpr = Expressions.asNumber(
 			JPAExpressions
 				.select(categoryLike.count())
@@ -63,7 +63,6 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 				.where(qComment.category.id.eq(category.id))
 		).coalesce(0L);
 
-		// 서브쿼리: 현재 사용자의 좋아요 여부
 		BooleanExpression userLikeExpression;
 		if (userId != null) {
 			userLikeExpression = JPAExpressions
@@ -78,7 +77,6 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 			userLikeExpression = Expressions.FALSE;
 		}
 
-		// 메인 쿼리
 		JPAQuery<Tuple> query = queryFactory
 			.select(
 				category.id,
@@ -96,7 +94,14 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 			.join(category.user, user)
 			.where(category.visibility.eq(Visibility.PUBLIC));
 
-		// 커서 조건 추가
+		if (search != null && !search.trim().isEmpty()) {
+			String searchTerm = search.trim();
+			BooleanExpression searchCondition = category.title.containsIgnoreCase(searchTerm)
+				.or(category.description.containsIgnoreCase(searchTerm))
+				.or(user.username.containsIgnoreCase(searchTerm));
+			query.where(searchCondition);
+		}
+
 		if (cursor != null && idAfter != null) {
 			BooleanExpression cursorCondition = buildCursorCondition(
 				sortKeys,
@@ -113,16 +118,9 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 			}
 		}
 
-		// 정렬 추가
 		query = applyOrdering(query, sortKeys, sortDir, category, user, likeCountExpr, commentCountExpr);
-
-		// 페이지 크기 제한
 		query.limit(size);
-
-		// 쿼리 실행
 		List<Tuple> results = query.fetch();
-
-		// DTO 변환
 		return results.stream()
 			.map(tuple -> CategorySummaryDto.builder()
 				.categoryId(tuple.get(0, UUID.class))
@@ -140,21 +138,29 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 	}
 
 	@Override
-	public long countPublicCategories() {
+	public long countPublicCategories(String search) {
 		QCategory category = QCategory.category;
+		QUser user = QUser.user;
 
-		Long count = queryFactory
+		JPAQuery<Long> query = queryFactory
 			.select(category.count())
 			.from(category)
-			.where(category.visibility.eq(Visibility.PUBLIC))
-			.fetchOne();
+			.join(category.user, user)
+			.where(category.visibility.eq(Visibility.PUBLIC));
+
+		if (search != null && !search.trim().isEmpty()) {
+			String searchTerm = search.trim();
+			BooleanExpression searchCondition = category.title.containsIgnoreCase(searchTerm)
+				.or(category.description.containsIgnoreCase(searchTerm))
+				.or(user.username.containsIgnoreCase(searchTerm));
+			query.where(searchCondition);
+		}
+
+		Long count = query.fetchOne();
 
 		return count != null ? count : 0L;
 	}
 
-	/**
-	 * 커서 조건 생성
-	 */
 	private BooleanExpression buildCursorCondition(
 		List<PublicCategorySortKey> sortKeys,
 		SortDir sortDir,
@@ -193,9 +199,6 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 		return condition;
 	}
 
-	/**
-	 * 단일 정렬 키에 대한 조건 생성
-	 */
 	private BooleanExpression buildSingleKeyCondition(
 		List<PublicCategorySortKey> sortKeys,
 		SortDir sortDir,
@@ -207,11 +210,10 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 		NumberExpression<Long> likeCountExpr,
 		NumberExpression<Long> commentCountExpr
 	) {
-		BooleanExpression prefixEq = null;
+		BooleanExpression condition = null;
 
-		// 이전 키들은 모두 같아야 함
 		for (int i = 0; i < currentIndex; i++) {
-			BooleanExpression eq = buildEqualCondition(
+			BooleanExpression equalCondition = buildEqualCondition(
 				sortKeys.get(i),
 				cursorValues[i],
 				category,
@@ -219,41 +221,36 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 				likeCountExpr,
 				commentCountExpr
 			);
-			if (eq != null) {
-				prefixEq = (prefixEq == null) ? eq : prefixEq.and(eq);
+
+			if (equalCondition != null) {
+				condition = (condition == null) ? equalCondition : condition.and(equalCondition);
 			}
 		}
 
-		PublicCategorySortKey key = sortKeys.get(currentIndex);
-		String value = cursorValues[currentIndex];
-
-		BooleanExpression cmp = buildCompareCondition(
-			key, sortDir, value, category, user, likeCountExpr, commentCountExpr
+		BooleanExpression compareCondition = buildCompareCondition(
+			sortKeys.get(currentIndex),
+			sortDir,
+			cursorValues[currentIndex],
+			category,
+			user,
+			likeCountExpr,
+			commentCountExpr
 		);
 
-		if (cmp == null)
-			return prefixEq; // 방어
-
-		BooleanExpression result = cmp;
-
-		// 마지막 키에서는 id tie-breaker를 "OR (equal AND idCond)"로 붙여야 함
-		if (currentIndex == sortKeys.size() - 1 && idAfter != null) {
-			BooleanExpression eqLast = buildEqualCondition(
-				key, value, category, user, likeCountExpr, commentCountExpr
-			);
-			BooleanExpression idCond = (sortDir == SortDir.asc)
-				? category.id.gt(idAfter)
-				: category.id.lt(idAfter);
-
-			result = cmp.or(eqLast.and(idCond));
+		if (compareCondition != null) {
+			condition = (condition == null) ? compareCondition : condition.and(compareCondition);
 		}
 
-		return (prefixEq == null) ? result : prefixEq.and(result);
+		if (currentIndex == sortKeys.size() - 1 && idAfter != null) {
+			BooleanExpression idCondition = sortDir == SortDir.asc
+				? category.id.gt(idAfter)
+				: category.id.lt(idAfter);
+			condition = (condition == null) ? idCondition : condition.and(idCondition);
+		}
+
+		return condition;
 	}
 
-	/**
-	 * 동등 조건 생성 (key = value)
-	 */
 	private BooleanExpression buildEqualCondition(
 		PublicCategorySortKey key,
 		String value,
@@ -278,9 +275,6 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 		}
 	}
 
-	/**
-	 * 비교 조건 생성 (key < value 또는 key > value)
-	 */
 	private BooleanExpression buildCompareCondition(
 		PublicCategorySortKey key,
 		SortDir sortDir,
@@ -311,9 +305,6 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 		}
 	}
 
-	/**
-	 * 정렬 적용
-	 */
 	private JPAQuery<Tuple> applyOrdering(
 		JPAQuery<Tuple> query,
 		List<PublicCategorySortKey> sortKeys,
@@ -337,7 +328,6 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 			}
 		}
 
-		// 마지막에 ID로 정렬 (deterministic ordering)
 		if (sortDir == SortDir.asc) {
 			query.orderBy(category.id.asc());
 		} else {
@@ -347,9 +337,6 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 		return query;
 	}
 
-	/**
-	 * 개별 키에 대한 OrderSpecifier 생성
-	 */
 	private OrderSpecifier<?> createOrderSpecifier(
 		PublicCategorySortKey key,
 		SortDir sortDir,

@@ -54,6 +54,7 @@ public class Category {
 	@Column(nullable = false)
 	private Visibility visibility;
 
+	@Column(nullable = false)
 	@CreatedDate
 	private Instant createdAt;
 
