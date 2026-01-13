@@ -5,12 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UserInfo {
-	private String username;
-	private String email;
+public class UpdateUserRequest {
 	private String title;
 	private String description;
-	private int birthYear;
-	private int birthMonth;
-	private int birthDay;
+	private String nickName;
 }

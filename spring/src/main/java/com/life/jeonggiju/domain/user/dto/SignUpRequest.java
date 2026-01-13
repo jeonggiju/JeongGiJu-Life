@@ -17,6 +17,10 @@ public class SignUpRequest {
 
 	@NotNull
 	private String password;
+
+	@NotNull
+	private String nickname;
+
 	private String title;
 	private String description;
 
