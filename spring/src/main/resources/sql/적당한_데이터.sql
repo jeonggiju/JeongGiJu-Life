@@ -1,5 +1,6 @@
 BEGIN;
 
+-- pgcrypto (gen_random_uuid)
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- =========================================================
@@ -20,7 +21,7 @@ CASCADE;
 -- =========================================================
 -- 파라미터
 -- users:        10
--- categories:  500
+-- categories:   50
 -- likes:      8000
 -- comments:   root 6000 + depth2~5 가변 (확률 기반)
 -- =========================================================
@@ -33,17 +34,23 @@ CREATE TEMP TABLE tmp_categories (id UUID PRIMARY KEY, record_type TEXT NOT NULL
 
 -- =========================================================
 -- 1) users 10명
+-- users(authority check 0~1) 준수
 -- =========================================================
 WITH ins AS (
-INSERT INTO users (id, authority, birth_day, birth_month, birth_year, description, email, password, title, username)
+INSERT INTO users (
+    id, authority, birth_day, birth_month, birth_year,
+    description, email, nickname, "password", title, username
+)
 SELECT
     gen_random_uuid(),
-    1,
+    (floor(random() * 2))::int2, -- 0 or 1
     (floor(random() * 28) + 1)::int,
     (floor(random() * 12) + 1)::int,
     (floor(random() * 10) + 1995)::int,
     '더미 사용자 ' || gs,
     'user' || lpad(gs::text, 2, '0') || '@example.com',
+    '닉네임' || gs,
+    -- 실제 서비스면 bcrypt 해시 넣는 게 맞지만, DB 제약상 text라 그냥 문자열로 둠
     'pass1234',
     'USER',
     'user' || lpad(gs::text, 2, '0')
@@ -54,15 +61,19 @@ INSERT INTO tmp_users(id)
 SELECT id FROM ins;
 
 -- =========================================================
--- 2) category 500개 (record_type 5종 균등)
+-- 2) category 50개 (record_type 5종 균등)
+-- category.created_at NOT NULL 채움
 -- record_type: CHECK, CHECKLIST, TEXT, TIME, NUMBER
+-- visibility: PUBLIC/PRIVATE
 -- =========================================================
 WITH u AS (
     SELECT array_agg(id ORDER BY id) AS ids, count(*) AS n
     FROM tmp_users
 ),
      ins AS (
-INSERT INTO category (id, user_id, description, record_type, title, visibility)
+INSERT INTO category (
+    id, user_id, description, record_type, title, visibility, created_at
+)
 SELECT
     gen_random_uuid(),
     (u.ids)[(((gs - 1) % u.n) + 1)] AS user_id,
@@ -81,15 +92,16 @@ END AS record_type,
           WHEN 3 THEN '시간기록-' || gs
           ELSE '숫자기록-' || gs
 END AS title,
-        CASE WHEN random() < 0.6 THEN 'PUBLIC' ELSE 'PRIVATE' END AS visibility
-    FROM generate_series(1, 500) gs, u
+        CASE WHEN random() < 0.6 THEN 'PUBLIC' ELSE 'PRIVATE' END AS visibility,
+        (now() - (floor(random()*90)::int * interval '1 day'))::timestamptz AS created_at
+    FROM generate_series(1, 50) gs, u
     RETURNING id, record_type
 )
 INSERT INTO tmp_categories(id, record_type)
 SELECT id, record_type FROM ins;
 
 -- =========================================================
--- 3) category_like 8000개 (중복은 유니크 제약 있으면 무시)
+-- 3) category_like 8000개 (중복은 uk_user_category로 무시)
 -- =========================================================
 WITH u AS (SELECT array_agg(id) AS ids FROM tmp_users),
      c AS (SELECT array_agg(id) AS ids FROM tmp_categories),
@@ -107,12 +119,9 @@ FROM pairs
     ON CONFLICT (user_id, category_id) DO NOTHING;
 
 -- =========================================================
--- 3.5) comment 더미데이터 (다양 + 최대 5단)
--- - 루트 6000개
--- - 각 댓글은 확률적으로 0~N개의 자식을 가지며, 깊어질수록 자식 수가 줄어듦
--- - 최대 depth=5 (루트=1, ... , 5단)
+-- 4) comment 더미데이터 (다양 + 최대 5단)
+-- comment.created_at NOT NULL / updated_at nullable
 -- =========================================================
-
 DROP TABLE IF EXISTS tmp_level1;
 DROP TABLE IF EXISTS tmp_level2;
 DROP TABLE IF EXISTS tmp_level3;
@@ -129,7 +138,7 @@ CREATE TEMP TABLE tmp_level5 (id UUID PRIMARY KEY, category_id UUID NOT NULL, de
 WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
      c AS (SELECT array_agg(id) AS cids FROM tmp_categories),
      ins AS (
-INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+INSERT INTO "comment" (id, "comment", parent_id, category_id, user_id, created_at, updated_at)
 SELECT
     gen_random_uuid(),
     '댓글(d1) - ' || gs,
@@ -150,7 +159,7 @@ SELECT id, category_id, 1 FROM ins;
 -- (2) depth=2: 루트당 0~4개 (70% 확률로 생성, 생성 시 1~4개)
 WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
      ins AS (
-INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+INSERT INTO "comment" (id, "comment", parent_id, category_id, user_id, created_at, updated_at)
 SELECT
     gen_random_uuid(),
     '댓글(d2) - ' || p.id || '-' || k,
@@ -179,7 +188,7 @@ SELECT id, category_id, 2 FROM ins;
 -- (3) depth=3: depth2당 0~3개 (50% 확률로 생성, 생성 시 1~3개)
 WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
      ins AS (
-INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+INSERT INTO "comment" (id, "comment", parent_id, category_id, user_id, created_at, updated_at)
 SELECT
     gen_random_uuid(),
     '댓글(d3) - ' || p.id || '-' || k,
@@ -208,7 +217,7 @@ SELECT id, category_id, 3 FROM ins;
 -- (4) depth=4: depth3당 0~2개 (35% 확률로 생성, 생성 시 1~2개)
 WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
      ins AS (
-INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+INSERT INTO "comment" (id, "comment", parent_id, category_id, user_id, created_at, updated_at)
 SELECT
     gen_random_uuid(),
     '댓글(d4) - ' || p.id || '-' || k,
@@ -237,7 +246,7 @@ SELECT id, category_id, 4 FROM ins;
 -- (5) depth=5: depth4당 0~1개 (20% 확률로 1개 생성)
 WITH u AS (SELECT array_agg(id) AS uids FROM tmp_users),
      ins AS (
-INSERT INTO "comment" (id, comment, parent_id, category_id, user_id, created_at, updated_at)
+INSERT INTO "comment" (id, "comment", parent_id, category_id, user_id, created_at, updated_at)
 SELECT
     gen_random_uuid(),
     '댓글(d5) - ' || p.id || '-1',
@@ -264,9 +273,10 @@ INSERT INTO tmp_level5(id, category_id, depth)
 SELECT id, category_id, 5 FROM ins;
 
 -- =========================================================
--- 4) check_record: CHECK 카테고리당 최근 120일
+-- 5) check_record: CHECK 카테고리당 최근 120일
+-- uk_category_date(category_id, date) 준수
 -- =========================================================
-INSERT INTO check_record (id, date, success, category_id)
+INSERT INTO check_record (id, "date", success, category_id)
 SELECT
     gen_random_uuid(),
     (current_date - d)::date,
@@ -276,9 +286,9 @@ FROM (SELECT id FROM tmp_categories WHERE record_type = 'CHECK') cat
          CROSS JOIN generate_series(0, 119) d;
 
 -- =========================================================
--- 5) check_list_record: CHECKLIST 카테고리당 최근 60일 * 하루 4개
+-- 6) check_list_record: CHECKLIST 카테고리당 최근 60일 * 하루 4개
 -- =========================================================
-INSERT INTO check_list_record (id, date, success, category_id, todo)
+INSERT INTO check_list_record (id, "date", success, category_id, todo)
 SELECT
     gen_random_uuid(),
     (current_date - d)::date,
@@ -290,9 +300,9 @@ FROM (SELECT id FROM tmp_categories WHERE record_type = 'CHECKLIST') cat
          CROSS JOIN generate_series(1, 4) t;
 
 -- =========================================================
--- 6) text_record: TEXT 카테고리당 최근 90일
+-- 7) text_record: TEXT 카테고리당 최근 90일
 -- =========================================================
-INSERT INTO text_record (id, date, category_id, text, title)
+INSERT INTO text_record (id, "date", category_id, "text", title)
 SELECT
     gen_random_uuid(),
     (current_date - d)::date,
@@ -303,9 +313,9 @@ FROM (SELECT id FROM tmp_categories WHERE record_type = 'TEXT') cat
          CROSS JOIN generate_series(0, 89) d;
 
 -- =========================================================
--- 7) time_record: TIME 카테고리당 최근 90일 (0~6시간 랜덤)
+-- 8) time_record: TIME 카테고리당 최근 90일 (0~6시간 랜덤)
 -- =========================================================
-INSERT INTO time_record (id, date, time, category_id)
+INSERT INTO time_record (id, "date", "time", category_id)
 SELECT
     gen_random_uuid(),
     (current_date - d)::date,
@@ -315,13 +325,14 @@ FROM (SELECT id FROM tmp_categories WHERE record_type = 'TIME') cat
     CROSS JOIN generate_series(0, 89) d;
 
 -- =========================================================
--- 8) number_record: NUMBER 카테고리당 최근 120일 (0~100)
+-- 9) number_record: NUMBER 카테고리당 최근 120일 (0~100)
+-- number는 float8 컬럼이라 float로 넣음
 -- =========================================================
-INSERT INTO number_record (id, date, number, category_id)
+INSERT INTO number_record (id, "date", "number", category_id)
 SELECT
     gen_random_uuid(),
     (current_date - d)::date,
-    (floor(random()*101))::int,
+    (random() * 100.0)::float8,
     cat.id
 FROM (SELECT id FROM tmp_categories WHERE record_type = 'NUMBER') cat
          CROSS JOIN generate_series(0, 119) d;
