@@ -21,7 +21,7 @@ import com.life.jeonggiju.domain.category.service.CommentService;
 import com.life.jeonggiju.domain.user.dto.CreateCommentRequest;
 import com.life.jeonggiju.domain.user.dto.CreateCommentResponse;
 import com.life.jeonggiju.domain.user.dto.CreateReplyRequest;
-import com.life.jeonggiju.security.principal.LifeUserDetails;
+import com.life.jeonggiju.security.core.principal.LifeUserDetails;
 
 import lombok.RequiredArgsConstructor;
 

@@ -16,7 +16,7 @@ import com.life.jeonggiju.domain.category.dto.AddLikeDto;
 import com.life.jeonggiju.domain.category.dto.CheckCountCategoryResponse;
 import com.life.jeonggiju.domain.category.dto.DeleteLikeDto;
 import com.life.jeonggiju.domain.category.service.CategoryLikeService;
-import com.life.jeonggiju.security.principal.LifeUserDetails;
+import com.life.jeonggiju.security.core.principal.LifeUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
