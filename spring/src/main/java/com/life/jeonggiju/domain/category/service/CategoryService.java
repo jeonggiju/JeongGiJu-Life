@@ -1,9 +1,7 @@
 package com.life.jeonggiju.domain.category.service;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -12,11 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.life.jeonggiju.domain.category.dto.AddCategory;
 import com.life.jeonggiju.domain.category.dto.FindCategoryResponse;
 import com.life.jeonggiju.domain.category.dto.LikeEmailCategoryResponse;
-import com.life.jeonggiju.domain.category.dto.PublicCategoryResponse;
+import com.life.jeonggiju.domain.category.dto.PublicCategorySummaryResponse;
 import com.life.jeonggiju.domain.category.dto.UpdateCategory;
 import com.life.jeonggiju.domain.category.entity.Category;
-import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
+import com.life.jeonggiju.domain.category.repository.CategoryRepository;
+import com.life.jeonggiju.domain.category.repository.CommentRepository;
 import com.life.jeonggiju.domain.user.entity.User;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
 
@@ -30,9 +29,10 @@ public class CategoryService {
 
 	private final CategoryRepository categoryRepository;
 	private final UserRepository userRepository;
+	private final CommentRepository commentRepository;
 
 	@Transactional(readOnly = true)
-	public FindCategoryResponse find(UUID categoryId){
+	public FindCategoryResponse find(UUID categoryId) {
 		Category category = categoryRepository.findById(categoryId).orElseThrow();
 		return FindCategoryResponse
 			.builder()
@@ -46,10 +46,10 @@ public class CategoryService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<FindCategoryResponse> findAll(UUID userId){
+	public List<FindCategoryResponse> findAll(UUID userId) {
 		List<Category> categories = categoryRepository.findAllByUserId(userId);
 		List<FindCategoryResponse> result = new ArrayList();
-		for(Category category : categories) {
+		for (Category category : categories) {
 			result.add(FindCategoryResponse
 				.builder()
 				.id(category.getId())
@@ -64,22 +64,13 @@ public class CategoryService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<LikeEmailCategoryResponse> findEmailLikeUser(UUID categoryId, UUID userId){
+	public List<LikeEmailCategoryResponse> findEmailLikeUser(UUID categoryId) {
 		Category category = categoryRepository.findById(categoryId).orElseThrow();
 
-		if(!category.getUser().getId().equals(userId)) {
-			log.info(category.getTitle());
-			log.info(String.valueOf(category.getUser().getId()));
-			log.info(String.valueOf(category.getUser().getEmail()));
-			log.info(String.valueOf(userId));
-
-			throw new RuntimeException("잘못된 사용자입니다.");
-		};
-
 		List<LikeEmailCategoryResponse> result = new ArrayList<>();
-		List<CategoryLike> categoryLike = category.getCategoryLike();
+		List<CategoryLike> categoryLike = category.getCategoryLikes();
 
-		for(CategoryLike like : categoryLike) {
+		for (CategoryLike like : categoryLike) {
 			result.add(
 				LikeEmailCategoryResponse.builder()
 					.email(like.getUser().getEmail())
@@ -90,50 +81,30 @@ public class CategoryService {
 	}
 
 	@Transactional
-	public void save(UUID userId, AddCategory dto){
+	public void save(UUID userId, AddCategory dto) {
 		User user = userRepository.findById(userId).orElseThrow();
-		Category category = Category.of(dto.getTitle(), dto.getDescription(), dto.getRecordType(), user, dto.getVisibility());
+		Category category = Category.of(dto.getTitle(), dto.getDescription(), dto.getRecordType(), user,
+			dto.getVisibility());
 		categoryRepository.save(category);
 	}
 
 	@Transactional
-	public void update(UpdateCategory dto){
+	public void update(UpdateCategory dto) {
 		Category category = categoryRepository.findById(dto.getId()).orElseThrow();
 		category.update(dto.getTitle(), dto.getDescription(), dto.getVisibility());
 		categoryRepository.save(category);
 	}
 
 	@Transactional
-	public void delete(UUID id){
+	public void delete(UUID id) {
 		categoryRepository.deleteById(id);
 	}
 
 	@Transactional(readOnly = true)
-	public List<PublicCategoryResponse> findPublic(){
-
-		List<Category> categories = categoryRepository.findPublicCategoriesWithOwner();
-
-		Map<UUID, PublicCategoryResponse> map = new LinkedHashMap<>();
-
-		for(Category category: categories) {
-			User user = category.getUser();
-
-			PublicCategoryResponse response = map.computeIfAbsent(
-				user.getId(),
-				uuid -> PublicCategoryResponse.builder()
-					.email(user.getEmail())
-					.categories(new ArrayList<>())
-					.build()
-			);
-
-			response.getCategories().add(
-				PublicCategoryResponse.PublicCategoryElement.builder()
-					.categoryId(category.getId())
-					.title(category.getTitle())
-					.recordType(category.getRecordType())
-					.build()
-			);
-		}
-		return new ArrayList<>(map.values());
+	public List<PublicCategorySummaryResponse> findPublic(UUID userId) {
+		return (userId == null)
+			? categoryRepository.findPublicSummariesAnonymous()
+			: categoryRepository.findPublicSummaries(userId);
 	}
+
 }
