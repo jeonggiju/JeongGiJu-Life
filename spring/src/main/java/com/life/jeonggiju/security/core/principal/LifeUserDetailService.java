@@ -11,7 +11,9 @@ import com.life.jeonggiju.domain.user.repository.UserRepository;
 import com.life.jeonggiju.security.core.dto.UserPrincipal;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LifeUserDetailService implements UserDetailsService {
@@ -20,6 +22,7 @@ public class LifeUserDetailService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		log.info(username);
 		User user = userRepository.findByEmail(username).orElseThrow(() -> UserNotFoundException.withEmail(username));
 
 		UserPrincipal principal = UserPrincipal.builder()

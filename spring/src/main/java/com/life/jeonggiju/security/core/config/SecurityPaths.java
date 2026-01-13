@@ -34,7 +34,8 @@ public class SecurityPaths {
 		"/error",
 		"/uploads/**",
 		"/.well-known/**",
-		"/default-ui.css"
+		"/default-ui.css",
+		"/api/categories/public"
 	};
 	public static final String[] PUBLIC_PATHS = combineArrays(
 		STATIC_RESOURCES,
@@ -89,8 +90,9 @@ public class SecurityPaths {
 
 	public static class MethodSpecific {
 		public static final String[] POST_ONLY = {
-			"/api/users",
+			"/api/user",
 			"/api/auth/refresh"
 		};
 	}
+
 }
