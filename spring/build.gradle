@@ -37,6 +37,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    testImplementation 'com.h2database:h2'
 
     implementation 'com.github.f4b6a3:uuid-creator:6.1.1'
 }
