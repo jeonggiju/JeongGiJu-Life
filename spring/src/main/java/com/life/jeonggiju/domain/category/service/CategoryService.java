@@ -3,14 +3,18 @@ package com.life.jeonggiju.domain.category.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.life.jeonggiju.domain.category.dto.AddCategory;
+import com.life.jeonggiju.domain.category.dto.CategorySummaryDto;
 import com.life.jeonggiju.domain.category.dto.FindCategoryResponse;
 import com.life.jeonggiju.domain.category.dto.LikeEmailCategoryResponse;
+import com.life.jeonggiju.domain.category.dto.PublicCategorySortKey;
 import com.life.jeonggiju.domain.category.dto.PublicCategorySummaryResponse;
+import com.life.jeonggiju.domain.category.dto.SortDir;
 import com.life.jeonggiju.domain.category.dto.UpdateCategory;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
@@ -101,10 +105,90 @@ public class CategoryService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<PublicCategorySummaryResponse> findPublic(UUID userId) {
-		return (userId == null)
-			? categoryRepository.findPublicSummariesAnonymous()
-			: categoryRepository.findPublicSummaries(userId);
+	public PublicCategorySummaryResponse findPublicCategoriesSummary(
+		UUID userId,
+		List<PublicCategorySortKey> sortKeys,
+		SortDir sortDir,
+		String cursor,
+		UUID idAfter,
+		int size
+	) {
+		List<CategorySummaryDto> categories = categoryRepository.findPublicCategoriesWithPagination(
+			userId,
+			sortKeys,
+			sortDir,
+			cursor,
+			idAfter,
+			size + 1
+		);
+
+		boolean hasNext = categories.size() > size;
+		if (hasNext) {
+			categories = categories.subList(0, size);
+		}
+
+		String nextCursor = null;
+		UUID nextIdAfter = null;
+		if (hasNext && !categories.isEmpty()) {
+			CategorySummaryDto lastCategory = categories.get(categories.size() - 1);
+			nextCursor = buildCursor(lastCategory, sortKeys);
+			nextIdAfter = lastCategory.getCategoryId();
+		}
+
+		long totalCount = categoryRepository.countPublicCategories();
+
+		List<PublicCategorySummaryResponse.Content> contents = categories.stream()
+			.map(category -> PublicCategorySummaryResponse.Content.builder()
+				.categoryId(category.getCategoryId())
+				.categoryTitle(category.getCategoryTitle())
+				.categoryDesc(category.getCategoryDesc())
+				.authorNickname(category.getAuthorNickname())
+				.type(category.getType())
+				.hasLike(category.isHasLike())
+				.isMyCategory(userId != null && userId.equals(category.getAuthorId()))
+				.likeCount(category.getLikeCount())
+				.commentCount(category.getCommentCount())
+				.build())
+			.collect(Collectors.toList());
+
+		String sortBy = sortKeys.stream()
+			.map(Enum::name)
+			.collect(Collectors.joining(","));
+
+		return PublicCategorySummaryResponse.builder()
+			.nextCursor(nextCursor)
+			.nextIdAfter(nextIdAfter)
+			.hasNext(hasNext)
+			.totalCount(totalCount)
+			.sortBy(sortBy)
+			.sortDirection(sortDir.name())
+			.contents(contents)
+			.build();
 	}
 
+	private String buildCursor(CategorySummaryDto category, List<PublicCategorySortKey> sortKeys) {
+		List<String> values = new ArrayList<>();
+
+		for (PublicCategorySortKey key : sortKeys) {
+			switch (key) {
+				case likeCount:
+					values.add(String.valueOf(category.getLikeCount()));
+					break;
+				case commentCount:
+					values.add(String.valueOf(category.getCommentCount()));
+					break;
+				case title:
+					values.add(category.getCategoryTitle() != null ? category.getCategoryTitle() : "");
+					break;
+				case createdAt:
+					values.add(category.getCreatedAt() != null ? category.getCreatedAt().toString() : "");
+					break;
+				case authorNickname:
+					values.add(category.getAuthorNickname() != null ? category.getAuthorNickname() : "");
+					break;
+			}
+		}
+
+		return String.join("|", values);
+	}
 }

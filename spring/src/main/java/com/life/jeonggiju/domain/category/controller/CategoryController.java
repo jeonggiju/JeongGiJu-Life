@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.life.jeonggiju.domain.category.dto.AddCategory;
+import com.life.jeonggiju.domain.category.dto.FindCategoryResponse;
 import com.life.jeonggiju.domain.category.dto.LikeEmailCategoryResponse;
+import com.life.jeonggiju.domain.category.dto.PublicCategorySortKey;
 import com.life.jeonggiju.domain.category.dto.PublicCategorySummaryResponse;
+import com.life.jeonggiju.domain.category.dto.SortDir;
 import com.life.jeonggiju.domain.category.dto.UpdateCategory;
 import com.life.jeonggiju.domain.category.service.CategoryService;
 import com.life.jeonggiju.security.core.principal.LifeUserDetails;
@@ -32,7 +36,7 @@ public class CategoryController {
 	private final CategoryService categoryService;
 
 	@GetMapping("/all")
-	public ResponseEntity<?> findAll(
+	public ResponseEntity<List<FindCategoryResponse>> findAll(
 		@AuthenticationPrincipal LifeUserDetails userDetails
 	) {
 		return ResponseEntity.ok(
@@ -49,12 +53,12 @@ public class CategoryController {
 	}
 
 	@GetMapping
-	public ResponseEntity<?> find(UUID id) {
+	public ResponseEntity<FindCategoryResponse> find(UUID id) {
 		return ResponseEntity.ok(categoryService.find(id));
 	}
 
 	@PostMapping
-	public ResponseEntity<?> add(
+	public ResponseEntity<Void> add(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		AddCategory addCategory
 	) {
@@ -63,7 +67,7 @@ public class CategoryController {
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(
+	public ResponseEntity<Void> update(
 		UpdateCategory updateCategory
 	) {
 		categoryService.update(updateCategory);
@@ -71,23 +75,61 @@ public class CategoryController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> delete(UUID id) {
+	public ResponseEntity<Void> delete(UUID id) {
 		categoryService.delete(id);
 		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/public/summary")
-	public ResponseEntity<List<PublicCategorySummaryResponse>> findPublicCategories(
-		@AuthenticationPrincipal LifeUserDetails userDetails
+	public ResponseEntity<PublicCategorySummaryResponse> findPublicCategories(
+		@AuthenticationPrincipal LifeUserDetails userDetails,
+		@RequestParam(required = false) List<PublicCategorySortKey> key,
+		@RequestParam(required = false) SortDir sort,
+		@RequestParam(required = false) String cursor,
+		@RequestParam(required = false) UUID idAfter,
+		@RequestParam(defaultValue = "20") int size
 	) {
-		UUID id = userDetails.getId();
-		boolean isLogin = id != null;
-		List<PublicCategorySummaryResponse> response;
-		if (isLogin) {
-			response = categoryService.findPublic(id);
-		} else {
-			response = categoryService.findPublic(null);
-		}
+		List<PublicCategorySortKey> sortKeys = (key == null || key.isEmpty())
+			? List.of(PublicCategorySortKey.createdAt)
+			: key;
+		SortDir sortDir = (sort == null) ? SortDir.desc : sort;
+
+		UUID userId = (userDetails != null) ? userDetails.getId() : null;
+
+		PublicCategorySummaryResponse response = categoryService.findPublicCategoriesSummary(
+			userId,
+			sortKeys,
+			sortDir,
+			cursor,
+			idAfter,
+			size
+		);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/public/summary/no-token")
+	public ResponseEntity<PublicCategorySummaryResponse> findPublicCategories(
+		@RequestParam(required = false) List<PublicCategorySortKey> key,
+		@RequestParam(required = false) SortDir sort,
+		@RequestParam(required = false) String cursor,
+		@RequestParam(required = false) UUID idAfter,
+		@RequestParam(defaultValue = "20") int size
+	) {
+		List<PublicCategorySortKey> sortKeys = (key == null || key.isEmpty())
+			? List.of(PublicCategorySortKey.createdAt)
+			: key;
+		SortDir sortDir = (sort == null) ? SortDir.desc : sort;
+
+		PublicCategorySummaryResponse response = categoryService.findPublicCategoriesSummary(
+			null,
+			sortKeys,
+			sortDir,
+			cursor,
+			idAfter,
+			size
+		);
+
 		return ResponseEntity.ok(response);
 	}
 }

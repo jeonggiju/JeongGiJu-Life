@@ -1,8 +1,11 @@
 package com.life.jeonggiju.domain.category.entity;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.life.jeonggiju.domain.checkRecord.entity.CheckRecord;
@@ -50,6 +53,10 @@ public class Category {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Visibility visibility;
+
+	@CreatedDate
+	private Instant createdAt;
+
 	@ManyToOne
 	@JsonIgnore
 	@JoinColumn(name = "user_id")
