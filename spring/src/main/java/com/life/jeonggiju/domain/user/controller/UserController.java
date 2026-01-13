@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.life.jeonggiju.domain.user.dto.SignUpRequest;
-import com.life.jeonggiju.domain.user.dto.UpdateUser;
+import com.life.jeonggiju.domain.user.dto.UpdateUserRequest;
+import com.life.jeonggiju.domain.user.dto.UserFindResponse;
 import com.life.jeonggiju.domain.user.service.UserService;
 import com.life.jeonggiju.security.core.principal.LifeUserDetails;
 
@@ -26,7 +27,7 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<?> find(
+	public ResponseEntity<UserFindResponse> find(
 		@AuthenticationPrincipal LifeUserDetails userDetails
 	) {
 		return ResponseEntity.ok(userService.find(userDetails.getId()));
@@ -34,8 +35,7 @@ public class UserController {
 
 	@PutMapping
 	public ResponseEntity<?> update(
-		@AuthenticationPrincipal LifeUserDetails userDetails,
-		UpdateUser dto) {
+		@AuthenticationPrincipal LifeUserDetails userDetails, UpdateUserRequest dto) {
 		userService.update(userDetails.getId(), dto);
 		return ResponseEntity.ok().build();
 	}
