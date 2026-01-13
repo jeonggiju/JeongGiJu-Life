@@ -18,13 +18,13 @@ public class AuthConfig {
 		return new ProviderManager(authenticationProvider);
 	}
 
-	@Bean
+	@Bean("passwordEncoder")
 	@Profile({"local", "dev"})
-	public PasswordEncoder passwordEncoder() {
+	public PasswordEncoder devPasswordEncoder() {
 		return new PlainTextPasswordEncoder();
 	}
 
-	@Bean
+	@Bean("passwordEncoder")
 	@Profile("prod")
 	public PasswordEncoder prodPasswordEncoder() {
 		return new BCryptPasswordEncoder();
