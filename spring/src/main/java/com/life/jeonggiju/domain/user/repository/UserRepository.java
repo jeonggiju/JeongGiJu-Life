@@ -10,4 +10,6 @@ import com.life.jeonggiju.domain.user.entity.User;
 public interface UserRepository extends JpaRepository<User, UUID> {
 
 	Optional<User> findByEmail(String email);
+
+	Optional<User> findByUsernameAndEmail(String username, String email);
 }
