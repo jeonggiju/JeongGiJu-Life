@@ -19,6 +19,7 @@ jobs:
 
       - name: env 주입 및 빌드
         run: ./gradlew :spring:clean :spring:build
+
       - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -36,6 +37,7 @@ jobs:
           JWT_ACCESS_KEY=${{secrets.JWT_ACCESS_KEY}}
           JWT_REFRESH_KEY=${{secrets.JWT_REFRESH_KEY}}
           EOF
+
       - name: ECR에 로그인하기
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
