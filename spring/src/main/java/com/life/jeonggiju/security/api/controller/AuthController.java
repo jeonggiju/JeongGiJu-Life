@@ -29,9 +29,9 @@ public class AuthController {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@GetMapping("/csrf-token")
-	public ResponseEntity<Void> getCsrfToken(CsrfToken csrfToken) {
-		csrfToken.getToken();
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	public ResponseEntity<Void> getCsrfToken(CsrfToken csrfToken, HttpServletResponse response) {
+		response.setHeader("X-CSRF-TOKEN", csrfToken.getToken());
+		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/refresh")

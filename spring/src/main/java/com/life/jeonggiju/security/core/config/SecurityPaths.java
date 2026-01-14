@@ -35,12 +35,12 @@ public class SecurityPaths {
 		"/uploads/**",
 		"/.well-known/**",
 		"/api/category/public/summary/no-token",
+		"/api/category/comment/no-token/**",
 		"/api/check-list/all",
 		"/api/time/all",
 		"/api/text/all",
 		"/api/number/all",
 		"/api/check/all",
-		"/api/category/comment/**",
 		"/default-ui.css",
 	};
 	public static final String[] PUBLIC_PATHS = combineArrays(
