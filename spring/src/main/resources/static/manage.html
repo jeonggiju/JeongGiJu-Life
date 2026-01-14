@@ -54,6 +54,8 @@
             border: 1px solid #ccc;
             background: white;
             cursor: pointer;
+            min-width: 70px;
+            text-align: center;
             font-size: 13px;
             text-decoration: none;
             color: #333;
@@ -79,7 +81,8 @@
             background: white;
             cursor: pointer;
             font-size: 13px;
-            min-width: 50px;
+            min-width: 60px;
+            text-align: center;
         }
 
         .language-toggle:hover {
@@ -117,7 +120,7 @@
         /* Panel Content - 왼쪽 (카테고리 목록) */
         .drawer-panel-content {
             width: 320px;
-            height: auto;
+            height: 100%;
             background: linear-gradient(135deg, #cfcfcf 0%, #dadada 100%);
             border-radius: 0;
             box-shadow: 4px 4px 16px rgba(0,0,0,0.15);
@@ -128,12 +131,12 @@
 
         /* PUBLIC drawer - top: 170px */
         #drawer-public .drawer-panel-content {
-            max-height: calc(100vh - 170px);
+            height: calc(100vh - 170px);
         }
 
         /* PRIVATE drawer - top: 310px */
         #drawer-private .drawer-panel-content {
-            max-height: calc(100vh - 310px);
+            height: calc(100vh - 310px);
         }
 
         /* Panel Inner - 스크롤 영역 */
@@ -144,7 +147,7 @@
         }
 
         .drawer-panel-inner::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
 
         .drawer-panel-inner::-webkit-scrollbar-track {
@@ -265,6 +268,8 @@
             background: #666;
             color: #fff;
             cursor: pointer;
+            min-width: 80px;
+            text-align: center;
             font-size: 12px;
             text-align: center;
             white-space: nowrap;
@@ -340,23 +345,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 14px;
+            padding: 8px 14px;
             border: none;
             border-bottom: 1px solid #e8e8e8;
             background: white;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             text-align: left;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
+            min-height: 32px;
         }
 
         .category-item:hover {
-            background: #f5f5f5;
+            background: #f8f8f8;
         }
 
         .category-item.active {
             background: #e8e8e8;
             font-weight: 600;
+            border-left: 3px solid #666;
+            padding-left: 11px;
         }
 
         .category-item.active .category-type-badge {
@@ -369,26 +377,31 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            color: #555;
+            color: #333;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.3;
+            padding-right: 12px;
         }
 
         .category-item:hover .category-title {
-            color: #333;
+            color: #222;
         }
 
         .category-item.active .category-title {
-            color: #333;
+            color: #222;
+            font-weight: 600;
         }
 
         .category-type-badge {
-            padding: 3px 7px;
-            background: #e0e0e0;
+            padding: 3px 8px;
+            background: #e8e8e8;
             color: #666;
-            font-size: 9px;
+            font-size: 9.5px;
             font-weight: 600;
-            margin-left: 10px;
             flex-shrink: 0;
-            border-radius: 4px;
+            border-radius: 3px;
+            line-height: 1.2;
         }
 
         .date-group {
@@ -845,6 +858,8 @@
             border: 1px solid #ccc;
             background: white;
             cursor: pointer;
+            min-width: 70px;
+            text-align: center;
             font-size: 11px;
             margin-left: 8px;
         }
@@ -1973,7 +1988,7 @@
             }
 
             .drawer-panel.open .drawer-panel-content {
-                height: auto;
+                height: 100%;
                 max-height: 200px;
             }
 
@@ -2085,8 +2100,18 @@
             border: 1px solid #ccc;
             background: white;
             cursor: pointer;
-            font-size: 18px;
-            line-height: 1;
+            font-size: 13px;
+            min-width: 70px;
+            text-align: center;
+            height: 32px;
+            line-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            vertical-align: middle;
+            text-decoration: none;
+            color: #333;
         }
 
         .notification-bell:hover {
@@ -2327,6 +2352,608 @@
             color: #999;
             font-size: 13px;
         }
+
+
+
+        /* ========== 언어 전환 시 완전한 레이아웃 고정 ========== */
+
+        /* 전역 폰트 설정 */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: 0;
+        }
+
+        /* ===== 모든 버튼 공통 스타일 - 완전 고정 ===== */
+        .btn, .language-toggle, .toggle-btn,
+        .add-record-btn, .submit-btn,
+        .btn-edit, .btn-delete, .btn-view-likes,
+        .category-action-btn, .comment-btn,
+        .label-toggle-btn, .modal-btn,
+        button[class*="btn"] {
+            /* 고정 크기 */
+            height: 32px !important;
+            line-height: 32px !important;
+            padding: 0 14px !important;
+
+            /* 레이아웃 */
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+
+            /* 텍스트 */
+            font-size: 13px !important;
+            font-weight: normal !important;
+            letter-spacing: 0 !important;
+            white-space: nowrap !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+
+            /* 오버플로우 방지 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* insert.html 카테고리 액션 버튼들 (수정, 삭제, 좋아요 목록) */
+        .btn-edit, .btn-delete, .btn-view-likes {
+            height: 32px !important;
+            line-height: 32px !important;
+            padding: 0 10px !important;
+            font-size: 12px !important;
+            min-width: 70px !important;
+            flex: 1 1 70px !important;
+        }
+
+        /* 카테고리 액션 컨테이너 */
+        .category-actions {
+            display: flex !important;
+            gap: 6px !important;
+            margin-top: auto !important;
+            height: 32px !important;
+            align-items: center !important;
+        }
+
+        /* 상단 액션 버튼 */
+        .top-actions .btn {
+            min-width: 110px !important;
+            height: 32px !important;
+        }
+
+        .top-actions .language-toggle {
+            min-width: 65px !important;
+            height: 32px !important;
+        }
+
+        /* 뷰 토글 버튼 */
+        .view-toggle {
+            height: 32px !important;
+            align-items: center !important;
+        }
+
+        .view-toggle .toggle-btn {
+            min-width: 90px !important;
+            height: 32px !important;
+        }
+
+        /* 컨텐츠 툴바 */
+        .content-toolbar {
+            min-height: 48px !important;
+            align-items: center !important;
+        }
+
+        .content-toolbar .add-record-btn {
+            min-width: 110px !important;
+            height: 32px !important;
+        }
+
+        /* 모달 버튼 */
+        .modal-footer .btn,
+        .modal-footer button {
+            min-width: 90px !important;
+            height: 36px !important;
+            line-height: 36px !important;
+            padding: 0 16px !important;
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            min-width: 120px !important;
+            height: 38px !important;
+            line-height: 38px !important;
+            padding: 0 20px !important;
+        }
+
+        /* 라벨 토글 버튼 */
+        .label-toggle-btn {
+            min-width: 75px !important;
+            height: 32px !important;
+        }
+
+        /* 카테고리 아이템 */
+        .category-item {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 14px;
+            border: none;
+            border-bottom: 1px solid #e8e8e8;
+            background: white;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: left;
+            transition: all 0.15s ease;
+            min-height: 32px;
+        }
+
+        .category-item .category-info {
+            flex: 1 !important;
+            min-height: 60px !important;
+        }
+
+        .category-item .category-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #333;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+
+        .category-item .category-meta {
+            min-height: 18px !important;
+            line-height: 1.4 !important;
+            font-size: 11px !important;
+        }
+
+        /* 카테고리 카드 (index.html) */
+        .category-card {
+            min-height: 160px !important;
+        }
+
+        .category-card .category-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #333;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+
+        .category-card .category-type {
+            min-height: 18px !important;
+            line-height: 1.2 !important;
+            padding: 3px 10px !important;
+        }
+
+        .category-card .category-meta {
+            min-height: 18px !important;
+            line-height: 1.5 !important;
+        }
+
+        .category-card .category-actions {
+            height: 32px !important;
+            margin-top: 12px !important;
+        }
+
+        /* 헤더 텍스트 */
+        .greeting {
+            min-height: 38px !important;
+            line-height: 1.2 !important;
+        }
+
+        .title {
+            min-height: 32px !important;
+            line-height: 1.3 !important;
+        }
+
+        .subtitle, .user-desc {
+            min-height: 20px !important;
+            line-height: 1.5 !important;
+        }
+
+        /* 섹션 타이틀 */
+        .section-title {
+            min-height: 28px !important;
+            line-height: 1.4 !important;
+        }
+
+        /* 폼 요소 */
+        .form-group {
+            margin-bottom: 18px !important;
+        }
+
+        .form-group label {
+            min-height: 20px !important;
+            line-height: 1.5 !important;
+            display: block !important;
+            margin-bottom: 6px !important;
+        }
+
+        .form-group input:not([type="checkbox"]),
+        .form-group select,
+        .form-group textarea {
+            height: 36px !important;
+            line-height: 1.4 !important;
+            padding: 8px 10px !important;
+            font-size: 13px !important;
+        }
+
+        .form-group textarea {
+            height: auto !important;
+            min-height: 80px !important;
+        }
+
+        /* 모달 */
+        .modal-header {
+            min-height: 54px !important;
+            padding: 16px 20px !important;
+        }
+
+        .modal-title {
+            min-height: 22px !important;
+            line-height: 1.4 !important;
+        }
+
+        .modal-footer {
+            min-height: 64px !important;
+            padding: 16px 20px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            gap: 10px !important;
+        }
+
+        /* 테이블 */
+        .records-table td,
+        .records-table th {
+            height: 44px !important;
+            line-height: 1.5 !important;
+            vertical-align: middle !important;
+            padding: 8px 12px !important;
+        }
+
+        /* 빈 상태 */
+        .empty-state {
+            min-height: 100px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            line-height: 1.6 !important;
+        }
+
+        /* 드로어 */
+        .drawer-header {
+            min-height: 44px !important;
+            line-height: 1.4 !important;
+        }
+
+        .drawer-handle {
+            height: 120px !important;
+        }
+
+        /* 알림 */
+        .notification-badge {
+            min-width: 20px !important;
+            min-height: 20px !important;
+            line-height: 20px !important;
+        }
+
+        /* 리스트 컨테이너 */
+        #categoryList {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 16px 20px !important;
+        }
+
+        /* Flexbox 컨테이너들 */
+        .top-actions,
+        .view-toggle,
+        .content-toolbar {
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        /* 스팬 요소 안정화 */
+        span[data-lang-ko],
+        span[data-lang-en],
+        .btn span,
+        .toggle-btn span {
+            display: inline-block !important;
+            line-height: inherit !important;
+            vertical-align: middle !important;
+        }
+
+        /* 전역 폰트 설정 - 한글/영어 균형 */
+        body {
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: 0.01em;
+        }
+
+        /* 버튼 공통 스타일 - 고정 높이 및 패딩 */
+        .btn, .language-toggle, .toggle-btn, .add-record-btn,
+        .submit-btn, .category-action-btn, .comment-btn,
+        .label-toggle-btn, .modal-btn {
+            min-height: 32px;
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            box-sizing: border-box;
+        }
+
+        /* 상단 액션 버튼들 */
+        .top-actions .btn {
+            min-width: 100px;
+            padding: 6px 14px;
+        }
+
+        .top-actions .language-toggle {
+            min-width: 65px;
+            padding: 6px 12px;
+        }
+
+        /* 뷰 토글 버튼 */
+        .view-toggle .toggle-btn {
+            min-width: 90px;
+            padding: 6px 14px;
+            height: 32px;
+        }
+
+        /* 컨텐츠 툴바 버튼 */
+        .content-toolbar .add-record-btn {
+            min-width: 110px;
+            padding: 6px 14px;
+            height: 32px;
+        }
+
+        /* 모달 버튼 */
+        .modal-footer .btn,
+        .modal-footer .modal-btn {
+            min-width: 85px;
+            padding: 8px 16px;
+            height: 36px;
+        }
+
+        /* 카테고리 액션 버튼 */
+        .category-action-btn {
+            min-width: 70px;
+            padding: 6px 10px;
+            height: 30px;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        /* 댓글 버튼 */
+        .comment-btn {
+            min-width: 70px;
+            padding: 6px 10px;
+            height: 30px;
+        }
+
+        /* 라벨 토글 버튼 */
+        .label-toggle-btn {
+            min-width: 75px;
+            padding: 6px 12px;
+            height: 32px;
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            min-width: 120px;
+            padding: 10px 16px;
+            height: 38px;
+        }
+
+        /* 헤더 텍스트 - 고정 높이 */
+        .greeting {
+            min-height: 40px;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        .subtitle, .user-desc {
+            min-height: 20px;
+            line-height: 1.4;
+        }
+
+        /* 카테고리 타이틀 */
+        .category-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #333;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+
+        /* 카테고리 타입 배지 */
+        .category-type {
+            min-width: 50px;
+            min-height: 18px;
+            line-height: 1.2;
+            padding: 3px 10px;
+            letter-spacing: 0.03em;
+        }
+
+        /* 카테고리 메타 정보 */
+        .category-meta {
+            min-height: 18px;
+            line-height: 1.5;
+        }
+
+        /* 섹션 타이틀 */
+        .section-title, .modal-title {
+            min-height: 26px;
+            line-height: 1.4;
+            letter-spacing: 0;
+        }
+
+        /* 폼 라벨 */
+        .form-group label {
+            min-height: 20px;
+            line-height: 1.5;
+            display: block;
+        }
+
+        /* 입력 필드 - 고정 높이 */
+        .form-group input,
+        .form-group select {
+            height: 36px;
+            line-height: 1.4;
+        }
+
+        /* 테이블 셀 */
+        .records-table td,
+        .records-table th {
+            min-height: 40px;
+            line-height: 1.5;
+            vertical-align: middle;
+        }
+
+        /* 빈 상태 메시지 */
+        .empty-state {
+            min-height: 80px;
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 카테고리 헤더 래퍼 */
+        .category-header-wrapper {
+            min-height: 40px;
+            line-height: 1.5;
+        }
+
+        /* 카테고리 설명 */
+        .category-description {
+            min-height: 20px;
+            line-height: 1.5;
+        }
+
+        /* 리스트 아이템 */
+        .category-item {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 14px;
+            border: none;
+            border-bottom: 1px solid #e8e8e8;
+            background: white;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: left;
+            transition: all 0.15s ease;
+            min-height: 32px;
+        }
+
+        .category-item .category-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #333;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+
+        .category-item .category-meta {
+            min-height: 16px;
+        }
+
+        /* 알림 관련 */
+        .notification-badge {
+            min-width: 18px;
+            min-height: 18px;
+            line-height: 18px;
+        }
+
+        /* 드로어 헤더 */
+        .drawer-header {
+            min-height: 40px;
+            line-height: 1.4;
+        }
+
+        /* 컨텐츠 툴바 */
+        .content-toolbar {
+            min-height: 44px;
+            align-items: center;
+        }
+
+        /* 스팬 요소들 - data-lang 속성을 가진 요소들 */
+        span[data-lang-ko],
+        span[data-lang-en] {
+            display: inline-block;
+            min-width: fit-content;
+        }
+
+        /* 텍스트 오버플로우 방지 */
+        .btn span,
+        .toggle-btn span,
+        .add-record-btn span {
+            overflow: visible;
+            text-overflow: clip;
+        }
+
+        /* flexbox 정렬 보정 */
+        .top-actions {
+            align-items: center;
+            height: fit-content;
+        }
+
+        .view-toggle {
+            align-items: center;
+            height: fit-content;
+        }
+
+        /* 모달 헤더 */
+        .modal-header {
+            min-height: 50px;
+            align-items: center;
+        }
+
+        /* 모달 푸터 */
+        .modal-footer {
+            min-height: 60px;
+            align-items: center;
+        }
+    /* 카테고리 카드 액션 버튼 */
+        .category-action-btn {
+            min-width: 65px;
+        }
+
+        /* 댓글 버튼 */
+        .comment-btn {
+            min-width: 65px;
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            min-width: 100px;
+        }
     </style>
 </head>
 <body>
@@ -2470,9 +3097,9 @@
         <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
         <button class="btn" data-lang-en="Edit Profile" data-lang-ko="프로필 수정" id="editProfileBtn">프로필 수정</button>
         <a class="btn" data-lang-en="Manage Categories" data-lang-ko="카테고리 관리" href="insert.html">카테고리 관리</a>
-        <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()">
-            🔔
-            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+        <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()"><span
+                data-lang-en="Alerts" data-lang-ko="알림">알림</span><span class="notification-badge" id="notificationBadge"
+                                                                       style="display: none;">0</span>
         </button>
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
         <button class="btn btn-primary" data-lang-en="Logout" data-lang-ko="로그아웃" id="logoutBtn">로그아웃</button>
