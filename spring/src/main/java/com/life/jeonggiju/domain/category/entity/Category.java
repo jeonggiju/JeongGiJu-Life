@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.life.jeonggiju.domain.checkList.entity.CheckListRecord;
 import com.life.jeonggiju.domain.checkRecord.entity.CheckRecord;
 import com.life.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.life.jeonggiju.domain.timeRecord.entity.TimeRecord;
@@ -84,10 +85,16 @@ public class Category {
 	)
 	@ToString.Exclude
 	private List<TimeRecord> timeRecords = new ArrayList<>();
+
 	@OneToMany(mappedBy = "category",
 		cascade = CascadeType.ALL,
 		orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
+
+	@OneToMany(mappedBy = "category",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true)
+	private List<CheckListRecord> checkListRecords = new ArrayList<>();
 
 	protected Category() {
 	}
