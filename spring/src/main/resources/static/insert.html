@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>JeongGiJu - 카테고리 관리</title>
     <style>
         * {
@@ -401,27 +401,38 @@
 </head>
 <body>
 <!-- 로그인 섹션 -->
-<div id="loginSection" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+<div id="loginSection"
+     style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
                 <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
             <h2 style="text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: normal;">Sign In</h2>
-            <div id="loginError" style="color: #cc0000; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <div id="loginError"
+                 style="color: #cc0000; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="loginForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="email" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="email">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="password" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="password">
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;">Sign In</button>
+                            <button style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;"
+                                    type="submit">
+                                Sign In
+                            </button>
                         </td>
                     </tr>
                 </table>
@@ -434,46 +445,95 @@
 </div>
 
 <!-- 회원가입 섹션 -->
-<div id="signupSection" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+<div id="signupSection"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
                 <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
             <h2 style="text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: normal;">Sign Up</h2>
-            <div id="signupError" style="color: #cc0000; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <div id="signupError"
+                 style="color: #cc0000; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="signupForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Username:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupUsername" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupUsername" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="text">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="signupEmail" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupEmail" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="email">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="signupPassword" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupPassword" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="password">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Title:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupTitle" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupTitle"
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="text">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Description:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupDescription"
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Birth Year:</td>
+                        <td style="padding: 5px 0;"><input id="signupBirthYear" max="2100" min="1900" placeholder="YYYY"
+                                                           required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="number">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Birth Month:</td>
+                        <td style="padding: 5px 0;"><input id="signupBirthMonth" max="12" min="1" placeholder="MM"
+                                                           required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="number">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Birth Day:</td>
+                        <td style="padding: 5px 0;"><input id="signupBirthDay" max="31" min="1" placeholder="DD"
+                                                           required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="number">
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px; margin-right: 10px;">Sign Up</button>
-                            <button type="button" id="cancelSignup" style="padding: 8px 24px; border: 1px solid #999; background: #fff; cursor: pointer; font-size: 13px;">Cancel</button>
+                            <button style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px; margin-right: 10px;"
+                                    type="submit">
+                                Sign Up
+                            </button>
+                            <button id="cancelSignup"
+                                    style="padding: 8px 24px; border: 1px solid #999; background: #fff; cursor: pointer; font-size: 13px;"
+                                    type="button">
+                                Cancel
+                            </button>
                         </td>
                     </tr>
                 </table>
             </form>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
-                Already have an account? <a href="#" id="showLogin" style="color: #0066cc; text-decoration: underline;">Sign In</a>
+                Already have an account? <a href="#" id="showLogin" style="color: #0066cc; text-decoration: underline;">Sign
+                In</a>
             </div>
         </div>
     </div>
@@ -482,16 +542,18 @@
 <!-- 메인 섹션 -->
 <div id="mainSection" style="display: none;">
     <div class="top-actions">
-        <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
-        <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
-        <a href="manage.html" class="btn" data-lang-ko="데이터 관리" data-lang-en="View Data">데이터 관리</a>
+        <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
+        <button class="btn" data-lang-en="Edit Profile" data-lang-ko="프로필 수정" id="editProfileBtn">프로필 수정</button>
+        <a class="btn" data-lang-en="View Data" data-lang-ko="데이터 관리" href="manage.html">데이터 관리</a>
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
-        <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
+        <button class="btn btn-primary" data-lang-en="Logout" data-lang-ko="로그아웃" id="logoutBtn">로그아웃</button>
     </div>
 
     <div class="header">
-        <div class="title" data-lang-ko="카테고리 관리" data-lang-en="Category Management">카테고리 관리</div>
-        <div class="subtitle" data-lang-ko="카테고리를 추가하고 관리하세요" data-lang-en="Add and manage your categories">카테고리를 추가하고 관리하세요</div>
+        <div class="title" data-lang-en="Category Management" data-lang-ko="카테고리 관리">카테고리 관리</div>
+        <div class="subtitle" data-lang-en="Add and manage your categories" data-lang-ko="카테고리를 추가하고 관리하세요">카테고리를 추가하고
+            관리하세요
+        </div>
     </div>
 
     <div class="content">
@@ -499,44 +561,66 @@
         <div class="section-grid">
             <!-- 카테고리 관리 -->
             <div class="section">
-                <div class="section-title" data-lang-ko="카테고리 관리" data-lang-en="Category Management">카테고리 관리</div>
+                <div class="section-title" data-lang-en="Category Management" data-lang-ko="카테고리 관리">카테고리 관리</div>
                 <div id="categoryList" style="margin-bottom: 20px;">
-                    <p style="color: #666; font-size: 13px;" data-lang-ko="카테고리를 불러오는 중..." data-lang-en="Loading categories...">카테고리를 불러오는 중...</p>
+                    <p data-lang-en="Loading categories..." data-lang-ko="카테고리를 불러오는 중..."
+                       style="color: #666; font-size: 13px;">카테고리를 불러오는 중...</p>
                 </div>
             </div>
 
             <!-- 카테고리 추가 -->
             <div class="section">
-                <div class="section-title" data-lang-ko="카테고리 추가" data-lang-en="Add Category">카테고리 추가</div>
+                <div class="section-title" data-lang-en="Add Category" data-lang-ko="카테고리 추가">카테고리 추가</div>
                 <div id="categoryMessage"></div>
                 <form id="categoryForm">
                     <div class="form-group">
-                        <label for="categoryTitle" data-lang-ko="제목 *" data-lang-en="Title *">제목 *</label>
-                        <input type="text" id="categoryTitle" required placeholder="예: 운동" data-placeholder-ko="예: 운동" data-placeholder-en="e.g. Exercise">
+                        <label data-lang-en="Title *" data-lang-ko="제목 *" for="categoryTitle">제목 *</label>
+                        <input data-placeholder-en="e.g. Exercise" data-placeholder-ko="예: 운동" id="categoryTitle"
+                               placeholder="예: 운동" required
+                               type="text">
                     </div>
                     <div class="form-group">
-                        <label for="categoryDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
-                        <textarea id="categoryDescription" placeholder="카테고리 설명 (선택사항)" data-placeholder-ko="카테고리 설명 (선택사항)" data-placeholder-en="Category description (optional)"></textarea>
+                        <label data-lang-en="Description" data-lang-ko="설명" for="categoryDescription">설명</label>
+                        <textarea data-placeholder-en="Category description (optional)"
+                                  data-placeholder-ko="카테고리 설명 (선택사항)"
+                                  id="categoryDescription"
+                                  placeholder="카테고리 설명 (선택사항)"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="recordType" data-lang-ko="타입 *" data-lang-en="Type *">타입 *</label>
+                        <label data-lang-en="Type *" data-lang-ko="타입 *" for="recordType">타입 *</label>
                         <select id="recordType" required>
-                            <option value="" data-lang-ko="선택하세요" data-lang-en="Select">선택하세요</option>
-                            <option value="CHECK" data-lang-ko="CHECK - 성공/실패 기록" data-lang-en="CHECK - Success/Fail">CHECK - 성공/실패 기록</option>
-                            <option value="TEXT" data-lang-ko="TEXT - 텍스트 기록" data-lang-en="TEXT - Text Record">TEXT - 텍스트 기록</option>
-                            <option value="TIME" data-lang-ko="TIME - 시간 기록" data-lang-en="TIME - Time Record">TIME - 시간 기록</option>
-                            <option value="NUMBER" data-lang-ko="NUMBER - 숫자 기록" data-lang-en="NUMBER - Number Record">NUMBER - 숫자 기록</option>
-                            <option value="CHECKLIST" data-lang-ko="CHECKLIST - 할일 목록" data-lang-en="CHECKLIST - Todo List">CHECKLIST - 할일 목록</option>
+                            <option data-lang-en="Select" data-lang-ko="선택하세요" value="">선택하세요</option>
+                            <option data-lang-en="CHECK - Success/Fail" data-lang-ko="CHECK - 성공/실패 기록" value="CHECK">
+                                CHECK - 성공/실패 기록
+                            </option>
+                            <option data-lang-en="TEXT - Text Record" data-lang-ko="TEXT - 텍스트 기록" value="TEXT">TEXT -
+                                텍스트 기록
+                            </option>
+                            <option data-lang-en="TIME - Time Record" data-lang-ko="TIME - 시간 기록" value="TIME">TIME - 시간
+                                기록
+                            </option>
+                            <option data-lang-en="NUMBER - Number Record" data-lang-ko="NUMBER - 숫자 기록" value="NUMBER">
+                                NUMBER - 숫자 기록
+                            </option>
+                            <option data-lang-en="CHECKLIST - Todo List" data-lang-ko="CHECKLIST - 할일 목록"
+                                    value="CHECKLIST">CHECKLIST - 할일 목록
+                            </option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="visibility" data-lang-ko="공개 설정 *" data-lang-en="Visibility *">공개 설정 *</label>
+                        <label data-lang-en="Visibility *" data-lang-ko="공개 설정 *" for="visibility">공개 설정 *</label>
                         <select id="visibility" required>
-                            <option value="PRIVATE" data-lang-ko="PRIVATE - 나만 보기" data-lang-en="PRIVATE - Only Me">PRIVATE - 나만 보기</option>
-                            <option value="PUBLIC" data-lang-ko="PUBLIC - 모두에게 공개" data-lang-en="PUBLIC - Public">PUBLIC - 모두에게 공개</option>
+                            <option data-lang-en="PRIVATE - Only Me" data-lang-ko="PRIVATE - 나만 보기" value="PRIVATE">
+                                PRIVATE - 나만 보기
+                            </option>
+                            <option data-lang-en="PUBLIC - Public" data-lang-ko="PUBLIC - 모두에게 공개" value="PUBLIC">PUBLIC
+                                - 모두에게 공개
+                            </option>
                         </select>
                     </div>
-                    <button type="submit" class="submit-btn" data-lang-ko="카테고리 추가" data-lang-en="Add Category">카테고리 추가</button>
+                    <button class="submit-btn" data-lang-en="Add Category" data-lang-ko="카테고리 추가" type="submit">카테고리
+                        추가
+                    </button>
                 </form>
             </div>
 
@@ -546,82 +630,105 @@
 </div>
 
 <!-- 프로필 수정 모달 -->
-<div id="profileModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+<div class="modal" id="profileModal"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
     <div style="background: white; padding: 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; border: 1px solid #ccc;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ddd;">
-            <div style="font-size: 18px; font-weight: bold;" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</div>
-            <button onclick="closeProfileModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; line-height: 1;">×</button>
+            <div data-lang-en="Edit Profile" data-lang-ko="프로필 수정" style="font-size: 18px; font-weight: bold;">프로필 수정
+            </div>
+            <button onclick="closeProfileModal()"
+                    style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; line-height: 1;">
+                ×
+            </button>
         </div>
         <div id="profileModalError"></div>
         <form id="profileForm">
             <div class="form-group">
-                <label for="profileTitle" data-lang-ko="타이틀" data-lang-en="Title">타이틀</label>
-                <input type="text" id="profileTitle" placeholder="예: Hi." data-placeholder-ko="예: Hi." data-placeholder-en="e.g. Hi.">
+                <label data-lang-en="Title" data-lang-ko="타이틀" for="profileTitle">타이틀</label>
+                <input data-placeholder-en="e.g. Hi." data-placeholder-ko="예: Hi." id="profileTitle"
+                       placeholder="예: Hi."
+                       type="text">
             </div>
             <div class="form-group">
-                <label for="profileDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
-                <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요" data-placeholder-ko="간단한 소개를 입력하세요" data-placeholder-en="Enter a brief introduction"></textarea>
+                <label data-lang-en="Description" data-lang-ko="설명" for="profileDescription">설명</label>
+                <textarea data-placeholder-en="Enter a brief introduction" data-placeholder-ko="간단한 소개를 입력하세요"
+                          id="profileDescription"
+                          placeholder="간단한 소개를 입력하세요"></textarea>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 30px;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;" data-lang-ko="저장" data-lang-en="Save">저장</button>
-                <button type="button" class="btn" onclick="closeProfileModal()" style="flex: 1;" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
+                <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="저장" style="flex: 1;" type="submit">
+                    저장
+                </button>
+                <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeProfileModal()"
+                        style="flex: 1;"
+                        type="button">취소
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- 카테고리 수정 모달 -->
-<div id="editCategoryModal" class="modal">
+<div class="modal" id="editCategoryModal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title" data-lang-ko="카테고리 수정" data-lang-en="Edit Category">카테고리 수정</div>
+            <div class="modal-title" data-lang-en="Edit Category" data-lang-ko="카테고리 수정">카테고리 수정</div>
             <button class="modal-close" onclick="closeEditCategoryModal()">×</button>
         </div>
         <div id="editCategoryModalError"></div>
         <form id="editCategoryForm">
             <div class="form-group">
-                <label for="editCategoryTitle" data-lang-ko="제목 *" data-lang-en="Title *">제목 *</label>
-                <input type="text" id="editCategoryTitle" required>
+                <label data-lang-en="Title *" data-lang-ko="제목 *" for="editCategoryTitle">제목 *</label>
+                <input id="editCategoryTitle" required type="text">
             </div>
             <div class="form-group">
-                <label for="editCategoryDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
+                <label data-lang-en="Description" data-lang-ko="설명" for="editCategoryDescription">설명</label>
                 <textarea id="editCategoryDescription"></textarea>
             </div>
             <div class="form-group">
-                <label data-lang-ko="타입" data-lang-en="Type">타입</label>
-                <input type="text" id="editCategoryType" readonly style="background: #f5f5f5; cursor: not-allowed;">
+                <label data-lang-en="Type" data-lang-ko="타입">타입</label>
+                <input id="editCategoryType" readonly style="background: #f5f5f5; cursor: not-allowed;" type="text">
             </div>
             <div class="form-group">
-                <label for="editCategoryVisibility" data-lang-ko="공개 설정 *" data-lang-en="Visibility *">공개 설정 *</label>
+                <label data-lang-en="Visibility *" data-lang-ko="공개 설정 *" for="editCategoryVisibility">공개 설정 *</label>
                 <select id="editCategoryVisibility" required>
-                    <option value="PRIVATE" data-lang-ko="PRIVATE - 나만 보기" data-lang-en="PRIVATE - Only Me">PRIVATE - 나만 보기</option>
-                    <option value="PUBLIC" data-lang-ko="PUBLIC - 모두에게 공개" data-lang-en="PUBLIC - Public">PUBLIC - 모두에게 공개</option>
+                    <option data-lang-en="PRIVATE - Only Me" data-lang-ko="PRIVATE - 나만 보기" value="PRIVATE">PRIVATE - 나만
+                        보기
+                    </option>
+                    <option data-lang-en="PUBLIC - Public" data-lang-ko="PUBLIC - 모두에게 공개" value="PUBLIC">PUBLIC - 모두에게
+                        공개
+                    </option>
                 </select>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 30px;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;" data-lang-ko="저장" data-lang-en="Save">저장</button>
-                <button type="button" class="btn" onclick="closeEditCategoryModal()" style="flex: 1;" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
+                <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="저장" style="flex: 1;" type="submit">
+                    저장
+                </button>
+                <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeEditCategoryModal()"
+                        style="flex: 1;"
+                        type="button">취소
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- 좋아요 목록 모달 -->
-<div id="likeListModal" class="modal">
+<div class="modal" id="likeListModal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title" data-lang-ko="좋아요 목록" data-lang-en="Like List">좋아요 목록</div>
+            <div class="modal-title" data-lang-en="Like List" data-lang-ko="좋아요 목록">좋아요 목록</div>
             <button class="modal-close" onclick="closeLikeListModal()">×</button>
         </div>
         <div style="margin-bottom: 20px;">
-            <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;" id="likeListCategoryTitle"></div>
-            <div style="font-size: 14px; color: #666;" id="likeListCount"></div>
+            <div id="likeListCategoryTitle" style="font-size: 16px; font-weight: 600; margin-bottom: 10px;"></div>
+            <div id="likeListCount" style="font-size: 14px; color: #666;"></div>
         </div>
         <div id="likeListContent" style="max-height: 400px; overflow-y: auto;">
             <p style="color: #666; text-align: center; padding: 40px 0;">로딩 중...</p>
         </div>
         <div style="margin-top: 30px; text-align: center;">
-            <button class="btn" onclick="closeLikeListModal()" data-lang-ko="닫기" data-lang-en="Close">닫기</button>
+            <button class="btn" data-lang-en="Close" data-lang-ko="닫기" onclick="closeLikeListModal()">닫기</button>
         </div>
     </div>
 </div>
@@ -631,6 +738,284 @@
     let currentUser = null;
     let categories = [];
     let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
+
+    // ==================== JWT 토큰 관리 ====================
+
+    // Access Token을 메모리에만 저장 (localStorage 사용 안 함)
+    let accessToken = null;
+
+    // Access Token 저장
+    function setAccessToken(token) {
+        accessToken = token;
+
+    }
+
+    // Access Token 가져오기
+    function getAccessToken() {
+        return accessToken;
+    }
+
+    // Access Token 삭제
+    function removeAccessToken() {
+        accessToken = null;
+
+    }
+
+    // ==================== CSRF 토큰 관리 ====================
+
+    let csrfToken = null;
+
+    // CSRF 토큰 가져오기 (쿠키에서)
+    function getCsrfToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'XSRF-TOKEN') {
+                return decodeURIComponent(value);
+            }
+        }
+        return null;
+    }
+
+    // 쿠키에서 값 가져오기 (범용)
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
+    // CSRF 토큰 초기화
+    async function initCsrfToken() {
+        try {
+
+            // 먼저 /api/auth/csrf-token 호출하여 쿠키 설정
+            await fetch(`${API_BASE}/auth/csrf-token`, {
+                credentials: 'include'
+            });
+
+            // 쿠키에서 토큰 읽기
+            csrfToken = getCsrfToken();
+
+        } catch (error) {
+
+        }
+    }
+
+    // CSRF 토큰 로드 (기존 함수 - 하위 호환성)
+    async function loadCsrfToken() {
+        // initCsrfToken()과 동일
+        await initCsrfToken();
+    }
+
+    // ==================== 인증된 Fetch 래퍼 ====================
+
+    async function authFetch(url, options = {}) {
+        // CSRF 토큰이 없으면 먼저 가져오기
+        if (!csrfToken) {
+            csrfToken = getCsrfToken();
+        }
+
+        // 기본 옵션 설정
+        const defaultOptions = {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(options.headers || {})
+            }
+        };
+
+        // AccessToken이 있으면 Authorization 헤더 추가
+        if (accessToken) {
+            defaultOptions.headers['Authorization'] = `Bearer ${accessToken}`;
+
+        } else {
+
+        }
+
+        // POST, PUT, DELETE, PATCH 요청에 CSRF 토큰 추가
+        if (options.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method.toUpperCase())) {
+            // 쿠키의 XSRF-TOKEN 값을 X-XSRF-TOKEN 헤더로 전송
+            if (csrfToken) {
+                defaultOptions.headers['X-XSRF-TOKEN'] = csrfToken;
+            } else {
+
+            }
+        }
+
+        // 옵션 병합
+        const finalOptions = {
+            ...defaultOptions,
+            ...options,
+            headers: {
+                ...defaultOptions.headers,
+                ...options.headers
+            }
+        };
+
+        const response = await fetch(url, finalOptions);
+
+        // ⭐ 중요: 응답 헤더에서 새로운 CSRF 토큰 확인 및 자동 업데이트
+        const responseCsrfToken = response.headers.get('X-CSRF-TOKEN');
+        if (responseCsrfToken) {
+            csrfToken = responseCsrfToken;
+
+        } else {
+            // 응답 헤더에 없으면 쿠키에서 다시 읽기
+            const cookieToken = getCsrfToken();
+            if (cookieToken && cookieToken !== csrfToken) {
+                csrfToken = cookieToken;
+
+            }
+        }
+
+        // 401 에러 시 토큰 갱신 시도
+        if (response.status === 401) {
+
+            const refreshed = await refreshAccessToken();
+            if (refreshed && accessToken) {
+                // 토큰 갱신 성공 - 재시도
+                finalOptions.headers['Authorization'] = `Bearer ${accessToken}`;
+
+                return await fetch(url, finalOptions);
+            } else {
+                // 토큰 갱신 실패 - 이미 RefreshToken이 없는 상태
+                // 불필요한 sign-out 호출 없이 바로 리다이렉트
+
+                currentUser = null;
+                accessToken = null;
+                location.href = location.pathname; // 현재 페이지 새로고침
+                throw new Error('Authentication required');
+            }
+        }
+
+        // 403 에러 시 CSRF 토큰 갱신 후 재시도
+        if (response.status === 403) {
+
+            await initCsrfToken();
+
+            if (csrfToken) {
+                finalOptions.headers['X-XSRF-TOKEN'] = csrfToken;
+
+                return await fetch(url, finalOptions);
+            }
+        }
+
+        return response;
+    }
+
+    // Access Token 갱신 (RefreshToken 검증)
+    async function refreshAccessToken() {
+        try {
+
+            // RefreshToken 쿠키 확인 (디버깅)
+            const cookies = document.cookie.split(';').map(c => c.trim());
+            const refreshTokenCookie = cookies.find(c => c.startsWith('REFRESH_TOKEN='));
+
+            if (!refreshTokenCookie) {
+
+            }
+
+            // CSRF 토큰 가져오기
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // CSRF 토큰 추가
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+
+            } else {
+
+            }
+
+            const response = await fetch(`${API_BASE}/auth/refresh`, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include' // RefreshToken은 쿠키로 전송
+            });
+
+            if (response.ok) {
+                const text = await response.text();
+
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    // JSON이 아니면 문자열 그대로 사용
+                    data = text;
+                }
+
+                // 다양한 응답 형식 지원
+                let token;
+                if (typeof data === 'string') {
+                    token = data;
+                } else if (data.accessToken) {
+                    token = data.accessToken;
+                } else if (data.access_token) {
+                    token = data.access_token;
+                } else if (data.token) {
+                    token = data.token;
+                }
+
+                if (token && typeof token === 'string' && token.length > 10) {
+                    accessToken = token;
+
+                    return true;
+                } else {
+
+                }
+            } else {
+
+                const errorText = await response.text().catch(() => '');
+                if (errorText) {
+
+                }
+            }
+
+            return false;
+        } catch (error) {
+
+            return false;
+        }
+    }
+    // 로그아웃 처리
+    async function handleLogout() {
+
+        try {
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            const headers = {};
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+            }
+
+            await fetch(`${API_BASE}/auth/sign-out`, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include'
+            });
+
+            removeAccessToken();
+            currentUser = null;
+            accessToken = null;
+
+            // 로그인 페이지로 리다이렉트
+
+            location.reload();
+        } catch (error) {
+
+            // 에러가 있어도 페이지 새로고침
+            location.reload();
+        }
+    }
 
     // 번역 데이터
     const translations = {
@@ -707,58 +1092,68 @@
 
     // 페이지 로드
     window.addEventListener('DOMContentLoaded', async () => {
-        console.log('=== INSERT.HTML 페이지 로드 시작 ===');
-        console.log('API_BASE:', API_BASE);
-        applyLanguage(); // 언어 적용
-        await checkAuth();
+
+        // 0. 쿠키 상태 확인 (디버깅)
+
+        const cookies = document.cookie.split(';').map(c => c.trim());
+
+        const hasRefreshTokenCookie = cookies.some(c => c.startsWith('REFRESH_TOKEN='));
+
+        // ⚠️ Secure 플래그 경고
+        if (!hasRefreshTokenCookie) {
+
+        }
+
+        if (!hasRefreshTokenCookie && document.referrer) {
+
+        }
+
+        // 1. CSRF 토큰 초기화
+
+        await initCsrfToken();
+
+        // 2. 언어 적용
+        applyLanguage();
+
+        // 3. RefreshToken 검증 및 AccessToken 발급
+
+        const refreshed = await refreshAccessToken();
+
+        if (refreshed && accessToken) {
+            // AccessToken 발급 성공 = 로그인 상태
+
+            await checkAuth();
+        } else {
+            // RefreshToken 없음 또는 만료 = 로그아웃 상태
+
+            showLoginSection();
+        }
     });
 
-    // 인증 확인
+    // 인증 확인 - 사용자 정보 조회
     async function checkAuth() {
-        console.log('1. checkAuth() 함수 시작');
-        try {
-            console.log('2. API 요청:', `${API_BASE}/auth/me`);
-            const response = await fetch(`${API_BASE}/auth/me`, {
-                credentials: 'include'
-            });
 
-            console.log('3. 응답 상태:', response.status, response.ok);
+        try {
+            // AccessToken으로 사용자 정보 조회
+
+            const response = await authFetch(`${API_BASE}/user`);
 
             if (response.ok) {
                 currentUser = await response.json();
-                console.log('4. 사용자 정보:', currentUser);
 
-                // /api/user 호출하여 title, description 가져오기
-                try {
-                    const userResponse = await fetch(`${API_BASE}/user`, {
-                        credentials: 'include'
-                    });
-
-                    if (userResponse.ok) {
-                        const userData = await userResponse.json();
-                        // title, description, birthYear, birthMonth, birthDay 업데이트
-                        currentUser.title = userData.title;
-                        currentUser.description = userData.description;
-                        currentUser.birthYear = userData.birthYear;
-                        currentUser.birthMonth = userData.birthMonth;
-                        currentUser.birthDay = userData.birthDay;
-                        console.log('5. 사용자 상세 정보 로드 완료');
-                    }
-                } catch (error) {
-                    console.error('User 정보 로드 실패:', error);
-                }
-
-                console.log('6. showMainSection() 호출');
                 showMainSection();
-                console.log('7. loadCategories() 호출');
                 await loadCategories();
-                console.log('8. 모든 초기화 완료');
+
             } else {
-                console.log('인증 실패 - 로그인 필요');
+
+                currentUser = null;
+                accessToken = null;
                 showLoginSection();
             }
         } catch (error) {
-            console.error('인증 확인 실패:', error);
+
+            currentUser = null;
+            accessToken = null;
             showLoginSection();
         }
     }
@@ -771,20 +1166,65 @@
         const password = document.getElementById('password').value;
 
         try {
-            const response = await fetch(`${API_BASE}/auth/login`, {
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            // 폼 데이터 방식으로 전송
+            const formData = new URLSearchParams();
+            formData.append('username', email); // username에 이메일 넣기
+            formData.append('password', password);
+
+            const headers = {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            };
+
+            // CSRF 토큰 추가
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+            }
+
+            const response = await fetch(`${API_BASE}/auth/sign-in`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: headers,
                 credentials: 'include',
-                body: JSON.stringify({ email, password })
+                body: formData.toString()
             });
 
             if (response.ok) {
-                await checkAuth();
+                // 로그인 성공 - AccessToken 받아서 저장
+                const data = await response.json();
+
+                if (data.accessToken) {
+                    accessToken = data.accessToken;
+
+                }
+
+                // 로그인 성공 시 CSRF 토큰 갱신 (서버가 새 토큰 발급함)
+                await initCsrfToken();
+
+                // 쿠키 상태 확인 (디버깅)
+
+                const cookies = document.cookie.split(';').map(c => c.trim());
+                const hasRefreshToken = cookies.some(c => c.startsWith('REFRESH_TOKEN='));
+
+                if (!hasRefreshToken) {
+
+                }
+
+                // 페이지 새로고침하여 인증 상태 업데이트
+
+                location.reload();
+            } else if (response.status === 403) {
+                // CSRF 토큰 문제 - 재시도
+                await initCsrfToken();
+                showError('loginError', '다시 시도해주세요.');
             } else {
                 showError('loginError', '로그인에 실패했습니다.');
             }
         } catch (error) {
-            console.error('로그인 오류:', error);
+
             showError('loginError', '로그인 중 오류가 발생했습니다.');
         }
     });
@@ -810,32 +1250,57 @@
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        // Birth year, month, day 값 가져오기
+        const birthYear = parseInt(document.getElementById('signupBirthYear').value) || new Date().getFullYear();
+        const birthMonth = parseInt(document.getElementById('signupBirthMonth').value) || 1;
+        const birthDay = parseInt(document.getElementById('signupBirthDay').value) || 1;
+
         const signupData = {
             username: document.getElementById('signupUsername').value,
             email: document.getElementById('signupEmail').value,
             password: document.getElementById('signupPassword').value,
             title: document.getElementById('signupTitle').value || '',
-            description: document.getElementById('signupDescription').value || ''
+            description: document.getElementById('signupDescription').value || '',
+            birthYear,
+            birthMonth,
+            birthDay
         };
 
         try {
-            const response = await fetch(`${API_BASE}/auth/signup`, {
+            // 회원가입 직전에 CSRF 토큰 최신화
+            const currentCsrfToken = getCookie('XSRF-TOKEN');
+            if (currentCsrfToken) {
+                csrfToken = currentCsrfToken;
+            }
+
+            const headers = { 'Content-Type': 'application/json' };
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+
+            } else {
+
+            }
+
+            const response = await fetch(`${API_BASE}/user`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
+                credentials: 'include',
                 body: JSON.stringify(signupData)
             });
 
             if (response.ok) {
-                showSuccess('signupError', '회원가입이 완료되었습니다.');
+                showSuccess('signupError', currentLang === 'ko' ? '회원가입이 완료되었습니다.' : 'Sign up completed.');
                 setTimeout(() => {
                     document.getElementById('signupSection').style.display = 'none';
                     document.getElementById('loginSection').style.display = 'block';
                 }, 1500);
             } else {
-                showError('signupError', '회원가입에 실패했습니다.');
+                const errorData = await response.json().catch(() => ({}));
+
+                showError('signupError', currentLang === 'ko' ? '회원가입에 실패했습니다.' : 'Sign up failed.');
             }
         } catch (error) {
-            console.error('회원가입 오류:', error);
+
             showError('signupError', '회원가입 중 오류가 발생했습니다.');
         }
     });
@@ -843,30 +1308,27 @@
     // 로그아웃
     document.getElementById('logoutBtn').addEventListener('click', async () => {
         try {
-            await fetch(`${API_BASE}/auth/logout`, {
-                method: 'POST',
-                credentials: 'include'
+            await authFetch(`${API_BASE}/auth/sign-out`, {
+                method: 'POST'
             });
-            currentUser = null;
-            showLoginSection();
+            handleLogout();
         } catch (error) {
-            console.error('로그아웃 오류:', error);
+
+            handleLogout(); // 에러가 나도 로그아웃 처리
         }
     });
 
     // 카테고리 로드
     async function loadCategories() {
         try {
-            const response = await fetch(`${API_BASE}/category/all`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/category/all`);
 
             if (response.ok) {
                 categories = await response.json();
                 updateCategoryList();
             }
         } catch (error) {
-            console.error('카테고리 로드 오류:', error);
+
         }
     }
 
@@ -936,9 +1398,7 @@
     // 좋아요 개수 로드 함수 (insert.html용)
     async function loadLikeCountForInsert(categoryId) {
         try {
-            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/categories/likes/count/${categoryId}`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -948,7 +1408,7 @@
                 }
             }
         } catch (error) {
-            console.error('좋아요 개수 로드 실패:', error);
+
         }
     }
 
@@ -968,9 +1428,8 @@
         params.append('visibility', visibility);
 
         try {
-            const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
+            const response = await authFetch(`${API_BASE}/category?${params.toString()}`, {
+                method: 'POST'
             });
 
             if (response.ok) {
@@ -982,7 +1441,7 @@
                 showMessage('categoryMessage', errorMsg, 'error');
             }
         } catch (error) {
-            console.error('카테고리 추가 오류:', error);
+
             const errorMsg = currentLang === 'ko' ? '오류가 발생했습니다.' : 'An error occurred.';
             showMessage('categoryMessage', errorMsg, 'error');
         }
@@ -990,39 +1449,27 @@
 
     // UI 표시 함수
     function showLoginSection() {
-        console.log('>>> showLoginSection() 호출됨');
+
         const loginSection = document.getElementById('loginSection');
         const signupSection = document.getElementById('signupSection');
         const mainSection = document.getElementById('mainSection');
-
-        console.log('>>> DOM 요소 존재 확인:', {
-            loginSection: !!loginSection,
-            signupSection: !!signupSection,
-            mainSection: !!mainSection
-        });
 
         if (loginSection) loginSection.style.display = 'block';
         if (signupSection) signupSection.style.display = 'none';
         if (mainSection) mainSection.style.display = 'none';
-        console.log('>>> 로그인 섹션 표시 완료');
+
     }
 
     function showMainSection() {
-        console.log('>>> showMainSection() 호출됨');
+
         const loginSection = document.getElementById('loginSection');
         const signupSection = document.getElementById('signupSection');
         const mainSection = document.getElementById('mainSection');
 
-        console.log('>>> DOM 요소 존재 확인:', {
-            loginSection: !!loginSection,
-            signupSection: !!signupSection,
-            mainSection: !!mainSection
-        });
-
         if (loginSection) loginSection.style.display = 'none';
         if (signupSection) signupSection.style.display = 'none';
         if (mainSection) mainSection.style.display = 'block';
-        console.log('>>> 메인 섹션 표시 완료');
+
     }
 
     // 프로필 수정 모달 열기
@@ -1055,9 +1502,8 @@
         params.append('description', description);
 
         try {
-            const response = await fetch(`${API_BASE}/user?${params.toString()}`, {
-                method: 'PUT',
-                credentials: 'include'
+            const response = await authFetch(`${API_BASE}/user?${params.toString()}`, {
+                method: 'PUT'
             });
 
             if (response.ok) {
@@ -1070,7 +1516,7 @@
                 showProfileModalError(errorMsg);
             }
         } catch (error) {
-            console.error('프로필 수정 오류:', error);
+
             const errorMsg = currentLang === 'ko' ? '프로필 수정 중 오류가 발생했습니다.' : 'Error occurred while updating profile.';
             showProfileModalError(errorMsg);
         }
@@ -1144,9 +1590,7 @@
         countDiv.textContent = '';
 
         try {
-            const response = await fetch(`${API_BASE}/category/${categoryId}/email`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/category/${categoryId}/email`);
 
             if (response.ok) {
                 const emails = await response.json();
@@ -1180,7 +1624,7 @@
                 contentDiv.innerHTML = `<p style="color: #ff0000; text-align: center; padding: 40px 0;">${errorText}</p>`;
             }
         } catch (error) {
-            console.error('좋아요 이메일 목록 로드 오류:', error);
+
             const errorText = currentLang === 'ko' ? '오류가 발생했습니다.' : 'An error occurred.';
             contentDiv.innerHTML = `<p style="color: #ff0000; text-align: center; padding: 40px 0;">${errorText}</p>`;
         }
@@ -1208,9 +1652,8 @@
         params.append('visibility', visibility);
 
         try {
-            const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
-                method: 'PUT',
-                credentials: 'include'
+            const response = await authFetch(`${API_BASE}/category?${params.toString()}`, {
+                method: 'PUT'
             });
 
             if (response.ok) {
@@ -1222,7 +1665,7 @@
                 showEditCategoryModalError(errorMsg);
             }
         } catch (error) {
-            console.error('카테고리 수정 오류:', error);
+
             const errorMsg = currentLang === 'ko' ? '카테고리 수정 중 오류가 발생했습니다.' : 'Error occurred while updating category.';
             showEditCategoryModalError(errorMsg);
         }
@@ -1239,9 +1682,8 @@
         }
 
         try {
-            const response = await fetch(`${API_BASE}/category?id=${categoryId}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await authFetch(`${API_BASE}/category?id=${categoryId}`, {
+                method: 'DELETE'
             });
 
             if (response.ok) {
@@ -1252,7 +1694,7 @@
                 showMessage('categoryMessage', errorMsg, 'error');
             }
         } catch (error) {
-            console.error('카테고리 삭제 오류:', error);
+
             const errorMsg = currentLang === 'ko' ? '카테고리 삭제 중 오류가 발생했습니다.' : 'Error occurred while deleting category.';
             showMessage('categoryMessage', errorMsg, 'error');
         }
@@ -1272,9 +1714,7 @@
     // 좋아요 개수 로드 (insert.html용)
     async function loadLikeCountForInsert(categoryId) {
         try {
-            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/categories/likes/count/${categoryId}`);
 
             if (response.ok) {
                 const count = await response.json();
@@ -1284,9 +1724,16 @@
                 }
             }
         } catch (error) {
-            console.error('좋아요 개수 로드 오류:', error);
+
         }
     }
+
+    // 페이지 전환 시 다른 페이지의 SSE 연결 정리를 위한 처리
+    window.addEventListener('beforeunload', () => {
+        // 다른 페이지의 SSE 정리를 위해 플래그 설정
+        sessionStorage.setItem('pageUnloading', 'true');
+    });
+
 </script>
 </body>
 </html>

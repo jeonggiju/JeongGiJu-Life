@@ -2,8 +2,10 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>JeongGiJu</title>
+    <!-- EventSource Polyfill for custom headers support -->
+    <script src="https://unpkg.com/event-source-polyfill@1.0.31/src/eventsource.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -2329,7 +2331,8 @@
 </head>
 <body>
 <!-- 로그인 섹션 -->
-<div id="loginSection" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+<div id="loginSection"
+     style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
@@ -2341,15 +2344,24 @@
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="email" required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="email">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="password" required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="password">
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Sign In</button>
+                            <button style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="submit">
+                                Sign In
+                            </button>
                         </td>
                     </tr>
                 </table>
@@ -2362,7 +2374,8 @@
 </div>
 
 <!-- 회원가입 섹션 -->
-<div id="signupSection" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+<div id="signupSection"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
@@ -2374,46 +2387,78 @@
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupUsername" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupUsername" required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="text">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="signupEmail" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupEmail" required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="email">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="signupPassword" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupPassword" required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="password">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Title:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupTitle" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupTitle"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="text">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Description:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupDescription"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="text">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Year:</td>
-                        <td style="padding: 5px 0;"><input type="number" id="signupBirthYear" placeholder="YYYY" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupBirthYear" placeholder="YYYY"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="number">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Month:</td>
-                        <td style="padding: 5px 0;"><input type="number" id="signupBirthMonth" placeholder="MM" min="1" max="12" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupBirthMonth" max="12" min="1" placeholder="MM"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="number">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Day:</td>
-                        <td style="padding: 5px 0;"><input type="number" id="signupBirthDay" placeholder="DD" min="1" max="31" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupBirthDay" max="31" min="1" placeholder="DD"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="number">
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;">Sign Up</button>
-                            <button type="button" id="cancelSignup" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Cancel</button>
+                            <button style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;"
+                                    type="submit">
+                                Sign Up
+                            </button>
+                            <button id="cancelSignup"
+                                    style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="button">
+                                Cancel
+                            </button>
                         </td>
                     </tr>
                 </table>
             </form>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
-                Already have an account? <a href="#" id="showLogin" style="color: #0066cc; text-decoration: underline;">Sign In</a>
+                Already have an account? <a href="#" id="showLogin" style="color: #0066cc; text-decoration: underline;">Sign
+                In</a>
             </div>
         </div>
     </div>
@@ -2422,15 +2467,15 @@
 <!-- 메인 섹션 -->
 <div id="mainSection" style="display: none;">
     <div class="top-actions">
-        <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
-        <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
-        <a href="insert.html" class="btn" data-lang-ko="카테고리 관리" data-lang-en="Manage Categories">카테고리 관리</a>
+        <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
+        <button class="btn" data-lang-en="Edit Profile" data-lang-ko="프로필 수정" id="editProfileBtn">프로필 수정</button>
+        <a class="btn" data-lang-en="Manage Categories" data-lang-ko="카테고리 관리" href="insert.html">카테고리 관리</a>
         <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()">
             🔔
             <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
         </button>
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
-        <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
+        <button class="btn btn-primary" data-lang-en="Logout" data-lang-ko="로그아웃" id="logoutBtn">로그아웃</button>
     </div>
 
     <div class="header">
@@ -2442,73 +2487,81 @@
         <div class="main-content">
             <div class="content-toolbar">
                 <div class="view-toggle" id="viewToggle"></div>
-                <button class="add-record-btn" id="addRecordBtn" style="display: none;" onclick="openAddRecordModal()">
-                    <span data-lang-ko="추가" data-lang-en="Add">추가</span>
+                <button class="add-record-btn" id="addRecordBtn" onclick="openAddRecordModal()" style="display: none;">
+                    <span data-lang-en="Add" data-lang-ko="추가">추가</span>
                 </button>
-                <button class="add-record-btn" id="commentManagementBtn" style="display: none;" onclick="showCommentManagement()">
-                    <span data-lang-ko="댓글 관리" data-lang-en="Comments">댓글 관리</span>
+                <button class="add-record-btn" id="commentManagementBtn" onclick="showCommentManagement()"
+                        style="display: none;">
+                    <span data-lang-en="Comments" data-lang-ko="댓글 관리">댓글 관리</span>
                 </button>
             </div>
 
-            <div class="category-header-wrapper" style="display: none;" id="categoryHeaderWrapper">
-                <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;"><span data-lang-ko="라벨" data-lang-en="Labels">라벨</span></button>
+            <div class="category-header-wrapper" id="categoryHeaderWrapper" style="display: none;">
+                <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;"><span
+                        data-lang-en="Labels" data-lang-ko="라벨">라벨</span></button>
                 <div class="category-description" id="categoryDescription"></div>
-                <span class="category-like-count" id="categoryLikeCount" style="display: none; margin-left: auto; padding: 4px 10px; background: #f5f5f5; border: 1px solid #ddd; font-size: 12px; color: #666;"></span>
+                <span class="category-like-count" id="categoryLikeCount"
+                      style="display: none; margin-left: auto; padding: 4px 10px; background: #f5f5f5; border: 1px solid #ddd; font-size: 12px; color: #666;"></span>
             </div>
 
             <div class="records-section" id="recordsSection">
-                <div class="empty-state" data-lang-ko="카테고리를 선택하세요" data-lang-en="Select a category">카테고리를 선택하세요</div>
+                <div class="empty-state" data-lang-en="Select a category" data-lang-ko="카테고리를 선택하세요">카테고리를 선택하세요</div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- 수정 모달 -->
-<div id="editModal" class="modal">
+<div class="modal" id="editModal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title" data-lang-ko="레코드 수정" data-lang-en="Edit Record">레코드 수정</div>
+            <div class="modal-title" data-lang-en="Edit Record" data-lang-ko="레코드 수정">레코드 수정</div>
             <button class="modal-close" onclick="closeEditModal()">×</button>
         </div>
         <div id="editModalError"></div>
         <form id="editForm">
             <div id="editFormContent"></div>
             <div class="modal-actions">
-                <button type="submit" class="btn btn-primary" data-lang-ko="수정" data-lang-en="Save">수정</button>
-                <button type="button" class="btn" onclick="deleteRecord()" data-lang-ko="삭제" data-lang-en="Delete">삭제</button>
-                <button type="button" class="btn" onclick="closeEditModal()" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
+                <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="수정" type="submit">수정</button>
+                <button class="btn" data-lang-en="Delete" data-lang-ko="삭제" onclick="deleteRecord()" type="button">삭제
+                </button>
+                <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeEditModal()" type="button">
+                    취소
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- 프로필 수정 모달 -->
-<div id="profileModal" class="modal">
+<div class="modal" id="profileModal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</div>
+            <div class="modal-title" data-lang-en="Edit Profile" data-lang-ko="프로필 수정">프로필 수정</div>
             <button class="modal-close" onclick="closeProfileModal()">×</button>
         </div>
         <div id="profileModalError"></div>
         <form id="profileForm">
             <div class="form-group">
-                <label for="profileTitle" data-lang-ko="타이틀" data-lang-en="Title">타이틀</label>
-                <input type="text" id="profileTitle" placeholder="예: Hi.">
+                <label data-lang-en="Title" data-lang-ko="타이틀" for="profileTitle">타이틀</label>
+                <input id="profileTitle" placeholder="예: Hi." type="text">
             </div>
             <div class="form-group">
-                <label for="profileDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
+                <label data-lang-en="Description" data-lang-ko="설명" for="profileDescription">설명</label>
                 <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요"></textarea>
             </div>
             <div class="modal-actions">
-                <button type="submit" class="btn btn-primary" data-lang-ko="저장" data-lang-en="Save">저장</button>
-                <button type="button" class="btn" onclick="closeProfileModal()" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
+                <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="저장" type="submit">저장</button>
+                <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeProfileModal()" type="button">
+                    취소
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- 텍스트 팝업 모달 -->
-<div id="textPopupModal" class="modal">
+<div class="modal" id="textPopupModal">
     <div class="modal-content modal-large">
         <div class="modal-header">
             <div class="modal-title" id="textPopupTitle"></div>
@@ -2519,13 +2572,13 @@
 </div>
 
 <!-- 히트맵 전용 모달 (100년 뷰) -->
-<div id="heatmapModal" class="heatmap-modal">
+<div class="heatmap-modal" id="heatmapModal">
     <button class="heatmap-close" onclick="closeHeatmapModal()">×</button>
     <div id="heatmapModalContent"></div>
 </div>
 
 <!-- CHECKLIST 상세 모달 -->
-<div id="checklistModal" class="checklist-modal" onclick="closeChecklistModal()">
+<div class="checklist-modal" id="checklistModal" onclick="closeChecklistModal()">
     <div class="checklist-modal-content" onclick="event.stopPropagation()">
         <div class="checklist-modal-header">
             <h3 id="checklistModalDate"></h3>
@@ -2536,7 +2589,7 @@
 </div>
 
 <!-- 데이터 추가 모달 -->
-<div id="addRecordModal" class="modal">
+<div class="modal" id="addRecordModal">
     <div class="modal-content">
         <div class="modal-header">
             <h2 class="modal-title" id="addRecordModalTitle">레코드 추가</h2>
@@ -2545,7 +2598,9 @@
         <div class="modal-body">
             <div id="addRecordFormContainer"></div>
             <div id="addRecordError"></div>
-            <button type="button" class="btn-primary" id="submitAddRecord" style="width: 100%; padding: 12px; margin-top: 20px;">추가</button>
+            <button class="btn-primary" id="submitAddRecord" style="width: 100%; padding: 12px; margin-top: 20px;"
+                    type="button">추가
+            </button>
         </div>
     </div>
 </div>
@@ -2559,6 +2614,292 @@
     let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
     let currentWeekStart = null; // 주간 뷰에서 현재 표시 중인 주의 시작일
     let currentMonthStart = null; // 월간 뷰에서 현재 표시 중인 월의 시작일
+
+    // ==================== JWT 토큰 관리 ====================
+
+    // Access Token을 메모리에만 저장 (localStorage 사용 안 함)
+    let accessToken = null;
+
+    // Access Token 저장
+    function setAccessToken(token) {
+        accessToken = token;
+
+    }
+
+    // Access Token 가져오기
+    function getAccessToken() {
+        return accessToken;
+    }
+
+    // Access Token 삭제
+    function removeAccessToken() {
+        accessToken = null;
+
+    }
+
+    // ==================== CSRF 토큰 관리 ====================
+
+    let csrfToken = null;
+
+    // CSRF 토큰 가져오기 (쿠키에서)
+    function getCsrfToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'XSRF-TOKEN') {
+                return decodeURIComponent(value);
+            }
+        }
+        return null;
+    }
+
+    // 쿠키에서 값 가져오기 (범용)
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
+    // CSRF 토큰 초기화
+    async function initCsrfToken() {
+        try {
+
+            // 먼저 /api/auth/csrf-token 호출하여 쿠키 설정
+            await fetch(`${API_BASE}/auth/csrf-token`, {
+                credentials: 'include'
+            });
+
+            // 쿠키에서 토큰 읽기
+            csrfToken = getCsrfToken();
+
+        } catch (error) {
+
+        }
+    }
+
+    // CSRF 토큰 로드 (기존 함수 - 하위 호환성)
+    async function loadCsrfToken() {
+        // initCsrfToken()과 동일
+        await initCsrfToken();
+    }
+
+    // ==================== 인증된 Fetch 래퍼 ====================
+
+    async function authFetch(url, options = {}) {
+        // CSRF 토큰이 없으면 먼저 가져오기
+        if (!csrfToken) {
+            csrfToken = getCsrfToken();
+        }
+
+        // 기본 옵션 설정
+        const defaultOptions = {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(options.headers || {})
+            }
+        };
+
+        // AccessToken이 있으면 Authorization 헤더 추가
+        if (accessToken) {
+            defaultOptions.headers['Authorization'] = `Bearer ${accessToken}`;
+
+        } else {
+
+        }
+
+        // POST, PUT, DELETE, PATCH 요청에 CSRF 토큰 추가
+        if (options.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method.toUpperCase())) {
+            // 쿠키의 XSRF-TOKEN 값을 X-XSRF-TOKEN 헤더로 전송
+            if (csrfToken) {
+                defaultOptions.headers['X-XSRF-TOKEN'] = csrfToken;
+            } else {
+
+            }
+        }
+
+        // 옵션 병합
+        const finalOptions = {
+            ...defaultOptions,
+            ...options,
+            headers: {
+                ...defaultOptions.headers,
+                ...options.headers
+            }
+        };
+
+        const response = await fetch(url, finalOptions);
+
+        // ⭐ 중요: 응답 헤더에서 새로운 CSRF 토큰 확인 및 자동 업데이트
+        const responseCsrfToken = response.headers.get('X-CSRF-TOKEN');
+        if (responseCsrfToken) {
+            csrfToken = responseCsrfToken;
+
+        } else {
+            // 응답 헤더에 없으면 쿠키에서 다시 읽기
+            const cookieToken = getCsrfToken();
+            if (cookieToken && cookieToken !== csrfToken) {
+                csrfToken = cookieToken;
+
+            }
+        }
+
+        // 401 에러 시 토큰 갱신 시도
+        if (response.status === 401) {
+
+            const refreshed = await refreshAccessToken();
+            if (refreshed && accessToken) {
+                // 토큰 갱신 성공 - 재시도
+                finalOptions.headers['Authorization'] = `Bearer ${accessToken}`;
+
+                return await fetch(url, finalOptions);
+            } else {
+                // 토큰 갱신 실패 - 이미 RefreshToken이 없는 상태
+                // 불필요한 sign-out 호출 없이 바로 리다이렉트
+
+                currentUser = null;
+                accessToken = null;
+                location.href = location.pathname; // 현재 페이지 새로고침
+                throw new Error('Authentication required');
+            }
+        }
+
+        // 403 에러 시 CSRF 토큰 갱신 후 재시도
+        if (response.status === 403) {
+
+            await initCsrfToken();
+
+            if (csrfToken) {
+                finalOptions.headers['X-XSRF-TOKEN'] = csrfToken;
+
+                return await fetch(url, finalOptions);
+            }
+        }
+
+        return response;
+    }
+
+    // Access Token 갱신 (RefreshToken 검증)
+    async function refreshAccessToken() {
+        try {
+
+            // RefreshToken 쿠키 확인 (디버깅)
+            const cookies = document.cookie.split(';').map(c => c.trim());
+            const refreshTokenCookie = cookies.find(c => c.startsWith('REFRESH_TOKEN='));
+
+            if (!refreshTokenCookie) {
+
+            }
+
+            // CSRF 토큰 가져오기
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // CSRF 토큰 추가
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+
+            } else {
+
+            }
+
+            const response = await fetch(`${API_BASE}/auth/refresh`, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include' // RefreshToken은 쿠키로 전송
+            });
+
+            if (response.ok) {
+                const text = await response.text();
+
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    // JSON이 아니면 문자열 그대로 사용
+                    data = text;
+                }
+
+                // 다양한 응답 형식 지원
+                let token;
+                if (typeof data === 'string') {
+                    token = data;
+                } else if (data.accessToken) {
+                    token = data.accessToken;
+                } else if (data.access_token) {
+                    token = data.access_token;
+                } else if (data.token) {
+                    token = data.token;
+                }
+
+                if (token && typeof token === 'string' && token.length > 10) {
+                    accessToken = token;
+
+                    return true;
+                } else {
+
+                }
+            } else {
+
+                const errorText = await response.text().catch(() => '');
+                if (errorText) {
+
+                }
+            }
+
+            return false;
+        } catch (error) {
+
+            return false;
+        }
+    }
+
+    // 로그아웃 처리
+    async function handleLogout() {
+
+        try {
+            // SSE 연결 종료
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+
+            }
+
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            const headers = {};
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+            }
+
+            await fetch(`${API_BASE}/auth/sign-out`, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include'
+            });
+
+            removeAccessToken();
+            currentUser = null;
+            accessToken = null;
+
+            // 로그인 페이지로 리다이렉트
+
+            location.reload();
+        } catch (error) {
+
+            // 에러가 있어도 페이지 새로고침
+            location.reload();
+        }
+    }
 
     // 번역 데이터
     const translations = {
@@ -2641,6 +2982,30 @@
     }
 
     // 페이지 로드 시 언어 적용
+    // 페이지 언로드 전 SSE 연결 종료
+    window.addEventListener('beforeunload', () => {
+        disconnectSSE();
+    });
+
+    // 페이지 숨김 시 연결 종료 (모바일/탭 전환 대응)
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            disconnectSSE();
+        } else if (!isPageUnloading && localStorage.getItem('accessToken')) {
+            // 페이지가 다시 보일 때만 재연결
+            const mainSection = document.getElementById('mainSection');
+            if (mainSection && mainSection.style.display !== 'none') {
+                connectSSE();
+            }
+        }
+    });
+
+    // 페이지 숨김 이벤트 (iOS Safari 대응)
+    window.addEventListener('pagehide', () => {
+        disconnectSSE();
+    });
+
+
     document.addEventListener('DOMContentLoaded', () => {
         applyLanguage();
     });
@@ -3312,44 +3677,65 @@
 
     // 페이지 로드
     window.addEventListener('DOMContentLoaded', async () => {
-        await checkAuth();
+
+        // 0. 쿠키 상태 확인 (디버깅)
+
+        const cookies = document.cookie.split(';').map(c => c.trim());
+
+        const hasRefreshTokenCookie = cookies.some(c => c.startsWith('REFRESH_TOKEN='));
+
+        // ⚠️ Secure 플래그 경고
+        if (!hasRefreshTokenCookie) {
+
+        }
+
+        if (!hasRefreshTokenCookie && document.referrer) {
+
+        }
+
+        // 1. CSRF 토큰 초기화
+
+        await initCsrfToken();
+
+        // 2. RefreshToken 검증 및 AccessToken 발급
+
+        const refreshed = await refreshAccessToken();
+
+        if (refreshed && accessToken) {
+            // AccessToken 발급 성공 = 로그인 상태
+
+            await checkAuth();
+        } else {
+            // RefreshToken 없음 또는 만료 = 로그아웃 상태
+
+            showLoginSection();
+        }
     });
 
-    // 인증 확인
+    // 인증 확인 - 사용자 정보 조회
     async function checkAuth() {
+
         try {
-            const response = await fetch(`${API_BASE}/auth/me`, {
-                credentials: 'include'
-            });
+            // AccessToken으로 사용자 정보 조회
+
+            const response = await authFetch(`${API_BASE}/user`);
 
             if (response.ok) {
                 currentUser = await response.json();
 
-                // /api/user 호출하여 title, description 가져오기
-                try {
-                    const userResponse = await fetch(`${API_BASE}/user`, {
-                        credentials: 'include'
-                    });
-
-                    if (userResponse.ok) {
-                        const userData = await userResponse.json();
-                        // title, description, birthYear, birthMonth, birthDay 업데이트
-                        currentUser.title = userData.title;
-                        currentUser.description = userData.description;
-                        currentUser.birthYear = userData.birthYear;
-                        currentUser.birthMonth = userData.birthMonth;
-                        currentUser.birthDay = userData.birthDay;
-                    }
-                } catch (error) {
-                    // 에러 무시
-                }
-
                 showMainSection();
                 loadCategories();
+
             } else {
+
+                currentUser = null;
+                accessToken = null;
                 showLoginSection();
             }
         } catch (error) {
+
+            currentUser = null;
+            accessToken = null;
             showLoginSection();
         }
     }
@@ -3362,23 +3748,79 @@
         const password = document.getElementById('password').value;
 
         try {
-            const response = await fetch(`${API_BASE}/auth/login`, {
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            // 폼 데이터 방식으로 전송
+            const formData = new URLSearchParams();
+            formData.append('username', email); // username에 이메일 넣기
+            formData.append('password', password);
+
+            const headers = {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            };
+
+            // CSRF 토큰 추가
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+            }
+
+            const response = await fetch(`${API_BASE}/auth/sign-in`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: headers,
                 credentials: 'include',
-                body: JSON.stringify({ email, password })
+                body: formData.toString()
             });
 
             if (response.ok) {
-                await checkAuth();
+                // 로그인 성공 - AccessToken 받아서 저장
+                const data = await response.json();
+
+                if (data.accessToken) {
+                    accessToken = data.accessToken;
+
+                }
+
+                // 로그인 성공 시 CSRF 토큰 갱신 (서버가 새 토큰 발급함)
+                await initCsrfToken();
+
+                // 쿠키 상태 확인 (디버깅)
+
+                const cookies = document.cookie.split(';').map(c => c.trim());
+                const hasRefreshToken = cookies.some(c => c.startsWith('REFRESH_TOKEN='));
+
+                if (!hasRefreshToken) {
+
+                }
+
+                // 페이지 새로고침하여 인증 상태 업데이트
+
+                location.reload();
+            } else if (response.status === 403) {
+                // CSRF 토큰 문제 - 재시도
+                await initCsrfToken();
+                showLoginError('다시 시도해주세요.');
             } else {
-                showError('loginError', '로그인에 실패했습니다.');
+                showLoginError('로그인에 실패했습니다.');
             }
         } catch (error) {
-            console.error('로그인 오류:', error);
-            showError('loginError', '로그인 중 오류가 발생했습니다.');
+
+            showLoginError('로그인 중 오류가 발생했습니다.');
         }
     });
+
+    function showLoginError(message) {
+        const errorDiv = document.getElementById('loginError');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
 
     // 회원가입
     document.getElementById('showSignup').addEventListener('click', (e) => {
@@ -3410,63 +3852,75 @@
             email: document.getElementById('signupEmail').value,
             password: document.getElementById('signupPassword').value,
             title: document.getElementById('signupTitle').value || '',
-            description: document.getElementById('signupDescription').value || ''
+            description: document.getElementById('signupDescription').value || '',
+            birthYear: parseInt(birthYear) || new Date().getFullYear(),
+            birthMonth: parseInt(birthMonth) || 1,
+            birthDay: parseInt(birthDay) || 1
         };
 
-        // 생년월일 추가 (입력된 경우만)
-        if (birthYear) signupData.birthYear = parseInt(birthYear);
-        if (birthMonth) signupData.birthMonth = parseInt(birthMonth);
-        if (birthDay) signupData.birthDay = parseInt(birthDay);
-
         try {
-            const response = await fetch(`${API_BASE}/auth/signup`, {
+            // 회원가입 직전에 CSRF 토큰 최신화
+            const currentCsrfToken = getCookie('XSRF-TOKEN');
+            if (currentCsrfToken) {
+                csrfToken = currentCsrfToken;
+            }
+
+            const headers = { 'Content-Type': 'application/json' };
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+
+            } else {
+
+            }
+
+            const response = await fetch(`${API_BASE}/user`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
+                credentials: 'include',
                 body: JSON.stringify(signupData)
             });
 
             if (response.ok) {
-                showSuccess('signupError', '회원가입이 완료되었습니다.');
+                showSuccess('signupError', currentLang === 'ko' ? '회원가입이 완료되었습니다.' : 'Sign up completed.');
                 setTimeout(() => {
                     document.getElementById('signupSection').style.display = 'none';
                     document.getElementById('loginSection').style.display = 'block';
                 }, 1500);
             } else {
-                showError('signupError', '회원가입에 실패했습니다.');
+                const errorData = await response.json().catch(() => ({}));
+
+                showError('signupError', currentLang === 'ko' ? '회원가입에 실패했습니다.' : 'Sign up failed.');
             }
         } catch (error) {
-            console.error('회원가입 오류:', error);
-            showError('signupError', '회원가입 중 오류가 발생했습니다.');
+
+            showError('signupError', currentLang === 'ko' ? '회원가입 중 오류가 발생했습니다.' : 'An error occurred during sign up.');
         }
     });
 
     // 로그아웃
     document.getElementById('logoutBtn').addEventListener('click', async () => {
         try {
-            await fetch(`${API_BASE}/auth/logout`, {
-                method: 'POST',
-                credentials: 'include'
+            await authFetch(`${API_BASE}/auth/sign-out`, {
+                method: 'POST'
             });
-            currentUser = null;
-            showLoginSection();
+            handleLogout();
         } catch (error) {
-            console.error('로그아웃 오류:', error);
+
+            handleLogout(); // 에러가 나도 로그아웃 처리
         }
     });
 
     // 카테고리 로드
     async function loadCategories() {
         try {
-            const response = await fetch(`${API_BASE}/category/all`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/category/all`);
 
             if (response.ok) {
                 const categories = await response.json();
                 displayCategories(categories);
             }
         } catch (error) {
-            console.error('카테고리 로드 오류:', error);
+
         }
     }
 
@@ -3623,7 +4077,7 @@
                     break;
             }
 
-            const response = await fetch(endpoint, { credentials: 'include' });
+            const response = await authFetch(endpoint);
 
             if (response.ok) {
                 allRecords = await response.json();
@@ -3632,7 +4086,7 @@
                 recordsSection.innerHTML = `<div class="empty-state">${translations.loadError[currentLang]}</div>`;
             }
         } catch (error) {
-            console.error('레코드 로드 오류:', error);
+
             recordsSection.innerHTML = `<div class="empty-state">${translations.error[currentLang]}</div>`;
         }
     }
@@ -3854,8 +4308,9 @@
     function displayCheckCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
+        // Calendar 뷰일 때만 전역 라벨 토글 표시
+        const isCalendarView = currentView === 'calendar';
+        setupGlobalLabelToggle(isCalendarView);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -5165,8 +5620,9 @@
     function displayTimeCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
+        // Calendar 뷰일 때만 전역 라벨 토글 표시
+        const isCalendarView = currentView === 'calendar';
+        setupGlobalLabelToggle(isCalendarView);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -5630,8 +6086,9 @@
     function displayTextCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
+        // Calendar 뷰일 때만 전역 라벨 토글 표시
+        const isCalendarView = currentView === 'calendar';
+        setupGlobalLabelToggle(isCalendarView);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -6251,8 +6708,9 @@
     function displayNumberCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
+        // Calendar 뷰일 때만 전역 라벨 토글 표시
+        const isCalendarView = currentView === 'calendar';
+        setupGlobalLabelToggle(isCalendarView);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -6586,9 +7044,7 @@
 
         // API로 해당 날짜의 최신 데이터 가져오기
         try {
-            const response = await fetch(`${API_BASE}/text/date?categoryId=${currentCategory.id}&date=${date}`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/text/date?categoryId=${currentCategory.id}&date=${date}`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -6629,7 +7085,7 @@
                 content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">데이터를 불러올 수 없습니다.</div>';
             }
         } catch (error) {
-            console.error('텍스트 데이터 로드 오류:', error);
+
             content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">오류가 발생했습니다.</div>';
         }
     }
@@ -6796,9 +7252,8 @@
                 params.append('success', document.getElementById('editSuccess').checked);
             }
 
-            const response = await fetch(`${endpoint}?${params.toString()}`, {
-                method: 'PUT',
-                credentials: 'include'
+            const response = await authFetch(`${endpoint}?${params.toString()}`, {
+                method: 'PUT'
             });
 
             if (response.ok) {
@@ -6807,7 +7262,7 @@
                 showModalError('수정에 실패했습니다.');
             }
         } catch (error) {
-            console.error('수정 오류:', error);
+
             showModalError('수정 중 오류가 발생했습니다.');
         }
     });
@@ -6828,9 +7283,8 @@
         else if (type === 'CHECKLIST') endpoint = `${API_BASE}/check-list`;
 
         try {
-            const response = await fetch(`${endpoint}?id=${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await authFetch(`${endpoint}?id=${id}`, {
+                method: 'DELETE'
             });
 
             if (response.ok) {
@@ -6839,7 +7293,7 @@
                 showModalError('삭제에 실패했습니다.');
             }
         } catch (error) {
-            console.error('삭제 오류:', error);
+
             showModalError('삭제 중 오류가 발생했습니다.');
         }
     }
@@ -6919,9 +7373,8 @@
         params.append('description', description);
 
         try {
-            const response = await fetch(`${API_BASE}/user?${params.toString()}`, {
-                method: 'PUT',
-                credentials: 'include'
+            const response = await authFetch(`${API_BASE}/user?${params.toString()}`, {
+                method: 'PUT'
             });
 
             if (response.ok) {
@@ -6948,7 +7401,7 @@
                 showProfileModalError('프로필 수정에 실패했습니다.');
             }
         } catch (error) {
-            console.error('프로필 수정 오류:', error);
+
             showProfileModalError('프로필 수정 중 오류가 발생했습니다.');
         }
     });
@@ -7116,9 +7569,8 @@
                 params.append('success', document.getElementById('addSuccess').checked);
             }
 
-            const response = await fetch(`${endpoint}?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
+            const response = await authFetch(`${endpoint}?${params.toString()}`, {
+                method: 'POST'
             });
 
             if (response.ok) {
@@ -7129,7 +7581,7 @@
                 showAddRecordError(currentLang === 'ko' ? '레코드 추가에 실패했습니다.' : 'Failed to add record.');
             }
         } catch (error) {
-            console.error('레코드 추가 오류:', error);
+
             showAddRecordError(currentLang === 'ko' ? '오류가 발생했습니다.' : 'An error occurred.');
         }
     });
@@ -7147,9 +7599,7 @@
     // 좋아요 개수 로드 (manage.html용)
     async function loadLikeCountForManage(categoryId) {
         try {
-            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/categories/likes/count/${categoryId}`);
 
             if (response.ok) {
                 const count = await response.json();
@@ -7159,7 +7609,7 @@
                 }
             }
         } catch (error) {
-            console.error('좋아요 개수 로드 오류:', error);
+
         }
     }
 
@@ -7238,9 +7688,7 @@
     // 댓글 불러오기
     async function loadManagementComments(categoryId) {
         try {
-            const response = await fetch(`${API_BASE}/category/comment/${categoryId}`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/category/comment/${categoryId}`);
 
             if (response.ok) {
                 allComments = await response.json();
@@ -7401,12 +7849,8 @@
                 });
             }
 
-            const response = await fetch(url, {
+            const response = await authFetch(url, {
                 method: method,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
                 body: body
             });
 
@@ -7444,7 +7888,7 @@
                 alert(errorText);
             }
         } catch (error) {
-            console.error('댓글 작성 오류:', error);
+
             const errorMsg = currentLang === 'ko'
                 ? '네트워크 오류가 발생했습니다.'
                 : 'Network error occurred.';
@@ -7532,9 +7976,8 @@
         }
 
         try {
-            const response = await fetch(`${API_BASE}/category/comment/${commentId}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await authFetch(`${API_BASE}/category/comment/${commentId}`, {
+                method: 'DELETE'
             });
 
             if (response.ok) {
@@ -7549,7 +7992,7 @@
                 alert(currentLang === 'ko' ? '댓글 삭제에 실패했습니다.' : 'Failed to delete comment.');
             }
         } catch (error) {
-            console.error('댓글 삭제 오류:', error);
+
             alert(currentLang === 'ko' ? '네트워크 오류가 발생했습니다.' : 'Network error occurred.');
         }
     }
@@ -7562,14 +8005,16 @@
 <div class="notification-modal" id="notificationModal">
     <div class="notification-modal-content">
         <div class="notification-modal-header">
-            <div class="notification-modal-title" data-lang-ko="알림" data-lang-en="Notifications">알림</div>
+            <div class="notification-modal-title" data-lang-en="Notifications" data-lang-ko="알림">알림</div>
             <div style="display: flex; gap: 8px; align-items: center;">
-                <button class="mark-all-read-btn" onclick="markAllAsRead()" data-lang-ko="모두 읽음" data-lang-en="Mark all as read">모두 읽음</button>
+                <button class="mark-all-read-btn" data-lang-en="Mark all as read" data-lang-ko="모두 읽음"
+                        onclick="markAllAsRead()">모두 읽음
+                </button>
                 <button class="notification-modal-close" onclick="toggleNotificationModal()">×</button>
             </div>
         </div>
         <div class="notification-list" id="notificationList">
-            <div class="notification-empty" data-lang-ko="알림이 없습니다" data-lang-en="No notifications">알림이 없습니다</div>
+            <div class="notification-empty" data-lang-en="No notifications" data-lang-ko="알림이 없습니다">알림이 없습니다</div>
         </div>
     </div>
 </div>
@@ -7584,25 +8029,21 @@
 
     // 페이지 로드 시 읽지 않은 알림 가져오기
     async function loadUnreadNotifications() {
-        console.log('>>> loadUnreadNotifications 시작 (manage.html)');
+
         isInitialized = false; // 초기화 시작
 
         try {
-            const response = await fetch(`${API_BASE}/notification/unread`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/notification/unread`);
 
             if (response.ok) {
                 const data = await response.json();
                 notifications = data || [];
-                console.log('읽지 않은 알림 로드:', notifications.length, '개');
-                console.log('알림 데이터:', notifications);
 
                 // 읽지 않은 개수 가져오기
                 await loadUnreadCount();
 
                 isInitialized = true; // 초기화 완료
-                console.log('>>> loadUnreadNotifications 완료 (manage.html) - unreadCount:', unreadCount);
+
             }
         } catch (error) {
             isInitialized = true; // 오류여도 초기화 완료로 표시
@@ -7611,33 +8052,27 @@
 
     // 읽지 않은 알림 개수 가져오기
     async function loadUnreadCount() {
-        console.log('>>> loadUnreadCount 시작 (manage.html)');
-        try {
-            const response = await fetch(`${API_BASE}/notification/unread/count`, {
-                credentials: 'include'
-            });
 
-            console.log('loadUnreadCount response status:', response.status);
+        try {
+            const response = await authFetch(`${API_BASE}/notification/unread/count`);
 
             if (response.ok) {
                 const count = await response.json();
-                console.log('API에서 받은 count:', count, '(타입:', typeof count, ')');
 
                 // 객체 또는 숫자 처리 (API가 {count: 4} 형태로 반환)
                 let actualCount = 0;
                 if (typeof count === 'object' && count !== null && 'count' in count) {
                     actualCount = count.count;
-                    console.log('객체에서 count 추출:', actualCount);
+
                 } else if (typeof count === 'number') {
                     actualCount = count;
                 }
 
                 // 강력한 타입 체크 - 숫자로 변환
                 unreadCount = Number(actualCount) || 0;
-                console.log('설정된 unreadCount:', unreadCount, '(타입:', typeof unreadCount, ')');
 
                 updateNotificationBadge();
-                console.log('>>> loadUnreadCount 완료 (manage.html)');
+
             } else {
                 unreadCount = 0;
             }
@@ -7649,24 +8084,20 @@
     // 알림을 읽음 처리
     async function markNotificationsAsRead(notificationIds) {
         try {
-            const response = await fetch(`${API_BASE}/notification/unread`, {
+            const response = await authFetch(`${API_BASE}/notification/unread`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
                 body: JSON.stringify({
                     notificationIds: notificationIds
                 })
             });
 
             if (response.ok) {
-                console.log('알림 읽음 처리 완료:', notificationIds.length);
+
                 // 읽음 처리 후 개수 업데이트
                 await loadUnreadCount();
             }
         } catch (error) {
-            console.error('알림 읽음 처리 오류:', error);
+
         }
     }
 
@@ -7676,16 +8107,29 @@
             eventSource.close();
         }
 
-        eventSource = new EventSource(`${API_BASE}/sse/subscribe`, {
+        // Access Token 가져오기
+        const token = getAccessToken();
+        if (!token) {
+
+            return;
+        }
+
+        // EventSourcePolyfill을 사용하여 Authorization 헤더 추가
+        const EventSourcePolyfill = window.EventSourcePolyfill || window.EventSource;
+
+        eventSource = new EventSourcePolyfill(`${API_BASE}/sse/subscribe`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
             withCredentials: true
         });
 
         eventSource.addEventListener('connected', (event) => {
-            console.log('SSE 연결됨:', event.data);
+
         });
 
         eventSource.addEventListener('ping', (event) => {
-            console.log('SSE ping:', event.data);
+
         });
 
         eventSource.addEventListener('notification', (event) => {
@@ -7693,15 +8137,21 @@
                 const data = JSON.parse(event.data);
                 handleNotification(data.body);
             } catch (error) {
-                console.error('알림 파싱 오류:', error);
+
             }
         });
 
         eventSource.onerror = (error) => {
-            console.error('SSE 오류:', error);
-            eventSource.close();
-            // 5초 후 재연결
-            setTimeout(connectSSE, 5000);
+            disconnectSSE();
+
+            // 페이지 언로딩 중이 아니고 토큰이 있으면 재연결
+            if (!isPageUnloading && localStorage.getItem('accessToken')) {
+                reconnectTimer = setTimeout(() => {
+                    if (!isPageUnloading) {
+                        connectSSE();
+                    }
+                }, 5000);
+            }
         };
     }
 
@@ -7712,13 +8162,11 @@
 
         // NaN 방지 - 현재 값이 숫자가 아니면 0으로 초기화
         if (isNaN(unreadCount)) {
-            console.warn('unreadCount가 NaN입니다! 0으로 초기화합니다.');
+
             unreadCount = 0;
         }
 
         unreadCount++;
-
-        console.log('새 알림 수신:', notification.type, '/ 현재 읽지 않은 알림:', unreadCount, '(타입:', typeof unreadCount, ')');
 
         // 배지 업데이트
         updateNotificationBadge();
@@ -7738,19 +8186,14 @@
         const badge = document.getElementById('notificationBadge');
         const bell = document.getElementById('notificationBell');
 
-        console.log('=== 배지 업데이트 디버깅 ===');
-        console.log('unreadCount:', unreadCount, '(타입:', typeof unreadCount, ', NaN?', isNaN(unreadCount), ')');
-        console.log('badge 요소:', badge);
-        console.log('bell 요소:', bell);
-
         if (!badge) {
-            console.error('배지 요소를 찾을 수 없습니다!');
+
             return;
         }
 
         // NaN 체크
         if (isNaN(unreadCount)) {
-            console.error('unreadCount가 NaN입니다! 0으로 초기화합니다.');
+
             unreadCount = 0;
         }
 
@@ -7758,10 +8201,10 @@
             const displayCount = unreadCount > 99 ? '99+' : unreadCount;
             badge.textContent = displayCount;
             badge.style.display = 'block';
-            console.log('배지 표시:', displayCount);
+
         } else {
             badge.style.display = 'none';
-            console.log('배지 숨김');
+
         }
     }
 
@@ -7863,13 +8306,12 @@
                 updateMarkAllReadButton();
 
                 // 성공 메시지
-                console.log('모든 알림을 읽음 처리했습니다');
 
                 // 모달 닫기
                 toggleNotificationModal();
             }
         } catch (error) {
-            console.error('알림 읽음 처리 오류:', error);
+
             alert(currentLang === 'ko' ? '알림 처리에 실패했습니다' : 'Failed to mark as read');
         } finally {
             btn.disabled = false;
@@ -7960,11 +8402,36 @@
     });
 
     // SSE 연결은 showMainSection()에서 처리됨
+    // 페이지 언로드 전 SSE 연결 종료
+    window.addEventListener('beforeunload', () => {
+        disconnectSSE();
+    });
+
+    // 페이지 숨김 시 연결 종료 (모바일/탭 전환 대응)
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            disconnectSSE();
+        } else if (!isPageUnloading && localStorage.getItem('accessToken')) {
+            // 페이지가 다시 보일 때만 재연결
+            const mainSection = document.getElementById('mainSection');
+            if (mainSection && mainSection.style.display !== 'none') {
+                connectSSE();
+            }
+        }
+    });
+
+    // 페이지 숨김 이벤트 (iOS Safari 대응)
+    window.addEventListener('pagehide', () => {
+        disconnectSSE();
+    });
+
+
     document.addEventListener('DOMContentLoaded', async () => {
+        // CSRF 토큰 로드
+        await loadCsrfToken();
         // 페이지 로드 완료 - 로그인 체크는 자동으로 실행됨
     });
 </script>
-
 
 </body>
 </html>
