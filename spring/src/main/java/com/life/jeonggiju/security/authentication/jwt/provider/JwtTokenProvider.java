@@ -42,11 +42,14 @@ public class JwtTokenProvider {
 	private final JWSSigner refreshTokenSigner;
 	private final JWSVerifier refreshTokenVerifier;
 
+	private final boolean cookieSecure;
+
 	public JwtTokenProvider(
 		@Value("${jwt.access-token.secret}") String accessTokenSecret,
 		@Value("${jwt.access-token.expiration-ms}") int accessTokenExpirationMs,
 		@Value("${jwt.refresh-token.secret}") String refreshTokenSecret,
-		@Value("${jwt.refresh-token.expiration-ms}") int refreshTokenExpirationMs
+		@Value("${jwt.refresh-token.expiration-ms}") int refreshTokenExpirationMs,
+		@Value("${app.cookie.secure}") boolean cookieSecure
 	) throws JOSEException {
 		this.accessTokenExpirationMs = accessTokenExpirationMs;
 		this.refreshTokenExpirationMs = refreshTokenExpirationMs;
@@ -58,6 +61,7 @@ public class JwtTokenProvider {
 		byte[] refreshTokenSecretBytes = refreshTokenSecret.getBytes(StandardCharsets.UTF_8);
 		this.refreshTokenSigner = new MACSigner(refreshTokenSecretBytes);
 		this.refreshTokenVerifier = new MACVerifier(refreshTokenSecretBytes);
+		this.cookieSecure = cookieSecure;
 	}
 
 	public String generateAccessToken(LifeUserDetails userDetails) {
@@ -139,7 +143,7 @@ public class JwtTokenProvider {
 	private Cookie createRefreshCookie(String value, int maxAgeSeconds) {
 		Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, value);
 		cookie.setHttpOnly(true);
-		cookie.setSecure(true);
+		cookie.setSecure(cookieSecure);
 		cookie.setPath("/");
 		cookie.setMaxAge(maxAgeSeconds);
 		return cookie;
