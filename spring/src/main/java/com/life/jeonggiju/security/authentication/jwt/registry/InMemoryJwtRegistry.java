@@ -7,7 +7,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +15,6 @@ import com.life.jeonggiju.security.authentication.jwt.provider.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
-@Profile({"prod", "dev", "local"})
 @Component
 @RequiredArgsConstructor
 public class InMemoryJwtRegistry implements JwtRegistry {

@@ -19,7 +19,7 @@ public class AuthConfig {
 	}
 
 	@Bean("passwordEncoder")
-	@Profile({"local", "dev"})
+	@Profile({"local", "dev", "test"})
 	public PasswordEncoder devPasswordEncoder() {
 		return new PlainTextPasswordEncoder();
 	}
