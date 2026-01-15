@@ -18,75 +18,92 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #fff;
-            color: #333;
-            padding: 32px 36px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+            padding: 20px;
+            line-height: 1.5;
         }
 
         .header {
-            margin-bottom: 15px;
-            padding-bottom: 0;
+            margin-bottom: 24px;
+            background: white;
+            padding: 24px 32px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
         .greeting {
-            font-size: 32px;
-            font-weight: normal;
+            font-size: 28px;
+            font-weight: 600;
             margin-bottom: 8px;
+            color: #1a202c;
         }
 
         .user-desc {
             font-size: 14px;
-            color: #666;
+            color: #718096;
             margin-bottom: 0;
         }
 
         .top-actions {
             position: absolute;
-            top: 40px;
-            right: 60px;
+            top: 32px;
+            right: 32px;
             display: flex;
-            gap: 8px;
+            gap: 12px;
+            align-items: center;
         }
 
         .btn {
-            padding: 6px 12px;
-            border: 1px solid #ccc;
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            min-width: 70px;
+            min-width: 80px;
             text-align: center;
-            font-size: 13px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
             text-decoration: none;
-            color: #333;
+            color: #2d3748;
             display: inline-block;
+            border-radius: 8px;
         }
 
         .btn:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
         }
 
         .btn-primary {
-            background: #e0e0e0;
-            border-color: #999;
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
         }
 
         .btn-primary:hover {
-            background: #d0d0d0;
+            background: #3182ce;
+            border-color: #3182ce;
         }
 
         .language-toggle {
-            padding: 6px 12px;
-            border: 1px solid #ccc;
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 13px;
-            min-width: 60px;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 70px;
             text-align: center;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .language-toggle:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         /* 메인 레이아웃 */
@@ -121,12 +138,13 @@
         .drawer-panel-content {
             width: 320px;
             height: 100%;
-            background: linear-gradient(135deg, #cfcfcf 0%, #dadada 100%);
+            background: white;
             border-radius: 0;
-            box-shadow: 4px 4px 16px rgba(0,0,0,0.15);
+            box-shadow: 4px 0 12px rgba(0,0,0,0.08);
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            border-right: 2px solid #e2e8f0;
         }
 
         /* PUBLIC drawer - top: 170px */
@@ -147,59 +165,62 @@
         }
 
         .drawer-panel-inner::-webkit-scrollbar {
-            width: 4px;
+            width: 6px;
         }
 
         .drawer-panel-inner::-webkit-scrollbar-track {
-            background: #f8f8f8;
+            background: #f8f9fa;
         }
 
         .drawer-panel-inner::-webkit-scrollbar-thumb {
-            background: #d0d0d0;
+            background: #cbd5e0;
             border-radius: 3px;
         }
 
         .drawer-panel-inner::-webkit-scrollbar-thumb:hover {
-            background: #b0b0b0;
+            background: #a0aec0;
         }
 
         /* Handle - 오른쪽 (고정 크기) */
         .drawer-handle {
             width: 22px;
             height: 120px;
-            background: linear-gradient(135deg, #cfcfcf 0%, #dadada 100%);
-            border-radius: 0 18px 18px 0;
+            background: white;
+            border-radius: 0 12px 12px 0;
             cursor: pointer;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.12);
+            box-shadow: 2px 0 8px rgba(0,0,0,0.08);
             display: flex;
             align-items: center;
             justify-content: center;
             writing-mode: vertical-rl;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
-            color: #666;
+            color: #718096;
             letter-spacing: 1.5px;
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
             user-select: none;
             flex-shrink: 0;
+            border: 2px solid #e2e8f0;
+            border-left: none;
         }
 
         .drawer-handle:hover {
-            background: linear-gradient(135deg, #bfbfbf 0%, #cacaca 100%);
+            background: #f7fafc;
+            color: #2d3748;
         }
 
         .drawer-panel.open .drawer-handle {
-            background: linear-gradient(135deg, #b8b8b8 0%, #c3c3c3 100%);
+            background: #edf2f7;
         }
 
         /* Panel Header */
         .drawer-header {
-            padding: 12px 16px;
-            background: linear-gradient(135deg, #f2f2f2 0%, #f8f8f8 100%);
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 11px;
+            padding: 16px 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 12px;
             font-weight: 600;
-            color: #666;
+            color: #718096;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -207,11 +228,11 @@
         }
 
         .drawer-count {
-            background: #999;
+            background: #4299e1;
             color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 9px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 600;
         }
 
@@ -242,18 +263,19 @@
 
         .content-toolbar {
             display: flex;
-            gap: 8px;
-            padding: 5px 15px 10px;
-            border-bottom: 1px solid #ddd;
+            gap: 10px;
+            padding: 12px 20px;
+            border-bottom: 2px solid #e2e8f0;
             background: white;
             align-items: center;
             flex-wrap: nowrap;
+            border-radius: 12px 12px 0 0;
         }
 
         .view-toggle {
             display: none;
             flex-direction: row;
-            gap: 4px;
+            gap: 8px;
             flex-shrink: 0;
             flex-wrap: nowrap;
         }
@@ -263,62 +285,70 @@
         }
 
         .add-record-btn {
-            padding: 6px 12px;
-            border: 1px solid #666;
-            background: #666;
-            color: #fff;
+            padding: 10px 18px;
+            border: 2px solid #4299e1;
+            background: #4299e1;
+            color: white;
             cursor: pointer;
-            min-width: 80px;
+            min-width: 100px;
             text-align: center;
-            font-size: 12px;
-            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
             white-space: nowrap;
             flex-shrink: 0;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .add-record-btn:hover {
-            background: #777;
-            border-color: #777;
+            background: #3182ce;
+            border-color: #3182ce;
         }
 
         .add-record-btn:disabled {
-            background: #ccc;
-            border-color: #ccc;
+            background: #cbd5e0;
+            border-color: #cbd5e0;
             cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .toggle-btn {
-            padding: 6px 12px;
-            border: 1px solid #ccc;
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: 500;
             text-align: center;
             white-space: nowrap;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .toggle-btn:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         .toggle-btn.active {
-            background: #e0e0e0;
-            border-color: #999;
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
         }
 
         .category-description {
             margin: 0;
-            font-size: 13px;
-            color: #333;
+            font-size: 14px;
+            color: #2d3748;
             padding: 0;
         }
 
         .category-header-wrapper {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 15px;
-            border-bottom: 1px solid #ddd;
+            gap: 16px;
+            padding: 16px 20px;
+            border-bottom: 2px solid #e2e8f0;
             background: white;
         }
 
@@ -328,7 +358,9 @@
 
         .records-section {
             flex: 1;
-            padding: 15px;
+            padding: 20px;
+            background: white;
+            border-radius: 0 0 12px 12px;
         }
 
         .records-section {
@@ -345,30 +377,30 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 14px;
+            padding: 10px 16px;
             border: none;
-            border-bottom: 1px solid #e8e8e8;
+            border-bottom: 1px solid #f1f3f5;
             background: white;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 12px;
             text-align: left;
-            transition: all 0.15s ease;
-            min-height: 32px;
+            transition: all 0.2s ease;
+            min-height: 40px;
         }
 
         .category-item:hover {
-            background: #f8f8f8;
+            background: #f8f9fa;
         }
 
         .category-item.active {
-            background: #e8e8e8;
+            background: #edf2f7;
             font-weight: 600;
-            border-left: 3px solid #666;
-            padding-left: 11px;
+            border-left: 4px solid #4299e1;
+            padding-left: 12px;
         }
 
         .category-item.active .category-type-badge {
-            background: #888;
+            background: #4299e1;
             color: white;
         }
 
@@ -377,80 +409,85 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            color: #333;
-            font-size: 12px;
+            color: #2d3748;
+            font-size: 13px;
             font-weight: 500;
-            line-height: 1.3;
+            line-height: 1.4;
             padding-right: 12px;
         }
 
         .category-item:hover .category-title {
-            color: #222;
+            color: #1a202c;
         }
 
         .category-item.active .category-title {
-            color: #222;
+            color: #1a202c;
             font-weight: 600;
         }
 
         .category-type-badge {
-            padding: 3px 8px;
-            background: #e8e8e8;
-            color: #666;
-            font-size: 9.5px;
+            padding: 4px 10px;
+            background: #e2e8f0;
+            color: #718096;
+            font-size: 10px;
             font-weight: 600;
             flex-shrink: 0;
-            border-radius: 3px;
+            border-radius: 6px;
             line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .date-group {
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
 
         .date-group-header {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            font-weight: 600;
         }
 
         /* CHECK 테이블 스타일 */
         .check-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .check-table td {
-            padding: 8px;
+            padding: 12px;
             text-align: center;
-            border: 1px solid #ddd;
+            border: 2px solid #e2e8f0;
         }
 
         .date-cell {
-            font-weight: normal;
-            font-size: 13px;
-            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+            color: #2d3748;
+            background: #f8f9fa;
         }
 
         .result-cell {
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 15px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .result-success {
-            color: #cc0000;
+            color: #48bb78;
         }
 
         .result-fail {
-            color: #333;
+            color: #718096;
         }
 
         .result-cell:hover {
-            background: #f5f5f5;
+            background: #f7fafc;
         }
 
         .empty-cell {
@@ -461,13 +498,13 @@
         .time-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .time-table td {
-            padding: 10px;
+            padding: 12px;
             text-align: center;
-            border: 1px solid #ddd;
+            border: 2px solid #e2e8f0;
         }
 
         .time-cell {
@@ -1138,40 +1175,43 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d3748;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            font-size: 13px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: border-color 0.2s ease;
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #999;
+            border-color: #4299e1;
         }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 60px;
+            min-height: 80px;
         }
 
         .birth-date-inputs {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
         .birth-date-inputs input {
@@ -1181,44 +1221,57 @@
 
         .submit-btn {
             width: 100%;
-            padding: 10px;
-            background: #e0e0e0;
-            color: #333;
-            border: 1px solid #999;
-            font-size: 13px;
+            padding: 12px;
+            background: #4299e1;
+            color: white;
+            border: 2px solid #4299e1;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .submit-btn:hover {
-            background: #d0d0d0;
+            background: #3182ce;
+            border-color: #3182ce;
         }
 
         .form-footer {
             text-align: center;
-            margin-top: 15px;
-            font-size: 13px;
-            color: #666;
+            margin-top: 18px;
+            font-size: 14px;
+            color: #718096;
         }
 
         .form-footer a {
-            color: #0066cc;
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
             text-decoration: underline;
         }
 
         .error-message {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-size: 13px;
+            background: #fff5f5;
+            color: #c53030;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 2px solid #feb2b2;
+            border-radius: 8px;
         }
 
         .success-message {
-            background: #dcfce7;
-            color: #166534;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-size: 13px;
+            background: #f0fff4;
+            color: #276749;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 2px solid #9ae6b4;
+            border-radius: 8px;
         }
 
         /* 모달 */
@@ -1241,49 +1294,61 @@
 
         .modal-content {
             background: white;
-            padding: 30px;
-            max-width: 500px;
+            padding: 32px;
+            max-width: 550px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
-            border: 1px solid #ccc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         }
 
         .modal-content.modal-large {
-            max-width: 700px;
+            max-width: 750px;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .modal-title {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
         }
 
         .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            font-size: 20px;
             cursor: pointer;
-            color: #666;
+            color: #718096;
             line-height: 1;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-close:hover {
-            color: #333;
+            color: #2d3748;
+            background: #edf2f7;
+            border-color: #cbd5e0;
         }
 
         .modal-actions {
             display: flex;
-            gap: 8px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 24px;
         }
 
         .modal-actions button {
@@ -1292,32 +1357,33 @@
 
         /* 텍스트 팝업 스타일 */
         .text-popup-item {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .text-popup-item-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .text-popup-item-title {
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a202c;
         }
 
         .text-popup-item-content {
-            font-size: 13px;
-            line-height: 1.5;
-            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #2d3748;
             white-space: pre-wrap;
         }
 
         .text-popup-divider {
-            height: 1px;
-            background: #ddd;
-            margin: 15px 0;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 20px 0;
         }
 
         /* 히트맵 풀스크린 모달 스타일 */
@@ -1331,7 +1397,7 @@
             background: white;
             z-index: 2000;
             overflow: auto;
-            padding: 40px 10px 10px 10px;
+            padding: 40px 20px 20px 20px;
         }
 
         .heatmap-modal.active {
@@ -2096,40 +2162,41 @@
         /* 알림 벨 아이콘 */
         .notification-bell {
             position: relative;
-            padding: 6px 12px;
-            border: 1px solid #ccc;
+            padding: 10px 18px;
+            border: 2px solid #dee2e6;
             background: white;
             cursor: pointer;
-            font-size: 13px;
-            min-width: 70px;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 80px;
             text-align: center;
-            height: 32px;
-            line-height: 32px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            box-sizing: border-box;
-            vertical-align: middle;
+            border-radius: 6px;
+            transition: all 0.15s ease;
             text-decoration: none;
-            color: #333;
+            color: #495057;
+            line-height: 1;
         }
 
         .notification-bell:hover {
-            background: #f0f0f0;
+            background: #f8f9fa;
+            border-color: #adb5bd;
         }
 
         /* 읽지 않은 알림 배지 */
         .notification-badge {
             position: absolute;
-            top: -4px;
-            right: -4px;
-            background: #ff0000;
+            top: -6px;
+            right: -6px;
+            background: #f56565;
             color: white;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
-            padding: 2px 6px;
-            border-radius: 10px;
-            min-width: 18px;
+            padding: 3px 7px;
+            border-radius: 12px;
+            min-width: 20px;
             text-align: center;
         }
 
@@ -2430,6 +2497,11 @@
             height: 32px !important;
         }
 
+        .top-actions .notification-bell {
+            min-width: 110px !important;
+            height: 32px !important;
+        }
+
         /* 뷰 토글 버튼 */
         .view-toggle {
             height: 32px !important;
@@ -2709,6 +2781,11 @@
             padding: 6px 12px;
         }
 
+        .top-actions .notification-bell {
+            min-width: 100px;
+            padding: 6px 14px;
+        }
+
         /* 뷰 토글 버튼 */
         .view-toggle .toggle-btn {
             min-width: 90px;
@@ -2978,7 +3055,8 @@
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
-                        <td style="padding: 5px 0;"><input id="password" required
+                        <td style="padding: 5px 0;"><input autocomplete="current-password" id="password"
+                                                           required
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="password">
                         </td>
@@ -2993,6 +3071,10 @@
                     </tr>
                 </table>
             </form>
+            <div style="text-align: center; margin-top: 10px; font-size: 12px;">
+                <a href="#" id="showResetPassword" style="color: #666; text-decoration: underline;">Forgot your
+                    password?</a>
+            </div>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
                 New account? <a href="#" id="showSignup" style="color: #0066cc; text-decoration: underline;">Sign Up</a>
             </div>
@@ -3028,7 +3110,8 @@
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
-                        <td style="padding: 5px 0;"><input id="signupPassword" required
+                        <td style="padding: 5px 0;"><input autocomplete="new-password" id="signupPassword"
+                                                           required
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="password">
                         </td>
@@ -3091,17 +3174,74 @@
     </div>
 </div>
 
+<!-- 비밀번호 재설정 섹션 -->
+<div id="resetPasswordSection"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="simple-auth-container">
+        <div class="simple-auth-box">
+            <div style="text-align: left; margin-bottom: 10px;">
+                <a href="#" onclick="showLoginFromReset(); return false;"
+                   style="color: #666; text-decoration: none; font-size: 13px;">← Back to Login</a>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Reset Password</h2>
+            <div id="resetPasswordError"
+                 style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <div id="resetPasswordSuccess"
+                 style="color: green; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <form id="resetPasswordForm">
+                <table style="margin: 0 auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:</td>
+                        <td style="padding: 5px 0;">
+                            <input autocomplete="username" id="resetUsername"
+                                   required
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                   type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td style="padding: 5px 0;">
+                            <input autocomplete="email" id="resetEmail"
+                                   required
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                   type="email">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">New Password:</td>
+                        <td style="padding: 5px 0;">
+                            <input autocomplete="new-password" id="resetNewPassword"
+                                   required
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                   type="password">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding-top: 15px;">
+                            <button style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="submit">
+                                Reset Password
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- 메인 섹션 -->
 <div id="mainSection" style="display: none;">
     <div class="top-actions">
+        <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
         <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
-        <button class="btn" data-lang-en="Edit Profile" data-lang-ko="프로필 수정" id="editProfileBtn">프로필 수정</button>
-        <a class="btn" data-lang-en="Manage Categories" data-lang-ko="카테고리 관리" href="insert.html">카테고리 관리</a>
+        <a class="btn" data-lang-en="Insert Data" data-lang-ko="데이터 입력" href="insert.html">데이터 입력</a>
+        <a class="btn" data-lang-en="My Page" data-lang-ko="내 관리" href="manage.html">내 관리</a>
         <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()"><span
                 data-lang-en="Alerts" data-lang-ko="알림">알림</span><span class="notification-badge" id="notificationBadge"
                                                                        style="display: none;">0</span>
         </button>
-        <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
         <button class="btn btn-primary" data-lang-en="Logout" data-lang-ko="로그아웃" id="logoutBtn">로그아웃</button>
     </div>
 
@@ -3617,14 +3757,14 @@
     });
 
     // 페이지 숨김 시 연결 종료 (모바일/탭 전환 대응)
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', async () => {
         if (document.hidden) {
             disconnectSSE();
         } else if (!isPageUnloading && localStorage.getItem('accessToken')) {
             // 페이지가 다시 보일 때만 재연결
             const mainSection = document.getElementById('mainSection');
             if (mainSection && mainSection.style.display !== 'none') {
-                connectSSE();
+                await connectSSE();
             }
         }
     });
@@ -4465,10 +4605,17 @@
         document.getElementById('loginSection').style.display = 'block';
     });
 
+    document.getElementById('showResetPassword').addEventListener('click', (e) => {
+        e.preventDefault();
+        showResetPasswordSection();
+    });
+
     document.getElementById('cancelSignup').addEventListener('click', () => {
         document.getElementById('signupSection').style.display = 'none';
         document.getElementById('loginSection').style.display = 'block';
     });
+
+    document.getElementById('resetPasswordForm').addEventListener('submit', resetPassword);
 
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -4526,6 +4673,71 @@
             showError('signupError', currentLang === 'ko' ? '회원가입 중 오류가 발생했습니다.' : 'An error occurred during sign up.');
         }
     });
+
+    // 비밀번호 재설정
+    async function resetPassword(e) {
+        e.preventDefault();
+        console.log('[MANAGE] Reset password attempt');
+
+        const username = document.getElementById('resetUsername').value;
+        const email = document.getElementById('resetEmail').value;
+        const newPassword = document.getElementById('resetNewPassword').value;
+
+        // Clear previous messages
+        document.getElementById('resetPasswordError').innerHTML = '';
+        document.getElementById('resetPasswordSuccess').innerHTML = '';
+
+        try {
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+                console.log('[MANAGE] Got CSRF token from cookie:', csrfToken ? 'EXISTS' : 'NULL');
+            }
+
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // CSRF 토큰 추가
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+                console.log('[MANAGE] CSRF token added to headers');
+            } else {
+                console.warn('[MANAGE] No CSRF token available');
+            }
+
+            const response = await fetch(`${API_BASE}/auth/reset-password`, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include',
+                body: JSON.stringify({
+                    username: username,
+                    email: email,
+                    newPassword: newPassword
+                })
+            });
+
+            if (response.ok) {
+                console.log('[MANAGE] Password reset successful');
+                document.getElementById('resetPasswordSuccess').innerHTML =
+                    'Password has been reset. Please login.';
+
+                // 2초 후 로그인 화면으로 이동
+                setTimeout(() => {
+                    showLoginFromReset();
+                }, 2000);
+            } else {
+                const errorText = await response.text();
+                console.error('[MANAGE] Password reset failed:', response.status, errorText);
+                document.getElementById('resetPasswordError').innerHTML =
+                    'Password reset failed. Please check your information.';
+            }
+        } catch (error) {
+            console.error('[MANAGE] Password reset error:', error);
+            document.getElementById('resetPasswordError').innerHTML =
+                'An error occurred during password reset.';
+        }
+    }
 
     // 로그아웃
     document.getElementById('logoutBtn').addEventListener('click', async () => {
@@ -8034,18 +8246,37 @@
         // 알림 시스템 초기화
         (async () => {
             await loadUnreadNotifications();
-            connectSSE();
+            await connectSSE();
         })();
     }
 
+    function showResetPasswordSection() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('resetPasswordSection').style.display = 'block';
+        document.getElementById('mainSection').style.display = 'none';
+        // Clear form
+        document.getElementById('resetPasswordForm').reset();
+        document.getElementById('resetPasswordError').innerHTML = '';
+        document.getElementById('resetPasswordSuccess').innerHTML = '';
+    }
+
+    function showLoginFromReset() {
+        document.getElementById('resetPasswordSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+    }
+
     // 프로필 수정 모달 열기
-    document.getElementById('editProfileBtn').addEventListener('click', () => {
-        if (currentUser) {
-            document.getElementById('profileTitle').value = currentUser.title || '';
-            document.getElementById('profileDescription').value = currentUser.description || '';
-            document.getElementById('profileModal').classList.add('active');
-        }
-    });
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    if (editProfileBtn) {
+        editProfileBtn.addEventListener('click', () => {
+            if (currentUser) {
+                document.getElementById('profileTitle').value = currentUser.title || '';
+                document.getElementById('profileDescription').value = currentUser.description || '';
+                document.getElementById('profileModal').classList.add('active');
+            }
+        });
+    }
 
     // 프로필 수정 모달 닫기
     function closeProfileModal() {
@@ -8717,6 +8948,9 @@
     let isInitialized = false; // 초기화 완료 플래그
     let reconnectTimer = null; // 재연결 타이머
     let isPageUnloading = false; // 페이지 언로딩 플래그
+    let lastEventId = localStorage.getItem('lastEventId') || ''; // lastEventId 저장
+    let sseReconnectAttempts = 0; // 재연결 시도 횟수
+    const MAX_SSE_RECONNECT_ATTEMPTS = 5; // 최대 재연결 시도 횟수
 
     // SSE 연결 종료 함수
     function disconnectSSE() {
@@ -8805,17 +9039,30 @@
     }
 
     // SSE 연결
-    function connectSSE() {
+    async function connectSSE() {
         if (eventSource) {
             eventSource.close();
+        }
+
+        // AccessToken 갱신 시도
+        try {
+            console.log('[MANAGE SSE] Refreshing access token before SSE connection...');
+            await refreshAccessToken();
+            console.log('[MANAGE SSE] Access token refreshed successfully');
+        } catch (error) {
+            console.error('[MANAGE SSE] Failed to refresh access token:', error);
+            console.warn('[MANAGE SSE] Skipping SSE connection due to token refresh failure');
+            return;
         }
 
         // Access Token 가져오기
         const token = getAccessToken();
         if (!token) {
-
+            console.warn('[MANAGE SSE] No AccessToken after refresh - skipping SSE connection');
             return;
         }
+
+        console.log('[MANAGE SSE] Connecting with lastEventId:', lastEventId || 'none');
 
         // EventSourcePolyfill을 사용하여 Authorization 헤더 추가
         const EventSourcePolyfill = window.EventSourcePolyfill || window.EventSource;
@@ -8824,36 +9071,89 @@
             headers: {
                 'Authorization': `Bearer ${token}`
             },
-            withCredentials: true
+            withCredentials: true,
+            heartbeatTimeout: 300000 // 5분
         });
 
-        eventSource.addEventListener('connected', (event) => {
+        eventSource.onopen = () => {
+            console.log('[MANAGE SSE] Connection opened');
+            sseReconnectAttempts = 0; // 재시도 카운터 리셋
+        };
 
+        eventSource.addEventListener('connected', (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                console.log('[MANAGE SSE] Connected event received:', data);
+
+                // lastEventId 저장
+                if (event.lastEventId) {
+                    lastEventId = event.lastEventId;
+                    localStorage.setItem('lastEventId', lastEventId);
+                    console.log('[MANAGE SSE] Saved lastEventId:', lastEventId);
+                }
+            } catch (e) {
+                console.error('[MANAGE SSE] Error parsing connected event:', e);
+            }
         });
 
         eventSource.addEventListener('ping', (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                console.log('[MANAGE SSE] Ping received at', new Date().toLocaleTimeString());
 
+                // lastEventId 저장
+                if (event.lastEventId) {
+                    lastEventId = event.lastEventId;
+                    localStorage.setItem('lastEventId', lastEventId);
+                }
+            } catch (e) {
+                console.error('[MANAGE SSE] Error parsing ping event:', e);
+            }
         });
 
         eventSource.addEventListener('notification', (event) => {
             try {
                 const data = JSON.parse(event.data);
+                console.log('[MANAGE SSE] Notification received:', data);
+
+                // lastEventId 저장
+                if (event.lastEventId) {
+                    lastEventId = event.lastEventId;
+                    localStorage.setItem('lastEventId', lastEventId);
+                    console.log('[MANAGE SSE] Saved lastEventId:', lastEventId);
+                }
+
                 handleNotification(data.body);
             } catch (error) {
-
+                console.error('[MANAGE SSE] Error parsing notification:', error);
             }
         });
 
-        eventSource.onerror = (error) => {
+        eventSource.onerror = async (error) => {
+            console.error('[MANAGE SSE] Connection error:', error);
             disconnectSSE();
 
-            // 페이지 언로딩 중이 아니고 토큰이 있으면 재연결
-            if (!isPageUnloading && localStorage.getItem('accessToken')) {
-                reconnectTimer = setTimeout(() => {
-                    if (!isPageUnloading) {
-                        connectSSE();
+            // 재연결 시도
+            if (sseReconnectAttempts < MAX_SSE_RECONNECT_ATTEMPTS && !isPageUnloading) {
+                sseReconnectAttempts++;
+                const delay = Math.min(1000 * Math.pow(2, sseReconnectAttempts), 30000);
+
+                console.log(`[MANAGE SSE] Reconnecting in ${delay}ms... (attempt ${sseReconnectAttempts}/${MAX_SSE_RECONNECT_ATTEMPTS})`);
+
+                reconnectTimer = setTimeout(async () => {
+                    if (!isPageUnloading && localStorage.getItem('accessToken')) {
+                        const refreshed = await refreshAccessToken();
+                        if (refreshed) {
+                            await connectSSE();
+                        } else {
+                            console.error('[MANAGE SSE] Failed to refresh token, stopping reconnection');
+                            sseReconnectAttempts = 0;
+                        }
                     }
-                }, 5000);
+                }, delay);
+            } else {
+                console.error('[MANAGE SSE] Max reconnection attempts reached or page is unloading');
+                sseReconnectAttempts = 0;
             }
         };
     }
@@ -9111,14 +9411,14 @@
     });
 
     // 페이지 숨김 시 연결 종료 (모바일/탭 전환 대응)
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', async () => {
         if (document.hidden) {
             disconnectSSE();
         } else if (!isPageUnloading && localStorage.getItem('accessToken')) {
             // 페이지가 다시 보일 때만 재연결
             const mainSection = document.getElementById('mainSection');
             if (mainSection && mainSection.style.display !== 'none') {
-                connectSSE();
+                await connectSSE();
             }
         }
     });
