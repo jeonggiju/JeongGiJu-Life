@@ -1,6 +1,7 @@
 package com.life.jeonggiju.domain.checkList.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.life.jeonggiju.domain.checkList.dto.FindCheckListAllResponse;
+import com.life.jeonggiju.domain.checkList.dto.FindCheckListResponse;
 import com.life.jeonggiju.domain.checkList.dto.SaveCheckList;
 import com.life.jeonggiju.domain.checkList.dto.UpdateCheckList;
+import com.life.jeonggiju.domain.checkList.entity.CheckListRecord;
 import com.life.jeonggiju.domain.checkList.service.CheckListService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,49 +28,49 @@ public class CheckListController {
 	private final CheckListService checkListService;
 
 	@GetMapping("/date")
-	public ResponseEntity<?> findByDate(
+	public ResponseEntity<List<CheckListRecord>> findByDate(
 		UUID categoryId,
 		LocalDate date
-	){
-		return ResponseEntity.ok(checkListService.findByDate(categoryId,date));
+	) {
+		return ResponseEntity.ok(checkListService.findByDate(categoryId, date));
 	}
 
 	@GetMapping
-	public ResponseEntity<?> find(
+	public ResponseEntity<FindCheckListResponse> find(
 		UUID checkId
-	){
+	) {
 		return ResponseEntity.ok(checkListService.find(checkId));
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<?> findAll(
+	public ResponseEntity<FindCheckListAllResponse> findAll(
 		UUID categoryId
-	){
+	) {
 		return ResponseEntity.ok(checkListService.findAll(categoryId));
 	}
 
 	@PostMapping
-	public ResponseEntity<?> save(
+	public ResponseEntity<Void> save(
 		SaveCheckList saveCheckList
-	){
-		try{
+	) {
+		try {
 			checkListService.save(saveCheckList);
 			return ResponseEntity.ok().build();
-		}catch(Exception e){
+		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(
+	public ResponseEntity<Void> update(
 		UpdateCheckList dto
-	){
+	) {
 		checkListService.update(dto);
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> delete(UUID id){
+	public ResponseEntity<?> delete(UUID id) {
 		checkListService.delete(id);
 		return ResponseEntity.ok().build();
 	}

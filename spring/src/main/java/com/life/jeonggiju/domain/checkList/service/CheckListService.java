@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.life.jeonggiju.domain.category.entity.Category;
+import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
+import com.life.jeonggiju.domain.checkList.dto.FindCheckListAllResponse;
 import com.life.jeonggiju.domain.checkList.dto.FindCheckListResponse;
 import com.life.jeonggiju.domain.checkList.dto.SaveCheckList;
 import com.life.jeonggiju.domain.checkList.dto.UpdateCheckList;
 import com.life.jeonggiju.domain.checkList.entity.CheckListRecord;
 import com.life.jeonggiju.domain.checkList.repository.CheckListRepository;
+import com.life.jeonggiju.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,45 +28,53 @@ public class CheckListService {
 	private final CheckListRepository checkListRepository;
 	private final CategoryRepository categoryRepository;
 
-	public FindCheckListResponse find(UUID checkId){
+	public FindCheckListResponse find(UUID checkId) {
 		CheckListRecord checkListRecord = checkListRepository.findById(checkId).orElseThrow();
 		return FindCheckListResponse.builder().id(checkListRecord.getId()).success(checkListRecord.isSuccess()).date(
 			checkListRecord.getDate()).build();
 	}
 
-	public List<FindCheckListResponse> findAll(UUID categoryId){
+	public FindCheckListAllResponse findAll(UUID categoryId) {
 		List<CheckListRecord> allByCategoryId = checkListRepository.findAllByCategory_Id(categoryId);
+		Category category = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
+		User user = category.getUser();
+		int year = user.getBirthYear();
+		int month = user.getBirthMonth();
+		int day = user.getBirthDay();
 
-		List<FindCheckListResponse> result = new ArrayList();
-		for(CheckListRecord checkListRecord : allByCategoryId) {
-			FindCheckListResponse response = FindCheckListResponse.builder().id(checkListRecord.getId()).success(
-				checkListRecord.isSuccess()).todo(checkListRecord.getTodo()).date(checkListRecord.getDate()).build();
-			result.add(response);
+		List<FindCheckListAllResponse.Content> result = new ArrayList();
+		for (CheckListRecord checkListRecord : allByCategoryId) {
+			FindCheckListAllResponse.Content build = FindCheckListAllResponse.Content.builder()
+				.id(checkListRecord.getId())
+				.todo(checkListRecord.getTodo())
+				.success(checkListRecord.isSuccess())
+				.date(checkListRecord.getDate()).build();
+			result.add(build);
 		}
-		return result;
+		return FindCheckListAllResponse.builder().contents(result).year(year).month(month).day(day).build();
 	}
 
-	public List<CheckListRecord> findByDate(UUID categoryId ,LocalDate date){
+	public List<CheckListRecord> findByDate(UUID categoryId, LocalDate date) {
 		return checkListRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
 	}
 
 	@Transactional
-	public void save(SaveCheckList dto){
+	public void save(SaveCheckList dto) {
 		Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow();
-		CheckListRecord checkListRecord = CheckListRecord.of(category, dto.getTodo(),dto.isSuccess(), dto.getDate());
+		CheckListRecord checkListRecord = CheckListRecord.of(category, dto.getTodo(), dto.isSuccess(), dto.getDate());
 		checkListRepository.save(checkListRecord);
 	}
 
 	@Transactional
-	public void update(UpdateCheckList dto){
+	public void update(UpdateCheckList dto) {
 		UUID id = dto.getId();
 		CheckListRecord checkListRecord = checkListRepository.findById(id).orElseThrow();
-		checkListRecord.update( dto.getTodo(), dto.isSuccess(), dto.getDate());
+		checkListRecord.update(dto.getTodo(), dto.isSuccess(), dto.getDate());
 		checkListRepository.save(checkListRecord);
 	}
 
 	@Transactional
-	public void delete(UUID id){
+	public void delete(UUID id) {
 		checkListRepository.deleteById(id);
 	}
 }
