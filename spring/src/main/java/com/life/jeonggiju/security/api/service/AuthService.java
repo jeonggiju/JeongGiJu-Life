@@ -31,7 +31,7 @@ public class AuthService {
 	public JwtInformation refreshToken(String refreshToken) {
 		if (!tokenProvider.validateRefreshToken(refreshToken) || !jwtRegistry.hasActiveJwtInformationByRefreshToken(
 			refreshToken)) {
-			throw new InValidAccessTokenException();
+			throw new InValidAccessTokenException("invalid refreshToken");
 		}
 
 		String email = tokenProvider.getSubject(refreshToken);

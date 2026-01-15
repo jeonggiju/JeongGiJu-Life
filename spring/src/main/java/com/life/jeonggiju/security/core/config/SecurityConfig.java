@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.life.jeonggiju.security.api.handler.SpaCsrfTokenRequestHandler;
@@ -38,6 +38,9 @@ public class SecurityConfig {
 				.loginProcessingUrl("/api/auth/sign-in")
 				.successHandler(lifeLoginSuccessHandler)
 			)
+			.securityContext(context ->
+				context.requireExplicitSave(false)
+			)
 			.logout(logout -> logout
 				.logoutUrl("/api/auth/sign-out")
 				.logoutSuccessHandler(lifeLogoutSuccessHandler)
@@ -49,7 +52,7 @@ public class SecurityConfig {
 			.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
-			.addFilterAfter(jwtAuthenticationFilter, ExceptionTranslationFilter.class);
+			.addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
