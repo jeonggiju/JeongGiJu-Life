@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.life.jeonggiju.domain.checkRecord.dto.FindCheckAllResponse;
+import com.life.jeonggiju.domain.checkRecord.dto.FindCheckResponse;
 import com.life.jeonggiju.domain.checkRecord.dto.SaveCheck;
 import com.life.jeonggiju.domain.checkRecord.dto.UpdateCheck;
 import com.life.jeonggiju.domain.checkRecord.service.CheckService;
@@ -24,49 +26,49 @@ public class CheckController {
 	private final CheckService checkService;
 
 	@GetMapping("/date")
-	public ResponseEntity<?> findByDate(
+	public ResponseEntity<FindCheckResponse> findByDate(
 		UUID categoryId,
 		LocalDate date
-	){
-		return ResponseEntity.ok(checkService.findByDate(categoryId,date));
+	) {
+		return ResponseEntity.ok(checkService.findByDate(categoryId, date));
 	}
 
 	@GetMapping
-	public ResponseEntity<?> find(
+	public ResponseEntity<FindCheckResponse> find(
 		UUID checkId
-	){
+	) {
 		return ResponseEntity.ok(checkService.find(checkId));
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<?> findAll(
+	public ResponseEntity<FindCheckAllResponse> findAll(
 		UUID categoryId
-	){
+	) {
 		return ResponseEntity.ok(checkService.findAll(categoryId));
 	}
 
 	@PostMapping
 	public ResponseEntity<?> save(
 		SaveCheck saveCheck
-	){
-		try{
+	) {
+		try {
 			checkService.save(saveCheck);
 			return ResponseEntity.ok().build();
-		}catch(Exception e){
+		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(
+	public ResponseEntity<Void> update(
 		UpdateCheck dto
-	){
+	) {
 		checkService.update(dto);
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> delete(UUID id){
+	public ResponseEntity<Void> delete(UUID id) {
 		checkService.delete(id);
 		return ResponseEntity.ok().build();
 	}
