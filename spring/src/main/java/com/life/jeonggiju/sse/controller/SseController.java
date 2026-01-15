@@ -48,29 +48,31 @@ public class SseController {
 						@ExampleObject(
 							name = "connected",
 							value = """
-                        {"ts":1735800000000}
-                        """
+								{"ts":1735800000000}
+								"""
 						),
 						@ExampleObject(
 							name = "notification",
 							value = """
-                        {"title":"notification","body":{"id":"...","receiverId":"...","senderId":"...","type":"LIKE","content":"...","createdAt":"2026-01-02T14:00:00"},"ts":1735800000000}
-                        """
+								{"title":"notification","body":{"id":"...","receiverId":"...","senderId":"...","type":"LIKE","content":"...","createdAt":"2026-01-02T14:00:00"},"ts":1735800000000}
+								"""
 						)
 					}
 				)
 			)
 		}
 	)
-	@GetMapping(value ="/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public SseEmitter subscribe(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@RequestHeader(value = "Last-Event-ID", required = false) String lastEventId
-	){
+	) {
 		if (userDetails == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
 		}
-			UUID userId = userDetails.getId();
-			return sseService.connect(userId, lastEventId);
+
+		UUID userId = userDetails.getId();
+
+		return sseService.connect(userId, lastEventId);
 	}
 }
