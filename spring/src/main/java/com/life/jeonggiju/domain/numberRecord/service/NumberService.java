@@ -51,9 +51,9 @@ public class NumberService {
 		}
 
 		return FindNumberAllResponse.builder()
-			.year(user.getBirthYear())
-			.month(user.getBirthMonth())
-			.day(user.getBirthDay())
+			.birthYear(user.getBirthYear())
+			.birthMonth(user.getBirthMonth())
+			.birthDay(user.getBirthDay())
 			.contents(result).build();
 	}
 
