@@ -168,7 +168,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 60px;
+            min-width: 80px;
             gap: 4px;
         }
 
@@ -187,16 +187,19 @@
             border-color: #999;
         }
 
-        .like-btn.liked .like-icon {
-            /* 이모지 하트는 자체 색상 사용 */
+        .like-btn.liked {
+            background: #333;
+            color: white;
+            border-color: #333;
         }
 
-        .like-icon {
-            font-size: 15px;
-            line-height: 1;
-            transition: color 0.2s;
-            display: inline-block;
-            vertical-align: middle;
+        .like-btn.liked:hover {
+            background: #000;
+            border-color: #000;
+        }
+
+        .like-btn.liked .like-count {
+            color: white;
         }
 
         .like-count {
@@ -1380,28 +1383,175 @@
         }
 
         /* 달력 라벨 숨김 클래스 */
+        /* 1단계: 날짜 숨김 */
         .hide-calendar-days .calendar-day {
-            font-size: 0;
+            color: transparent !important;
         }
 
+        /* 1단계에서 색상 선명하게 + 미묘한 그림자 */
+        .hide-calendar-days .calendar-day.has-data {
+            background: #1a1a1a !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .hide-calendar-days .calendar-day.has-data-success {
+            background: #00d26a !important;
+            box-shadow: 0 1px 3px rgba(0, 210, 106, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.has-data-fail {
+            background: #ff3b30 !important;
+            box-shadow: 0 1px 3px rgba(255, 59, 48, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.checklist-complete {
+            background: #00d26a !important;
+            box-shadow: 0 1px 3px rgba(0, 210, 106, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.checklist-partial {
+            background: #fbbf24 !important;
+            box-shadow: 0 1px 3px rgba(251, 191, 36, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.checklist-low {
+            background: #ff3b30 !important;
+            box-shadow: 0 1px 3px rgba(255, 59, 48, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.has-data-time {
+            background: #1a1a1a !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .hide-calendar-days .calendar-day.has-data-number {
+            background: #000000 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .hide-calendar-days .heatmap-data {
+            background: #00d26a !important;
+            box-shadow: 0 1px 3px rgba(0, 210, 106, 0.3);
+        }
+
+        /* 2단계: 날짜 + 요일 숨김 */
+        .hide-calendar-weekdays .calendar-day,
         .hide-calendar-weekdays .calendar-weekday {
-            display: none;
+            color: transparent !important;
         }
 
+        /* 2단계에서 색상 유지 + 중간 그림자 */
+        .hide-calendar-weekdays .calendar-day.has-data {
+            background: #1a1a1a !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .hide-calendar-weekdays .calendar-day.has-data-success {
+            background: #00d26a !important;
+            box-shadow: 0 2px 6px rgba(0, 210, 106, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.has-data-fail {
+            background: #ff3b30 !important;
+            box-shadow: 0 2px 6px rgba(255, 59, 48, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.checklist-complete {
+            background: #00d26a !important;
+            box-shadow: 0 2px 6px rgba(0, 210, 106, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.checklist-partial {
+            background: #fbbf24 !important;
+            box-shadow: 0 2px 6px rgba(251, 191, 36, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.checklist-low {
+            background: #ff3b30 !important;
+            box-shadow: 0 2px 6px rgba(255, 59, 48, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.has-data-time {
+            background: #1a1a1a !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .hide-calendar-weekdays .calendar-day.has-data-number {
+            background: #000000 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .hide-calendar-weekdays .heatmap-data {
+            background: #00d26a !important;
+            box-shadow: 0 2px 6px rgba(0, 210, 106, 0.4);
+        }
+
+        /* 3단계: 날짜 + 요일 + 월 제목 숨김 */
         .hide-calendar-all .calendar-day,
-        .hide-calendar-all .calendar-weekday {
-            font-size: 0;
+        .hide-calendar-all .calendar-weekday,
+        .hide-calendar-all .calendar-month-title {
+            color: transparent !important;
         }
 
-        .hide-calendar-all .calendar-weekday {
-            display: none;
+        /* 3단계에서 색상 유지 + 강한 그림자 */
+        .hide-calendar-all .calendar-day.has-data {
+            background: #1a1a1a !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
+
+        .hide-calendar-all .calendar-day.has-data-success {
+            background: #00d26a !important;
+            box-shadow: 0 4px 10px rgba(0, 210, 106, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.has-data-fail {
+            background: #ff3b30 !important;
+            box-shadow: 0 4px 10px rgba(255, 59, 48, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.checklist-complete {
+            background: #00d26a !important;
+            box-shadow: 0 4px 10px rgba(0, 210, 106, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.checklist-partial {
+            background: #fbbf24 !important;
+            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.checklist-low {
+            background: #ff3b30 !important;
+            box-shadow: 0 4px 10px rgba(255, 59, 48, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.has-data-time {
+            background: #1a1a1a !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .hide-calendar-all .calendar-day.has-data-number {
+            background: #000000 !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hide-calendar-all .heatmap-data {
+            background: #00d26a !important;
+            box-shadow: 0 4px 10px rgba(0, 210, 106, 0.5);
+        }
+
+        .hide-calendar-days .calendar-day.empty,
+        .hide-calendar-weekdays .calendar-day.empty,
+        .hide-calendar-all .calendar-day.empty {
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
 
         /* Heatmap (100Y) Styles */
         .heatmap-container {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 0px;
             padding: 15px;
             overflow-x: auto;
             overflow-y: auto;
@@ -1412,13 +1562,13 @@
 
         .heatmap-header {
             display: flex;
-            gap: 2px;
-            margin-bottom: 5px;
+            gap: 1px;
+            margin-bottom: 3px;
         }
 
         .heatmap-months {
             display: flex;
-            gap: 2px;
+            gap: 1px;
         }
 
         .heatmap-month-label {
@@ -1431,7 +1581,7 @@
 
         .heatmap-row {
             display: flex;
-            gap: 2px;
+            gap: 1px;
             align-items: center;
         }
 
@@ -1447,7 +1597,7 @@
 
         .heatmap-days {
             display: flex;
-            gap: 2px;
+            gap: 1px;
         }
 
         .heatmap-cell {
@@ -2275,9 +2425,6 @@
             <div class="modal-title" data-lang-en="View Records" data-lang-ko="레코드 조회" id="recordsModalTitle">레코드 조회
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
-                <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;">
-                    <span data-lang-en="Label" data-lang-ko="Label">Label</span>
-                </button>
                 <button class="modal-close" onclick="closeRecordsModal()">×</button>
             </div>
         </div>
@@ -2531,49 +2678,34 @@
         }
     }
 
-    // manage.html 헬퍼 함수들 (임시)
-    function setupGlobalLabelToggle(show) {
-        const globalLabelToggle = document.getElementById('globalCalendarLabelToggle');
+    // 달력 Label 토글 상태 (전역 변수로 관리)
+    let calendarLabelToggleState = 0; // 0: 전체 표시, 1: 날짜 숨김, 2: 요일 숨김, 3: 월 숨김
 
-        if (!globalLabelToggle) {
-
-            return;
-        }
-
-        // 헤더의 Label 버튼은 항상 숨김 (인라인 버튼 사용)
-        globalLabelToggle.style.display = 'none';
-    }
-
-    // 달력 Label 토글 (인라인 버튼용)
     function toggleCalendarLabels() {
         const container = document.getElementById('calendarContainer');
         if (!container) {
-
             return;
         }
 
-        // 현재 상태 확인
-        const hasHideDays = container.classList.contains('hide-calendar-days');
-        const hasHideWeekdays = container.classList.contains('hide-calendar-weekdays');
-        const hasHideAll = container.classList.contains('hide-calendar-all');
+        const button = document.getElementById('inlineCalendarLabelToggle');
+        if (!button) {
+            return;
+        }
 
         // 모든 클래스 제거
         container.classList.remove('hide-calendar-days', 'hide-calendar-weekdays', 'hide-calendar-all');
 
-        const button = document.getElementById('inlineCalendarLabelToggle');
-        if (!button) {
+        // 다음 상태로 전환
+        calendarLabelToggleState = (calendarLabelToggleState + 1) % 4;
 
-            return;
-        }
-
-        // 상태 순환: 전체 표시 → 날짜 숨김 → 요일 숨김 → 전체 숨김
-        if (!hasHideDays && !hasHideWeekdays && !hasHideAll) {
+        // 상태에 따라 클래스 추가
+        if (calendarLabelToggleState === 1) {
             container.classList.add('hide-calendar-days');
             button.classList.add('active');
-        } else if (hasHideDays) {
+        } else if (calendarLabelToggleState === 2) {
             container.classList.add('hide-calendar-weekdays');
             button.classList.add('active');
-        } else if (hasHideWeekdays) {
+        } else if (calendarLabelToggleState === 3) {
             container.classList.add('hide-calendar-all');
             button.classList.add('active');
         } else {
@@ -3219,12 +3351,12 @@
                     <div class="category-type">${recordType}</div>
                     <div class="category-meta"><span data-lang-ko="작성자" data-lang-en="Author">작성자</span>: ${authorNickname}</div>
                     <div class="category-actions">
-                        <button class="category-action-btn like-btn" data-category-id="${id}" onclick="toggleLike(event, '${id}')" style="min-width: 60px;">
-                            <span class="like-icon" style="display: inline-block;">${hasLike ? '❤️' : '🤍'}</span>
-                            <span class="like-count" id="like-count-${id}" style="display: inline-block;">${likeCount}</span>
+                        <button class="category-action-btn like-btn ${hasLike ? 'liked' : ''}" data-category-id="${id}" onclick="toggleLike(event, '${id}')">
+                            <span data-lang-ko="좋아요" data-lang-en="Likes">좋아요</span>
+                            <span class="like-count" id="like-count-${id}">${likeCount}</span>
                         </button>
                         <button class="category-action-btn comment-btn" onclick="openCommentModal(event, '${id}', '${title.replace(/'/g, "\\'")}')">
-                            💬 <span data-lang-ko="댓글" data-lang-en="Comments">댓글</span> (${commentCount})
+                            <span data-lang-ko="댓글" data-lang-en="Comments">댓글</span> (${commentCount})
                         </button>
                     </div>
                 </div>
@@ -3411,8 +3543,6 @@
     function renderCurrentView(records, category) {
         const content = document.getElementById('recordsContent');
 
-        // 기본적으로 Label 버튼 숨김 (CHECK 달력만 표시)
-        setupGlobalLabelToggle(false);
 
         if (category.type === 'CHECK') {
             if (currentView === 'table') {
@@ -3488,8 +3618,6 @@
 
     // CHECK 달력 뷰
     function displayCheckCalendar(records, container) {
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -5303,7 +5431,6 @@
 
                 if (response.ok) {
                     btn.classList.remove('liked');
-                    btn.querySelector('.like-icon').textContent = '🤍';
                     await loadLikeCount(categoryId);
                 } else if (response.status === 401) {
                     alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
@@ -5323,7 +5450,6 @@
 
                 if (response.ok) {
                     btn.classList.add('liked');
-                    btn.querySelector('.like-icon').textContent = '❤️';
                     await loadLikeCount(categoryId);
                 } else if (response.status === 401) {
                     alert(currentLang === 'ko' ? '로그인이 필요합니다' : 'Login required');
@@ -5365,14 +5491,10 @@
                 const btn = document.querySelector(`[data-category-id="${categoryId}"].like-btn`);
 
                 if (btn) {
-                    const icon = btn.querySelector('.like-icon');
-
                     if (data.checked) {
                         btn.classList.add('liked');
-                        if (icon) icon.textContent = '❤️';
                     } else {
                         btn.classList.remove('liked');
-                        if (icon) icon.textContent = '🤍';
                     }
                 }
             }
@@ -5660,8 +5782,6 @@
     function displayCheckCalendar(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김 (인라인 버튼 사용)
-        setupGlobalLabelToggle(false);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -5690,7 +5810,6 @@
 
         if (sortedYears.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
-            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -5930,8 +6049,6 @@
     function displayChecklistCalendar(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
 
         // 날짜별로 레코드 그룹화
         const recordsByDate = {};
@@ -5963,7 +6080,6 @@
 
         if (sortedYears.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
-            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -6040,8 +6156,6 @@
     function displayChecklistWeekly(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김
-        setupGlobalLabelToggle(false);
 
         // 날짜별로 레코드 그룹화
         const recordsByDate = {};
@@ -6282,8 +6396,6 @@
     function displayChecklistMonthly(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김
-        setupGlobalLabelToggle(false);
 
         // 날짜별로 레코드 그룹화
         const recordsByDate = {};
@@ -6523,8 +6635,6 @@
     function displayChecklistHeatmap(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김
-        setupGlobalLabelToggle(false);
 
         // 날짜별로 레코드 그룹화
         const recordsByDate = {};
@@ -6716,8 +6826,6 @@
     function displayTimeGraph_Old(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김
-        setupGlobalLabelToggle(false);
 
         // 날짜별로 정리 (각 날짜당 첫 번째 레코드만 사용)
         const recordMap = {};
@@ -6732,7 +6840,6 @@
 
         if (sortedDates.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
-            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -6914,8 +7021,6 @@
     function displayTimeTable_Old(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김
-        setupGlobalLabelToggle(false);
 
         // 날짜별로 정리
         const recordMap = {};
@@ -6930,7 +7035,6 @@
 
         if (sortedDates.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
-            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -6980,8 +7084,6 @@
     function displayTimeCalendar(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -7010,7 +7112,6 @@
 
         if (sortedYears.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
-            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -7140,8 +7241,6 @@
     function displayTimeHeatmap(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김
-        setupGlobalLabelToggle(false);
 
         // 데이터를 날짜별 맵으로 변환
         const recordMap = {};
@@ -7445,8 +7544,6 @@
     function displayTextCalendar(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -7478,7 +7575,6 @@
 
         if (sortedYears.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
-            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -7546,8 +7642,6 @@
     function displayTextList(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김
-        setupGlobalLabelToggle(false);
 
         // 년월별로 그룹화
         const yearMonthMap = {};
@@ -7572,7 +7666,6 @@
 
         if (sortedYears.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
-            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -7632,8 +7725,6 @@
     function displayTextHeatmap(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김
-        setupGlobalLabelToggle(false);
 
         // 데이터를 날짜별 맵으로 변환 (하나의 날짜에 여러 개 있을 수 있음)
         const recordMap = {};
@@ -7776,7 +7867,6 @@
 
         if (sortedDates.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
-            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -8003,8 +8093,6 @@
     function displayNumberTable_Old(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김
-        setupGlobalLabelToggle(false);
 
         // 날짜별로 정리
         const recordMap = {};
@@ -8019,7 +8107,6 @@
 
         if (sortedDates.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
-            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -8069,8 +8156,6 @@
     function displayNumberCalendar(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -8099,7 +8184,6 @@
 
         if (sortedYears.length === 0) {
             recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
-            setupGlobalLabelToggle(false);
             return;
         }
 
@@ -8230,8 +8314,6 @@
     function displayNumberHeatmap(records) {
         const recordsSection = document.getElementById('recordsContent');
 
-        // 전역 라벨 토글 숨김
-        setupGlobalLabelToggle(false);
 
         // 데이터를 날짜별 맵으로 변환
         const recordMap = {};
