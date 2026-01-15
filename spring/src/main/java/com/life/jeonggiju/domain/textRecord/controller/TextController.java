@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.life.jeonggiju.domain.textRecord.dto.FindTextAllResponse;
 import com.life.jeonggiju.domain.textRecord.dto.FindTextResponse;
 import com.life.jeonggiju.domain.textRecord.dto.SaveText;
 import com.life.jeonggiju.domain.textRecord.dto.UpdateText;
@@ -29,51 +30,50 @@ public class TextController {
 	private final TextService textService;
 
 	@GetMapping
-	public ResponseEntity<?> find(
+	public ResponseEntity<FindTextResponse> find(
 		UUID textId
-	){
+	) {
 		return ResponseEntity.ok(textService.find(textId));
 	}
 
-	@GetMapping( "/date")
-	public ResponseEntity<?> findByDate(
+	@GetMapping("/date")
+	public ResponseEntity<List<FindTextResponse>> findByDate(
 		UUID categoryId,
 		LocalDate date
-	){
+	) {
 		List<FindTextResponse> byDate = textService.findByDate(categoryId, date);
 		return ResponseEntity.ok(byDate);
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<?> findAll(
+	public ResponseEntity<FindTextAllResponse> findAll(
 		UUID categoryId
-	){
-		List<FindTextResponse> all = textService.findAll(categoryId);
-		return ResponseEntity.ok(all);
+	) {
+		return ResponseEntity.ok(textService.findAll(categoryId));
 	}
 
 	@PostMapping
-	public ResponseEntity<?> save(
+	public ResponseEntity<Void> save(
 		SaveText dto
-	){
-		try{
+	) {
+		try {
 			textService.save(dto);
 			return ResponseEntity.ok().build();
-		}catch(Exception e){
+		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(
+	public ResponseEntity<Void> update(
 		UpdateText dto
-	){
+	) {
 		textService.update(dto);
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> delete(UUID id){
+	public ResponseEntity<Void> delete(UUID id) {
 		textService.delete(id);
 		return ResponseEntity.ok().build();
 	}
