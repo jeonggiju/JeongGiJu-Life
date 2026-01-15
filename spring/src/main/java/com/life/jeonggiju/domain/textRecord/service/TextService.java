@@ -69,9 +69,9 @@ public class TextService {
 		}
 
 		return FindTextAllResponse.builder()
-			.month(user.getBirthMonth())
-			.year(user.getBirthYear())
-			.day(user.getBirthDay())
+			.birthMonth(user.getBirthMonth())
+			.birthYear(user.getBirthYear())
+			.birthDay(user.getBirthDay())
 			.contents(result)
 			.build();
 	}

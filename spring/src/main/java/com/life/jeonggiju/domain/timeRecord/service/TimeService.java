@@ -52,9 +52,9 @@ public class TimeService {
 
 		return FindTimeAllResponse.builder()
 			.contents(result)
-			.year(user.getBirthYear())
-			.month(user.getBirthMonth())
-			.day(user.getBirthDay())
+			.birthYear(user.getBirthYear())
+			.birthMonth(user.getBirthMonth())
+			.birthDay(user.getBirthDay())
 			.build();
 	}
 

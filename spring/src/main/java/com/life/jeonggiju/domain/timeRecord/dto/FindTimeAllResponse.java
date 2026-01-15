@@ -12,9 +12,9 @@ import lombok.Data;
 @Builder
 public class FindTimeAllResponse {
 
-	private int year;
-	private int month;
-	private int day;
+	private int birthYear;
+	private int birthMonth;
+	private int birthDay;
 	private List<Content> contents;
 
 	@Data

@@ -51,7 +51,12 @@ public class CheckListService {
 				.date(checkListRecord.getDate()).build();
 			result.add(build);
 		}
-		return FindCheckListAllResponse.builder().contents(result).year(year).month(month).day(day).build();
+		return FindCheckListAllResponse.builder()
+			.contents(result)
+			.birthYear(year)
+			.birthMonth(month)
+			.birthDay(day)
+			.build();
 	}
 
 	public List<CheckListRecord> findByDate(UUID categoryId, LocalDate date) {

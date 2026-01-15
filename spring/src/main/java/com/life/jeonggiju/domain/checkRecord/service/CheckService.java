@@ -55,7 +55,7 @@ public class CheckService {
 			result.add(response);
 		}
 
-		return FindCheckAllResponse.builder().contents(result).year(year).month(month).day(day).build();
+		return FindCheckAllResponse.builder().contents(result).birthYear(year).birthMonth(month).birthDay(day).build();
 	}
 
 	public FindCheckResponse findByDate(UUID categoryId, LocalDate date) {
