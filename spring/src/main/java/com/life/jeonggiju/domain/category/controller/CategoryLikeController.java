@@ -1,5 +1,6 @@
 package com.life.jeonggiju.domain.category.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.life.jeonggiju.domain.category.dto.AddLikeDto;
 import com.life.jeonggiju.domain.category.dto.CheckCountCategoryResponse;
 import com.life.jeonggiju.domain.category.dto.DeleteLikeDto;
+import com.life.jeonggiju.domain.category.dto.LikePersonResponse;
 import com.life.jeonggiju.domain.category.service.CategoryLikeService;
 import com.life.jeonggiju.security.core.principal.LifeUserDetails;
 
@@ -27,11 +29,18 @@ public class CategoryLikeController {
 
 	private final CategoryLikeService categoryLikeService;
 
+	@GetMapping("/{categoryId}")
+	public ResponseEntity<List<LikePersonResponse>> findAll(
+		@PathVariable UUID categoryId
+	) {
+		List<LikePersonResponse> userEmails = categoryLikeService.findUserEmails(categoryId);
+		return ResponseEntity.ok(userEmails);
+	}
 
 	@GetMapping("/count/{categoryId}")
 	public ResponseEntity<Integer> count(
 		@PathVariable UUID categoryId
-	){
+	) {
 		return ResponseEntity.ok(categoryLikeService.countByCategoryId(categoryId));
 	}
 
@@ -39,7 +48,7 @@ public class CategoryLikeController {
 	public ResponseEntity<Void> add(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@RequestBody AddLikeDto dto
-	){
+	) {
 		UUID userId = userDetails.getId();
 		categoryLikeService.add(userId, dto.getCategoryId());
 		return ResponseEntity.ok().build();
@@ -49,7 +58,7 @@ public class CategoryLikeController {
 	public ResponseEntity<CheckCountCategoryResponse> check(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@PathVariable UUID categoryId
-	){
+	) {
 		UUID userId = userDetails.getId();
 		return ResponseEntity.ok(categoryLikeService.checkCount(userId, categoryId));
 	}
@@ -58,7 +67,7 @@ public class CategoryLikeController {
 	public ResponseEntity<Void> delete(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@RequestBody DeleteLikeDto dto
-	){
+	) {
 		UUID userId = userDetails.getId();
 		categoryLikeService.delete(userId, dto.getCategoryId());
 		return ResponseEntity.ok().build();

@@ -38,6 +38,9 @@ public class CategoryService {
 	@Transactional(readOnly = true)
 	public FindCategoryResponse find(UUID categoryId) {
 		Category category = categoryRepository.findById(categoryId).orElseThrow();
+		long likeCount = category.getCategoryLikes().size();
+		long commentCount = category.getComments().size();
+
 		return FindCategoryResponse
 			.builder()
 			.id(category.getId())
@@ -45,6 +48,8 @@ public class CategoryService {
 			.description(category.getDescription())
 			.recordType(category.getRecordType())
 			.visibility(category.getVisibility())
+			.likeCount(likeCount)
+			.commentCount(commentCount)
 			.build();
 
 	}
@@ -53,7 +58,11 @@ public class CategoryService {
 	public List<FindCategoryResponse> findAll(UUID userId) {
 		List<Category> categories = categoryRepository.findAllByUserId(userId);
 		List<FindCategoryResponse> result = new ArrayList();
+		long likeCount = 0;
+		long commentCount = 0;
 		for (Category category : categories) {
+			likeCount = category.getCategoryLikes().size();
+			commentCount = category.getComments().size();
 			result.add(FindCategoryResponse
 				.builder()
 				.id(category.getId())
@@ -61,6 +70,8 @@ public class CategoryService {
 				.description(category.getDescription())
 				.recordType(category.getRecordType())
 				.visibility(category.getVisibility())
+				.likeCount(likeCount)
+				.commentCount(commentCount)
 				.build());
 		}
 		return result;

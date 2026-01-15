@@ -5,14 +5,11 @@ import org.springframework.http.HttpStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-/*
- * ErrorCode(HttpStatus, message)
- * http와 관련 없으면 500번대 코드 사용
- * 커스텀 코드를 사용할 지는 결정해야함, 프론트 구조가 어떤 지 모르겠음
- */
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
+	CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다."),
+
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다"),
 	DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 존재하는 이메일입니다"),
 	ACCOUNT_LOCKED(HttpStatus.FORBIDDEN, "계정이 잠겨있습니다"),
