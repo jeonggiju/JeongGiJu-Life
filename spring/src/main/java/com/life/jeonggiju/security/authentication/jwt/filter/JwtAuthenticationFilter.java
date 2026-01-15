@@ -35,6 +35,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final UserDetailsService userDetailsService;
 
 	@Override
+	protected boolean shouldNotFilterAsyncDispatch() {
+		return false;
+	}
+
+	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) {
 		String path = request.getRequestURI();
 		String method = request.getMethod();
