@@ -1,6 +1,5 @@
 package com.life.jeonggiju.sse.controller;
 
-import java.awt.*;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -13,10 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import com.life.jeonggiju.domain.notification.dto.NotificationPayload;
 import com.life.jeonggiju.domain.notification.dto.SseNotificationMessage;
 import com.life.jeonggiju.domain.notification.dto.SsePingMessage;
-import com.life.jeonggiju.security.principal.LifeUserDetails;
+import com.life.jeonggiju.security.core.principal.LifeUserDetails;
 import com.life.jeonggiju.sse.service.SseService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,29 +48,31 @@ public class SseController {
 						@ExampleObject(
 							name = "connected",
 							value = """
-                        {"ts":1735800000000}
-                        """
+								{"ts":1735800000000}
+								"""
 						),
 						@ExampleObject(
 							name = "notification",
 							value = """
-                        {"title":"notification","body":{"id":"...","receiverId":"...","senderId":"...","type":"LIKE","content":"...","createdAt":"2026-01-02T14:00:00"},"ts":1735800000000}
-                        """
+								{"title":"notification","body":{"id":"...","receiverId":"...","senderId":"...","type":"LIKE","content":"...","createdAt":"2026-01-02T14:00:00"},"ts":1735800000000}
+								"""
 						)
 					}
 				)
 			)
 		}
 	)
-	@GetMapping(value ="/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public SseEmitter subscribe(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@RequestHeader(value = "Last-Event-ID", required = false) String lastEventId
-	){
+	) {
 		if (userDetails == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
 		}
-			UUID userId = userDetails.getId();
-			return sseService.connect(userId, lastEventId);
+
+		UUID userId = userDetails.getId();
+
+		return sseService.connect(userId, lastEventId);
 	}
 }

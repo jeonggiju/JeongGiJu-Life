@@ -1,10 +1,14 @@
 package com.life.jeonggiju.domain.category.entity;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.life.jeonggiju.domain.checkList.entity.CheckListRecord;
 import com.life.jeonggiju.domain.checkRecord.entity.CheckRecord;
 import com.life.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.life.jeonggiju.domain.timeRecord.entity.TimeRecord;
@@ -33,29 +37,33 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Category {
 
+	@OneToMany(
+		mappedBy = "category",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true
+	)
+	public List<CategoryLike> categoryLikes;
 	@Id
 	@GeneratedValue(generator = "UUID")
 	private UUID id;
-
-
 	@Column(columnDefinition = "TEXT")
 	private String description;
-
 	@Enumerated(EnumType.STRING)
 	private RecordType recordType;
-
 	private String title;
-
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Visibility visibility;
 
+	@Column(nullable = false)
+	@CreatedDate
+	private Instant createdAt;
+
 	@ManyToOne
 	@JsonIgnore
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	@ToString.Exclude
 	private User user;
-
 	@OneToMany(
 		mappedBy = "category",
 		cascade = CascadeType.ALL,
@@ -63,7 +71,6 @@ public class Category {
 	)
 	@ToString.Exclude
 	private List<TextRecord> textRecords = new ArrayList<>();
-
 	@OneToMany(
 		mappedBy = "category",
 		cascade = CascadeType.ALL,
@@ -71,7 +78,6 @@ public class Category {
 	)
 	@ToString.Exclude
 	private List<CheckRecord> checkRecords = new ArrayList<>();
-
 	@OneToMany(
 		mappedBy = "category",
 		cascade = CascadeType.ALL,
@@ -80,27 +86,32 @@ public class Category {
 	@ToString.Exclude
 	private List<TimeRecord> timeRecords = new ArrayList<>();
 
-
 	@OneToMany(mappedBy = "category",
 		cascade = CascadeType.ALL,
 		orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
 
-	@OneToMany(
-		mappedBy = "category",
+	@OneToMany(mappedBy = "category",
 		cascade = CascadeType.ALL,
-		orphanRemoval = true
-	)
-	public List<CategoryLike> categoryLike;
+		orphanRemoval = true)
+	private List<CheckListRecord> checkListRecords = new ArrayList<>();
 
 	protected Category() {
 	}
 
-	public static Category of(String title, String description, RecordType recordType, User user, Visibility visibility) {
-		return Category.builder().title(title).description(description).recordType(recordType).user(user).visibility(visibility).build();
+	public static Category of(String title, String description, RecordType recordType, User user,
+		Visibility visibility) {
+		return Category.builder()
+			.title(title)
+			.description(description)
+			.recordType(recordType)
+			.user(user)
+			.visibility(visibility)
+			.createdAt(Instant.now())
+			.build();
 	}
 
-	public void update(String title, String description, Visibility visibility){
+	public void update(String title, String description, Visibility visibility) {
 		this.title = title;
 		this.description = description;
 		this.visibility = visibility;

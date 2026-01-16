@@ -28,7 +28,7 @@ public class CheckListRecord {
 	private UUID id;
 
 	@ManyToOne
-	@JoinColumn(name="category_id")
+	@JoinColumn(name = "category_id")
 	@JsonIgnore
 	private Category category;
 
@@ -37,13 +37,14 @@ public class CheckListRecord {
 
 	private LocalDate date;
 
-	protected CheckListRecord() {}
+	protected CheckListRecord() {
+	}
 
-	public static CheckListRecord of(Category category, String todo,boolean success, LocalDate date) {
+	public static CheckListRecord of(Category category, String todo, boolean success, LocalDate date) {
 		return CheckListRecord.builder().category(category).todo(todo).success(success).date(date).build();
 	}
 
-	public void update(String todo, boolean success, LocalDate date){
+	public void update(String todo, boolean success, LocalDate date) {
 		this.success = success;
 		this.date = date;
 	}

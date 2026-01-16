@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>JeongGiJu - 카테고리 관리</title>
     <style>
         * {
@@ -16,90 +16,109 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #fff;
-            color: #333;
-            padding: 32px 36px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+            padding: 20px;
             font-size: 14px;
+            line-height: 1.5;
         }
 
         .header {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 32px;
+            background: white;
+            padding: 24px 32px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
         .title {
-            font-size: 24px;
-            font-weight: normal;
-            margin-bottom: 5px;
-            color: #000;
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #1a202c;
         }
 
         .subtitle {
-            font-size: 13px;
-            color: #666;
+            font-size: 14px;
+            color: #718096;
             font-weight: normal;
         }
 
         .top-actions {
             position: absolute;
-            top: 40px;
-            right: 60px;
+            top: 32px;
+            right: 32px;
             display: flex;
-            gap: 8px;
+            gap: 12px;
+            align-items: center;
         }
 
         .btn {
-            padding: 6px 12px;
-            border: 1px solid #ccc;
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 13px;
+            min-width: 80px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
             text-decoration: none;
-            color: #333;
+            color: #2d3748;
             display: inline-block;
+            border-radius: 8px;
         }
 
         .btn:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
         }
 
         .btn-primary {
-            background: #e0e0e0;
-            border-color: #999;
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
         }
 
         .btn-primary:hover {
-            background: #d0d0d0;
+            background: #3182ce;
+            border-color: #3182ce;
         }
 
         .language-toggle {
-            padding: 6px 12px;
-            border: 1px solid #ccc;
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 70px;
+            text-align: center;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .language-toggle:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         .content {
             max-width: 1680px;
             width: 100%;
-            margin: 40px auto 0;
+            margin: 30px auto 0;
         }
 
         .section {
-            margin-bottom: 60px;
+            margin-bottom: 50px;
         }
 
         .section-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 80px;
+            gap: 60px;
             align-items: start;
         }
 
@@ -110,7 +129,6 @@
             margin-bottom: 0;
         }
 
-        /* Add Category 섹션을 sticky로 */
         .section-grid .section:nth-child(2) {
             position: sticky;
             top: 20px;
@@ -120,100 +138,119 @@
         @media (max-width: 1024px) {
             .section-grid {
                 grid-template-columns: 1fr;
-                gap: 50px;
+                gap: 40px;
             }
         }
 
         .section-title {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 600;
             margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #000;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #4299e1;
+            color: #1a202c;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-size: 13px;
-            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #2d3748;
+            font-weight: 500;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            font-size: 13px;
-            font-family: Arial, sans-serif;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            border-radius: 6px;
+            transition: border-color 0.2s ease;
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #999;
+            border-color: #4299e1;
         }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 100px;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 10px;
-            background: #e0e0e0;
-            color: #333;
-            border: 1px solid #999;
-            font-size: 13px;
+            padding: 12px;
+            background: #4299e1;
+            color: white;
+            border: 2px solid #4299e1;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .submit-btn:hover {
-            background: #d0d0d0;
+            background: #3182ce;
+            border-color: #3182ce;
         }
 
         .error-message {
-            background: #ffe0e0;
-            color: #cc0000;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            border: 1px solid #ffcccc;
+            background: #fff5f5;
+            color: #c53030;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 2px solid #feb2b2;
+            border-radius: 8px;
         }
 
         .success-message {
-            background: #e0ffe0;
-            color: #006600;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            border: 1px solid #ccffcc;
+            background: #f0fff4;
+            color: #276749;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 2px solid #9ae6b4;
+            border-radius: 8px;
         }
 
         #categoryList {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px 20px;
-            margin-bottom: 20px;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            background: #fafafa;
+            gap: 20px;
+            margin-bottom: 24px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
         .category-item {
-            border: 1px solid #ddd;
-            padding: 12px;
+            border: 2px solid #e2e8f0;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             background: white;
-            min-height: 90px;
+            min-height: 100px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .category-item:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .category-item:first-child {
@@ -226,78 +263,88 @@
 
         .category-info {
             flex: 1;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .category-title {
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 4px;
-            line-height: 1.3;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1.4;
+            color: #1a202c;
         }
 
         .category-meta {
-            font-size: 11px;
-            color: #666;
+            font-size: 12px;
+            color: #718096;
             word-break: break-word;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         .like-info {
             display: inline-block;
-            margin-left: 6px;
-            padding: 2px 6px;
-            background: #fff;
-            border: 1px solid #ddd;
-            font-size: 10px;
-            color: #666;
+            margin-left: 8px;
+            padding: 4px 8px;
+            background: #4299e1;
+            border: none;
+            font-size: 11px;
+            color: white;
+            border-radius: 4px;
+            font-weight: 500;
         }
 
         .category-actions {
             display: flex;
-            gap: 4px;
+            gap: 6px;
             margin-top: auto;
         }
 
         .btn-edit, .btn-delete, .btn-view-likes {
             flex: 1 1 auto;
-            min-width: 60px;
-            padding: 7px 8px;
-            border: 1px solid #ccc;
+            min-width: 70px;
+            padding: 8px 10px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 12px;
             text-align: center;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            color: #495057;
         }
 
         .btn-edit:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         .btn-delete {
-            border-color: #cc0000;
-            color: #cc0000;
+            border-color: #feb2b2;
+            color: #c53030;
         }
 
         .btn-delete:hover {
-            background: #ffeeee;
+            background: #fff5f5;
+            border-color: #fc8181;
         }
 
         .btn-view-likes {
-            border-color: #009900;
-            color: #009900;
+            border-color: #e2e8f0;
+            color: #718096;
         }
 
         .btn-view-likes:hover {
-            background: #eeffee;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         .btn-view-likes:disabled {
-            border-color: #ccc;
-            color: #999;
-            background: #f5f5f5;
+            border-color: #e2e8f0;
+            color: #a0aec0;
+            background: #f7fafc;
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         .modal {
@@ -307,10 +354,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(4px);
         }
 
         .modal.active {
@@ -319,39 +367,75 @@
 
         .modal-content {
             background: white;
-            padding: 30px;
-            max-width: 500px;
+            padding: 0;
+            max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
-            border: 1px solid #ccc;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
+            padding: 24px;
+            margin-bottom: 0;
+            border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+            border-radius: 12px 12px 0 0;
         }
 
         .modal-title {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
         }
 
         .modal-close {
-            background: none;
-            border: none;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
             font-size: 24px;
             cursor: pointer;
-            color: #666;
+            color: #2d3748;
             line-height: 1;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-close:hover {
-            color: #000;
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            color: #1a202c;
+            transform: scale(1.05);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-content form {
+            padding: 0;  /* form 자체는 패딩 없음 */
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .modal-actions button {
+            flex: 1;
         }
 
         .simple-auth-container {
@@ -359,21 +443,23 @@
             justify-content: center;
             align-items: center;
             height: 100%;
-            background: #f5f5f5;
+            background: #f8f9fa;
             padding: 20px;
         }
 
         .simple-auth-box {
             background: white;
-            padding: 40px;
-            border: 1px solid #ddd;
-            min-width: 400px;
-            max-width: 500px;
+            padding: 40px 48px;
+            border: 2px solid #e2e8f0;
+            min-width: 440px;
+            max-width: 520px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         @media (max-width: 768px) {
             body {
-                padding: 20px;
+                padding: 16px;
             }
 
             .top-actions {
@@ -397,84 +483,1045 @@
                 padding: 20px;
             }
         }
+
+
+
+        /* ========== 언어 전환 시 완전한 레이아웃 고정 ========== */
+
+        /* 전역 폰트 설정 */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: 0;
+        }
+
+        /* ===== 모든 버튼 공통 스타일 - 완전 고정 ===== */
+        .btn, .language-toggle, .toggle-btn,
+        .add-record-btn, .submit-btn,
+        .btn-edit, .btn-delete, .btn-view-likes,
+        .category-action-btn, .comment-btn,
+        .label-toggle-btn, .modal-btn,
+        button[class*="btn"] {
+            /* 고정 크기 */
+            height: 32px !important;
+            line-height: 32px !important;
+            padding: 0 14px !important;
+
+            /* 레이아웃 */
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+
+            /* 텍스트 */
+            font-size: 13px !important;
+            font-weight: normal !important;
+            letter-spacing: 0 !important;
+            white-space: nowrap !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+
+            /* 오버플로우 방지 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* insert.html 카테고리 액션 버튼들 (수정, 삭제, 좋아요 목록) */
+        .btn-edit, .btn-delete, .btn-view-likes {
+            height: 32px !important;
+            line-height: 32px !important;
+            padding: 0 10px !important;
+            font-size: 12px !important;
+            min-width: 70px !important;
+            flex: 1 1 70px !important;
+        }
+
+        /* 카테고리 액션 컨테이너 */
+        .category-actions {
+            display: flex !important;
+            gap: 6px !important;
+            margin-top: auto !important;
+            height: 32px !important;
+            align-items: center !important;
+        }
+
+        /* 상단 액션 버튼 */
+        .top-actions .btn {
+            min-width: 110px !important;
+            height: 32px !important;
+        }
+
+        .top-actions .language-toggle {
+            min-width: 65px !important;
+            height: 32px !important;
+        }
+
+        .top-actions .notification-bell {
+            min-width: 110px !important;
+            height: 32px !important;
+        }
+
+        /* 뷰 토글 버튼 */
+        .view-toggle {
+            height: 32px !important;
+            align-items: center !important;
+        }
+
+        .view-toggle .toggle-btn {
+            min-width: 90px !important;
+            height: 32px !important;
+        }
+
+        /* 컨텐츠 툴바 */
+        .content-toolbar {
+            min-height: 48px !important;
+            align-items: center !important;
+        }
+
+        .content-toolbar .add-record-btn {
+            min-width: 110px !important;
+            height: 32px !important;
+        }
+
+        /* 모달 버튼 */
+        .modal-footer .btn,
+        .modal-footer button {
+            min-width: 90px !important;
+            height: 36px !important;
+            line-height: 36px !important;
+            padding: 0 16px !important;
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            min-width: 120px !important;
+            height: 38px !important;
+            line-height: 38px !important;
+            padding: 0 20px !important;
+        }
+
+        /* 라벨 토글 버튼 */
+        .label-toggle-btn {
+            min-width: 75px !important;
+            height: 32px !important;
+        }
+
+        /* 카테고리 아이템 */
+        .category-item {
+            min-height: 100px !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .category-item .category-info {
+            flex: 1 !important;
+            min-height: 60px !important;
+        }
+
+        .category-item .category-title {
+            min-height: 20px !important;
+            line-height: 1.4 !important;
+            margin-bottom: 6px !important;
+        }
+
+        .category-item .category-meta {
+            min-height: 18px !important;
+            line-height: 1.4 !important;
+            font-size: 11px !important;
+        }
+
+        /* 카테고리 카드 (index.html) */
+        .category-card {
+            min-height: 160px !important;
+        }
+
+        .category-card .category-title {
+            min-height: 22px !important;
+            line-height: 1.4 !important;
+        }
+
+        .category-card .category-type {
+            min-height: 18px !important;
+            line-height: 1.2 !important;
+            padding: 3px 10px !important;
+        }
+
+        .category-card .category-meta {
+            min-height: 18px !important;
+            line-height: 1.5 !important;
+        }
+
+        .category-card .category-actions {
+            height: 32px !important;
+            margin-top: 12px !important;
+        }
+
+        /* 헤더 텍스트 */
+        .greeting {
+            min-height: 38px !important;
+            line-height: 1.2 !important;
+        }
+
+        .title {
+            min-height: 32px !important;
+            line-height: 1.3 !important;
+        }
+
+        .subtitle, .user-desc {
+            min-height: 20px !important;
+            line-height: 1.5 !important;
+        }
+
+        /* 섹션 타이틀 */
+        .section-title {
+            min-height: 28px !important;
+            line-height: 1.4 !important;
+        }
+
+        /* 폼 요소 */
+        .form-group {
+            margin-bottom: 18px !important;
+        }
+
+        .form-group label {
+            min-height: 20px !important;
+            line-height: 1.5 !important;
+            display: block !important;
+            margin-bottom: 6px !important;
+        }
+
+        .form-group input:not([type="checkbox"]),
+        .form-group select,
+        .form-group textarea {
+            height: 36px !important;
+            line-height: 1.4 !important;
+            padding: 8px 10px !important;
+            font-size: 13px !important;
+        }
+
+        .form-group textarea {
+            height: auto !important;
+            min-height: 80px !important;
+        }
+
+        /* 모달 */
+        .modal-header {
+            min-height: 54px !important;
+            padding: 16px 20px !important;
+        }
+
+        .modal-title {
+            min-height: 22px !important;
+            line-height: 1.4 !important;
+        }
+
+        .modal-footer {
+            min-height: 64px !important;
+            padding: 16px 20px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            gap: 10px !important;
+        }
+
+        /* 테이블 */
+        .records-table td,
+        .records-table th {
+            height: 44px !important;
+            line-height: 1.5 !important;
+            vertical-align: middle !important;
+            padding: 8px 12px !important;
+        }
+
+        /* 빈 상태 */
+        .empty-state {
+            min-height: 100px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            line-height: 1.6 !important;
+        }
+
+        /* 드로어 */
+        .drawer-header {
+            min-height: 44px !important;
+            line-height: 1.4 !important;
+        }
+
+        .drawer-handle {
+            height: 120px !important;
+        }
+
+        /* 알림 버튼 */
+        .notification-bell {
+            position: relative;
+            padding: 10px 18px;
+            border: 2px solid #dee2e6;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 80px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            color: #495057;
+            line-height: 1;
+        }
+
+        .notification-bell:hover {
+            background: #f8f9fa;
+            border-color: #adb5bd;
+        }
+
+        /* 알림 배지 */
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #f56565;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 7px;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+/* 토스트 알림 컨테이너 */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        /* 토스트 알림 */
+        .toast-notification {
+            background: white;
+            border: 1px solid #ddd;
+            border-left: 4px solid #999;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideInRight 0.3s ease-out;
+            cursor: pointer;
+        }
+
+        .toast-notification.comment {
+            border-left-color: #666;
+        }
+
+        .toast-notification.reply {
+            border-left-color: #888;
+        }
+
+        .toast-notification.like {
+            border-left-color: #999;
+        }
+
+        .toast-notification:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .toast-message {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* 알림 목록 모달 */
+        .notification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .notification-modal.active {
+            display: flex;
+        }
+
+        .notification-modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 0;
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .notification-modal-header {
+            padding: 24px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .notification-modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .notification-modal-close {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            font-size: 24px;
+            cursor: pointer;
+            color: #2d3748;
+            padding: 0;
+            width: 36px;
+            height: 36px;
+            line-height: 1;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-modal-close:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            color: #1a202c;
+            transform: scale(1.05);
+        }
+
+        .mark-all-read-btn {
+            padding: 8px 16px;
+            background: #4299e1;
+            color: white;
+            border: 2px solid #4299e1;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .mark-all-read-btn:hover {
+            background: #3182ce;
+            border-color: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        .mark-all-read-btn:disabled {
+            background: #cbd5e0;
+            border-color: #cbd5e0;
+            color: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .notification-list {
+            padding: 0;
+        }
+
+        .notification-item {
+            padding: 18px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .notification-item:hover {
+            background: #f7fafc;
+        }
+
+        .notification-item.unread {
+            background: #ebf8ff;
+            border-left: 4px solid #4299e1;
+        }
+
+        .notification-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .notification-item-type {
+            font-size: 10px;
+            padding: 2px 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .notification-item-type.comment {
+            background: #e8e8e8;
+            color: #333;
+        }
+
+        .notification-item-type.reply {
+            background: #d0d0d0;
+            color: #333;
+        }
+
+        .notification-item-type.like {
+            background: #c0c0c0;
+            color: #333;
+        }
+
+        .notification-item-time {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .notification-item-content {
+            font-size: 12px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .notification-item-sender {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .notification-empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        /* 리스트 컨테이너 */
+        #categoryList {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 16px 20px !important;
+        }
+
+        /* Flexbox 컨테이너들 */
+        .top-actions,
+        .view-toggle,
+        .content-toolbar {
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        /* 스팬 요소 안정화 */
+        span[data-lang-ko],
+        span[data-lang-en],
+        .btn span,
+        .toggle-btn span {
+            display: inline-block !important;
+            line-height: inherit !important;
+            vertical-align: middle !important;
+        }
+
+        /* 전역 폰트 설정 - 한글/영어 균형 */
+        body {
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: 0.01em;
+        }
+
+        /* 버튼 공통 스타일 - 고정 높이 및 패딩 */
+        .btn, .language-toggle, .toggle-btn, .add-record-btn,
+        .submit-btn, .category-action-btn, .comment-btn,
+        .label-toggle-btn, .modal-btn {
+            min-height: 32px;
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            box-sizing: border-box;
+        }
+
+        /* 상단 액션 버튼들 */
+        .top-actions .btn {
+            min-width: 100px;
+            padding: 6px 14px;
+        }
+
+        .top-actions .language-toggle {
+            min-width: 65px;
+            padding: 6px 12px;
+        }
+
+        .top-actions .notification-bell {
+            min-width: 100px;
+            padding: 6px 14px;
+        }
+
+        /* 뷰 토글 버튼 */
+        .view-toggle .toggle-btn {
+            min-width: 90px;
+            padding: 6px 14px;
+            height: 32px;
+        }
+
+        /* 컨텐츠 툴바 버튼 */
+        .content-toolbar .add-record-btn {
+            min-width: 110px;
+            padding: 6px 14px;
+            height: 32px;
+        }
+
+        /* 모달 버튼 */
+        .modal-footer .btn,
+        .modal-footer .modal-btn {
+            min-width: 85px;
+            padding: 8px 16px;
+            height: 36px;
+        }
+
+        /* 카테고리 액션 버튼 */
+        .category-action-btn {
+            min-width: 70px;
+            padding: 6px 10px;
+            height: 30px;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        /* 댓글 버튼 */
+        .comment-btn {
+            min-width: 70px;
+            padding: 6px 10px;
+            height: 30px;
+        }
+
+        /* 라벨 토글 버튼 */
+        .label-toggle-btn {
+            min-width: 75px;
+            padding: 6px 12px;
+            height: 32px;
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            min-width: 120px;
+            padding: 10px 16px;
+            height: 38px;
+        }
+
+        /* 헤더 텍스트 - 고정 높이 */
+        .greeting {
+            min-height: 40px;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        .subtitle, .user-desc {
+            min-height: 20px;
+            line-height: 1.4;
+        }
+
+        /* 카테고리 타이틀 */
+        .category-title {
+            min-height: 22px;
+            line-height: 1.4;
+            letter-spacing: 0.01em;
+        }
+
+        /* 카테고리 타입 배지 */
+        .category-type {
+            min-width: 50px;
+            min-height: 18px;
+            line-height: 1.2;
+            padding: 3px 10px;
+            letter-spacing: 0.03em;
+        }
+
+        /* 카테고리 메타 정보 */
+        .category-meta {
+            min-height: 18px;
+            line-height: 1.5;
+        }
+
+        /* 섹션 타이틀 */
+        .section-title, .modal-title {
+            min-height: 26px;
+            line-height: 1.4;
+            letter-spacing: 0;
+        }
+
+        /* 폼 라벨 */
+        .form-group label {
+            min-height: 20px;
+            line-height: 1.5;
+            display: block;
+        }
+
+        /* 입력 필드 - 고정 높이 */
+        .form-group input,
+        .form-group select {
+            height: 36px;
+            line-height: 1.4;
+        }
+
+        /* 테이블 셀 */
+        .records-table td,
+        .records-table th {
+            min-height: 40px;
+            line-height: 1.5;
+            vertical-align: middle;
+        }
+
+        /* 빈 상태 메시지 */
+        .empty-state {
+            min-height: 80px;
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 카테고리 헤더 래퍼 */
+        .category-header-wrapper {
+            min-height: 40px;
+            line-height: 1.5;
+        }
+
+        /* 카테고리 설명 */
+        .category-description {
+            min-height: 20px;
+            line-height: 1.5;
+        }
+
+        /* 리스트 아이템 */
+        .category-item {
+            min-height: 95px;
+        }
+
+        .category-item .category-title {
+            min-height: 20px;
+        }
+
+        .category-item .category-meta {
+            min-height: 16px;
+        }
+
+        /* 알림 관련 */
+        .notification-badge {
+            min-width: 18px;
+            min-height: 18px;
+            line-height: 18px;
+        }
+
+        /* 드로어 헤더 */
+        .drawer-header {
+            min-height: 40px;
+            line-height: 1.4;
+        }
+
+        /* 컨텐츠 툴바 */
+        .content-toolbar {
+            min-height: 44px;
+            align-items: center;
+        }
+
+        /* 스팬 요소들 - data-lang 속성을 가진 요소들 */
+        span[data-lang-ko],
+        span[data-lang-en] {
+            display: inline-block;
+            min-width: fit-content;
+        }
+
+        /* 텍스트 오버플로우 방지 */
+        .btn span,
+        .toggle-btn span,
+        .add-record-btn span {
+            overflow: visible;
+            text-overflow: clip;
+        }
+
+        /* flexbox 정렬 보정 */
+        .top-actions {
+            align-items: center;
+            height: fit-content;
+        }
+
+        .view-toggle {
+            align-items: center;
+            height: fit-content;
+        }
+
+        /* 모달 헤더 */
+        .modal-header {
+            min-height: 50px;
+            align-items: center;
+        }
+
+        /* 모달 푸터 */
+        .modal-footer {
+            min-height: 60px;
+            align-items: center;
+        }
+    /* 카테고리 카드 액션 버튼 */
+        .category-action-btn {
+            min-width: 65px;
+        }
+
+        /* 댓글 버튼 */
+        .comment-btn {
+            min-width: 65px;
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            min-width: 100px;
+        }
+
     </style>
+
+    <!-- EventSourcePolyfill 라이브러리 (Authorization 헤더 지원) -->
+    <script src="https://unpkg.com/event-source-polyfill@1.0.31/src/eventsource.min.js"></script>
 </head>
 <body>
 <!-- 로그인 섹션 -->
-<div id="loginSection" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+<div id="loginSection"
+     style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
                 <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
             <h2 style="text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: normal;">Sign In</h2>
-            <div id="loginError" style="color: #cc0000; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <div id="loginError"
+                 style="color: #333; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="loginForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="email" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="email">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="password" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="password">
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;">Sign In</button>
+                            <button style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;"
+                                    type="submit">
+                                Sign In
+                            </button>
                         </td>
                     </tr>
                 </table>
             </form>
+            <div style="text-align: center; margin-top: 10px; font-size: 12px;">
+                <a href="#" id="showResetPassword" style="color: #666; text-decoration: underline;">Forgot your
+                    password?</a>
+            </div>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
-                New account? <a href="#" id="showSignup" style="color: #0066cc; text-decoration: underline;">Sign Up</a>
+                New account? <a href="#" id="showSignup" style="color: #666; text-decoration: underline;">Sign Up</a>
             </div>
         </div>
     </div>
 </div>
 
 <!-- 회원가입 섹션 -->
-<div id="signupSection" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+<div id="signupSection"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
                 <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
             <h2 style="text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: normal;">Sign Up</h2>
-            <div id="signupError" style="color: #cc0000; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <div id="signupError"
+                 style="color: #333; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="signupForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Username:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupUsername" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupUsername" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="text">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="signupEmail" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupEmail" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="email">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="signupPassword" required style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupPassword" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="password">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Title:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupTitle" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupTitle"
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="text">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Description:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupDescription"
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Birth Year:</td>
+                        <td style="padding: 5px 0;"><input id="signupBirthYear" max="2100" min="1900" placeholder="YYYY"
+                                                           required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="number">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Birth Month:</td>
+                        <td style="padding: 5px 0;"><input id="signupBirthMonth" max="12" min="1" placeholder="MM"
+                                                           required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="number">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Birth Day:</td>
+                        <td style="padding: 5px 0;"><input id="signupBirthDay" max="31" min="1" placeholder="DD"
+                                                           required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="number">
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px; margin-right: 10px;">Sign Up</button>
-                            <button type="button" id="cancelSignup" style="padding: 8px 24px; border: 1px solid #999; background: #fff; cursor: pointer; font-size: 13px;">Cancel</button>
+                            <button style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px; margin-right: 10px;"
+                                    type="submit">
+                                Sign Up
+                            </button>
+                            <button id="cancelSignup"
+                                    style="padding: 8px 24px; border: 1px solid #999; background: #fff; cursor: pointer; font-size: 13px;"
+                                    type="button">
+                                Cancel
+                            </button>
                         </td>
                     </tr>
                 </table>
             </form>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
-                Already have an account? <a href="#" id="showLogin" style="color: #0066cc; text-decoration: underline;">Sign In</a>
+                Already have an account? <a href="#" id="showLogin" style="color: #666; text-decoration: underline;">Sign
+                In</a>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- 비밀번호 재설정 섹션 -->
+<div id="resetPasswordSection"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="simple-auth-container">
+        <div class="simple-auth-box">
+            <div style="text-align: left; margin-bottom: 10px;">
+                <a href="#" onclick="showLoginFromReset(); return false;"
+                   style="color: #666; text-decoration: none; font-size: 13px;">← Back to Login</a>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: normal;">Reset
+                Password</h2>
+            <div id="resetPasswordError"
+                 style="color: #333; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <div id="resetPasswordSuccess"
+                 style="color: green; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <form id="resetPasswordForm">
+                <table style="margin: 0 auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Username:</td>
+                        <td style="padding: 5px 0;">
+                            <input id="resetUsername" required
+                                   style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                   type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Email:</td>
+                        <td style="padding: 5px 0;">
+                            <input id="resetEmail" required
+                                   style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                   type="email">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">New Password:</td>
+                        <td style="padding: 5px 0;">
+                            <input autocomplete="new-password" id="resetNewPassword"
+                                   required
+                                   style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                   type="password">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding-top: 15px;">
+                            <button style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;"
+                                    type="submit">
+                                Reset Password
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
         </div>
     </div>
 </div>
@@ -482,16 +1529,22 @@
 <!-- 메인 섹션 -->
 <div id="mainSection" style="display: none;">
     <div class="top-actions">
-        <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
-        <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
-        <a href="manage.html" class="btn" data-lang-ko="데이터 관리" data-lang-en="View Data">데이터 관리</a>
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
-        <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
+        <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
+        <a class="btn" data-lang-en="Insert Data" data-lang-ko="데이터 입력" href="insert.html">데이터 입력</a>
+        <a class="btn" data-lang-en="View Data" data-lang-ko="내 관리" href="manage.html">내 관리</a>
+        <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()">
+            <span data-lang-en="Alerts" data-lang-ko="알림">알림</span>
+            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+        </button>
+        <button class="btn btn-primary" data-lang-en="Logout" data-lang-ko="로그아웃" id="logoutBtn">로그아웃</button>
     </div>
 
     <div class="header">
-        <div class="title" data-lang-ko="카테고리 관리" data-lang-en="Category Management">카테고리 관리</div>
-        <div class="subtitle" data-lang-ko="카테고리를 추가하고 관리하세요" data-lang-en="Add and manage your categories">카테고리를 추가하고 관리하세요</div>
+        <div class="title" data-lang-en="Category Management" data-lang-ko="카테고리 관리">카테고리 관리</div>
+        <div class="subtitle" data-lang-en="Add and manage your categories" data-lang-ko="카테고리를 추가하고 관리하세요">카테고리를 추가하고
+            관리하세요
+        </div>
     </div>
 
     <div class="content">
@@ -499,44 +1552,66 @@
         <div class="section-grid">
             <!-- 카테고리 관리 -->
             <div class="section">
-                <div class="section-title" data-lang-ko="카테고리 관리" data-lang-en="Category Management">카테고리 관리</div>
+                <div class="section-title" data-lang-en="Category Management" data-lang-ko="카테고리 관리">카테고리 관리</div>
                 <div id="categoryList" style="margin-bottom: 20px;">
-                    <p style="color: #666; font-size: 13px;" data-lang-ko="카테고리를 불러오는 중..." data-lang-en="Loading categories...">카테고리를 불러오는 중...</p>
+                    <p data-lang-en="Loading categories..." data-lang-ko="카테고리를 불러오는 중..."
+                       style="color: #666; font-size: 13px;">카테고리를 불러오는 중...</p>
                 </div>
             </div>
 
             <!-- 카테고리 추가 -->
             <div class="section">
-                <div class="section-title" data-lang-ko="카테고리 추가" data-lang-en="Add Category">카테고리 추가</div>
+                <div class="section-title" data-lang-en="Add Category" data-lang-ko="카테고리 추가">카테고리 추가</div>
                 <div id="categoryMessage"></div>
                 <form id="categoryForm">
                     <div class="form-group">
-                        <label for="categoryTitle" data-lang-ko="제목 *" data-lang-en="Title *">제목 *</label>
-                        <input type="text" id="categoryTitle" required placeholder="예: 운동" data-placeholder-ko="예: 운동" data-placeholder-en="e.g. Exercise">
+                        <label data-lang-en="Title *" data-lang-ko="제목 *" for="categoryTitle">제목 *</label>
+                        <input data-placeholder-en="e.g. Exercise" data-placeholder-ko="예: 운동" id="categoryTitle"
+                               placeholder="예: 운동" required
+                               type="text">
                     </div>
                     <div class="form-group">
-                        <label for="categoryDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
-                        <textarea id="categoryDescription" placeholder="카테고리 설명 (선택사항)" data-placeholder-ko="카테고리 설명 (선택사항)" data-placeholder-en="Category description (optional)"></textarea>
+                        <label data-lang-en="Description" data-lang-ko="설명" for="categoryDescription">설명</label>
+                        <textarea data-placeholder-en="Category description (optional)"
+                                  data-placeholder-ko="카테고리 설명 (선택사항)"
+                                  id="categoryDescription"
+                                  placeholder="카테고리 설명 (선택사항)"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="recordType" data-lang-ko="타입 *" data-lang-en="Type *">타입 *</label>
+                        <label data-lang-en="Type *" data-lang-ko="타입 *" for="recordType">타입 *</label>
                         <select id="recordType" required>
-                            <option value="" data-lang-ko="선택하세요" data-lang-en="Select">선택하세요</option>
-                            <option value="CHECK" data-lang-ko="CHECK - 성공/실패 기록" data-lang-en="CHECK - Success/Fail">CHECK - 성공/실패 기록</option>
-                            <option value="TEXT" data-lang-ko="TEXT - 텍스트 기록" data-lang-en="TEXT - Text Record">TEXT - 텍스트 기록</option>
-                            <option value="TIME" data-lang-ko="TIME - 시간 기록" data-lang-en="TIME - Time Record">TIME - 시간 기록</option>
-                            <option value="NUMBER" data-lang-ko="NUMBER - 숫자 기록" data-lang-en="NUMBER - Number Record">NUMBER - 숫자 기록</option>
-                            <option value="CHECKLIST" data-lang-ko="CHECKLIST - 할일 목록" data-lang-en="CHECKLIST - Todo List">CHECKLIST - 할일 목록</option>
+                            <option data-lang-en="Select" data-lang-ko="선택하세요" value="">선택하세요</option>
+                            <option data-lang-en="CHECK - Success/Fail" data-lang-ko="CHECK - 성공/실패 기록" value="CHECK">
+                                CHECK - 성공/실패 기록
+                            </option>
+                            <option data-lang-en="TEXT - Text Record" data-lang-ko="TEXT - 텍스트 기록" value="TEXT">TEXT -
+                                텍스트 기록
+                            </option>
+                            <option data-lang-en="TIME - Time Record" data-lang-ko="TIME - 시간 기록" value="TIME">TIME - 시간
+                                기록
+                            </option>
+                            <option data-lang-en="NUMBER - Number Record" data-lang-ko="NUMBER - 숫자 기록" value="NUMBER">
+                                NUMBER - 숫자 기록
+                            </option>
+                            <option data-lang-en="CHECKLIST - Todo List" data-lang-ko="CHECKLIST - 할일 목록"
+                                    value="CHECKLIST">CHECKLIST - 할일 목록
+                            </option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="visibility" data-lang-ko="공개 설정 *" data-lang-en="Visibility *">공개 설정 *</label>
+                        <label data-lang-en="Visibility *" data-lang-ko="공개 설정 *" for="visibility">공개 설정 *</label>
                         <select id="visibility" required>
-                            <option value="PRIVATE" data-lang-ko="PRIVATE - 나만 보기" data-lang-en="PRIVATE - Only Me">PRIVATE - 나만 보기</option>
-                            <option value="PUBLIC" data-lang-ko="PUBLIC - 모두에게 공개" data-lang-en="PUBLIC - Public">PUBLIC - 모두에게 공개</option>
+                            <option data-lang-en="PRIVATE - Only Me" data-lang-ko="PRIVATE - 나만 보기" value="PRIVATE">
+                                PRIVATE - 나만 보기
+                            </option>
+                            <option data-lang-en="PUBLIC - Public" data-lang-ko="PUBLIC - 모두에게 공개" value="PUBLIC">PUBLIC
+                                - 모두에게 공개
+                            </option>
                         </select>
                     </div>
-                    <button type="submit" class="submit-btn" data-lang-ko="카테고리 추가" data-lang-en="Add Category">카테고리 추가</button>
+                    <button class="submit-btn" data-lang-en="Add Category" data-lang-ko="카테고리 추가" type="submit">카테고리
+                        추가
+                    </button>
                 </form>
             </div>
 
@@ -546,747 +1621,1802 @@
 </div>
 
 <!-- 프로필 수정 모달 -->
-<div id="profileModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+<div class="modal" id="profileModal"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
     <div style="background: white; padding: 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; border: 1px solid #ccc;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ddd;">
-            <div style="font-size: 18px; font-weight: bold;" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</div>
-            <button onclick="closeProfileModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; line-height: 1;">×</button>
+            <div data-lang-en="Edit Profile" data-lang-ko="프로필 수정" style="font-size: 18px; font-weight: bold;">프로필 수정
+            </div>
+            <button onclick="closeProfileModal()"
+                    style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; line-height: 1;">
+                ×
+            </button>
         </div>
         <div id="profileModalError"></div>
         <form id="profileForm">
             <div class="form-group">
-                <label for="profileTitle" data-lang-ko="타이틀" data-lang-en="Title">타이틀</label>
-                <input type="text" id="profileTitle" placeholder="예: Hi." data-placeholder-ko="예: Hi." data-placeholder-en="e.g. Hi.">
+                <label data-lang-en="Title" data-lang-ko="타이틀" for="profileTitle">타이틀</label>
+                <input data-placeholder-en="e.g. Hi." data-placeholder-ko="예: Hi." id="profileTitle"
+                       placeholder="예: Hi."
+                       type="text">
             </div>
             <div class="form-group">
-                <label for="profileDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
-                <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요" data-placeholder-ko="간단한 소개를 입력하세요" data-placeholder-en="Enter a brief introduction"></textarea>
+                <label data-lang-en="Description" data-lang-ko="설명" for="profileDescription">설명</label>
+                <textarea data-placeholder-en="Enter a brief introduction" data-placeholder-ko="간단한 소개를 입력하세요"
+                          id="profileDescription"
+                          placeholder="간단한 소개를 입력하세요"></textarea>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 30px;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;" data-lang-ko="저장" data-lang-en="Save">저장</button>
-                <button type="button" class="btn" onclick="closeProfileModal()" style="flex: 1;" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
+                <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="저장" style="flex: 1;" type="submit">
+                    저장
+                </button>
+                <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeProfileModal()"
+                        style="flex: 1;"
+                        type="button">취소
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- 카테고리 수정 모달 -->
-<div id="editCategoryModal" class="modal">
+<div class="modal" id="editCategoryModal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title" data-lang-ko="카테고리 수정" data-lang-en="Edit Category">카테고리 수정</div>
+            <div class="modal-title" data-lang-en="Edit Category" data-lang-ko="카테고리 수정">카테고리 수정</div>
             <button class="modal-close" onclick="closeEditCategoryModal()">×</button>
         </div>
-        <div id="editCategoryModalError"></div>
-        <form id="editCategoryForm">
-            <div class="form-group">
-                <label for="editCategoryTitle" data-lang-ko="제목 *" data-lang-en="Title *">제목 *</label>
-                <input type="text" id="editCategoryTitle" required>
-            </div>
-            <div class="form-group">
-                <label for="editCategoryDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
-                <textarea id="editCategoryDescription"></textarea>
-            </div>
-            <div class="form-group">
-                <label data-lang-ko="타입" data-lang-en="Type">타입</label>
-                <input type="text" id="editCategoryType" readonly style="background: #f5f5f5; cursor: not-allowed;">
-            </div>
-            <div class="form-group">
-                <label for="editCategoryVisibility" data-lang-ko="공개 설정 *" data-lang-en="Visibility *">공개 설정 *</label>
-                <select id="editCategoryVisibility" required>
-                    <option value="PRIVATE" data-lang-ko="PRIVATE - 나만 보기" data-lang-en="PRIVATE - Only Me">PRIVATE - 나만 보기</option>
-                    <option value="PUBLIC" data-lang-ko="PUBLIC - 모두에게 공개" data-lang-en="PUBLIC - Public">PUBLIC - 모두에게 공개</option>
-                </select>
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 30px;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;" data-lang-ko="저장" data-lang-en="Save">저장</button>
-                <button type="button" class="btn" onclick="closeEditCategoryModal()" style="flex: 1;" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
-            </div>
-        </form>
+        <div class="modal-body">
+            <div id="editCategoryModalError"></div>
+            <form id="editCategoryForm">
+                <div class="form-group">
+                    <label data-lang-en="Title *" data-lang-ko="제목 *" for="editCategoryTitle">제목 *</label>
+                    <input id="editCategoryTitle" required type="text">
+                </div>
+                <div class="form-group">
+                    <label data-lang-en="Description" data-lang-ko="설명" for="editCategoryDescription">설명</label>
+                    <textarea id="editCategoryDescription"></textarea>
+                </div>
+                <div class="form-group">
+                    <label data-lang-en="Type" data-lang-ko="타입">타입</label>
+                    <input id="editCategoryType" readonly style="background: #f5f5f5; cursor: not-allowed;" type="text">
+                    <small data-lang-en="Type cannot be changed."
+                           data-lang-ko="타입은 변경할 수 없습니다." style="display: block; margin-top: 6px; color: #a0aec0; font-size: 12px;">타입은 변경할 수 없습니다.</small>
+                </div>
+                <div class="form-group">
+                    <label data-lang-en="Visibility *" data-lang-ko="공개 설정 *" for="editCategoryVisibility">공개 설정
+                        *</label>
+                    <select id="editCategoryVisibility" required>
+                        <option data-lang-en="PRIVATE - Only Me" data-lang-ko="PRIVATE - 나만 보기" value="PRIVATE">PRIVATE
+                            - 나만
+                            보기
+                        </option>
+                        <option data-lang-en="PUBLIC - Public" data-lang-ko="PUBLIC - 모두에게 공개" value="PUBLIC">PUBLIC -
+                            모두에게
+                            공개
+                        </option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="저장" type="submit">
+                        저장
+                    </button>
+                    <button class="btn" data-lang-en="Delete" data-lang-ko="삭제" onclick="deleteEditingCategory(event)"
+                            type="button">
+                        삭제
+                    </button>
+                    <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeEditCategoryModal()"
+                            type="button">
+                        취소
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <!-- 좋아요 목록 모달 -->
-<div id="likeListModal" class="modal">
+<div class="modal" id="likeListModal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title" data-lang-ko="좋아요 목록" data-lang-en="Like List">좋아요 목록</div>
+            <div class="modal-title" data-lang-en="Like List" data-lang-ko="좋아요 목록">좋아요 목록</div>
             <button class="modal-close" onclick="closeLikeListModal()">×</button>
         </div>
         <div style="margin-bottom: 20px;">
-            <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;" id="likeListCategoryTitle"></div>
-            <div style="font-size: 14px; color: #666;" id="likeListCount"></div>
+            <div id="likeListCategoryTitle" style="font-size: 16px; font-weight: 600; margin-bottom: 10px;"></div>
+            <div id="likeListCount" style="font-size: 14px; color: #666;"></div>
         </div>
         <div id="likeListContent" style="max-height: 400px; overflow-y: auto;">
             <p style="color: #666; text-align: center; padding: 40px 0;">로딩 중...</p>
         </div>
         <div style="margin-top: 30px; text-align: center;">
-            <button class="btn" onclick="closeLikeListModal()" data-lang-ko="닫기" data-lang-en="Close">닫기</button>
+            <button class="btn" data-lang-en="Close" data-lang-ko="닫기" onclick="closeLikeListModal()">닫기</button>
         </div>
     </div>
 </div>
 
+<!-- 알림 모달 -->
+<div class="notification-modal" id="notificationModal">
+    <div class="notification-modal-content">
+        <div class="notification-modal-header">
+            <div class="notification-modal-title" data-lang-en="Notifications" data-lang-ko="알림">알림</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="mark-all-read-btn" data-lang-en="Mark all as read" data-lang-ko="모두 읽음"
+                        onclick="markAllAsRead()">모두 읽음
+                </button>
+                <button class="notification-modal-close" onclick="toggleNotificationModal()">×</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <!-- 알림 목록이 여기에 동적으로 추가됨 -->
+        </div>
+    </div>
+</div>
+
+<!-- 토스트 알림 컨테이너 -->
+<div class="toast-container" id="toastContainer"></div>
+
 <script>
+
+    // ==================== API 및 인증 관련 ====================
+
     const API_BASE = 'http://localhost:8080/api';
+    let csrfToken = null;
+    let accessToken = null;
     let currentUser = null;
     let categories = [];
-    let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
+    let currentLang = localStorage.getItem('language') || 'ko';
 
-    // 번역 데이터
-    const translations = {
-        // 버튼
-        'home': { ko: '홈', en: 'Home' },
-        'editProfile': { ko: '프로필 수정', en: 'Edit Profile' },
-        'viewData': { ko: '데이터 관리', en: 'View Data' },
-        'logout': { ko: '로그아웃', en: 'Logout' },
-        'save': { ko: '저장', en: 'Save' },
-        'cancel': { ko: '취소', en: 'Cancel' },
-        'close': { ko: '닫기', en: 'Close' },
-        'edit': { ko: '수정', en: 'Edit' },
-        'delete': { ko: '삭제', en: 'Delete' },
-        'viewLikes': { ko: '좋아요 목록', en: 'View Likes' },
+    // SSE 관련 변수
+    let eventSource = null;
+    let reconnectTimer = null;
+    let isPageUnloading = false;
+    let notifications = [];
+    let unreadCount = 0;
+    let lastEventId = localStorage.getItem('lastEventId') || ''; // lastEventId 저장
+    let sseReconnectAttempts = 0; // 재연결 시도 횟수
+    const MAX_SSE_RECONNECT_ATTEMPTS = 5; // 최대 재연결 시도 횟수
 
-        // 제목
-        'categoryManagementTitle': { ko: '카테고리 관리', en: 'Category Management' },
-        'subtitle': { ko: '카테고리를 추가하고 관리하세요', en: 'Add and manage your categories' },
-        'categoryManagement': { ko: '카테고리 관리', en: 'Category Management' },
-        'addCategory': { ko: '카테고리 추가', en: 'Add Category' },
-        'editCategory': { ko: '카테고리 수정', en: 'Edit Category' },
-        'likeListTitle': { ko: '좋아요 목록', en: 'Like List' },
-
-        // 폼 라벨
-        'title': { ko: '제목 *', en: 'Title *' },
-        'titleLabel': { ko: '타이틀', en: 'Title' },
-        'description': { ko: '설명', en: 'Description' },
-        'type': { ko: '타입 *', en: 'Type *' },
-        'typeLabel': { ko: '타입', en: 'Type' },
-        'visibility': { ko: '공개 설정 *', en: 'Visibility *' },
-
-        // 메시지
-        'loading': { ko: '카테고리를 불러오는 중...', en: 'Loading categories...' },
-        'noCategories': { ko: '등록된 카테고리가 없습니다', en: 'No categories' },
-        'noLikes': { ko: '아직 좋아요가 없습니다', en: 'No likes yet' },
-        'categoryAdded': { ko: '카테고리가 추가되었습니다.', en: 'Category added successfully.' },
-        'categoryUpdated': { ko: '카테고리가 수정되었습니다.', en: 'Category updated successfully.' },
-        'categoryDeleted': { ko: '카테고리가 삭제되었습니다.', en: 'Category deleted successfully.' },
-        'profileUpdated': { ko: '프로필이 수정되었습니다.', en: 'Profile updated successfully.' },
-        'deleteConfirm': { ko: '정말 삭제하시겠습니까?\n\n이 카테고리의 모든 레코드도 함께 삭제됩니다.', en: 'Are you sure you want to delete?\n\nAll records in this category will also be deleted.' }
-    };
-
-    // 언어 전환 함수
-    function toggleLanguage() {
-        currentLang = currentLang === 'ko' ? 'en' : 'ko';
-        localStorage.setItem('language', currentLang);
-        applyLanguage();
+    // CSRF 토큰 가져오기
+    function getCsrfToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'XSRF-TOKEN') {
+                return decodeURIComponent(value);
+            }
+        }
+        return null;
     }
 
-    // 언어 적용 함수
-    function applyLanguage() {
-        // 언어 토글 버튼 텍스트 변경
-        document.getElementById('languageToggle').textContent = currentLang === 'ko' ? 'EN' : 'KO';
+    // CSRF 토큰 초기화
+    async function initCsrfToken() {
+        try {
+            await fetch(`${API_BASE}/auth/csrf-token`, {
+                credentials: 'include'
+            });
+            csrfToken = getCsrfToken();
+        } catch (error) {
+            console.error('CSRF token init failed:', error);
+        }
+    }
 
-        // data-lang 속성이 있는 모든 요소 업데이트
+    // AccessToken 저장
+    function setAccessToken(token) {
+        accessToken = token;
+        localStorage.setItem('accessToken', token);
+    }
+
+    // AccessToken 가져오기
+    function getAccessToken() {
+        if (!accessToken) {
+            accessToken = localStorage.getItem('accessToken');
+        }
+        return accessToken;
+    }
+
+    // AccessToken 갱신
+    async function refreshAccessToken() {
+        try {
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            const headers = { 'Content-Type': 'application/json' };
+
+            // 기존 AccessToken이 있으면 헤더에 추가
+            const token = getAccessToken();
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+                console.log('[INSERT REFRESH] Sending AccessToken:', token.substring(0, 20) + '...');
+            } else {
+                console.log('[INSERT REFRESH] No AccessToken - using RefreshToken cookie only');
+            }
+
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+            }
+
+            const response = await fetch(`${API_BASE}/auth/refresh`, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include'  // RefreshToken 쿠키 자동 전송
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const newToken = data.accessToken || data.access_token || data.token;
+                if (newToken && typeof newToken === 'string') {
+                    setAccessToken(newToken);
+                    console.log('[INSERT REFRESH] New AccessToken received:', newToken.substring(0, 20) + '...');
+                    return true;
+                }
+            }
+            return false;
+        } catch (error) {
+            console.error('[INSERT REFRESH] Token refresh failed:', error);
+            return false;
+        }
+    }
+
+    // 인증된 fetch 요청
+    async function authFetch(url, options = {}) {
+        const token = getAccessToken();
+        console.log('[INSERT authFetch] URL:', url);
+        console.log('[INSERT authFetch] AccessToken:', token ? `${token.substring(0, 20)}...` : 'NULL');
+
+        const defaultOptions = {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(options.headers || {})
+            }
+        };
+
+        if (token) {
+            defaultOptions.headers['Authorization'] = `Bearer ${token}`;
+            console.log('[INSERT authFetch] Authorization header set:', `Bearer ${token.substring(0, 20)}...`);
+        } else {
+            console.log('[INSERT authFetch] No token - Authorization header not set');
+        }
+
+        if (options.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method.toUpperCase())) {
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+                console.log('[INSERT authFetch] Got CSRF token from cookie:', csrfToken ? csrfToken.substring(0, 20) + '...' : 'NULL');
+            } else {
+                console.log('[INSERT authFetch] Using existing CSRF token:', csrfToken.substring(0, 20) + '...');
+            }
+            if (csrfToken) {
+                defaultOptions.headers['X-XSRF-TOKEN'] = csrfToken;
+                console.log('[INSERT authFetch] X-XSRF-TOKEN header set');
+            } else {
+                console.error('[INSERT authFetch] No CSRF token available!');
+            }
+        }
+
+        const finalOptions = {
+            ...defaultOptions,
+            ...options,
+            headers: {
+                ...defaultOptions.headers,
+                ...options.headers
+            }
+        };
+
+        console.log('[INSERT authFetch] Final headers:', finalOptions.headers);
+        return await fetch(url, finalOptions);
+    }
+
+    // 사용자 정보 설정 (로그인 시 이미 인증됨)
+    function checkAuth() {
+        console.log('[INSERT] Auth already verified by login');
+        // 로그인이 성공했으면 이미 인증된 상태
+        // accessToken이 있으면 인증된 것으로 간주
+        return !!accessToken;
+    }
+
+    // 카테고리 로드
+    async function loadCategories() {
+        console.log('[INSERT] Loading categories...');
+        try {
+            // 내 모든 카테고리 조회 (PRIVATE + PUBLIC)
+            const response = await authFetch(`${API_BASE}/category/all`);
+            if (response.ok) {
+                const data = await response.json();
+                // FindCategoryResponse[] 배열: { id, title, description, recordType, visibility, likeCount, commentCount }
+                categories = data || [];
+                console.log('[INSERT] Categories loaded:', categories.length);
+                console.log('[INSERT] Categories data:', categories);
+
+                // 카테고리 목록 렌더링
+                renderCategoryList();
+            } else {
+                console.error('[INSERT] Failed to load categories:', response.status);
+            }
+        } catch (error) {
+            console.error('[INSERT] Error loading categories:', error);
+        }
+    }
+
+    // 카테고리 목록 렌더링
+    function renderCategoryList() {
+        const categoryListElement = document.getElementById('categoryList');
+        if (!categoryListElement) {
+            console.log('[INSERT] Category list element not found');
+            return;
+        }
+
+        if (categories.length === 0) {
+            categoryListElement.innerHTML = `<p style="color: #666; font-size: 13px; text-align: center;">${t('등록된 카테고리가 없습니다.', 'No categories registered.')}</p>`;
+            return;
+        }
+
+        const categoryItems = categories.map(cat => {
+            // FindCategoryResponse 구조: { id, title, description, recordType, visibility, likeCount, commentCount }
+            const typeText = getTypeText(cat.recordType);
+            const visibilityText = cat.visibility === 'PRIVATE'
+                ? t('PRIVATE - 나만 보기', 'PRIVATE - Only Me')
+                : t('PUBLIC - 공개', 'PUBLIC - Public');
+            const visibilityColor = cat.visibility === 'PRIVATE' ? '#666' : '#999';
+
+            return `
+                <div class="category-item-wrapper" style="padding: 14px 16px; margin-bottom: 10px; border: 1px solid #e0e0e0; background: white; transition: all 0.2s;"
+                     onmouseover="this.style.backgroundColor='#f8f9fa'; this.style.borderColor='#999'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';"
+                     onmouseout="this.style.backgroundColor='white'; this.style.borderColor='#e0e0e0'; this.style.boxShadow='none';">
+
+                    <!-- 카테고리 정보 (클릭 시 수정) -->
+                    <div class="category-item" data-category-id="${cat.id}" style="cursor: pointer; margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <div style="flex: 1; margin-right: 12px;">
+                                <div style="font-weight: 600; font-size: 15px; margin-bottom: 6px; color: #333;">${cat.title}</div>
+                                <div style="font-size: 13px; color: #666; line-height: 1.5;">${cat.description || t('설명 없음', 'No description')}</div>
+                            </div>
+                            <div style="text-align: right; white-space: nowrap;">
+                                <div style="font-size: 11px; color: #fff; background: #666; padding: 3px 10px; margin-bottom: 6px; display: inline-block; font-weight: 500;">${typeText}</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 12px; color: ${visibilityColor}; font-weight: 500;">
+                                ${visibilityText}
+                            </div>
+                            <div style="font-size: 11px; color: #999;">
+                                ID: ${cat.id.substring(0, 8)}...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 댓글/좋아요 통계 (클릭 시 팝업) -->
+                    <div style="display: flex; gap: 16px; padding-top: 10px; border-top: 1px solid #f0f0f0;">
+                        <button class="comment-btn" data-category-id="${cat.id}"
+                                style="flex: 1; padding: 8px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 13px; transition: all 0.2s;"
+                                onmouseover="this.style.backgroundColor='#f0f0f0';"
+                                onmouseout="this.style.backgroundColor='white';">
+                            ${t('댓글', 'Comments')} ${cat.commentCount || 0}
+                        </button>
+                        <button class="like-btn" data-category-id="${cat.id}"
+                                style="flex: 1; padding: 8px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 13px; transition: all 0.2s;"
+                                onmouseover="this.style.backgroundColor='#f0f0f0';"
+                                onmouseout="this.style.backgroundColor='white';">
+                            ${t('좋아요', 'Likes')} ${cat.likeCount || 0}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        categoryListElement.innerHTML = categoryItems;
+
+        // 카테고리 클릭 이벤트 - 수정 모달
+        categoryListElement.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const categoryId = this.getAttribute('data-category-id');
+                const category = categories.find(c => c.id === categoryId);
+                showEditCategoryModal(category);
+            });
+        });
+
+        // 댓글 버튼 클릭 이벤트
+        categoryListElement.querySelectorAll('.comment-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation(); // 상위 카테고리 클릭 이벤트 방지
+                const categoryId = this.getAttribute('data-category-id');
+                showCommentsPopup(categoryId);
+            });
+        });
+
+        // 좋아요 버튼 클릭 이벤트
+        categoryListElement.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation(); // 상위 카테고리 클릭 이벤트 방지
+                const categoryId = this.getAttribute('data-category-id');
+                showLikesPopup(categoryId);
+            });
+        });
+    }
+
+    // 카테고리 수정 모달 표시
+    function showEditCategoryModal(category) {
+        console.log('[INSERT] Edit category:', category);
+
+        // 기존 모달 제거
+        const existingModal = document.getElementById('editCategoryModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        // 모달 생성
+        const modal = document.createElement('div');
+        modal.id = 'editCategoryModal';
+        modal.className = 'modal active';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">${t('카테고리 수정', 'Edit Category')}</div>
+                    <button id="closeEditModal" class="modal-close">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="editTitle">${t('제목', 'Title')} *</label>
+                        <input id="editTitle" type="text" value="${category.title}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editDescription">${t('설명', 'Description')}</label>
+                        <textarea id="editDescription" rows="3">${category.description || ''}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editRecordType">${t('타입', 'Type')}</label>
+                        <select id="editRecordType" disabled style="background: #f5f5f5; cursor: not-allowed;">
+                            <option value="CHECK" ${category.recordType === 'CHECK' ? 'selected' : ''}>${getTypeText('CHECK')}</option>
+                            <option value="TIME" ${category.recordType === 'TIME' ? 'selected' : ''}>${getTypeText('TIME')}</option>
+                            <option value="TEXT" ${category.recordType === 'TEXT' ? 'selected' : ''}>${getTypeText('TEXT')}</option>
+                            <option value="NUMBER" ${category.recordType === 'NUMBER' ? 'selected' : ''}>${getTypeText('NUMBER')}</option>
+                            <option value="CHECKLIST" ${category.recordType === 'CHECKLIST' ? 'selected' : ''}>${getTypeText('CHECKLIST')}</option>
+                        </select>
+                        <small style="display: block; margin-top: 6px; color: #a0aec0; font-size: 12px;">${t('타입은 변경할 수 없습니다.', 'Type cannot be changed.')}</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editVisibility">${t('공개 설정', 'Visibility')} *</label>
+                        <select id="editVisibility" required>
+                            <option value="PRIVATE" ${category.visibility === 'PRIVATE' ? 'selected' : ''}>${t('PRIVATE - 나만 보기', 'PRIVATE - Only Me')}</option>
+                            <option value="PUBLIC" ${category.visibility === 'PUBLIC' ? 'selected' : ''}>${t('PUBLIC - 공개', 'PUBLIC - Public')}</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button id="saveEditBtn" class="btn btn-primary">
+                            ${t('저장', 'Save')}
+                        </button>
+                        <button id="deleteBtn" class="btn">
+                            ${t('삭제', 'Delete')}
+                        </button>
+                        <button id="cancelEditBtn" class="btn">
+                            ${t('취소', 'Cancel')}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // 저장 버튼
+        document.getElementById('saveEditBtn').addEventListener('click', async () => {
+            const updatedData = {
+                id: category.id,
+                title: document.getElementById('editTitle').value,
+                description: document.getElementById('editDescription').value,
+                visibility: document.getElementById('editVisibility').value
+            };
+
+            await updateCategory(updatedData);
+            modal.remove();
+        });
+
+        // 삭제 버튼
+        document.getElementById('deleteBtn').addEventListener('click', async () => {
+            if (confirm(t('정말 이 카테고리를 삭제하시겠습니까?', 'Are you sure you want to delete this category?'))) {
+                await deleteCategory(category.id);
+                modal.remove();
+            }
+        });
+
+        // 닫기 및 취소 버튼
+        document.getElementById('closeEditModal').addEventListener('click', () => {
+            modal.remove();
+        });
+
+        document.getElementById('cancelEditBtn').addEventListener('click', () => {
+            modal.remove();
+        });
+
+        // 배경 클릭 시 닫기
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
+
+    // 카테고리 수정 API 호출
+    async function updateCategory(data) {
+        console.log('[INSERT] Updating category:', data);
+        try {
+            // CSRF 토큰 새로고침
+            await initCsrfToken();
+            console.log('[INSERT] CSRF token refreshed before update');
+
+            // PUT /api/category?updateCategory (query parameter는 URL에 수동 추가)
+            const params = new URLSearchParams();
+            params.append('id', data.id);
+            params.append('title', data.title);
+            params.append('description', data.description);
+            params.append('visibility', data.visibility);
+
+            console.log('[INSERT] Update params:', params.toString());
+
+            const response = await authFetch(`${API_BASE}/category?${params.toString()}`, {
+                method: 'PUT'
+            });
+
+            if (response.ok) {
+                console.log('[INSERT] Category updated successfully');
+                await loadCategories(); // 목록 새로고침
+            } else {
+                const errorText = await response.text();
+                console.error('[INSERT] Failed to update category:', response.status, errorText);
+                alert('카테고리 수정에 실패했습니다: ' + response.status);
+            }
+        } catch (error) {
+            console.error('[INSERT] Error updating category:', error);
+            alert('카테고리 수정 중 오류가 발생했습니다.');
+        }
+    }
+
+    // 카테고리 삭제 API 호출
+    async function deleteCategory(categoryId) {
+        console.log('[INSERT] Deleting category:', categoryId);
+        try {
+            // CSRF 토큰 새로고침
+            await initCsrfToken();
+            console.log('[INSERT] CSRF token refreshed before delete');
+
+            const response = await authFetch(`${API_BASE}/category?id=${categoryId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                console.log('[INSERT] Category deleted successfully');
+                await loadCategories(); // 목록 새로고침
+            } else {
+                const errorText = await response.text();
+                console.error('[INSERT] Failed to delete category:', response.status, errorText);
+                alert('카테고리 삭제에 실패했습니다: ' + response.status);
+            }
+        } catch (error) {
+            console.error('[INSERT] Error deleting category:', error);
+            alert('카테고리 삭제 중 오류가 발생했습니다.');
+        }
+    }
+
+    // ==================== 프로필 수정 관련 ====================
+
+    // 프로필 수정 모달 열기
+    function openProfileModal() {
+        console.log('[INSERT] Opening profile modal');
+        const modal = document.getElementById('profileModal');
+
+        // 현재 사용자 정보 불러오기
+        if (currentUser) {
+            document.getElementById('profileTitle').value = currentUser.title || '';
+            document.getElementById('profileDescription').value = currentUser.description || '';
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    // 프로필 수정 모달 닫기
+    function closeProfileModal() {
+        console.log('[INSERT] Closing profile modal');
+        const modal = document.getElementById('profileModal');
+        modal.style.display = 'none';
+
+        // 에러 메시지 초기화
+        document.getElementById('profileModalError').innerHTML = '';
+    }
+
+    // 프로필 수정 저장
+    async function saveProfile(e) {
+        e.preventDefault();
+        console.log('[INSERT] Saving profile');
+
+        const title = document.getElementById('profileTitle').value;
+        const description = document.getElementById('profileDescription').value;
+
+        try {
+            // CSRF 토큰 새로고침
+            await initCsrfToken();
+
+            const updateData = {
+                title: title,
+                description: description
+            };
+
+            const response = await authFetch(`${API_BASE}/user?dto=${encodeURIComponent(JSON.stringify(updateData))}`, {
+                method: 'PUT'
+            });
+
+            if (response.ok) {
+                console.log('[INSERT] Profile updated successfully');
+
+                // 현재 사용자 정보 업데이트
+                if (currentUser) {
+                    currentUser.title = title;
+                    currentUser.description = description;
+                }
+
+                // 화면의 사용자 정보 업데이트
+                const titleElement = document.querySelector('.greeting');
+                if (titleElement && currentUser) {
+                    titleElement.textContent = currentUser.title || currentUser.nickname || currentUser.username;
+                }
+
+                const descElement = document.querySelector('.subtitle');
+                if (descElement && currentUser) {
+                    descElement.textContent = currentUser.description || '';
+                }
+
+                closeProfileModal();
+                alert(t('프로필이 성공적으로 업데이트되었습니다.', 'Profile updated successfully.'));
+            } else {
+                const errorText = await response.text();
+                console.error('[INSERT] Failed to update profile:', response.status, errorText);
+                document.getElementById('profileModalError').innerHTML =
+                    `<div class="error-message">${t('프로필 수정에 실패했습니다.', 'Failed to update profile.')}</div>`;
+            }
+        } catch (error) {
+            console.error('[INSERT] Error updating profile:', error);
+            document.getElementById('profileModalError').innerHTML =
+                `<div class="error-message">${t('프로필 수정 중 오류가 발생했습니다.', 'An error occurred while updating profile.')}</div>`;
+        }
+    }
+
+    // ==================== 카테고리 추가 관련 ====================
+
+    // 카테고리 추가
+    async function addCategory(e) {
+        e.preventDefault();
+        console.log('[INSERT] Adding category');
+
+        const title = document.getElementById('categoryTitle').value.trim();
+        const description = document.getElementById('categoryDescription').value.trim();
+        const recordType = document.getElementById('recordType').value;
+        const visibility = document.getElementById('visibility').value;
+
+        if (!title || !recordType || !visibility) {
+            showCategoryMessage('error', t('모든 필수 항목을 입력해주세요.', 'Please fill in all required fields.'));
+            return;
+        }
+
+        try {
+            // CSRF 토큰 새로고침
+            await initCsrfToken();
+
+            const categoryData = {
+                title: title,
+                description: description || '',
+                recordType: recordType,
+                visibility: visibility
+            };
+
+            console.log('[INSERT] Category data:', categoryData);
+
+            // Query parameter로 각 필드를 개별 전송
+            const params = new URLSearchParams();
+            params.append('title', categoryData.title);
+            params.append('description', categoryData.description);
+            params.append('recordType', categoryData.recordType);
+            params.append('visibility', categoryData.visibility);
+
+            const url = `${API_BASE}/category?${params.toString()}`;
+            console.log('[INSERT] Request URL:', url);
+
+            const response = await authFetch(url, {
+                method: 'POST'
+            });
+
+            console.log('[INSERT] Response status:', response.status);
+
+            if (response.ok) {
+                console.log('[INSERT] Category added successfully');
+                showCategoryMessage('success', t('카테고리가 성공적으로 추가되었습니다.', 'Category added successfully.'));
+
+                // 폼 초기화
+                document.getElementById('categoryForm').reset();
+
+                // 카테고리 목록 새로고침
+                await loadCategories();
+
+                // 3초 후 메시지 제거
+                setTimeout(() => {
+                    const messageElement = document.getElementById('categoryMessage');
+                    if (messageElement) {
+                        messageElement.innerHTML = '';
+                    }
+                }, 3000);
+            } else {
+                const errorText = await response.text();
+                console.error('[INSERT] Failed to add category:', response.status, errorText);
+                showCategoryMessage('error', t('카테고리 추가에 실패했습니다.', 'Failed to add category.') + ` (${response.status})`);
+            }
+        } catch (error) {
+            console.error('[INSERT] Error adding category:', error);
+            showCategoryMessage('error', t('카테고리 추가 중 오류가 발생했습니다.', 'An error occurred while adding category.'));
+        }
+    }
+
+    // 카테고리 메시지 표시
+    function showCategoryMessage(type, message) {
+        const messageDiv = document.getElementById('categoryMessage');
+        const className = type === 'success' ? 'success-message' : 'error-message';
+        messageDiv.innerHTML = `<div class="${className}">${message}</div>`;
+    }
+
+    // 댓글 목록 팝업
+    async function showCommentsPopup(categoryId) {
+        console.log('[INSERT] Show comments for category:', categoryId);
+
+        // 기존 팝업 제거
+        const existingPopup = document.getElementById('commentsPopup');
+        if (existingPopup) {
+            existingPopup.remove();
+        }
+
+        // 팝업 생성
+        const popup = document.createElement('div');
+        popup.id = 'commentsPopup';
+        popup.className = 'modal active';
+        popup.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">${t('댓글 목록', 'Comments')}</div>
+                    <button id="closeCommentsBtn" class="modal-close">×</button>
+                </div>
+                <div class="modal-body">
+                    <div id="commentsList" style="min-height: 100px;">
+                        <p style="text-align: center; color: #999;">댓글을 불러오는 중...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+        // 닫기 버튼
+        document.getElementById('closeCommentsBtn').addEventListener('click', () => {
+            popup.remove();
+        });
+
+        // 배경 클릭 시 닫기
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                popup.remove();
+            }
+        });
+
+        // 댓글 로드
+        await loadComments(categoryId);
+    }
+
+    // 댓글 로드 API 호출
+    async function loadComments(categoryId) {
+        try {
+            // GET /api/category/comment/{categoryId} (path parameter)
+            const response = await authFetch(`${API_BASE}/category/comment/${categoryId}`);
+
+            if (response.ok) {
+                const comments = await response.json();
+                const commentsList = document.getElementById('commentsList');
+
+                if (comments.length === 0) {
+                    commentsList.innerHTML = `<p style="text-align: center; color: #a0aec0; padding: 20px;">${t('댓글이 없습니다.', 'No comments yet.')}</p>`;
+                } else {
+                    commentsList.innerHTML = comments.map(comment => `
+                        <div style="padding: 16px; margin-bottom: 12px; border: 2px solid #e2e8f0; border-radius: 8px; transition: all 0.2s ease;"
+                             onmouseover="this.style.borderColor='#cbd5e0'; this.style.background='#f7fafc';"
+                             onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white';">
+                            <div style="font-weight: 600; font-size: 13px; color: #2d3748; margin-bottom: 6px;">
+                                ${comment.authorEmail || t('익명', 'Anonymous')}
+                                ${comment.mine ? `<span style="color: #4299e1; font-size: 11px; margin-left: 8px; font-weight: 500;">${t('내 댓글', 'My Comment')}</span>` : ''}
+                            </div>
+                            <div style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 8px;">${comment.comment}</div>
+                            <div style="font-size: 11px; color: #a0aec0;">${new Date(comment.createdAt).toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US')}</div>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                console.error('[INSERT] Failed to load comments:', response.status);
+                document.getElementById('commentsList').innerHTML = `<p style="text-align: center; color: #666; padding: 20px;">${t('댓글을 불러오는데 실패했습니다.', 'Failed to load comments.')}</p>`;
+            }
+        } catch (error) {
+            console.error('[INSERT] Error loading comments:', error);
+            document.getElementById('commentsList').innerHTML = `<p style="text-align: center; color: #666; padding: 20px;">${t('댓글을 불러오는 중 오류가 발생했습니다.', 'An error occurred while loading comments.')}</p>`;
+        }
+    }
+
+    // 좋아요한 사람 목록 팝업
+    async function showLikesPopup(categoryId) {
+        console.log('[INSERT] Show likes for category:', categoryId);
+
+        // 기존 팝업 제거
+        const existingPopup = document.getElementById('likesPopup');
+        if (existingPopup) {
+            existingPopup.remove();
+        }
+
+        // 팝업 생성
+        const popup = document.createElement('div');
+        popup.id = 'likesPopup';
+        popup.className = 'modal active';
+        popup.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">${t('좋아요한 사람', 'Liked By')}</div>
+                    <button id="closeLikesBtn" class="modal-close">×</button>
+                </div>
+                <div class="modal-body">
+                    <div id="likesList" style="min-height: 100px;">
+                        <p style="text-align: center; color: #999;">좋아요 목록을 불러오는 중...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+        // 닫기 버튼
+        document.getElementById('closeLikesBtn').addEventListener('click', () => {
+            popup.remove();
+        });
+
+        // 배경 클릭 시 닫기
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                popup.remove();
+            }
+        });
+
+        // 좋아요 목록 로드
+        await loadLikes(categoryId);
+    }
+
+    // 좋아요 목록 로드 API 호출
+    async function loadLikes(categoryId) {
+        try {
+            // GET /api/categories/likes/{categoryId} (path parameter)
+            const response = await authFetch(`${API_BASE}/categories/likes/${categoryId}`);
+
+            if (response.ok) {
+                const likes = await response.json();
+                const likesList = document.getElementById('likesList');
+
+                // LikePersonResponse[]: [{ email: string }, ...]
+                if (likes.length === 0) {
+                    likesList.innerHTML = `<p style="text-align: center; color: #a0aec0; padding: 20px;">${t('아직 좋아요가 없습니다.', 'No likes yet.')}</p>`;
+                } else {
+                    likesList.innerHTML = likes.map(like => `
+                        <div style="padding: 16px; margin-bottom: 12px; border: 2px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; transition: all 0.2s ease;"
+                             onmouseover="this.style.borderColor='#cbd5e0'; this.style.background='#f7fafc';"
+                             onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white';">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; margin-right: 16px; font-size: 18px; color: white; font-weight: 600;">
+                                ${(like.email || 'A')[0].toUpperCase()}
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; font-size: 14px; color: #2d3748;">${like.email || t('익명', 'Anonymous')}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                console.error('[INSERT] Failed to load likes:', response.status);
+                document.getElementById('likesList').innerHTML = `<p style="text-align: center; color: #666; padding: 20px;">${t('좋아요 목록을 불러오는데 실패했습니다.', 'Failed to load likes.')}</p>`;
+            }
+        } catch (error) {
+            console.error('[INSERT] Error loading likes:', error);
+            document.getElementById('likesList').innerHTML = `<p style="text-align: center; color: #666; padding: 20px;">${t('좋아요 목록을 불러오는 중 오류가 발생했습니다.', 'An error occurred while loading likes.')}</p>`;
+        }
+    }
+
+    // 타입 텍스트 변환
+    // ==================== SSE 관련 ====================
+
+    // SSE 연결 종료
+    function disconnectSSE() {
+        console.log('[INSERT SSE] Disconnecting...');
+        isPageUnloading = true;
+
+        if (reconnectTimer) {
+            clearTimeout(reconnectTimer);
+            reconnectTimer = null;
+        }
+
+        if (eventSource) {
+            try {
+                eventSource.close();
+            } catch (e) {
+                console.log('[INSERT SSE] Already closed');
+            }
+            eventSource = null;
+        }
+    }
+
+    // SSE 연결
+    async function connectSSE() {
+        console.log('[INSERT SSE] Starting connection...');
+
+        // 기존 연결 종료
+        disconnectSSE();
+        isPageUnloading = false;
+
+        // AccessToken 갱신 시도
+        try {
+            console.log('[INSERT SSE] Refreshing access token before SSE connection...');
+            await refreshAccessToken();
+            console.log('[INSERT SSE] Access token refreshed successfully');
+        } catch (error) {
+            console.error('[INSERT SSE] Failed to refresh access token:', error);
+            console.warn('[INSERT SSE] Skipping SSE connection due to token refresh failure');
+            return;
+        }
+
+        const token = getAccessToken();
+        if (!token) {
+            console.warn('[INSERT SSE] No AccessToken after refresh - skipping SSE connection');
+            return;
+        }
+
+        // EventSourcePolyfill 확인
+        if (!window.EventSourcePolyfill) {
+            console.error('[INSERT SSE] EventSourcePolyfill not loaded!');
+            console.error('[INSERT SSE] Cannot send Authorization header with standard EventSource');
+            console.warn('[INSERT SSE] SSE connection disabled - install EventSourcePolyfill');
+            return;
+        }
+
+        console.log('[INSERT SSE] Connecting with lastEventId:', lastEventId || 'none');
+
+        try {
+            const sseUrl = `${API_BASE}/sse/subscribe`;
+            const sseHeaders = {
+                'Authorization': `Bearer ${token}`
+            };
+
+            eventSource = new window.EventSourcePolyfill(sseUrl, {
+                headers: sseHeaders,
+                withCredentials: true,
+                heartbeatTimeout: 300000 // 5분
+            });
+
+            console.log('[INSERT SSE] EventSource instance created successfully');
+
+            eventSource.onopen = (event) => {
+                console.log('[INSERT SSE] Connection opened');
+                sseReconnectAttempts = 0; // 재시도 카운터 리셋
+            };
+
+            eventSource.addEventListener('connected', (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    console.log('[INSERT SSE] Connected event received:', data);
+
+                    // lastEventId 저장
+                    if (event.lastEventId) {
+                        lastEventId = event.lastEventId;
+                        localStorage.setItem('lastEventId', lastEventId);
+                        console.log('[INSERT SSE] Saved lastEventId:', lastEventId);
+                    }
+                } catch (e) {
+                    console.error('[INSERT SSE] Error parsing connected event:', e);
+                }
+            });
+
+            eventSource.addEventListener('ping', (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    console.log('[INSERT SSE] Ping received at', new Date().toLocaleTimeString());
+
+                    // lastEventId 저장
+                    if (event.lastEventId) {
+                        lastEventId = event.lastEventId;
+                        localStorage.setItem('lastEventId', lastEventId);
+                    }
+                } catch (e) {
+                    console.error('[INSERT SSE] Error parsing ping event:', e);
+                }
+            });
+
+            eventSource.addEventListener('notification', (event) => {
+                try {
+                    console.log('[INSERT SSE] Notification received:', event.data);
+                    const data = JSON.parse(event.data);
+
+                    // lastEventId 저장
+                    if (event.lastEventId) {
+                        lastEventId = event.lastEventId;
+                        localStorage.setItem('lastEventId', lastEventId);
+                        console.log('[INSERT SSE] Saved lastEventId:', lastEventId);
+                    }
+
+                    handleNotification(data.body);
+                } catch (error) {
+                    console.error('[INSERT SSE] Parse error:', error);
+                }
+            });
+
+            eventSource.onerror = async (error) => {
+                console.error('[INSERT SSE] Connection error:', error);
+                console.error('[INSERT SSE] ReadyState:', eventSource ? eventSource.readyState : 'N/A');
+
+                disconnectSSE();
+
+                // 재연결 시도
+                if (sseReconnectAttempts < MAX_SSE_RECONNECT_ATTEMPTS && !isPageUnloading) {
+                    sseReconnectAttempts++;
+                    const delay = Math.min(1000 * Math.pow(2, sseReconnectAttempts), 30000);
+
+                    console.log(`[INSERT SSE] Reconnecting in ${delay}ms... (attempt ${sseReconnectAttempts}/${MAX_SSE_RECONNECT_ATTEMPTS})`);
+
+                    reconnectTimer = setTimeout(async () => {
+                        if (!isPageUnloading && getAccessToken()) {
+                            const refreshed = await refreshAccessToken();
+                            if (refreshed) {
+                                await connectSSE();
+                            } else {
+                                console.error('[INSERT SSE] Failed to refresh token, stopping reconnection');
+                                sseReconnectAttempts = 0;
+                            }
+                        }
+                    }, delay);
+                } else {
+                    console.error('[INSERT SSE] Max reconnection attempts reached or page is unloading');
+                    sseReconnectAttempts = 0;
+                }
+            };
+
+        } catch (error) {
+            console.error('[INSERT SSE] Failed to create EventSource:', error);
+        }
+    }
+
+
+    // 알림 처리
+    function handleNotification(notification) {
+        // 알림 저장 (맨 앞에 추가)
+        notifications.unshift(notification);
+
+        // NaN 방지 - 현재 값이 숫자가 아니면 0으로 초기화
+        if (isNaN(unreadCount)) {
+
+            unreadCount = 0;
+        }
+
+        unreadCount++;
+
+        // 배지 업데이트
+        updateNotificationBadge();
+
+        // 토스트 표시
+        showToast(notification);
+
+        // 알림 목록 업데이트 (모달이 열려있으면)
+        if (document.getElementById('notificationModal').classList.contains('active')) {
+            renderNotificationList();
+            updateMarkAllReadButton();
+        }
+    }
+
+    // 배지 업데이트
+    function updateNotificationBadge() {
+        const badge = document.getElementById('notificationBadge');
+        const bell = document.getElementById('notificationBell');
+
+        if (!badge) {
+
+            return;
+        }
+
+        // NaN 체크
+        if (isNaN(unreadCount)) {
+
+            unreadCount = 0;
+        }
+
+        if (unreadCount > 0) {
+            const displayCount = unreadCount > 99 ? '99+' : unreadCount;
+            badge.textContent = displayCount;
+            badge.style.display = 'block';
+
+        } else {
+            badge.style.display = 'none';
+
+        }
+    }
+
+    // 토스트 알림 표시
+    function showToast(notification) {
+        const container = document.getElementById('toastContainer');
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${notification.type.toLowerCase()}`;
+
+        // 타입별 제목
+        let title = '';
+        if (notification.type === 'COMMENT') {
+            title = currentLang === 'ko' ? '새 댓글' : 'New Comment';
+        } else if (notification.type === 'REPLY') {
+            title = currentLang === 'ko' ? '새 대댓글' : 'New Reply';
+        } else {
+            title = currentLang === 'ko' ? '새 좋아요' : 'New Like';
+        }
+
+        const categoryTitle = notification.data.categoryTitle || '';
+        const categoryPrefix = categoryTitle ? `[${categoryTitle}] ` : '';
+
+        // 타입별 메시지
+        let message = '';
+        if (notification.type === 'COMMENT') {
+            message = `${categoryPrefix}${notification.data.senderEmail}: ${notification.data.comment}`;
+        } else if (notification.type === 'REPLY') {
+            const myComment = notification.data.myComment || '';
+            const myCommentPreview = myComment.length > 20 ? myComment.substring(0, 20) + '...' : myComment;
+            message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied'}: "${myCommentPreview}" → ${notification.data.comment}`;
+        } else {
+            message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+        }
+
+        const time = new Date(notification.createdAt).toLocaleTimeString(currentLang === 'ko' ? 'ko-KR' : 'en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        toast.innerHTML = `
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+            <div class="toast-time">${time}</div>
+        `;
+
+        toast.onclick = () => {
+            toggleNotificationModal();
+            toast.remove();
+        };
+
+        container.appendChild(toast);
+
+        // 5초 후 자동 제거
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(400px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
+    // 알림 모달 토글
+    function toggleNotificationModal() {
+        console.log('[INSERT] toggleNotificationModal called');
+
+        const modal = document.getElementById('notificationModal');
+        console.log('[INSERT] Modal element:', modal);
+        console.log('[INSERT] Document body children count:', document.body.children.length);
+
+        if (!modal) {
+            console.error('[INSERT] Notification modal not found in DOM!');
+            console.error('[INSERT] Available IDs in body:',
+                Array.from(document.querySelectorAll('[id]')).map(el => el.id).join(', ')
+            );
+
+            // 강제로 DOM 검색
+            const modalByClass = document.querySelector('.notification-modal');
+            console.log('[INSERT] Modal found by class:', modalByClass);
+
+            return;
+        }
+
+        console.log('[INSERT] Modal current classList:', modal.classList);
+        modal.classList.toggle('active');
+        console.log('[INSERT] Modal toggled, new classList:', modal.classList);
+
+        if (modal.classList.contains('active')) {
+            renderNotificationList();
+            updateMarkAllReadButton();
+        }
+    }
+
+    // 모두 읽음 처리
+    async function markAllAsRead() {
+        if (notifications.length === 0) return;
+
+        const btn = document.querySelector('.mark-all-read-btn');
+        btn.disabled = true;
+        btn.textContent = currentLang === 'ko' ? '처리 중...' : 'Processing...';
+
+        try {
+            // 읽지 않은 알림 ID 수집
+            const unreadIds = notifications
+                .filter(n => n.id)
+                .map(n => n.id);
+
+            if (unreadIds.length > 0) {
+                // 알림 읽음 처리
+                await markNotificationsAsRead(unreadIds);
+
+                // 알림 배열 비우기 (중요!)
+                notifications = [];
+
+                // UI 업데이트
+                unreadCount = 0;
+                updateNotificationBadge();
+
+                // 버튼 업데이트
+                updateMarkAllReadButton();
+
+                // 성공 메시지
+
+                // 모달 닫기
+                toggleNotificationModal();
+            }
+        } catch (error) {
+
+            alert(currentLang === 'ko' ? '알림 처리에 실패했습니다' : 'Failed to mark as read');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = currentLang === 'ko' ? '모두 읽음' : 'Mark all as read';
+        }
+    }
+
+    // 모두 읽음 버튼 상태 업데이트
+    function updateMarkAllReadButton() {
+        const btn = document.querySelector('.mark-all-read-btn');
+        if (btn) {
+            const hasUnread = notifications.some(n => n.id);
+            btn.disabled = !hasUnread || notifications.length === 0;
+        }
+    }
+
+    // 알림 목록 렌더링
+    function renderNotificationList() {
+        const listContainer = document.getElementById('notificationList');
+
+        if (!listContainer) {
+            console.warn('Notification list container not found');
+            return;
+        }
+
+        if (notifications.length === 0) {
+            const emptyText = currentLang === 'ko' ? '알림이 없습니다' : 'No notifications';
+            listContainer.innerHTML = `<div class="notification-empty">${emptyText}</div>`;
+            return;
+        }
+
+        let html = '';
+        notifications.forEach((notif, index) => {
+            // 타입별 텍스트
+            let typeText = '';
+            if (notif.type === 'COMMENT') {
+                typeText = currentLang === 'ko' ? '댓글' : 'Comment';
+            } else if (notif.type === 'REPLY') {
+                typeText = currentLang === 'ko' ? '대댓글' : 'Reply';
+            } else {
+                typeText = currentLang === 'ko' ? '좋아요' : 'Like';
+            }
+
+            const categoryTitle = notif.data.categoryTitle || '';
+            const categoryBadge = categoryTitle
+                ? `<span style="background: #e8e8e8; padding: 2px 6px; font-size: 10px; font-weight: 600; color: #666; margin-right: 4px;">${categoryTitle}</span>`
+                : '';
+
+            // 타입별 컨텐츠
+            let content = '';
+            if (notif.type === 'COMMENT') {
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>: ${notif.data.comment}`;
+            } else if (notif.type === 'REPLY') {
+                const myComment = notif.data.myComment || '';
+                const myCommentPreview = myComment.length > 30 ? myComment.substring(0, 30) + '...' : myComment;
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied to'}: "<span style="color: #666; font-style: italic;">${myCommentPreview}</span>" → ${notif.data.comment}`;
+            } else {
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+            }
+
+            const time = getRelativeTime(new Date(notif.createdAt));
+
+            html += `
+                <div class="notification-item ${index < unreadCount ? 'unread' : ''}">
+                    <div class="notification-item-header">
+                        <span class="notification-item-type ${notif.type.toLowerCase()}">${typeText}</span>
+                        <span class="notification-item-time">${time}</span>
+                    </div>
+                    <div class="notification-item-content">${content}</div>
+                </div>
+            `;
+        });
+
+        listContainer.innerHTML = html;
+    }
+
+    // 상대 시간 계산
+    function getRelativeTime(date) {
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000); // 초 단위
+
+        if (diff < 60) return currentLang === 'ko' ? '방금 전' : 'Just now';
+        if (diff < 3600) return `${Math.floor(diff / 60)}${currentLang === 'ko' ? '분 전' : 'm ago'}`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)}${currentLang === 'ko' ? '시간 전' : 'h ago'}`;
+        return `${Math.floor(diff / 86400)}${currentLang === 'ko' ? '일 전' : 'd ago'}`;
+    }
+
+    // 모달 외부 클릭 시 닫기
+    const notificationModal = document.getElementById('notificationModal');
+    if (notificationModal) {
+        notificationModal.addEventListener('click', (e) => {
+            if (e.target.id === 'notificationModal') {
+                toggleNotificationModal();
+            }
+        });
+    }
+
+    // SSE 연결은 showMainSection()에서 처리됨
+    // 페이지 언로드 전 SSE 연결 종료
+    window.addEventListener('beforeunload', () => {
+        disconnectSSE();
+                console.log('[INSERT LOGIN] SSE connected');
+    });
+
+    // 페이지 숨김 시 연결 종료 (모바일/탭 전환 대응)
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            disconnectSSE();
+                console.log('[INSERT LOGIN] SSE connected');
+        } else if (!isPageUnloading && localStorage.getItem('accessToken')) {
+            // 페이지가 다시 보일 때만 재연결
+            const mainSection = document.getElementById('mainSection');
+            if (mainSection && mainSection.style.display !== 'none') {
+                connectSSE();
+                console.log('[INSERT LOGIN] SSE connected');
+            }
+        }
+    });
+
+    // 페이지 숨김 이벤트 (iOS Safari 대응)
+    window.addEventListener('pagehide', () => {
+        disconnectSSE();
+                console.log('[INSERT LOGIN] SSE connected');
+    });
+
+    // 화면 전환 함수들
+    function showLoginSection() {
+        document.getElementById('loginSection').style.display = 'block';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('mainSection').style.display = 'none';
+    }
+
+    function showSignupSection() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'block';
+        document.getElementById('mainSection').style.display = 'none';
+    }
+
+    function showMainSection() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('resetPasswordSection').style.display = 'none';
+        document.getElementById('mainSection').style.display = 'block';
+    }
+
+    function showResetPasswordSection() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('resetPasswordSection').style.display = 'block';
+        document.getElementById('mainSection').style.display = 'none';
+        // Clear form
+        document.getElementById('resetPasswordForm').reset();
+        document.getElementById('resetPasswordError').textContent = '';
+        document.getElementById('resetPasswordSuccess').textContent = '';
+    }
+
+    function showLoginFromReset() {
+        document.getElementById('resetPasswordSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+    }
+
+    // 에러 표시
+    function showError(elementId, message) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.textContent = message;
+        }
+    }
+
+    // 언어 적용
+    function applyLanguage() {
+        console.log('[INSERT] Applying language:', currentLang);
+
+        // 1. 일반 텍스트 요소 처리
         document.querySelectorAll('[data-lang-ko]').forEach(element => {
             const ko = element.getAttribute('data-lang-ko');
             const en = element.getAttribute('data-lang-en');
-            element.textContent = currentLang === 'ko' ? ko : en;
+            if (ko && en) {
+                // select option은 별도 처리하지 않음 (아래에서 처리)
+                if (element.tagName !== 'OPTION') {
+                    element.textContent = currentLang === 'ko' ? ko : en;
+                }
+            }
         });
 
-        // placeholder 속성 업데이트
+        // 2. placeholder 속성 처리
         document.querySelectorAll('[data-placeholder-ko]').forEach(element => {
             const ko = element.getAttribute('data-placeholder-ko');
             const en = element.getAttribute('data-placeholder-en');
-            element.placeholder = currentLang === 'ko' ? ko : en;
+            if (ko && en) {
+                element.placeholder = currentLang === 'ko' ? ko : en;
+            }
         });
 
-        // 카테고리 목록 다시 렌더링 (버튼 텍스트 업데이트)
-        if (categories && categories.length > 0) {
-            updateCategoryList();
+        // 3. select option 텍스트 처리
+        document.querySelectorAll('select').forEach(select => {
+            select.querySelectorAll('option[data-lang-ko]').forEach(option => {
+                const ko = option.getAttribute('data-lang-ko');
+                const en = option.getAttribute('data-lang-en');
+                if (ko && en) {
+                    option.textContent = currentLang === 'ko' ? ko : en;
+                }
+            });
+        });
+
+        console.log('[INSERT] Language applied successfully');
+    }
+
+    // 다국어 텍스트 가져오기 헬퍼 함수
+    function t(ko, en) {
+        return currentLang === 'ko' ? ko : en;
+    }
+
+    // 타입 텍스트 변환 (다국어 지원)
+    function getTypeText(type) {
+        const typeMap = {
+            'CHECK': { ko: '체크', en: 'Check' },
+            'TIME': { ko: '시간', en: 'Time' },
+            'TEXT': { ko: '텍스트', en: 'Text' },
+            'NUMBER': { ko: '숫자', en: 'Number' },
+            'CHECKLIST': { ko: '체크리스트', en: 'Checklist' }
+        };
+        return typeMap[type] ? typeMap[type][currentLang] : type;
+    }
+
+    // 언어 전환
+    function toggleLanguage() {
+        currentLang = currentLang === 'ko' ? 'en' : 'ko';
+        localStorage.setItem('language', currentLang);
+        const toggleBtn = document.getElementById('languageToggle');
+        if (toggleBtn) {
+            toggleBtn.textContent = currentLang === 'ko' ? 'EN' : '한';
+        }
+        applyLanguage();
+
+        // 카테고리 목록 다시 렌더링 (언어 변경 반영)
+        if (categories.length > 0) {
+            renderCategoryList();
         }
     }
 
-    // 페이지 로드
-    window.addEventListener('DOMContentLoaded', async () => {
-        console.log('=== INSERT.HTML 페이지 로드 시작 ===');
-        console.log('API_BASE:', API_BASE);
-        applyLanguage(); // 언어 적용
-        await checkAuth();
+    // 페이지 초기화
+    document.addEventListener('DOMContentLoaded', async () => {
+        console.log('[INSERT] Page loaded - Starting initialization');
+
+        // EventSourcePolyfill 로드 확인
+        console.log('[INSERT] Checking EventSourcePolyfill...');
+        if (window.EventSourcePolyfill) {
+            console.log('[INSERT] ✅ EventSourcePolyfill is available');
+            console.log('[INSERT] EventSourcePolyfill version:', window.EventSourcePolyfill.version || 'unknown');
+        } else {
+            console.error('[INSERT] ❌ EventSourcePolyfill NOT loaded!');
+            console.error('[INSERT] SSE connections will fail');
+            console.error('[INSERT] Check if the script is blocked or failed to load');
+        }
+
+        // 쿠키 확인
+        const cookies = document.cookie.split(';').map(c => c.trim());
+        console.log('[INSERT] Cookies:', cookies);
+        const hasRefreshTokenCookie = cookies.some(c => c.startsWith('REFRESH_TOKEN='));
+        console.log('[INSERT] Has REFRESH_TOKEN cookie:', hasRefreshTokenCookie);
+
+        // CSRF 토큰 초기화
+        console.log('[INSERT] Step 1: Initializing CSRF token');
+        await initCsrfToken();
+        console.log('[INSERT] CSRF token:', csrfToken);
+
+        // AccessToken 갱신
+        console.log('[INSERT] Step 2: Refreshing access token');
+        const refreshed = await refreshAccessToken();
+        console.log('[INSERT] Token refresh result:', refreshed);
+        console.log('[INSERT] Access token:', accessToken ? 'EXISTS' : 'NULL');
+
+        let isLoggedIn = false;
+        if (refreshed && accessToken) {
+            // 로그인 상태
+            isLoggedIn = true;
+            console.log('[INSERT] Login status: LOGGED IN');
+
+            // 메인 섹션 표시
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('signupSection').style.display = 'none';
+            document.getElementById('mainSection').style.display = 'block';
+            console.log('[INSERT] UI: Showing main section');
+
+            // 카테고리 로드
+            console.log('[INSERT] Step 3: Loading categories');
+            await loadCategories();
+
+            // SSE 연결
+            console.log('[INSERT] Step 4: Connecting SSE');
+            await connectSSE();
+
+        } else {
+            // 로그아웃 상태
+            console.log('[INSERT] Login status: NOT LOGGED IN');
+            isLoggedIn = false;
+            currentUser = null;
+            accessToken = null;
+
+            // 로그인 섹션 표시
+            document.getElementById('mainSection').style.display = 'none';
+            document.getElementById('signupSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+            console.log('[INSERT] UI: Showing login section');
+        }
+
+        // 언어 적용
+        applyLanguage();
+        console.log('[INSERT] Initialization complete');
+
+        // 이벤트 리스너 등록
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const showSignup = document.getElementById('showSignup');
+        const showLogin = document.getElementById('showLogin');
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const profileForm = document.getElementById('profileForm');
+        const categoryForm = document.getElementById('categoryForm');
+        const showResetPassword = document.getElementById('showResetPassword');
+        const resetPasswordForm = document.getElementById('resetPasswordForm');
+
+        if (loginForm) loginForm.addEventListener('submit', login);
+        if (signupForm) signupForm.addEventListener('submit', signup);
+        if (resetPasswordForm) resetPasswordForm.addEventListener('submit', resetPassword);
+        if (editProfileBtn) editProfileBtn.addEventListener('click', openProfileModal);
+        if (profileForm) profileForm.addEventListener('submit', saveProfile);
+        if (categoryForm) categoryForm.addEventListener('submit', addCategory);
+        if (showSignup) {
+            showSignup.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSignupSection();
+            });
+        }
+        if (showLogin) {
+            showLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                showLoginSection();
+            });
+        }
+        if (showResetPassword) {
+            showResetPassword.addEventListener('click', (e) => {
+                e.preventDefault();
+                showResetPasswordSection();
+            });
+        }
     });
 
-    // 인증 확인
-    async function checkAuth() {
-        console.log('1. checkAuth() 함수 시작');
-        try {
-            console.log('2. API 요청:', `${API_BASE}/auth/me`);
-            const response = await fetch(`${API_BASE}/auth/me`, {
-                credentials: 'include'
-            });
+    // ==================== 인증 관련 함수 ====================
 
-            console.log('3. 응답 상태:', response.status, response.ok);
-
-            if (response.ok) {
-                currentUser = await response.json();
-                console.log('4. 사용자 정보:', currentUser);
-
-                // /api/user 호출하여 title, description 가져오기
-                try {
-                    const userResponse = await fetch(`${API_BASE}/user`, {
-                        credentials: 'include'
-                    });
-
-                    if (userResponse.ok) {
-                        const userData = await userResponse.json();
-                        // title, description, birthYear, birthMonth, birthDay 업데이트
-                        currentUser.title = userData.title;
-                        currentUser.description = userData.description;
-                        currentUser.birthYear = userData.birthYear;
-                        currentUser.birthMonth = userData.birthMonth;
-                        currentUser.birthDay = userData.birthDay;
-                        console.log('5. 사용자 상세 정보 로드 완료');
-                    }
-                } catch (error) {
-                    console.error('User 정보 로드 실패:', error);
-                }
-
-                console.log('6. showMainSection() 호출');
-                showMainSection();
-                console.log('7. loadCategories() 호출');
-                await loadCategories();
-                console.log('8. 모든 초기화 완료');
-            } else {
-                console.log('인증 실패 - 로그인 필요');
-                showLoginSection();
-            }
-        } catch (error) {
-            console.error('인증 확인 실패:', error);
-            showLoginSection();
-        }
-    }
-
-    // 로그인
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    async function login(e) {
         e.preventDefault();
+        console.log('[INSERT LOGIN] Login attempt started');
 
         const email = document.getElementById('email').value;
+        console.log('[INSERT LOGIN] Email:', email);
         const password = document.getElementById('password').value;
 
         try {
-            const response = await fetch(`${API_BASE}/auth/login`, {
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            // 폼 데이터 방식으로 전송
+            const formData = new URLSearchParams();
+            formData.append('username', email);
+            formData.append('password', password);
+
+            const headers = {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            };
+
+            // CSRF 토큰 추가
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+            }
+
+            const response = await fetch(`${API_BASE}/auth/sign-in`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: headers,
                 credentials: 'include',
-                body: JSON.stringify({ email, password })
+                body: formData.toString()
             });
 
             if (response.ok) {
-                await checkAuth();
+                console.log('[INSERT LOGIN] Response OK');
+                const data = await response.json();
+                console.log('[INSERT LOGIN] Response data:', data);
+
+                if (data.accessToken) {
+                    console.log('[INSERT LOGIN] Got access token');
+                    accessToken = data.accessToken;
+                    setAccessToken(data.accessToken);
+                    console.log('[INSERT LOGIN] Access token saved to localStorage');
+                }
+
+                // CSRF 토큰 갱신
+                await initCsrfToken();
+                console.log('[INSERT LOGIN] CSRF token refreshed');
+
+                // 쿠키 상태 확인
+                const cookies = document.cookie.split(';').map(c => c.trim());
+                const hasRefreshToken = cookies.some(c => c.startsWith('REFRESH_TOKEN='));
+                console.log('[INSERT LOGIN] Has REFRESH_TOKEN cookie after login:', hasRefreshToken);
+
+                // 메인 섹션 표시
+                showMainSection();
+                console.log('[INSERT LOGIN] UI updated - showing main section');
+
+                // 카테고리 로드
+                console.log('[INSERT LOGIN] Loading categories...');
+                await loadCategories();
+                console.log('[INSERT LOGIN] Categories loaded');
+
+                // SSE 연결
+                console.log('[INSERT LOGIN] Connecting SSE...');
+                await connectSSE();
+                console.log('[INSERT LOGIN] Login process complete');
+
+            } else if (response.status === 403) {
+                await initCsrfToken();
+                showError('loginError', '다시 시도해주세요.');
             } else {
+                console.error('[INSERT LOGIN] Failed:', response.status);
                 showError('loginError', '로그인에 실패했습니다.');
             }
         } catch (error) {
-            console.error('로그인 오류:', error);
+            console.error('[INSERT LOGIN] Error:', error);
             showError('loginError', '로그인 중 오류가 발생했습니다.');
         }
-    });
+    }
 
-    // 회원가입
-    document.getElementById('showSignup').addEventListener('click', (e) => {
+    // signup 함수 추가
+    async function signup(e) {
         e.preventDefault();
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('signupSection').style.display = 'block';
-    });
-
-    document.getElementById('showLogin').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('signupSection').style.display = 'none';
-        document.getElementById('loginSection').style.display = 'block';
-    });
-
-    document.getElementById('cancelSignup').addEventListener('click', () => {
-        document.getElementById('signupSection').style.display = 'none';
-        document.getElementById('loginSection').style.display = 'block';
-    });
-
-    document.getElementById('signupForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
+        console.log('[INSERT] Signup attempt');
 
         const signupData = {
             username: document.getElementById('signupUsername').value,
             email: document.getElementById('signupEmail').value,
             password: document.getElementById('signupPassword').value,
+            nickname: document.getElementById('signupUsername').value,
             title: document.getElementById('signupTitle').value || '',
-            description: document.getElementById('signupDescription').value || ''
+            description: document.getElementById('signupDescription').value || '',
+            birthYear: parseInt(document.getElementById('signupBirthYear').value),
+            birthMonth: parseInt(document.getElementById('signupBirthMonth').value),
+            birthDay: parseInt(document.getElementById('signupBirthDay').value)
         };
 
         try {
-            const response = await fetch(`${API_BASE}/auth/signup`, {
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            const headers = { 'Content-Type': 'application/json' };
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+            }
+
+            const response = await fetch(`${API_BASE}/user`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: headers,
+                credentials: 'include',
                 body: JSON.stringify(signupData)
             });
 
             if (response.ok) {
-                showSuccess('signupError', '회원가입이 완료되었습니다.');
-                setTimeout(() => {
-                    document.getElementById('signupSection').style.display = 'none';
-                    document.getElementById('loginSection').style.display = 'block';
-                }, 1500);
+                showLoginSection();
+                showError('loginError', '회원가입이 완료되었습니다. 로그인해주세요.');
+            } else if (response.status === 403) {
+                await initCsrfToken();
+                showError('signupError', '다시 시도해주세요.');
             } else {
                 showError('signupError', '회원가입에 실패했습니다.');
             }
         } catch (error) {
-            console.error('회원가입 오류:', error);
+            console.error('[INSERT] Signup error:', error);
             showError('signupError', '회원가입 중 오류가 발생했습니다.');
         }
-    });
+    }
 
-    // 로그아웃
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
+    // 비밀번호 재설정
+    async function resetPassword(e) {
+        e.preventDefault();
+        console.log('[INSERT] Reset password attempt');
+
+        const username = document.getElementById('resetUsername').value;
+        const email = document.getElementById('resetEmail').value;
+        const newPassword = document.getElementById('resetNewPassword').value;
+
+        // Clear previous messages
+        document.getElementById('resetPasswordError').textContent = '';
+        document.getElementById('resetPasswordSuccess').textContent = '';
+
         try {
-            await fetch(`${API_BASE}/auth/logout`, {
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+                console.log('[INSERT] Got CSRF token from cookie:', csrfToken ? 'EXISTS' : 'NULL');
+            }
+
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // CSRF 토큰 추가
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+                console.log('[INSERT] CSRF token added to headers');
+            } else {
+                console.warn('[INSERT] No CSRF token available');
+            }
+
+            const response = await fetch(`${API_BASE}/auth/reset-password`, {
                 method: 'POST',
-                credentials: 'include'
-            });
-            currentUser = null;
-            showLoginSection();
-        } catch (error) {
-            console.error('로그아웃 오류:', error);
-        }
-    });
-
-    // 카테고리 로드
-    async function loadCategories() {
-        try {
-            const response = await fetch(`${API_BASE}/category/all`, {
-                credentials: 'include'
+                headers: headers,
+                credentials: 'include',
+                body: JSON.stringify({
+                    username: username,
+                    email: email,
+                    newPassword: newPassword
+                })
             });
 
             if (response.ok) {
-                categories = await response.json();
-                updateCategoryList();
-            }
-        } catch (error) {
-            console.error('카테고리 로드 오류:', error);
-        }
-    }
+                console.log('[INSERT] Password reset successful');
+                document.getElementById('resetPasswordSuccess').textContent =
+                    'Password has been reset. Please login.';
 
-    // 카테고리 목록 업데이트
-    function updateCategoryList() {
-        const listContainer = document.getElementById('categoryList');
-
-        if (!categories || categories.length === 0) {
-            listContainer.innerHTML = `<p style="color: #000; font-size: 14px;">${translations.noCategories[currentLang]}</p>`;
-            return;
-        }
-
-        const typeLabel = currentLang === 'ko' ? '타입' : 'Type';
-        const editText = translations.edit[currentLang];
-        const deleteText = translations.delete[currentLang];
-        const viewLikesText = translations.viewLikes[currentLang];
-
-        let html = '';
-        categories.forEach(category => {
-            const visibilityBadge = category.visibility === 'PUBLIC'
-                ? '<span style="display: inline-block; padding: 2px 8px; background: #000; color: #fff; font-size: 11px; font-weight: 600; margin-left: 8px;">PUBLIC</span>'
-                : '<span style="display: inline-block; padding: 2px 8px; background: #e5e5e5; color: #000; font-size: 11px; font-weight: 600; margin-left: 8px;">PRIVATE</span>';
-
-            const likeInfo = category.visibility === 'PUBLIC'
-                ? `<span class="like-info" data-category-id="${category.id}">❤️ 0</span>`
-                : '';
-
-            // PUBLIC 카테고리는 3개 버튼 (수정, 삭제, 좋아요 목록)
-            // PRIVATE 카테고리는 2개 버튼 (수정, 삭제) + 비활성화된 좋아요 목록
-            const actionsHtml = category.visibility === 'PUBLIC'
-                ? `
-                    <button class="btn-edit" onclick="openEditCategoryModal('${category.id}')">${editText}</button>
-                    <button class="btn-delete" onclick="deleteCategory('${category.id}', '${category.title}')">${deleteText}</button>
-                    <button class="btn-view-likes" onclick="openLikeListModal('${category.id}', '${category.title}')">${viewLikesText}</button>
-                  `
-                : `
-                    <button class="btn-edit" onclick="openEditCategoryModal('${category.id}')">${editText}</button>
-                    <button class="btn-delete" onclick="deleteCategory('${category.id}', '${category.title}')">${deleteText}</button>
-                    <button class="btn-view-likes" disabled>${viewLikesText}</button>
-                  `;
-
-            html += `
-                <div class="category-item">
-                    <div class="category-info">
-                        <div class="category-title">${category.title}${visibilityBadge}${likeInfo}</div>
-                        <div class="category-meta">
-                            ${typeLabel}: ${category.recordType}
-                            ${category.description ? ` | ${category.description}` : ''}
-                        </div>
-                    </div>
-                    <div class="category-actions">
-                        ${actionsHtml}
-                    </div>
-                </div>
-            `;
-        });
-        listContainer.innerHTML = html;
-
-        // PUBLIC 카테고리의 좋아요 개수 로드
-        categories.forEach(category => {
-            if (category.visibility === 'PUBLIC') {
-                loadLikeCountForInsert(category.id);
-            }
-        });
-    }
-
-    // 좋아요 개수 로드 함수 (insert.html용)
-    async function loadLikeCountForInsert(categoryId) {
-        try {
-            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const likeElement = document.querySelector(`.like-info[data-category-id="${categoryId}"]`);
-                if (likeElement) {
-                    likeElement.textContent = `❤️ ${data.count}`;
-                }
-            }
-        } catch (error) {
-            console.error('좋아요 개수 로드 실패:', error);
-        }
-    }
-
-    // 카테고리 추가
-    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const title = document.getElementById('categoryTitle').value;
-        const description = document.getElementById('categoryDescription').value;
-        const recordType = document.getElementById('recordType').value;
-        const visibility = document.getElementById('visibility').value;
-
-        const params = new URLSearchParams();
-        params.append('title', title);
-        params.append('description', description);
-        params.append('recordType', recordType);
-        params.append('visibility', visibility);
-
-        try {
-            const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                showMessage('categoryMessage', translations.categoryAdded[currentLang], 'success');
-                document.getElementById('categoryForm').reset();
-                await loadCategories();
+                // 2초 후 로그인 화면으로 이동
+                setTimeout(() => {
+                    showLoginFromReset();
+                }, 2000);
             } else {
-                const errorMsg = currentLang === 'ko' ? '카테고리 추가에 실패했습니다.' : 'Failed to add category.';
-                showMessage('categoryMessage', errorMsg, 'error');
+                const errorText = await response.text();
+                console.error('[INSERT] Password reset failed:', response.status, errorText);
+                document.getElementById('resetPasswordError').textContent =
+                    'Password reset failed. Please check your information.';
             }
         } catch (error) {
-            console.error('카테고리 추가 오류:', error);
-            const errorMsg = currentLang === 'ko' ? '오류가 발생했습니다.' : 'An error occurred.';
-            showMessage('categoryMessage', errorMsg, 'error');
-        }
-    });
-
-    // UI 표시 함수
-    function showLoginSection() {
-        console.log('>>> showLoginSection() 호출됨');
-        const loginSection = document.getElementById('loginSection');
-        const signupSection = document.getElementById('signupSection');
-        const mainSection = document.getElementById('mainSection');
-
-        console.log('>>> DOM 요소 존재 확인:', {
-            loginSection: !!loginSection,
-            signupSection: !!signupSection,
-            mainSection: !!mainSection
-        });
-
-        if (loginSection) loginSection.style.display = 'block';
-        if (signupSection) signupSection.style.display = 'none';
-        if (mainSection) mainSection.style.display = 'none';
-        console.log('>>> 로그인 섹션 표시 완료');
-    }
-
-    function showMainSection() {
-        console.log('>>> showMainSection() 호출됨');
-        const loginSection = document.getElementById('loginSection');
-        const signupSection = document.getElementById('signupSection');
-        const mainSection = document.getElementById('mainSection');
-
-        console.log('>>> DOM 요소 존재 확인:', {
-            loginSection: !!loginSection,
-            signupSection: !!signupSection,
-            mainSection: !!mainSection
-        });
-
-        if (loginSection) loginSection.style.display = 'none';
-        if (signupSection) signupSection.style.display = 'none';
-        if (mainSection) mainSection.style.display = 'block';
-        console.log('>>> 메인 섹션 표시 완료');
-    }
-
-    // 프로필 수정 모달 열기
-    document.getElementById('editProfileBtn').addEventListener('click', () => {
-        if (currentUser) {
-            document.getElementById('profileTitle').value = currentUser.title || '';
-            document.getElementById('profileDescription').value = currentUser.description || '';
-            const modal = document.getElementById('profileModal');
-            modal.style.display = 'flex';
-        }
-    });
-
-    // 프로필 수정 모달 닫기
-    function closeProfileModal() {
-        document.getElementById('profileModal').style.display = 'none';
-        document.getElementById('profileModalError').innerHTML = '';
-    }
-
-    // 프로필 수정 폼 제출
-    document.getElementById('profileForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        if (!currentUser) return;
-
-        const title = document.getElementById('profileTitle').value;
-        const description = document.getElementById('profileDescription').value;
-
-        const params = new URLSearchParams();
-        params.append('title', title);
-        params.append('description', description);
-
-        try {
-            const response = await fetch(`${API_BASE}/user?${params.toString()}`, {
-                method: 'PUT',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                currentUser.title = title;
-                currentUser.description = description;
-                closeProfileModal();
-                showMessage('categoryMessage', translations.profileUpdated[currentLang], 'success');
-            } else {
-                const errorMsg = currentLang === 'ko' ? '프로필 수정에 실패했습니다.' : 'Failed to update profile.';
-                showProfileModalError(errorMsg);
-            }
-        } catch (error) {
-            console.error('프로필 수정 오류:', error);
-            const errorMsg = currentLang === 'ko' ? '프로필 수정 중 오류가 발생했습니다.' : 'Error occurred while updating profile.';
-            showProfileModalError(errorMsg);
-        }
-    });
-
-    function showProfileModalError(message) {
-        const element = document.getElementById('profileModalError');
-        element.innerHTML = `<div class="error-message">${message}</div>`;
-        setTimeout(() => {
-            element.innerHTML = '';
-        }, 5000);
-    }
-
-    function showError(elementId, message) {
-        const element = document.getElementById(elementId);
-        element.innerHTML = `<div class="error-message">${message}</div>`;
-        setTimeout(() => {
-            element.innerHTML = '';
-        }, 5000);
-    }
-
-    function showSuccess(elementId, message) {
-        const element = document.getElementById(elementId);
-        element.innerHTML = `<div class="success-message">${message}</div>`;
-    }
-
-    function showMessage(elementId, message, type) {
-        const element = document.getElementById(elementId);
-        const className = type === 'success' ? 'success-message' : 'error-message';
-        element.innerHTML = `<div class="${className}">${message}</div>`;
-
-        setTimeout(() => {
-            element.innerHTML = '';
-        }, 5000);
-    }
-
-    // 카테고리 수정 관련 변수
-    let editingCategoryId = null;
-
-    // 카테고리 수정 모달 열기
-    function openEditCategoryModal(categoryId) {
-        const category = categories.find(c => c.id === categoryId);
-        if (!category) return;
-
-        editingCategoryId = categoryId;
-        document.getElementById('editCategoryTitle').value = category.title || '';
-        document.getElementById('editCategoryDescription').value = category.description || '';
-        document.getElementById('editCategoryType').value = category.recordType || '';
-        document.getElementById('editCategoryVisibility').value = category.visibility || 'PRIVATE';
-        document.getElementById('editCategoryModal').classList.add('active');
-    }
-
-    // 카테고리 수정 모달 닫기
-    function closeEditCategoryModal() {
-        document.getElementById('editCategoryModal').classList.remove('active');
-        document.getElementById('editCategoryModalError').innerHTML = '';
-        editingCategoryId = null;
-    }
-
-    // 좋아요 목록 모달 열기
-    async function openLikeListModal(categoryId, categoryTitle) {
-        document.getElementById('likeListCategoryTitle').textContent = categoryTitle;
-        document.getElementById('likeListModal').classList.add('active');
-
-        const contentDiv = document.getElementById('likeListContent');
-        const countDiv = document.getElementById('likeListCount');
-
-        // 로딩 표시
-        const loadingText = currentLang === 'ko' ? '로딩 중...' : 'Loading...';
-        contentDiv.innerHTML = `<p style="color: #000; text-align: center; padding: 40px 0;">${loadingText}</p>`;
-        countDiv.textContent = '';
-
-        try {
-            const response = await fetch(`${API_BASE}/category/${categoryId}/email`, {
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                const emails = await response.json();
-
-                if (emails.length === 0) {
-                    const noLikesText = translations.noLikes[currentLang];
-                    contentDiv.innerHTML = `<p style="color: #000; text-align: center; padding: 40px 0;">${noLikesText}</p>`;
-                    countDiv.textContent = currentLang === 'ko' ? '0명이 좋아요를 눌렀습니다' : '0 likes';
-                } else {
-                    const countText = currentLang === 'ko'
-                        ? `${emails.length}명이 좋아요를 눌렀습니다`
-                        : `${emails.length} ${emails.length === 1 ? 'like' : 'likes'}`;
-                    countDiv.textContent = countText;
-
-                    let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
-                    emails.forEach((item, index) => {
-                        html += `
-                            <div style="padding: 12px 16px; background: #fff; border: 1px solid #ddd; display: flex; align-items: center; gap: 12px;">
-                                <span style="display: flex; justify-content: center; align-items: center; width: 28px; height: 28px; background: #f5f5f5; color: #666; border: 1px solid #ddd; font-size: 13px; font-weight: 600; flex-shrink: 0;">
-                                    ${index + 1}
-                                </span>
-                                <span style="font-size: 14px; color: #333;">${item.email}</span>
-                            </div>
-                        `;
-                    });
-                    html += '</div>';
-                    contentDiv.innerHTML = html;
-                }
-            } else {
-                const errorText = currentLang === 'ko' ? '목록을 불러오는데 실패했습니다.' : 'Failed to load list.';
-                contentDiv.innerHTML = `<p style="color: #ff0000; text-align: center; padding: 40px 0;">${errorText}</p>`;
-            }
-        } catch (error) {
-            console.error('좋아요 이메일 목록 로드 오류:', error);
-            const errorText = currentLang === 'ko' ? '오류가 발생했습니다.' : 'An error occurred.';
-            contentDiv.innerHTML = `<p style="color: #ff0000; text-align: center; padding: 40px 0;">${errorText}</p>`;
+            console.error('[INSERT] Password reset error:', error);
+            document.getElementById('resetPasswordError').textContent =
+                'An error occurred during password reset.';
         }
     }
 
-    // 좋아요 목록 모달 닫기
-    function closeLikeListModal() {
-        document.getElementById('likeListModal').classList.remove('active');
-    }
-
-    // 카테고리 수정 폼 제출
-    document.getElementById('editCategoryForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        if (!editingCategoryId) return;
-
-        const title = document.getElementById('editCategoryTitle').value;
-        const description = document.getElementById('editCategoryDescription').value;
-        const visibility = document.getElementById('editCategoryVisibility').value;
-
-        const params = new URLSearchParams();
-        params.append('id', editingCategoryId);
-        params.append('title', title);
-        params.append('description', description);
-        params.append('visibility', visibility);
-
-        try {
-            const response = await fetch(`${API_BASE}/category?${params.toString()}`, {
-                method: 'PUT',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                showMessage('categoryMessage', translations.categoryUpdated[currentLang], 'success');
-                closeEditCategoryModal();
-                await loadCategories();
-            } else {
-                const errorMsg = currentLang === 'ko' ? '카테고리 수정에 실패했습니다.' : 'Failed to update category.';
-                showEditCategoryModalError(errorMsg);
-            }
-        } catch (error) {
-            console.error('카테고리 수정 오류:', error);
-            const errorMsg = currentLang === 'ko' ? '카테고리 수정 중 오류가 발생했습니다.' : 'Error occurred while updating category.';
-            showEditCategoryModalError(errorMsg);
-        }
-    });
-
-    // 카테고리 삭제
-    async function deleteCategory(categoryId, categoryTitle) {
-        const confirmMsg = currentLang === 'ko'
-            ? `정말 "${categoryTitle}" 카테고리를 삭제하시겠습니까?\n\n이 카테고리의 모든 레코드도 함께 삭제됩니다.`
-            : `Are you sure you want to delete "${categoryTitle}"?\n\nAll records in this category will also be deleted.`;
-
-        if (!confirm(confirmMsg)) {
-            return;
-        }
-
-        try {
-            const response = await fetch(`${API_BASE}/category?id=${categoryId}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                showMessage('categoryMessage', translations.categoryDeleted[currentLang], 'success');
-                await loadCategories();
-            } else {
-                const errorMsg = currentLang === 'ko' ? '카테고리 삭제에 실패했습니다.' : 'Failed to delete category.';
-                showMessage('categoryMessage', errorMsg, 'error');
-            }
-        } catch (error) {
-            console.error('카테고리 삭제 오류:', error);
-            const errorMsg = currentLang === 'ko' ? '카테고리 삭제 중 오류가 발생했습니다.' : 'Error occurred while deleting category.';
-            showMessage('categoryMessage', errorMsg, 'error');
-        }
-    }
-
-    // 카테고리 수정 모달 에러 메시지
-    function showEditCategoryModalError(message) {
-        const element = document.getElementById('editCategoryModalError');
-        element.innerHTML = `<div class="error-message">${message}</div>`;
-        setTimeout(() => {
-            element.innerHTML = '';
-        }, 5000);
-    }
-
-    // ==================== 좋아요 기능 ====================
-
-    // 좋아요 개수 로드 (insert.html용)
-    async function loadLikeCountForInsert(categoryId) {
-        try {
-            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                const count = await response.json();
-                const likeElement = document.querySelector(`.like-info[data-category-id="${categoryId}"]`);
-                if (likeElement) {
-                    likeElement.textContent = `❤️ ${count}`;
-                }
-            }
-        } catch (error) {
-            console.error('좋아요 개수 로드 오류:', error);
-        }
-    }
 </script>
+
 </body>
 </html>

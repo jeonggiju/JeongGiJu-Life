@@ -1,7 +1,6 @@
 package com.life.jeonggiju.domain.notification.Controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +13,7 @@ import com.life.jeonggiju.domain.notification.dto.MarkNotificationDto;
 import com.life.jeonggiju.domain.notification.dto.UnReadNotificationCountResponse;
 import com.life.jeonggiju.domain.notification.dto.UnReadNotificationResponse;
 import com.life.jeonggiju.domain.notification.service.NotificationService;
-import com.life.jeonggiju.security.principal.LifeUserDetails;
+import com.life.jeonggiju.security.core.principal.LifeUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
