@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.life.jeonggiju.domain.numberRecord.dto.FindNumberAllResponse;
+import com.life.jeonggiju.domain.numberRecord.dto.FindNumberResponse;
 import com.life.jeonggiju.domain.numberRecord.dto.SaveNumber;
 import com.life.jeonggiju.domain.numberRecord.dto.UpdateNumber;
 import com.life.jeonggiju.domain.numberRecord.service.NumberService;
@@ -25,37 +27,38 @@ public class NumberController {
 	private final NumberService numberService;
 
 	@GetMapping
-	public ResponseEntity<?> find(UUID numberId){
+	public ResponseEntity<FindNumberResponse> find(UUID numberId) {
 		return ResponseEntity.ok(numberService.find(numberId));
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<?> findAll(UUID categoryId){
+	public ResponseEntity<FindNumberAllResponse> findAll(UUID categoryId) {
 		return ResponseEntity.ok(numberService.findAll(categoryId));
 	}
 
 	@GetMapping("/date")
-	public ResponseEntity<?> findByDate(UUID categoryId, LocalDate date){
+	public ResponseEntity<FindNumberResponse> findByDate(UUID categoryId, LocalDate date) {
 		return ResponseEntity.ok(numberService.findByDate(categoryId, date));
 	}
+
 	@PostMapping
-	public ResponseEntity<?> save(
+	public ResponseEntity<Void> save(
 		SaveNumber dto
-	){
+	) {
 		numberService.save(dto);
 		return ResponseEntity.ok().build();
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(
+	public ResponseEntity<Void> update(
 		UpdateNumber dto
-	){
+	) {
 		numberService.update(dto);
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> delete(UUID id){
+	public ResponseEntity<Void> delete(UUID id) {
 		numberService.delete(id);
 		return ResponseEntity.ok().build();
 	}

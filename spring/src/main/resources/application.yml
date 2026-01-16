@@ -1,8 +1,12 @@
+app:
+  cookie:
+    secure: ${APP_COOKIE_SECURE}
+
 spring:
   application:
     name: jeonggiju
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+    active: ${SPRING_PROFILES_ACTIVE}
 
 server:
   address: 0.0.0.0
@@ -10,10 +14,26 @@ server:
 
 management:
   server:
-    port: 8081 # metric은 따로 관리
+    port: 8081
     address: 0.0.0.0
   endpoints:
     web:
       exposure:
         include: prometheus
+jwt:
+  max-active: 1
+  access-token:
+    secret: ${JWT_ACCESS_KEY}
+    expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRCATION_MS}
+  refresh-token:
+    secret: ${JWT_REFRESH_KEY}
+    expiration-ms: ${JWT_REFRESH_TOKEN_EXPIRCATION_MS}
+
+init:
+  admin:
+    email: ${INIT_ADMIN_EMAIL}
+    password: ${INIT_ADMIN_PASSWORD}
+  user:
+    email: ${INIT_USER_EMAIL}
+    password: ${INIT_USER_PASSWORD}
 

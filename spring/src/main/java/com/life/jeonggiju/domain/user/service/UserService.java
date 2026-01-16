@@ -6,8 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.life.jeonggiju.domain.user.dto.SignUpRequest;
-import com.life.jeonggiju.domain.user.dto.UpdateUser;
-import com.life.jeonggiju.domain.user.dto.UserInfo;
+import com.life.jeonggiju.domain.user.dto.UpdateUserRequest;
+import com.life.jeonggiju.domain.user.dto.UserFindResponse;
 import com.life.jeonggiju.domain.user.entity.Authority;
 import com.life.jeonggiju.domain.user.entity.User;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
@@ -21,13 +21,14 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	public void signup(SignUpRequest dto){
+	public void signup(SignUpRequest dto) {
 		User user = User.builder()
 			.username(dto.getUsername())
 			.title(dto.getTitle())
 			.description(dto.getDescription())
 			.email(dto.getEmail())
 			.authority(Authority.ROLE_USER)
+			.nickname(dto.getNickname())
 			.birthYear(dto.getBirthYear())
 			.birthMonth(dto.getBirthMonth())
 			.birthDay(dto.getBirthDay())
@@ -36,13 +37,14 @@ public class UserService {
 		userRepository.save(user);
 	}
 
-	public UserInfo find(UUID id){
+	public UserFindResponse find(UUID id) {
 		User user = userRepository.findById(id).orElseThrow();
 
-		return UserInfo.builder()
+		return UserFindResponse.builder()
 			.username(user.getUsername())
 			.email(user.getEmail())
 			.title(user.getTitle())
+			.nickname(user.getNickname())
 			.description(user.getDescription())
 			.birthYear(user.getBirthYear())
 			.birthMonth(user.getBirthMonth())
@@ -50,13 +52,13 @@ public class UserService {
 			.build();
 	}
 
-	public void update(UUID id,UpdateUser dto){
+	public void update(UUID id, UpdateUserRequest dto) {
 		User user = userRepository.findById(id).orElseThrow();
-		user.update(dto.getTitle(), dto.getDescription());
+		user.update(dto.getTitle(), dto.getDescription(), dto.getNickName());
 		userRepository.save(user);
 	}
 
-	public void delete(UUID id){
+	public void delete(UUID id) {
 		userRepository.deleteById(id);
 	}
 }

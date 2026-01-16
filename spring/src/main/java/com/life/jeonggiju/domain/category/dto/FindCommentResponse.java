@@ -24,6 +24,5 @@ public class FindCommentResponse {
 	private boolean mine;
 	private boolean canDelete; // 작성자 OR 카테고리 주인
 	private boolean canUpdate; // 작성자
-
 	private boolean isUpdated;
 }

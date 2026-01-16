@@ -2,8 +2,10 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>JeongGiJu</title>
+    <!-- EventSource Polyfill for custom headers support -->
+    <script src="https://unpkg.com/event-source-polyfill@1.0.31/src/eventsource.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -11,75 +13,97 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #fff;
-            color: #333;
-            padding: 32px 36px;
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+            padding: 20px;
+            line-height: 1.5;
         }
 
         .header {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 24px;
+            background: white;
+            padding: 24px 32px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
         .greeting {
-            font-size: 32px;
-            font-weight: normal;
+            font-size: 28px;
+            font-weight: 600;
             margin-bottom: 8px;
+            color: #1a202c;
         }
 
         .user-desc {
             font-size: 14px;
-            color: #666;
-            margin-bottom: 20px;
+            color: #718096;
+            margin-bottom: 0;
         }
 
         .top-actions {
             position: absolute;
-            top: 40px;
-            right: 60px;
+            top: 32px;
+            right: 32px;
             display: flex;
-            gap: 8px;
+            gap: 12px;
+            align-items: center;
         }
 
         .btn {
-            padding: 6px 12px;
-            border: 1px solid #ccc;
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 13px;
+            min-width: 80px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
             text-decoration: none;
-            color: #333;
+            color: #2d3748;
             display: inline-block;
+            border-radius: 8px;
         }
 
         .btn:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
         }
 
         .btn-primary {
-            background: #e0e0e0;
-            border-color: #999;
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
         }
 
         .btn-primary:hover {
-            background: #d0d0d0;
+            background: #3182ce;
+            border-color: #3182ce;
         }
 
         .language-toggle {
-            padding: 6px 12px;
-            border: 1px solid #ccc;
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 13px;
-            min-width: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 70px;
+            text-align: center;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .language-toggle:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         /* 메인 레이아웃 */
@@ -87,128 +111,137 @@
             display: flex;
             flex-direction: row;
             gap: 0;
-            height: calc(100vh - 140px);
+            min-height: calc(100vh - 140px);
             margin-left: 0;
         }
 
-        /* 사이드바 - LEFT EDGE DRAWER */
-        .sidebar {
+        /* ========== DRAWER SYSTEM ========== */
+
+        /* Drawer Panel - 전체 컨테이너 */
+        .drawer-panel {
             position: fixed;
             left: 0;
-            top: 140px;
-            bottom: 0;
-            width: 0;
-            z-index: 1000;
-            pointer-events: none;
+            width: 342px;  /* 320px(content) + 22px(handle) */
+            transform: translateX(-320px);  /* handle 22px만 보임 */
+            transition: transform 240ms cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            display: flex;
+            flex-direction: row;
         }
 
-        .sidebar-tabs {
-            position: relative;
+        .drawer-panel:hover {
+            transform: translateX(0);
+            z-index: 1002;  /* 열리면 위로 */
+        }
+
+        /* Panel Content - 왼쪽 (카테고리 목록) */
+        .drawer-panel-content {
+            width: 320px;
             height: 100%;
-            width: 0;
-            pointer-events: auto;
+            background: white;
+            border-radius: 0;
+            box-shadow: 4px 0 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-right: 2px solid #e2e8f0;
         }
 
-        .sidebar-tab {
-            position: relative;
-            margin-bottom: 10px;
+        /* PUBLIC drawer - top: 170px */
+        #drawer-public .drawer-panel-content {
+            height: calc(100vh - 170px);
         }
 
-        /* HANDLE - 항상 고정 */
-        .tab-label {
-            position: fixed;
-            left: 0;
-            width: 28px;
+        /* PRIVATE drawer - top: 310px */
+        #drawer-private .drawer-panel-content {
+            height: calc(100vh - 310px);
+        }
+
+        /* Panel Inner - 스크롤 영역 */
+        .drawer-panel-inner {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .drawer-panel-inner::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .drawer-panel-inner::-webkit-scrollbar-track {
+            background: #f8f9fa;
+        }
+
+        .drawer-panel-inner::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        .drawer-panel-inner::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+
+        /* Handle - 오른쪽 (고정 크기) */
+        .drawer-handle {
+            width: 22px;
             height: 120px;
-            background: linear-gradient(135deg, #c8c8c8 0%, #d8d8d8 100%);
-            border-radius: 0 14px 14px 0;
+            background: white;
+            border-radius: 0 12px 12px 0;
             cursor: pointer;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.12);
-            z-index: 1002;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.08);
             display: flex;
             align-items: center;
             justify-content: center;
             writing-mode: vertical-rl;
             font-size: 11px;
             font-weight: 600;
-            color: #666;
-            letter-spacing: 1px;
-            transition: background 0.2s ease;
+            color: #718096;
+            letter-spacing: 1.5px;
+            transition: all 0.2s ease;
+            user-select: none;
+            flex-shrink: 0;
+            border: 2px solid #e2e8f0;
+            border-left: none;
         }
 
-        .tab-label:hover {
-            background: linear-gradient(135deg, #b8b8b8 0%, #c8c8c8 100%);
+        .drawer-handle:hover {
+            background: #f7fafc;
+            color: #2d3748;
         }
 
-        /* DRAWER PANEL - 슬라이드 */
-        .tab-content {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 300px;
-            height: 120px;
-            background: white;
-            border-right: 1px solid #d0d0d0;
-            box-shadow: 3px 0 12px rgba(0,0,0,0.15);
-            transform: translateX(-300px);
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1001;
-            overflow: hidden;
+        .drawer-panel.open .drawer-handle {
+            background: #edf2f7;
         }
 
-        .sidebar-tab:hover .tab-content {
-            transform: translateX(0);
-        }
-
-        /* Panel이 열릴 때 handle 스타일 */
-        .sidebar-tab:hover .tab-label {
-            z-index: 1003;
-        }
-
-        .tab-content-inner {
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding-left: 28px;
-        }
-
-        .tab-content-inner::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        .tab-content-inner::-webkit-scrollbar-track {
-            background: #f8f8f8;
-        }
-
-        .tab-content-inner::-webkit-scrollbar-thumb {
-            background: #d0d0d0;
-            border-radius: 3px;
-        }
-
-        .tab-header {
-            padding: 12px 16px;
-            background: linear-gradient(135deg, #f2f2f2 0%, #f8f8f8 100%);
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 11px;
+        /* Panel Header */
+        .drawer-header {
+            padding: 16px 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 12px;
             font-weight: 600;
-            color: #666;
+            color: #718096;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
 
-        .tab-count {
-            background: #999;
+        .drawer-count {
+            background: #4299e1;
             color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 9px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 600;
         }
 
-        .sidebar::before {
-            content: '';
+        /* 기존 sidebar 제거 */
+        .sidebar {
+            display: none;
+        }
+
+        .sidebar-tabs {
             display: none;
         }
 
@@ -225,24 +258,24 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             margin-left: 0;
         }
 
         .content-toolbar {
             display: flex;
-            gap: 8px;
-            padding: 10px 15px;
-            border-bottom: 1px solid #ddd;
+            gap: 10px;
+            padding: 12px 20px;
+            border-bottom: 2px solid #e2e8f0;
             background: white;
             align-items: center;
             flex-wrap: nowrap;
+            border-radius: 12px 12px 0 0;
         }
 
         .view-toggle {
             display: none;
             flex-direction: row;
-            gap: 4px;
+            gap: 8px;
             flex-shrink: 0;
             flex-wrap: nowrap;
         }
@@ -252,60 +285,70 @@
         }
 
         .add-record-btn {
-            padding: 6px 12px;
-            border: 1px solid #666;
-            background: #666;
-            color: #fff;
+            padding: 10px 18px;
+            border: 2px solid #4299e1;
+            background: #4299e1;
+            color: white;
             cursor: pointer;
-            font-size: 12px;
+            min-width: 100px;
             text-align: center;
+            font-size: 13px;
+            font-weight: 500;
             white-space: nowrap;
             flex-shrink: 0;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .add-record-btn:hover {
-            background: #777;
-            border-color: #777;
+            background: #3182ce;
+            border-color: #3182ce;
         }
 
         .add-record-btn:disabled {
-            background: #ccc;
-            border-color: #ccc;
+            background: #cbd5e0;
+            border-color: #cbd5e0;
             cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .toggle-btn {
-            padding: 6px 12px;
-            border: 1px solid #ccc;
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: 500;
             text-align: center;
             white-space: nowrap;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .toggle-btn:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         .toggle-btn.active {
-            background: #e0e0e0;
-            border-color: #999;
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
         }
 
         .category-description {
             margin: 0;
-            font-size: 13px;
-            color: #333;
+            font-size: 14px;
+            color: #2d3748;
             padding: 0;
         }
 
         .category-header-wrapper {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 15px;
-            border-bottom: 1px solid #ddd;
+            gap: 16px;
+            padding: 12px 20px;
+            border-bottom: 2px solid #e2e8f0;
             background: white;
         }
 
@@ -313,10 +356,25 @@
             flex-shrink: 0;
         }
 
+        .category-like-count {
+            margin-left: auto;
+            padding: 6px 14px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3748;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .records-section {
             flex: 1;
-            overflow-y: auto;
-            padding: 15px;
+            padding: 20px;
+            background: white;
+            border-radius: 0 0 12px 12px;
         }
 
         .records-section {
@@ -333,27 +391,30 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 14px;
+            padding: 10px 16px;
             border: none;
-            border-bottom: 1px solid #e8e8e8;
+            border-bottom: 1px solid #f1f3f5;
             background: white;
             cursor: pointer;
             font-size: 12px;
             text-align: left;
             transition: all 0.2s ease;
+            min-height: 40px;
         }
 
         .category-item:hover {
-            background: #f5f5f5;
+            background: #f8f9fa;
         }
 
         .category-item.active {
-            background: #e8e8e8;
+            background: #edf2f7;
             font-weight: 600;
+            border-left: 4px solid #4299e1;
+            padding-left: 12px;
         }
 
         .category-item.active .category-type-badge {
-            background: #888;
+            background: #4299e1;
             color: white;
         }
 
@@ -362,114 +423,132 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            color: #555;
+            color: #2d3748;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.4;
+            padding-right: 12px;
         }
 
         .category-item:hover .category-title {
-            color: #333;
+            color: #1a202c;
         }
 
         .category-item.active .category-title {
-            color: #333;
+            color: #1a202c;
+            font-weight: 600;
         }
 
         .category-type-badge {
-            padding: 3px 7px;
-            background: #e0e0e0;
-            color: #666;
-            font-size: 9px;
+            padding: 4px 10px;
+            background: #e2e8f0;
+            color: #718096;
+            font-size: 10px;
             font-weight: 600;
-            margin-left: 10px;
             flex-shrink: 0;
-            border-radius: 4px;
+            border-radius: 6px;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .date-group {
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
 
         .date-group-header {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            font-weight: 600;
         }
 
         /* CHECK 테이블 스타일 */
         .check-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .check-table td {
-            padding: 8px;
+            padding: 14px;
             text-align: center;
-            border: 1px solid #ddd;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
         }
 
         .date-cell {
-            font-weight: normal;
-            font-size: 13px;
-            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+            color: #2d3748;
+            background: #f7fafc;
         }
 
         .result-cell {
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .result-success {
-            color: #cc0000;
+            color: #48bb78;
         }
 
         .result-fail {
-            color: #333;
+            color: #a0aec0;
         }
 
         .result-cell:hover {
-            background: #f5f5f5;
+            background: #f7fafc;
+            transform: scale(1.05);
         }
 
         .empty-cell {
             border: none;
+            background: transparent;
         }
 
         /* TIME 테이블 스타일 */
         .time-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .time-table td {
-            padding: 10px;
+            padding: 14px;
             text-align: center;
-            border: 1px solid #ddd;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
         }
 
         .time-cell {
-            font-weight: normal;
+            font-weight: 500;
             cursor: pointer;
+            color: #2d3748;
         }
 
         .time-cell:hover {
-            background: #f5f5f5;
+            background: #f7fafc;
+            transform: scale(1.02);
         }
 
         .time-graph-container {
             margin-bottom: 30px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 0;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
         }
 
         .time-graph-title {
             font-size: 15px;
-            font-weight: bold;
-            margin-bottom: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2d3748;
         }
 
         .time-graph-large {
@@ -486,24 +565,26 @@
         .number-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .number-table td {
-            padding: 8px;
+            padding: 12px;
             text-align: center;
-            border: 1px solid #ddd;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
         }
 
         .number-cell {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 14px;
             cursor: pointer;
-            color: #333;
+            color: #2d3748;
         }
 
         .number-cell:hover {
-            background: #f5f5f5;
+            background: #f7fafc;
+            transform: scale(1.02);
         }
 
         .number-graph-large {
@@ -517,14 +598,15 @@
         }
 
         .graph-controls {
-            background: #f9f9f9;
-            padding: 15px;
+            background: #f7fafc;
+            padding: 20px;
             margin-bottom: 20px;
-            border-radius: 0;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
         }
 
         .control-group {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .control-group:last-child {
@@ -534,14 +616,15 @@
         .control-group label {
             display: block;
             font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2d3748;
         }
 
         .control-group input[type="range"] {
             width: 100%;
             height: 6px;
-            background: #ddd;
+            background: #cbd5e0;
             outline: none;
             border-radius: 3px;
             cursor: pointer;
@@ -550,28 +633,41 @@
         .control-group input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #333;
+            width: 18px;
+            height: 18px;
+            background: #4299e1;
             cursor: pointer;
             border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb:hover {
+            background: #3182ce;
+            transform: scale(1.1);
         }
 
         .control-group input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: #333;
+            width: 18px;
+            height: 18px;
+            background: #4299e1;
             cursor: pointer;
             border-radius: 50%;
             border: none;
+            transition: all 0.2s ease;
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb:hover {
+            background: #3182ce;
+            transform: scale(1.1);
         }
 
         .range-labels {
             display: flex;
             justify-content: space-between;
             font-size: 12px;
-            color: #999;
-            margin-top: 5px;
+            color: #718096;
+            margin-top: 8px;
+            font-weight: 500;
         }
 
         .time-range-sliders {
@@ -583,8 +679,9 @@
         .time-slider label {
             display: block;
             font-size: 12px;
-            color: #666;
-            margin-bottom: 5px;
+            color: #718096;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
 
         /* TEXT 달력 스타일 */
@@ -593,42 +690,53 @@
         }
 
         .calendar-year-title {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a202c;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #4299e1;
         }
 
         .calendar-months {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
         }
 
         .calendar-month {
-            border: 1px solid #ddd;
-            padding: 12px;
-            background: #fafafa;
+            border: 2px solid #e2e8f0;
+            padding: 16px;
+            background: #ffffff;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-month:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-color: #cbd5e0;
         }
 
         .calendar-month-title {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
             text-align: center;
+            color: #2d3748;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
+            gap: 3px;
         }
 
         .calendar-weekday {
             text-align: center;
-            font-size: 10px;
-            font-weight: bold;
-            color: #999;
-            padding: 4px 0;
+            font-size: 11px;
+            font-weight: 600;
+            color: #718096;
+            padding: 6px 0;
         }
 
         .calendar-day {
@@ -636,9 +744,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            background: white;
-            border: 1px solid #f0f0f0;
+            font-size: 12px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .calendar-day:hover {
+            background: #edf2f7;
+            transform: scale(1.05);
         }
 
         .calendar-day.empty {
@@ -834,21 +950,29 @@
 
         /* 라벨 토글 버튼 */
         .label-toggle-btn {
-            padding: 5px 10px;
-            border: 1px solid #ccc;
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 11px;
+            min-width: 80px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
             margin-left: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            color: #2d3748;
         }
 
         .label-toggle-btn:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         .label-toggle-btn.active {
-            background: #e0e0e0;
-            border-color: #999;
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
         }
 
         /* 히트맵 라벨 숨기기 스타일 */
@@ -938,23 +1062,30 @@
             background: #555;
         }
 
-        /* 히트맵 스타일 (100년 뷰) */
+        /* 히트맵 스타일 (100년 뷰) - 정사각형, 균일 간격 */
         .heatmap-container {
             display: flex;
             flex-direction: column;
             gap: 2px;
-            padding: 15px;
+            padding: 20px;
             overflow-x: auto;
             overflow-y: auto;
             max-height: 80vh;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
         }
 
         .heatmap-header {
             display: flex;
             gap: 2px;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .heatmap-months {
@@ -964,9 +1095,9 @@
 
         .heatmap-month-label {
             font-size: 10px;
-            color: #666;
+            color: #718096;
             text-align: center;
-            font-weight: bold;
+            font-weight: 600;
             flex-shrink: 0;
         }
 
@@ -977,13 +1108,13 @@
         }
 
         .heatmap-year-label {
-            width: 60px;
+            width: 65px;
             font-size: 11px;
-            color: #666;
+            color: #2d3748;
             text-align: right;
-            padding-right: 8px;
+            padding-right: 10px;
             flex-shrink: 0;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .heatmap-days {
@@ -992,47 +1123,94 @@
         }
 
         .heatmap-cell {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             cursor: pointer;
-            transition: all 0.1s;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
+            border-radius: 2px;
         }
 
+        /* 셀 개별 호버 효과 - 레이아웃 깨짐 방지 */
         .heatmap-cell:hover {
-            transform: scale(2);
-            z-index: 10;
-            border: 2px solid #000;
-            box-shadow: 0 0 8px rgba(0,0,0,0.4);
+            transform: scale(2.5);
+            z-index: 1000;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
         }
 
         /* CHECK 히트맵 */
         .heatmap-success {
-            background: #22c55e;
+            background: #48bb78;
+        }
+
+        .heatmap-success:hover {
+            background: #38a169;
         }
 
         .heatmap-fail {
-            background: #ef4444;
+            background: #f56565;
+        }
+
+        .heatmap-fail:hover {
+            background: #e53e3e;
         }
 
         .heatmap-partial {
-            background: #f59e0b;
+            background: #ed8936;
+        }
+
+        .heatmap-partial:hover {
+            background: #dd6b20;
         }
 
         /* TIME/TEXT 히트맵 */
         .heatmap-data {
-            background: #00d26a;
+            background: #4299e1;
+        }
+
+        .heatmap-data:hover {
+            background: #3182ce;
         }
 
         /* 과거 + 데이터 없음 */
         .heatmap-past-empty {
-            background: #333;
+            background: #cbd5e0;
+        }
+
+        .heatmap-past-empty:hover {
+            background: #a0aec0;
         }
 
         /* 미래 + 데이터 없음 */
         .heatmap-future-empty {
-            background: #fff;
-            border: 1px solid #ddd;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .heatmap-future-empty:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        /* 스크롤바 스타일 */
+        .heatmap-container::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .heatmap-container::-webkit-scrollbar-track {
+            background: #f7fafc;
+            border-radius: 5px;
+        }
+
+        .heatmap-container::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 5px;
+        }
+
+        .heatmap-container::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
         }
 
         /* TEXT 그룹 스타일 (이전 버전 - 제거) */
@@ -1041,60 +1219,75 @@
         }
 
         .year-header {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a202c;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #4299e1;
         }
 
         .month-group {
-            margin-bottom: 25px;
-            padding-left: 15px;
+            margin-bottom: 30px;
+            padding-left: 0;
         }
 
         .month-header {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 12px;
-            color: #666;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2d3748;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .text-record-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 16px;
+            border-bottom: 2px solid #e2e8f0;
             cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
         }
 
         .text-record-item:hover {
-            background: #fafafa;
-            padding-left: 8px;
+            background: #f7fafc;
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .text-record-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            align-items: center;
         }
 
         .text-record-title {
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a202c;
         }
 
         .text-record-date {
-            font-size: 12px;
-            color: #999;
+            font-size: 13px;
+            color: #718096;
+            font-weight: 500;
         }
 
         .text-record-content {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.4;
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.6;
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: #999;
+            padding: 60px 20px;
+            color: #a0aec0;
+            font-size: 15px;
+            font-weight: 500;
         }
 
         /* 로그인 섹션 스타일 */
@@ -1116,40 +1309,43 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d3748;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            font-size: 13px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: border-color 0.2s ease;
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #999;
+            border-color: #4299e1;
         }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 60px;
+            min-height: 80px;
         }
 
         .birth-date-inputs {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
         .birth-date-inputs input {
@@ -1159,44 +1355,57 @@
 
         .submit-btn {
             width: 100%;
-            padding: 10px;
-            background: #e0e0e0;
-            color: #333;
-            border: 1px solid #999;
-            font-size: 13px;
+            padding: 12px;
+            background: #4299e1;
+            color: white;
+            border: 2px solid #4299e1;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .submit-btn:hover {
-            background: #d0d0d0;
+            background: #3182ce;
+            border-color: #3182ce;
         }
 
         .form-footer {
             text-align: center;
-            margin-top: 15px;
-            font-size: 13px;
-            color: #666;
+            margin-top: 18px;
+            font-size: 14px;
+            color: #718096;
         }
 
         .form-footer a {
-            color: #0066cc;
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
             text-decoration: underline;
         }
 
         .error-message {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-size: 13px;
+            background: #fff5f5;
+            color: #c53030;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 2px solid #feb2b2;
+            border-radius: 8px;
         }
 
         .success-message {
-            background: #dcfce7;
-            color: #166534;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-size: 13px;
+            background: #f0fff4;
+            color: #276749;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 2px solid #9ae6b4;
+            border-radius: 8px;
         }
 
         /* 모달 */
@@ -1207,10 +1416,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 3000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(4px);
         }
 
         .modal.active {
@@ -1219,49 +1429,76 @@
 
         .modal-content {
             background: white;
-            padding: 30px;
-            max-width: 500px;
+            padding: 0;
+            max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
-            border: 1px solid #ccc;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
         .modal-content.modal-large {
-            max-width: 700px;
+            max-width: 750px;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
+            padding: 24px;
+            margin-bottom: 0;
+            border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+            border-radius: 12px 12px 0 0;
         }
 
         .modal-title {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
         }
 
         .modal-close {
-            background: none;
-            border: none;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
             font-size: 24px;
             cursor: pointer;
-            color: #666;
+            color: #2d3748;
             line-height: 1;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-close:hover {
-            color: #333;
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            color: #1a202c;
+            transform: scale(1.05);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-content form {
+            padding: 24px;
         }
 
         .modal-actions {
             display: flex;
-            gap: 8px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 24px;
+            padding: 0;
         }
 
         .modal-actions button {
@@ -1270,32 +1507,33 @@
 
         /* 텍스트 팝업 스타일 */
         .text-popup-item {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .text-popup-item-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .text-popup-item-title {
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a202c;
         }
 
         .text-popup-item-content {
-            font-size: 13px;
-            line-height: 1.5;
-            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #2d3748;
             white-space: pre-wrap;
         }
 
         .text-popup-divider {
-            height: 1px;
-            background: #ddd;
-            margin: 15px 0;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 20px 0;
         }
 
         /* 히트맵 풀스크린 모달 스타일 */
@@ -1309,7 +1547,7 @@
             background: white;
             z-index: 2000;
             overflow: auto;
-            padding: 40px 10px 10px 10px;
+            padding: 40px 20px 20px 20px;
         }
 
         .heatmap-modal.active {
@@ -1942,53 +2180,44 @@
 
             .main-content {
                 margin-left: 0;
+                padding-top: 80px;
             }
 
-            .sidebar {
-                position: relative;
-                top: 0;
+            .drawer-panel {
+                position: fixed;
+                top: 60px !important;
+                left: 0;
+                right: 0;
                 width: 100%;
                 height: auto;
-                border-bottom: 1px solid #d0d0d0;
+                flex-direction: column;
+                transform: none !important;
+                border-radius: 0;
             }
 
-            .sidebar-tabs {
-                flex-direction: row;
-                width: 100%;
-                height: auto;
-                gap: 10px;
-                padding: 10px;
-            }
-
-            .sidebar-tab {
-                flex: 1;
-                height: 60px;
-            }
-
-            .tab-label {
-                position: static;
-                width: 100%;
-                height: 100%;
-                border-radius: 12px;
-            }
-
-            .tab-content {
-                position: static;
+            .drawer-panel-content {
                 width: 100%;
                 height: 0;
-                border: 1px solid #d0d0d0;
-                border-radius: 12px;
-                margin-top: 5px;
+                border-radius: 0;
+                transition: height 240ms ease-out;
+                overflow: hidden;
             }
 
-            .sidebar-tab:hover .tab-content {
-                width: 100%;
-                height: auto;
+            .drawer-panel.open .drawer-panel-content {
+                height: 100%;
                 max-height: 200px;
             }
 
-            .tab-content-inner {
+            .drawer-handle {
                 width: 100%;
+                height: 50px;
+                writing-mode: horizontal-tb;
+                border-radius: 0;
+                position: relative;
+            }
+
+            .drawer-panel-inner {
+                padding-left: 0;
             }
 
             .view-toggle {
@@ -2003,85 +2232,1002 @@
 
         /* 댓글 관리 스타일 */
         .comments-container {
-            padding: 20px;
+            padding: 24px;
+            background: white;
         }
 
         .comment-item {
-            border-bottom: 1px solid #ddd;
-            padding: 12px 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 16px;
+            transition: all 0.2s ease;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
         }
 
         .comment-item:last-child {
             border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .comment-item:hover {
+            background: #f7fafc;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .comment-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
         }
 
         .comment-author {
-            font-size: 12px;
-            font-weight: bold;
-            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
         }
 
         .comment-date {
-            font-size: 11px;
-            color: #999;
+            font-size: 12px;
+            color: #718096;
+            font-weight: 500;
         }
 
         .comment-content {
-            font-size: 13px;
-            color: #333;
-            margin-bottom: 6px;
-            line-height: 1.4;
+            font-size: 14px;
+            color: #2d3748;
+            margin-bottom: 10px;
+            line-height: 1.6;
         }
 
         .comment-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
         .comment-action-btn {
-            padding: 4px 8px;
-            border: 1px solid #ccc;
+            padding: 6px 14px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: #2d3748;
         }
 
         .comment-action-btn:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         .comment-action-btn.delete {
-            color: #cc0000;
-            border-color: #cc0000;
+            color: #f56565;
+            border-color: #feb2b2;
         }
 
         .comment-action-btn.delete:hover {
-            background: #ffe0e0;
+            background: #fff5f5;
+            border-color: #fc8181;
         }
 
         .reply-item {
-            padding-left: 15px;
-            border-left: 2px solid #ddd;
+            padding-left: 24px;
+            border-left: 3px solid #cbd5e0;
+            margin-top: 12px;
         }
 
         .no-comments {
             text-align: center;
-            padding: 40px 20px;
+            padding: 60px 20px;
+            color: #a0aec0;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* ========== NOTIFICATION SYSTEM ========== */
+
+        /* 알림 벨 아이콘 */
+        .notification-bell {
+            position: relative;
+            padding: 10px 18px;
+            border: 2px solid #dee2e6;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 80px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            color: #495057;
+            line-height: 1;
+        }
+
+        .notification-bell:hover {
+            background: #f8f9fa;
+            border-color: #adb5bd;
+        }
+
+        /* 읽지 않은 알림 배지 */
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #f56565;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 7px;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* 토스트 알림 컨테이너 */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        /* 토스트 알림 */
+        .toast-notification {
+            background: white;
+            border: 1px solid #ddd;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideInRight 0.3s ease-out;
+            cursor: pointer;
+        }
+
+        .toast-notification.comment {
+            border-left-color: #2196F3;
+        }
+
+        .toast-notification.reply {
+            border-left-color: #9C27B0;
+        }
+
+        .toast-notification.like {
+            border-left-color: #ff4081;
+        }
+
+        .toast-notification:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .toast-message {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* 알림 목록 모달 */
+        .notification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .notification-modal.active {
+            display: flex;
+        }
+
+        .notification-modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 0;
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .notification-modal-header {
+            padding: 24px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .notification-modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .notification-modal-close {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            font-size: 24px;
+            cursor: pointer;
+            color: #2d3748;
+            padding: 0;
+            width: 36px;
+            height: 36px;
+            line-height: 1;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-modal-close:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            color: #1a202c;
+            transform: scale(1.05);
+        }
+
+        .mark-all-read-btn {
+            padding: 8px 16px;
+            background: #4299e1;
+            color: white;
+            border: 2px solid #4299e1;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .mark-all-read-btn:hover {
+            background: #3182ce;
+            border-color: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        .mark-all-read-btn:disabled {
+            background: #cbd5e0;
+            border-color: #cbd5e0;
+            color: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .notification-list {
+            padding: 0;
+        }
+
+        .notification-item {
+            padding: 18px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .notification-item:hover {
+            background: #f7fafc;
+        }
+
+        .notification-item.unread {
+            background: #ebf8ff;
+            border-left: 4px solid #4299e1;
+        }
+
+        .notification-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .notification-item-type {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .notification-item-type.comment {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .notification-item-type.reply {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .notification-item-type.like {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .notification-item-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .notification-item-content {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .notification-item-sender {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .notification-empty {
+            padding: 60px 20px;
+            text-align: center;
             color: #999;
             font-size: 13px;
+        }
+
+
+
+        /* ========== 언어 전환 시 완전한 레이아웃 고정 ========== */
+
+        /* 전역 폰트 설정 */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: 0;
+        }
+
+        /* ===== 모든 버튼 공통 스타일 - 완전 고정 ===== */
+        .btn, .language-toggle, .toggle-btn,
+        .add-record-btn, .submit-btn,
+        .btn-edit, .btn-delete, .btn-view-likes,
+        .category-action-btn, .comment-btn,
+        .label-toggle-btn, .modal-btn,
+        button[class*="btn"] {
+            /* 고정 크기 */
+            height: 32px !important;
+            line-height: 32px !important;
+            padding: 0 14px !important;
+
+            /* 레이아웃 */
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+
+            /* 텍스트 */
+            font-size: 13px !important;
+            font-weight: normal !important;
+            letter-spacing: 0 !important;
+            white-space: nowrap !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+
+            /* 오버플로우 방지 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* insert.html 카테고리 액션 버튼들 (수정, 삭제, 좋아요 목록) */
+        .btn-edit, .btn-delete, .btn-view-likes {
+            height: 32px !important;
+            line-height: 32px !important;
+            padding: 0 10px !important;
+            font-size: 12px !important;
+            min-width: 70px !important;
+            flex: 1 1 70px !important;
+        }
+
+        /* 카테고리 액션 컨테이너 */
+        .category-actions {
+            display: flex !important;
+            gap: 6px !important;
+            margin-top: auto !important;
+            height: 32px !important;
+            align-items: center !important;
+        }
+
+        /* 상단 액션 버튼 */
+        .top-actions .btn {
+            min-width: 110px !important;
+            height: 32px !important;
+        }
+
+        .top-actions .language-toggle {
+            min-width: 65px !important;
+            height: 32px !important;
+        }
+
+        .top-actions .notification-bell {
+            min-width: 110px !important;
+            height: 32px !important;
+        }
+
+        /* 뷰 토글 버튼 */
+        .view-toggle {
+            height: 32px !important;
+            align-items: center !important;
+        }
+
+        .view-toggle .toggle-btn {
+            min-width: 90px !important;
+            height: 32px !important;
+        }
+
+        /* 컨텐츠 툴바 */
+        .content-toolbar {
+            min-height: 48px !important;
+            align-items: center !important;
+        }
+
+        .content-toolbar .add-record-btn {
+            min-width: 110px !important;
+            height: 32px !important;
+        }
+
+        /* 모달 버튼 */
+        .modal-footer .btn,
+        .modal-footer button {
+            min-width: 90px !important;
+            height: 36px !important;
+            line-height: 36px !important;
+            padding: 0 16px !important;
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            min-width: 120px !important;
+            height: 38px !important;
+            line-height: 38px !important;
+            padding: 0 20px !important;
+        }
+
+        /* 라벨 토글 버튼 */
+        .label-toggle-btn {
+            min-width: 75px !important;
+            height: 32px !important;
+        }
+
+        /* 카테고리 아이템 */
+        .category-item {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 14px;
+            border: none;
+            border-bottom: 1px solid #e8e8e8;
+            background: white;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: left;
+            transition: all 0.15s ease;
+            min-height: 32px;
+        }
+
+        .category-item .category-info {
+            flex: 1 !important;
+            min-height: 60px !important;
+        }
+
+        .category-item .category-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #333;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+
+        .category-item .category-meta {
+            min-height: 18px !important;
+            line-height: 1.4 !important;
+            font-size: 11px !important;
+        }
+
+        /* 카테고리 카드 (index.html) */
+        .category-card {
+            min-height: 160px !important;
+        }
+
+        .category-card .category-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #333;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+
+        .category-card .category-type {
+            min-height: 18px !important;
+            line-height: 1.2 !important;
+            padding: 3px 10px !important;
+        }
+
+        .category-card .category-meta {
+            min-height: 18px !important;
+            line-height: 1.5 !important;
+        }
+
+        .category-card .category-actions {
+            height: 32px !important;
+            margin-top: 12px !important;
+        }
+
+        /* 헤더 텍스트 */
+        .greeting {
+            min-height: 38px !important;
+            line-height: 1.2 !important;
+        }
+
+        .title {
+            min-height: 32px !important;
+            line-height: 1.3 !important;
+        }
+
+        .subtitle, .user-desc {
+            min-height: 20px !important;
+            line-height: 1.5 !important;
+        }
+
+        /* 섹션 타이틀 */
+        .section-title {
+            min-height: 28px !important;
+            line-height: 1.4 !important;
+        }
+
+        /* 폼 요소 */
+        .form-group {
+            margin-bottom: 18px !important;
+        }
+
+        .form-group label {
+            min-height: 20px !important;
+            line-height: 1.5 !important;
+            display: block !important;
+            margin-bottom: 6px !important;
+        }
+
+        .form-group input:not([type="checkbox"]),
+        .form-group select,
+        .form-group textarea {
+            height: 36px !important;
+            line-height: 1.4 !important;
+            padding: 8px 10px !important;
+            font-size: 13px !important;
+        }
+
+        .form-group textarea {
+            height: auto !important;
+            min-height: 80px !important;
+        }
+
+        /* 모달 */
+        .modal-header {
+            min-height: 54px !important;
+            padding: 16px 20px !important;
+        }
+
+        .modal-title {
+            min-height: 22px !important;
+            line-height: 1.4 !important;
+        }
+
+        .modal-footer {
+            min-height: 64px !important;
+            padding: 16px 20px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            gap: 10px !important;
+        }
+
+        /* 테이블 */
+        .records-table td,
+        .records-table th {
+            height: 44px !important;
+            line-height: 1.5 !important;
+            vertical-align: middle !important;
+            padding: 8px 12px !important;
+        }
+
+        /* 빈 상태 */
+        .empty-state {
+            min-height: 100px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            line-height: 1.6 !important;
+        }
+
+        /* 드로어 */
+        .drawer-header {
+            min-height: 44px !important;
+            line-height: 1.4 !important;
+        }
+
+        .drawer-handle {
+            height: 120px !important;
+        }
+
+        /* 알림 */
+        .notification-badge {
+            min-width: 20px !important;
+            min-height: 20px !important;
+            line-height: 20px !important;
+        }
+
+        /* 리스트 컨테이너 */
+        #categoryList {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 16px 20px !important;
+        }
+
+        /* Flexbox 컨테이너들 */
+        .top-actions,
+        .view-toggle,
+        .content-toolbar {
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        /* 스팬 요소 안정화 */
+        span[data-lang-ko],
+        span[data-lang-en],
+        .btn span,
+        .toggle-btn span {
+            display: inline-block !important;
+            line-height: inherit !important;
+            vertical-align: middle !important;
+        }
+
+        /* 전역 폰트 설정 - 한글/영어 균형 */
+        body {
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: 0.01em;
+        }
+
+        /* 버튼 공통 스타일 - 고정 높이 및 패딩 */
+        .btn, .language-toggle, .toggle-btn, .add-record-btn,
+        .submit-btn, .category-action-btn, .comment-btn,
+        .label-toggle-btn, .modal-btn {
+            min-height: 32px;
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            box-sizing: border-box;
+        }
+
+        /* 상단 액션 버튼들 */
+        .top-actions .btn {
+            min-width: 100px;
+            padding: 6px 14px;
+        }
+
+        .top-actions .language-toggle {
+            min-width: 65px;
+            padding: 6px 12px;
+        }
+
+        .top-actions .notification-bell {
+            min-width: 100px;
+            padding: 6px 14px;
+        }
+
+        /* 뷰 토글 버튼 */
+        .view-toggle .toggle-btn {
+            min-width: 90px;
+            padding: 6px 14px;
+            height: 32px;
+        }
+
+        /* 컨텐츠 툴바 버튼 */
+        .content-toolbar .add-record-btn {
+            min-width: 110px;
+            padding: 6px 14px;
+            height: 32px;
+        }
+
+        /* 모달 버튼 */
+        .modal-footer .btn,
+        .modal-footer .modal-btn {
+            min-width: 85px;
+            padding: 8px 16px;
+            height: 36px;
+        }
+
+        /* 카테고리 액션 버튼 */
+        .category-action-btn {
+            min-width: 70px;
+            padding: 6px 10px;
+            height: 30px;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        /* 댓글 버튼 */
+        .comment-btn {
+            min-width: 70px;
+            padding: 6px 10px;
+            height: 30px;
+        }
+
+        /* 라벨 토글 버튼 */
+        .label-toggle-btn {
+            min-width: 75px;
+            padding: 6px 12px;
+            height: 32px;
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            min-width: 120px;
+            padding: 10px 16px;
+            height: 38px;
+        }
+
+        /* 헤더 텍스트 - 고정 높이 */
+        .greeting {
+            min-height: 40px;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        .subtitle, .user-desc {
+            min-height: 20px;
+            line-height: 1.4;
+        }
+
+        /* 카테고리 타이틀 */
+        .category-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #333;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+
+        /* 카테고리 타입 배지 */
+        .category-type {
+            min-width: 50px;
+            min-height: 18px;
+            line-height: 1.2;
+            padding: 3px 10px;
+            letter-spacing: 0.03em;
+        }
+
+        /* 카테고리 메타 정보 */
+        .category-meta {
+            min-height: 18px;
+            line-height: 1.5;
+        }
+
+        /* 섹션 타이틀 */
+        .section-title, .modal-title {
+            min-height: 26px;
+            line-height: 1.4;
+            letter-spacing: 0;
+        }
+
+        /* 폼 라벨 */
+        .form-group label {
+            min-height: 20px;
+            line-height: 1.5;
+            display: block;
+        }
+
+        /* 입력 필드 - 고정 높이 */
+        .form-group input,
+        .form-group select {
+            height: 36px;
+            line-height: 1.4;
+        }
+
+        /* 테이블 셀 */
+        .records-table td,
+        .records-table th {
+            min-height: 40px;
+            line-height: 1.5;
+            vertical-align: middle;
+        }
+
+        /* 빈 상태 메시지 */
+        .empty-state {
+            min-height: 80px;
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 카테고리 헤더 래퍼 */
+        .category-header-wrapper {
+            min-height: 40px;
+            line-height: 1.5;
+        }
+
+        /* 카테고리 설명 */
+        .category-description {
+            min-height: 20px;
+            line-height: 1.5;
+        }
+
+        /* 리스트 아이템 */
+        .category-item {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 14px;
+            border: none;
+            border-bottom: 1px solid #e8e8e8;
+            background: white;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: left;
+            transition: all 0.15s ease;
+            min-height: 32px;
+        }
+
+        .category-item .category-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #333;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+
+        .category-item .category-meta {
+            min-height: 16px;
+        }
+
+        /* 알림 관련 */
+        .notification-badge {
+            min-width: 18px;
+            min-height: 18px;
+            line-height: 18px;
+        }
+
+        /* 드로어 헤더 */
+        .drawer-header {
+            min-height: 40px;
+            line-height: 1.4;
+        }
+
+        /* 컨텐츠 툴바 */
+        .content-toolbar {
+            min-height: 44px;
+            align-items: center;
+        }
+
+        /* 스팬 요소들 - data-lang 속성을 가진 요소들 */
+        span[data-lang-ko],
+        span[data-lang-en] {
+            display: inline-block;
+            min-width: fit-content;
+        }
+
+        /* 텍스트 오버플로우 방지 */
+        .btn span,
+        .toggle-btn span,
+        .add-record-btn span {
+            overflow: visible;
+            text-overflow: clip;
+        }
+
+        /* flexbox 정렬 보정 */
+        .top-actions {
+            align-items: center;
+            height: fit-content;
+        }
+
+        .view-toggle {
+            align-items: center;
+            height: fit-content;
+        }
+
+        /* 모달 헤더 */
+        .modal-header {
+            min-height: 50px;
+            align-items: center;
+        }
+
+        /* 모달 푸터 */
+        .modal-footer {
+            min-height: 60px;
+            align-items: center;
+        }
+    /* 카테고리 카드 액션 버튼 */
+        .category-action-btn {
+            min-width: 65px;
+        }
+
+        /* 댓글 버튼 */
+        .comment-btn {
+            min-width: 65px;
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            min-width: 100px;
         }
     </style>
 </head>
 <body>
 <!-- 로그인 섹션 -->
-<div id="loginSection" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+<div id="loginSection"
+     style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
@@ -2093,19 +3239,33 @@
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="email" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="email" required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="email">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="password" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input autocomplete="current-password" id="password"
+                                                           required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="password">
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Sign In</button>
+                            <button style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="submit">
+                                Sign In
+                            </button>
                         </td>
                     </tr>
                 </table>
             </form>
+            <div style="text-align: center; margin-top: 10px; font-size: 12px;">
+                <a href="#" id="showResetPassword" style="color: #666; text-decoration: underline;">Forgot your
+                    password?</a>
+            </div>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
                 New account? <a href="#" id="showSignup" style="color: #0066cc; text-decoration: underline;">Sign Up</a>
             </div>
@@ -2114,7 +3274,8 @@
 </div>
 
 <!-- 회원가입 섹션 -->
-<div id="signupSection" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+<div id="signupSection"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
@@ -2126,47 +3287,137 @@
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupUsername" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupUsername" required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="text">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
-                        <td style="padding: 5px 0;"><input type="email" id="signupEmail" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupEmail" required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="email">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
-                        <td style="padding: 5px 0;"><input type="password" id="signupPassword" required style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input autocomplete="new-password" id="signupPassword"
+                                                           required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="password">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Title:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupTitle" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupTitle"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="text">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Description:</td>
-                        <td style="padding: 5px 0;"><input type="text" id="signupDescription" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupDescription"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="text">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Year:</td>
-                        <td style="padding: 5px 0;"><input type="number" id="signupBirthYear" placeholder="YYYY" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupBirthYear" placeholder="YYYY"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="number">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Month:</td>
-                        <td style="padding: 5px 0;"><input type="number" id="signupBirthMonth" placeholder="MM" min="1" max="12" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupBirthMonth" max="12" min="1" placeholder="MM"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="number">
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Day:</td>
-                        <td style="padding: 5px 0;"><input type="number" id="signupBirthDay" placeholder="DD" min="1" max="31" style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"></td>
+                        <td style="padding: 5px 0;"><input id="signupBirthDay" max="31" min="1" placeholder="DD"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="number">
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button type="submit" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;">Sign Up</button>
-                            <button type="button" id="cancelSignup" style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">Cancel</button>
+                            <button style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;"
+                                    type="submit">
+                                Sign Up
+                            </button>
+                            <button id="cancelSignup"
+                                    style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="button">
+                                Cancel
+                            </button>
                         </td>
                     </tr>
                 </table>
             </form>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
-                Already have an account? <a href="#" id="showLogin" style="color: #0066cc; text-decoration: underline;">Sign In</a>
+                Already have an account? <a href="#" id="showLogin" style="color: #0066cc; text-decoration: underline;">Sign
+                In</a>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- 비밀번호 재설정 섹션 -->
+<div id="resetPasswordSection"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="simple-auth-container">
+        <div class="simple-auth-box">
+            <div style="text-align: left; margin-bottom: 10px;">
+                <a href="#" onclick="showLoginFromReset(); return false;"
+                   style="color: #666; text-decoration: none; font-size: 13px;">← Back to Login</a>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Reset Password</h2>
+            <div id="resetPasswordError"
+                 style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <div id="resetPasswordSuccess"
+                 style="color: green; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <form id="resetPasswordForm">
+                <table style="margin: 0 auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:</td>
+                        <td style="padding: 5px 0;">
+                            <input autocomplete="username" id="resetUsername"
+                                   required
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                   type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td style="padding: 5px 0;">
+                            <input autocomplete="email" id="resetEmail"
+                                   required
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                   type="email">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">New Password:</td>
+                        <td style="padding: 5px 0;">
+                            <input autocomplete="new-password" id="resetNewPassword"
+                                   required
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                   type="password">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding-top: 15px;">
+                            <button style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="submit">
+                                Reset Password
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
         </div>
     </div>
 </div>
@@ -2174,11 +3425,15 @@
 <!-- 메인 섹션 -->
 <div id="mainSection" style="display: none;">
     <div class="top-actions">
-        <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
-        <button class="btn" id="editProfileBtn" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</button>
-        <a href="insert.html" class="btn" data-lang-ko="카테고리 관리" data-lang-en="Manage Categories">카테고리 관리</a>
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
-        <button class="btn btn-primary" id="logoutBtn" data-lang-ko="로그아웃" data-lang-en="Logout">로그아웃</button>
+        <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
+        <a class="btn" data-lang-en="Insert Data" data-lang-ko="데이터 입력" href="insert.html">데이터 입력</a>
+        <a class="btn" data-lang-en="My Page" data-lang-ko="내 관리" href="manage.html">내 관리</a>
+        <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()"><span
+                data-lang-en="Alerts" data-lang-ko="알림">알림</span><span class="notification-badge" id="notificationBadge"
+                                                                       style="display: none;">0</span>
+        </button>
+        <button class="btn btn-primary" data-lang-en="Logout" data-lang-ko="로그아웃" id="logoutBtn">로그아웃</button>
     </div>
 
     <div class="header">
@@ -2187,80 +3442,83 @@
     </div>
 
     <div class="main-layout">
-        <div class="sidebar">
-            <div class="sidebar-tabs" id="categoryTabs"></div>
-        </div>
-
         <div class="main-content">
             <div class="content-toolbar">
                 <div class="view-toggle" id="viewToggle"></div>
-                <button class="add-record-btn" id="addRecordBtn" style="display: none;" onclick="openAddRecordModal()">
-                    <span data-lang-ko="추가" data-lang-en="Add">추가</span>
+                <button class="add-record-btn" id="addRecordBtn" onclick="openAddRecordModal()" style="display: none;">
+                    <span data-lang-en="Add" data-lang-ko="추가">추가</span>
                 </button>
-                <button class="add-record-btn" id="commentManagementBtn" style="display: none;" onclick="showCommentManagement()">
-                    <span data-lang-ko="댓글 관리" data-lang-en="Comments">댓글 관리</span>
+                <button class="add-record-btn" id="commentManagementBtn" onclick="showCommentManagement()"
+                        style="display: none;">
+                    <span data-lang-en="Comments" data-lang-ko="댓글 관리">댓글 관리</span>
                 </button>
             </div>
 
-            <div class="category-header-wrapper" style="display: none;" id="categoryHeaderWrapper">
-                <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;"><span data-lang-ko="라벨" data-lang-en="Labels">라벨</span></button>
+            <div class="category-header-wrapper" id="categoryHeaderWrapper" style="display: none;">
+                <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;"><span
+                        data-lang-en="Labels" data-lang-ko="라벨">라벨</span></button>
                 <div class="category-description" id="categoryDescription"></div>
-                <span class="category-like-count" id="categoryLikeCount" style="display: none; margin-left: auto; padding: 4px 10px; background: #f5f5f5; border: 1px solid #ddd; font-size: 12px; color: #666;"></span>
+                <span class="category-like-count" id="categoryLikeCount" style="display: none;"></span>
             </div>
 
             <div class="records-section" id="recordsSection">
-                <div class="empty-state" data-lang-ko="카테고리를 선택하세요" data-lang-en="Select a category">카테고리를 선택하세요</div>
+                <div class="empty-state" data-lang-en="Select a category" data-lang-ko="카테고리를 선택하세요">카테고리를 선택하세요</div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- 수정 모달 -->
-<div id="editModal" class="modal">
+<div class="modal" id="editModal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title" data-lang-ko="레코드 수정" data-lang-en="Edit Record">레코드 수정</div>
+            <div class="modal-title" data-lang-en="Edit Record" data-lang-ko="레코드 수정">레코드 수정</div>
             <button class="modal-close" onclick="closeEditModal()">×</button>
         </div>
         <div id="editModalError"></div>
         <form id="editForm">
             <div id="editFormContent"></div>
             <div class="modal-actions">
-                <button type="submit" class="btn btn-primary" data-lang-ko="수정" data-lang-en="Save">수정</button>
-                <button type="button" class="btn" onclick="deleteRecord()" data-lang-ko="삭제" data-lang-en="Delete">삭제</button>
-                <button type="button" class="btn" onclick="closeEditModal()" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
+                <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="수정" type="submit">수정</button>
+                <button class="btn" data-lang-en="Delete" data-lang-ko="삭제" onclick="deleteRecord()" type="button">삭제
+                </button>
+                <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeEditModal()" type="button">
+                    취소
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- 프로필 수정 모달 -->
-<div id="profileModal" class="modal">
+<div class="modal" id="profileModal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title" data-lang-ko="프로필 수정" data-lang-en="Edit Profile">프로필 수정</div>
+            <div class="modal-title" data-lang-en="Edit Profile" data-lang-ko="프로필 수정">프로필 수정</div>
             <button class="modal-close" onclick="closeProfileModal()">×</button>
         </div>
         <div id="profileModalError"></div>
         <form id="profileForm">
             <div class="form-group">
-                <label for="profileTitle" data-lang-ko="타이틀" data-lang-en="Title">타이틀</label>
-                <input type="text" id="profileTitle" placeholder="예: Hi.">
+                <label data-lang-en="Title" data-lang-ko="타이틀" for="profileTitle">타이틀</label>
+                <input id="profileTitle" placeholder="예: Hi." type="text">
             </div>
             <div class="form-group">
-                <label for="profileDescription" data-lang-ko="설명" data-lang-en="Description">설명</label>
+                <label data-lang-en="Description" data-lang-ko="설명" for="profileDescription">설명</label>
                 <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요"></textarea>
             </div>
             <div class="modal-actions">
-                <button type="submit" class="btn btn-primary" data-lang-ko="저장" data-lang-en="Save">저장</button>
-                <button type="button" class="btn" onclick="closeProfileModal()" data-lang-ko="취소" data-lang-en="Cancel">취소</button>
+                <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="저장" type="submit">저장</button>
+                <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeProfileModal()" type="button">
+                    취소
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- 텍스트 팝업 모달 -->
-<div id="textPopupModal" class="modal">
+<div class="modal" id="textPopupModal">
     <div class="modal-content modal-large">
         <div class="modal-header">
             <div class="modal-title" id="textPopupTitle"></div>
@@ -2271,13 +3529,13 @@
 </div>
 
 <!-- 히트맵 전용 모달 (100년 뷰) -->
-<div id="heatmapModal" class="heatmap-modal">
+<div class="heatmap-modal" id="heatmapModal">
     <button class="heatmap-close" onclick="closeHeatmapModal()">×</button>
     <div id="heatmapModalContent"></div>
 </div>
 
 <!-- CHECKLIST 상세 모달 -->
-<div id="checklistModal" class="checklist-modal" onclick="closeChecklistModal()">
+<div class="checklist-modal" id="checklistModal" onclick="closeChecklistModal()">
     <div class="checklist-modal-content" onclick="event.stopPropagation()">
         <div class="checklist-modal-header">
             <h3 id="checklistModalDate"></h3>
@@ -2288,7 +3546,7 @@
 </div>
 
 <!-- 데이터 추가 모달 -->
-<div id="addRecordModal" class="modal">
+<div class="modal" id="addRecordModal">
     <div class="modal-content">
         <div class="modal-header">
             <h2 class="modal-title" id="addRecordModalTitle">레코드 추가</h2>
@@ -2297,7 +3555,9 @@
         <div class="modal-body">
             <div id="addRecordFormContainer"></div>
             <div id="addRecordError"></div>
-            <button type="button" class="btn-primary" id="submitAddRecord" style="width: 100%; padding: 12px; margin-top: 20px;">추가</button>
+            <button class="btn-primary" id="submitAddRecord" style="width: 100%; padding: 12px; margin-top: 20px;"
+                    type="button">추가
+            </button>
         </div>
     </div>
 </div>
@@ -2311,6 +3571,293 @@
     let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
     let currentWeekStart = null; // 주간 뷰에서 현재 표시 중인 주의 시작일
     let currentMonthStart = null; // 월간 뷰에서 현재 표시 중인 월의 시작일
+    let userBirthInfo = null; // API에서 받은 생년월일 정보 저장
+
+    // ==================== JWT 토큰 관리 ====================
+
+    // Access Token을 메모리에만 저장 (localStorage 사용 안 함)
+    let accessToken = null;
+
+    // Access Token 저장
+    function setAccessToken(token) {
+        accessToken = token;
+
+    }
+
+    // Access Token 가져오기
+    function getAccessToken() {
+        return accessToken;
+    }
+
+    // Access Token 삭제
+    function removeAccessToken() {
+        accessToken = null;
+
+    }
+
+    // ==================== CSRF 토큰 관리 ====================
+
+    let csrfToken = null;
+
+    // CSRF 토큰 가져오기 (쿠키에서)
+    function getCsrfToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'XSRF-TOKEN') {
+                return decodeURIComponent(value);
+            }
+        }
+        return null;
+    }
+
+    // 쿠키에서 값 가져오기 (범용)
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
+    // CSRF 토큰 초기화
+    async function initCsrfToken() {
+        try {
+
+            // 먼저 /api/auth/csrf-token 호출하여 쿠키 설정
+            await fetch(`${API_BASE}/auth/csrf-token`, {
+                credentials: 'include'
+            });
+
+            // 쿠키에서 토큰 읽기
+            csrfToken = getCsrfToken();
+
+        } catch (error) {
+
+        }
+    }
+
+    // CSRF 토큰 로드 (기존 함수 - 하위 호환성)
+    async function loadCsrfToken() {
+        // initCsrfToken()과 동일
+        await initCsrfToken();
+    }
+
+    // ==================== 인증된 Fetch 래퍼 ====================
+
+    async function authFetch(url, options = {}) {
+        // CSRF 토큰이 없으면 먼저 가져오기
+        if (!csrfToken) {
+            csrfToken = getCsrfToken();
+        }
+
+        // 기본 옵션 설정
+        const defaultOptions = {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(options.headers || {})
+            }
+        };
+
+        // AccessToken이 있으면 Authorization 헤더 추가
+        if (accessToken) {
+            defaultOptions.headers['Authorization'] = `Bearer ${accessToken}`;
+
+        } else {
+
+        }
+
+        // POST, PUT, DELETE, PATCH 요청에 CSRF 토큰 추가
+        if (options.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method.toUpperCase())) {
+            // 쿠키의 XSRF-TOKEN 값을 X-XSRF-TOKEN 헤더로 전송
+            if (csrfToken) {
+                defaultOptions.headers['X-XSRF-TOKEN'] = csrfToken;
+            } else {
+
+            }
+        }
+
+        // 옵션 병합
+        const finalOptions = {
+            ...defaultOptions,
+            ...options,
+            headers: {
+                ...defaultOptions.headers,
+                ...options.headers
+            }
+        };
+
+        const response = await fetch(url, finalOptions);
+
+        // ⭐ 중요: 응답 헤더에서 새로운 CSRF 토큰 확인 및 자동 업데이트
+        const responseCsrfToken = response.headers.get('X-CSRF-TOKEN');
+        if (responseCsrfToken) {
+            csrfToken = responseCsrfToken;
+
+        } else {
+            // 응답 헤더에 없으면 쿠키에서 다시 읽기
+            const cookieToken = getCsrfToken();
+            if (cookieToken && cookieToken !== csrfToken) {
+                csrfToken = cookieToken;
+
+            }
+        }
+
+        // 401 에러 시 토큰 갱신 시도
+        if (response.status === 401) {
+
+            const refreshed = await refreshAccessToken();
+            if (refreshed && accessToken) {
+                // 토큰 갱신 성공 - 재시도
+                finalOptions.headers['Authorization'] = `Bearer ${accessToken}`;
+
+                return await fetch(url, finalOptions);
+            } else {
+                // 토큰 갱신 실패 - 이미 RefreshToken이 없는 상태
+                // 불필요한 sign-out 호출 없이 바로 리다이렉트
+
+                currentUser = null;
+                accessToken = null;
+                location.href = location.pathname; // 현재 페이지 새로고침
+                throw new Error('Authentication required');
+            }
+        }
+
+        // 403 에러 시 CSRF 토큰 갱신 후 재시도
+        if (response.status === 403) {
+
+            await initCsrfToken();
+
+            if (csrfToken) {
+                finalOptions.headers['X-XSRF-TOKEN'] = csrfToken;
+
+                return await fetch(url, finalOptions);
+            }
+        }
+
+        return response;
+    }
+
+    // Access Token 갱신 (RefreshToken 검증)
+    async function refreshAccessToken() {
+        try {
+
+            // RefreshToken 쿠키 확인 (디버깅)
+            const cookies = document.cookie.split(';').map(c => c.trim());
+            const refreshTokenCookie = cookies.find(c => c.startsWith('REFRESH_TOKEN='));
+
+            if (!refreshTokenCookie) {
+
+            }
+
+            // CSRF 토큰 가져오기
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // CSRF 토큰 추가
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+
+            } else {
+
+            }
+
+            const response = await fetch(`${API_BASE}/auth/refresh`, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include' // RefreshToken은 쿠키로 전송
+            });
+
+            if (response.ok) {
+                const text = await response.text();
+
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    // JSON이 아니면 문자열 그대로 사용
+                    data = text;
+                }
+
+                // 다양한 응답 형식 지원
+                let token;
+                if (typeof data === 'string') {
+                    token = data;
+                } else if (data.accessToken) {
+                    token = data.accessToken;
+                } else if (data.access_token) {
+                    token = data.access_token;
+                } else if (data.token) {
+                    token = data.token;
+                }
+
+                if (token && typeof token === 'string' && token.length > 10) {
+                    accessToken = token;
+
+                    return true;
+                } else {
+
+                }
+            } else {
+
+                const errorText = await response.text().catch(() => '');
+                if (errorText) {
+
+                }
+            }
+
+            return false;
+        } catch (error) {
+
+            return false;
+        }
+    }
+
+    // 로그아웃 처리
+    async function handleLogout() {
+
+        try {
+            // SSE 연결 종료
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+
+            }
+
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            const headers = {};
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+            }
+
+            await fetch(`${API_BASE}/auth/sign-out`, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include'
+            });
+
+            removeAccessToken();
+            currentUser = null;
+            accessToken = null;
+
+            // 로그인 페이지로 리다이렉트
+
+            location.reload();
+        } catch (error) {
+
+            // 에러가 있어도 페이지 새로고침
+            location.reload();
+        }
+    }
 
     // 번역 데이터
     const translations = {
@@ -2393,6 +3940,32 @@
     }
 
     // 페이지 로드 시 언어 적용
+    // 페이지 언로드 전 SSE 연결 종료
+    window.addEventListener('beforeunload', () => {
+        isPageUnloading = true;
+        disconnectSSE();
+    });
+
+    // 페이지 숨김 시 연결 종료 (모바일/탭 전환 대응)
+    document.addEventListener('visibilitychange', async () => {
+        if (document.hidden) {
+            disconnectSSE();
+        } else if (!isPageUnloading && localStorage.getItem('accessToken')) {
+            // 페이지가 다시 보일 때만 재연결
+            const mainSection = document.getElementById('mainSection');
+            if (mainSection && mainSection.style.display !== 'none') {
+                await connectSSE();
+            }
+        }
+    });
+
+    // 페이지 숨김 이벤트 (iOS Safari 대응)
+    window.addEventListener('pagehide', () => {
+        isPageUnloading = true;
+        disconnectSSE();
+    });
+
+
     document.addEventListener('DOMContentLoaded', () => {
         applyLanguage();
     });
@@ -3064,45 +4637,65 @@
 
     // 페이지 로드
     window.addEventListener('DOMContentLoaded', async () => {
-        await checkAuth();
+
+        // 0. 쿠키 상태 확인 (디버깅)
+
+        const cookies = document.cookie.split(';').map(c => c.trim());
+
+        const hasRefreshTokenCookie = cookies.some(c => c.startsWith('REFRESH_TOKEN='));
+
+        // ⚠️ Secure 플래그 경고
+        if (!hasRefreshTokenCookie) {
+
+        }
+
+        if (!hasRefreshTokenCookie && document.referrer) {
+
+        }
+
+        // 1. CSRF 토큰 초기화
+
+        await initCsrfToken();
+
+        // 2. RefreshToken 검증 및 AccessToken 발급
+
+        const refreshed = await refreshAccessToken();
+
+        if (refreshed && accessToken) {
+            // AccessToken 발급 성공 = 로그인 상태
+
+            await checkAuth();
+        } else {
+            // RefreshToken 없음 또는 만료 = 로그아웃 상태
+
+            showLoginSection();
+        }
     });
 
-    // 인증 확인
+    // 인증 확인 - 사용자 정보 조회
     async function checkAuth() {
+
         try {
-            const response = await fetch(`${API_BASE}/auth/me`, {
-                credentials: 'include'
-            });
+            // AccessToken으로 사용자 정보 조회
+
+            const response = await authFetch(`${API_BASE}/user`);
 
             if (response.ok) {
                 currentUser = await response.json();
 
-                // /api/user 호출하여 title, description 가져오기
-                try {
-                    const userResponse = await fetch(`${API_BASE}/user`, {
-                        credentials: 'include'
-                    });
-
-                    if (userResponse.ok) {
-                        const userData = await userResponse.json();
-                        // title, description, birthYear, birthMonth, birthDay 업데이트
-                        currentUser.title = userData.title;
-                        currentUser.description = userData.description;
-                        currentUser.birthYear = userData.birthYear;
-                        currentUser.birthMonth = userData.birthMonth;
-                        currentUser.birthDay = userData.birthDay;
-                    }
-                } catch (error) {
-                    console.error('User 정보 로드 실패:', error);
-                }
-
                 showMainSection();
                 loadCategories();
+
             } else {
+
+                currentUser = null;
+                accessToken = null;
                 showLoginSection();
             }
         } catch (error) {
-            console.error('인증 확인 실패:', error);
+
+            currentUser = null;
+            accessToken = null;
             showLoginSection();
         }
     }
@@ -3115,23 +4708,79 @@
         const password = document.getElementById('password').value;
 
         try {
-            const response = await fetch(`${API_BASE}/auth/login`, {
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            // 폼 데이터 방식으로 전송
+            const formData = new URLSearchParams();
+            formData.append('username', email); // username에 이메일 넣기
+            formData.append('password', password);
+
+            const headers = {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            };
+
+            // CSRF 토큰 추가
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+            }
+
+            const response = await fetch(`${API_BASE}/auth/sign-in`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: headers,
                 credentials: 'include',
-                body: JSON.stringify({ email, password })
+                body: formData.toString()
             });
 
             if (response.ok) {
-                await checkAuth();
+                // 로그인 성공 - AccessToken 받아서 저장
+                const data = await response.json();
+
+                if (data.accessToken) {
+                    accessToken = data.accessToken;
+
+                }
+
+                // 로그인 성공 시 CSRF 토큰 갱신 (서버가 새 토큰 발급함)
+                await initCsrfToken();
+
+                // 쿠키 상태 확인 (디버깅)
+
+                const cookies = document.cookie.split(';').map(c => c.trim());
+                const hasRefreshToken = cookies.some(c => c.startsWith('REFRESH_TOKEN='));
+
+                if (!hasRefreshToken) {
+
+                }
+
+                // 페이지 새로고침하여 인증 상태 업데이트
+
+                location.reload();
+            } else if (response.status === 403) {
+                // CSRF 토큰 문제 - 재시도
+                await initCsrfToken();
+                showLoginError('다시 시도해주세요.');
             } else {
-                showError('loginError', '로그인에 실패했습니다.');
+                showLoginError('로그인에 실패했습니다.');
             }
         } catch (error) {
-            console.error('로그인 오류:', error);
-            showError('loginError', '로그인 중 오류가 발생했습니다.');
+
+            showLoginError('로그인 중 오류가 발생했습니다.');
         }
     });
+
+    function showLoginError(message) {
+        const errorDiv = document.getElementById('loginError');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
 
     // 회원가입
     document.getElementById('showSignup').addEventListener('click', (e) => {
@@ -3146,10 +4795,17 @@
         document.getElementById('loginSection').style.display = 'block';
     });
 
+    document.getElementById('showResetPassword').addEventListener('click', (e) => {
+        e.preventDefault();
+        showResetPasswordSection();
+    });
+
     document.getElementById('cancelSignup').addEventListener('click', () => {
         document.getElementById('signupSection').style.display = 'none';
         document.getElementById('loginSection').style.display = 'block';
     });
+
+    document.getElementById('resetPasswordForm').addEventListener('submit', resetPassword);
 
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -3163,73 +4819,149 @@
             email: document.getElementById('signupEmail').value,
             password: document.getElementById('signupPassword').value,
             title: document.getElementById('signupTitle').value || '',
-            description: document.getElementById('signupDescription').value || ''
+            description: document.getElementById('signupDescription').value || '',
+            birthYear: parseInt(birthYear) || new Date().getFullYear(),
+            birthMonth: parseInt(birthMonth) || 1,
+            birthDay: parseInt(birthDay) || 1
         };
 
-        // 생년월일 추가 (입력된 경우만)
-        if (birthYear) signupData.birthYear = parseInt(birthYear);
-        if (birthMonth) signupData.birthMonth = parseInt(birthMonth);
-        if (birthDay) signupData.birthDay = parseInt(birthDay);
-
         try {
-            const response = await fetch(`${API_BASE}/auth/signup`, {
+            // 회원가입 직전에 CSRF 토큰 최신화
+            const currentCsrfToken = getCookie('XSRF-TOKEN');
+            if (currentCsrfToken) {
+                csrfToken = currentCsrfToken;
+            }
+
+            const headers = { 'Content-Type': 'application/json' };
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+
+            } else {
+
+            }
+
+            const response = await fetch(`${API_BASE}/user`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
+                credentials: 'include',
                 body: JSON.stringify(signupData)
             });
 
             if (response.ok) {
-                showSuccess('signupError', '회원가입이 완료되었습니다.');
+                showSuccess('signupError', currentLang === 'ko' ? '회원가입이 완료되었습니다.' : 'Sign up completed.');
                 setTimeout(() => {
                     document.getElementById('signupSection').style.display = 'none';
                     document.getElementById('loginSection').style.display = 'block';
                 }, 1500);
             } else {
-                showError('signupError', '회원가입에 실패했습니다.');
+                const errorData = await response.json().catch(() => ({}));
+
+                showError('signupError', currentLang === 'ko' ? '회원가입에 실패했습니다.' : 'Sign up failed.');
             }
         } catch (error) {
-            console.error('회원가입 오류:', error);
-            showError('signupError', '회원가입 중 오류가 발생했습니다.');
+
+            showError('signupError', currentLang === 'ko' ? '회원가입 중 오류가 발생했습니다.' : 'An error occurred during sign up.');
         }
     });
+
+    // 비밀번호 재설정
+    async function resetPassword(e) {
+        e.preventDefault();
+        console.log('[MANAGE] Reset password attempt');
+
+        const username = document.getElementById('resetUsername').value;
+        const email = document.getElementById('resetEmail').value;
+        const newPassword = document.getElementById('resetNewPassword').value;
+
+        // Clear previous messages
+        document.getElementById('resetPasswordError').innerHTML = '';
+        document.getElementById('resetPasswordSuccess').innerHTML = '';
+
+        try {
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+                console.log('[MANAGE] Got CSRF token from cookie:', csrfToken ? 'EXISTS' : 'NULL');
+            }
+
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // CSRF 토큰 추가
+            if (csrfToken) {
+                headers['X-XSRF-TOKEN'] = csrfToken;
+                console.log('[MANAGE] CSRF token added to headers');
+            } else {
+                console.warn('[MANAGE] No CSRF token available');
+            }
+
+            const response = await fetch(`${API_BASE}/auth/reset-password`, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include',
+                body: JSON.stringify({
+                    username: username,
+                    email: email,
+                    newPassword: newPassword
+                })
+            });
+
+            if (response.ok) {
+                console.log('[MANAGE] Password reset successful');
+                document.getElementById('resetPasswordSuccess').innerHTML =
+                    'Password has been reset. Please login.';
+
+                // 2초 후 로그인 화면으로 이동
+                setTimeout(() => {
+                    showLoginFromReset();
+                }, 2000);
+            } else {
+                const errorText = await response.text();
+                console.error('[MANAGE] Password reset failed:', response.status, errorText);
+                document.getElementById('resetPasswordError').innerHTML =
+                    'Password reset failed. Please check your information.';
+            }
+        } catch (error) {
+            console.error('[MANAGE] Password reset error:', error);
+            document.getElementById('resetPasswordError').innerHTML =
+                'An error occurred during password reset.';
+        }
+    }
 
     // 로그아웃
     document.getElementById('logoutBtn').addEventListener('click', async () => {
         try {
-            await fetch(`${API_BASE}/auth/logout`, {
-                method: 'POST',
-                credentials: 'include'
+            await authFetch(`${API_BASE}/auth/sign-out`, {
+                method: 'POST'
             });
-            currentUser = null;
-            showLoginSection();
+            handleLogout();
         } catch (error) {
-            console.error('로그아웃 오류:', error);
+
+            handleLogout(); // 에러가 나도 로그아웃 처리
         }
     });
 
     // 카테고리 로드
     async function loadCategories() {
         try {
-            const response = await fetch(`${API_BASE}/category/all`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/category/all`);
 
             if (response.ok) {
                 const categories = await response.json();
                 displayCategories(categories);
             }
         } catch (error) {
-            console.error('카테고리 로드 오류:', error);
+
         }
     }
 
     // 카테고리 표시
     function displayCategories(categories) {
-        const container = document.getElementById('categoryTabs');
+        // 기존 drawer 제거
+        document.querySelectorAll('.drawer-panel').forEach(el => el.remove());
 
         if (!categories || categories.length === 0) {
-            const message = currentLang === 'ko' ? '등록된 카테고리가 없습니다.' : 'No categories registered.';
-            container.innerHTML = `<div style="padding: 10px; color: #999; font-size: 12px;">${message}</div>`;
             return;
         }
 
@@ -3237,60 +4969,82 @@
         const publicCategories = categories.filter(c => c.visibility === 'PUBLIC');
         const privateCategories = categories.filter(c => c.visibility === 'PRIVATE');
 
-        let html = '';
+        const startTop = 170; // 140(header) + 30(margin)
+        const gap = 20;
 
-        // PUBLIC 탭
+        let publicDrawer = null;
+        let privateDrawer = null;
+
+        // PUBLIC 생성
         if (publicCategories.length > 0) {
-            html += `
-                <div class="sidebar-tab" data-tab="public">
-                    <div class="tab-label" style="top: 30px;">${currentLang === 'ko' ? '공개' : 'PUBLIC'}</div>
-                    <div class="tab-content" style="top: 30px;">
-                        <div class="tab-content-inner">
-                            <div class="tab-header">
-                                <span data-lang-ko="공개" data-lang-en="PUBLIC">${currentLang === 'ko' ? '공개' : 'PUBLIC'}</span>
-                                <span class="tab-count">${publicCategories.length}</span>
-                            </div>
-                            ${publicCategories.map(category => `
-                                <button class="category-item" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}" data-visibility="${category.visibility}">
-                                    <span class="category-title">${category.title}</span>
-                                    <span class="category-type-badge">${category.recordType}</span>
-                                </button>
-                            `).join('')}
-                        </div>
+            publicDrawer = document.createElement('div');
+            publicDrawer.className = 'drawer-panel';
+            publicDrawer.id = 'drawer-public';
+            publicDrawer.dataset.drawer = 'public';
+            publicDrawer.style.top = `${startTop}px`;
+            publicDrawer.innerHTML = `
+                <div class="drawer-panel-content">
+                    <div class="drawer-header">
+                        <span>${currentLang === 'ko' ? '공개' : 'PUBLIC'}</span>
+                        <span class="drawer-count">${publicCategories.length}</span>
+                    </div>
+                    <div class="drawer-panel-inner">
+                        ${publicCategories.map(category => `
+                            <button class="category-item"
+                                    data-id="${category.id}"
+                                    data-type="${category.recordType}"
+                                    data-description="${category.description || ''}"
+                                    data-visibility="${category.visibility}">
+                                <span class="category-title">${category.title}</span>
+                                <span class="category-type-badge">${category.recordType}</span>
+                            </button>
+                        `).join('')}
                     </div>
                 </div>
+                <div class="drawer-handle">${currentLang === 'ko' ? '공개' : 'PUBLIC'}</div>
             `;
+
+            document.body.appendChild(publicDrawer);
         }
 
-        // PRIVATE 탭
+        // PRIVATE 생성
         if (privateCategories.length > 0) {
-            html += `
-                <div class="sidebar-tab" data-tab="private">
-                    <div class="tab-label" style="top: 160px;">${currentLang === 'ko' ? '비공개' : 'PRIVATE'}</div>
-                    <div class="tab-content" style="top: 160px;">
-                        <div class="tab-content-inner">
-                            <div class="tab-header">
-                                <span data-lang-ko="비공개" data-lang-en="PRIVATE">${currentLang === 'ko' ? '비공개' : 'PRIVATE'}</span>
-                                <span class="tab-count">${privateCategories.length}</span>
-                            </div>
-                            ${privateCategories.map(category => `
-                                <button class="category-item" data-id="${category.id}" data-type="${category.recordType}" data-description="${category.description || ''}" data-visibility="${category.visibility}">
-                                    <span class="category-title">${category.title}</span>
-                                    <span class="category-type-badge">${category.recordType}</span>
-                                </button>
-                            `).join('')}
-                        </div>
+            const privateTop = startTop + 120 + gap; // PUBLIC handle 높이 + gap
+
+            privateDrawer = document.createElement('div');
+            privateDrawer.className = 'drawer-panel';
+            privateDrawer.id = 'drawer-private';
+            privateDrawer.dataset.drawer = 'private';
+            privateDrawer.style.top = `${privateTop}px`;
+            privateDrawer.innerHTML = `
+                <div class="drawer-panel-content">
+                    <div class="drawer-header">
+                        <span>${currentLang === 'ko' ? '비공개' : 'PRIVATE'}</span>
+                        <span class="drawer-count">${privateCategories.length}</span>
+                    </div>
+                    <div class="drawer-panel-inner">
+                        ${privateCategories.map(category => `
+                            <button class="category-item"
+                                    data-id="${category.id}"
+                                    data-type="${category.recordType}"
+                                    data-description="${category.description || ''}"
+                                    data-visibility="${category.visibility}">
+                                <span class="category-title">${category.title}</span>
+                                <span class="category-type-badge">${category.recordType}</span>
+                            </button>
+                        `).join('')}
                     </div>
                 </div>
+                <div class="drawer-handle">${currentLang === 'ko' ? '비공개' : 'PRIVATE'}</div>
             `;
-        }
 
-        container.innerHTML = html;
+            document.body.appendChild(privateDrawer);
+        }
 
         // 카테고리 클릭 이벤트
-        container.querySelectorAll('.category-item').forEach(btn => {
+        document.querySelectorAll('.category-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                container.querySelectorAll('.category-item').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.category-item').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
                 currentCategory = {
@@ -3301,10 +5055,10 @@
                     visibility: btn.dataset.visibility
                 };
 
-                // 댓글 관리 버튼 표시 여부 (PUBLIC 카테고리만)
+                // 댓글 관리 버튼 표시 (모든 카테고리에서 표시)
                 const commentBtn = document.getElementById('commentManagementBtn');
                 if (commentBtn) {
-                    commentBtn.style.display = currentCategory.visibility === 'PUBLIC' ? 'block' : 'none';
+                    commentBtn.style.display = 'block';
                 }
 
                 // 타입별 기본 뷰 설정
@@ -3355,16 +5109,33 @@
                     break;
             }
 
-            const response = await fetch(endpoint, { credentials: 'include' });
+            const response = await authFetch(endpoint);
 
             if (response.ok) {
-                allRecords = await response.json();
+                const responseData = await response.json();
+
+                // API 응답에서 생년월일 정보와 contents 분리
+                if (responseData && typeof responseData === 'object' && 'contents' in responseData) {
+                    // 생년월일 정보 저장
+                    userBirthInfo = {
+                        birthYear: responseData.birthYear,
+                        birthMonth: responseData.birthMonth,
+                        birthDay: responseData.birthDay
+                    };
+                    // 실제 레코드 배열 저장
+                    allRecords = responseData.contents || [];
+                } else {
+                    // 이전 형식 (배열) 호환성 유지
+                    allRecords = Array.isArray(responseData) ? responseData : [];
+                    userBirthInfo = null;
+                }
+
                 displayRecords(allRecords, category);
             } else {
                 recordsSection.innerHTML = `<div class="empty-state">${translations.loadError[currentLang]}</div>`;
             }
         } catch (error) {
-            console.error('레코드 로드 오류:', error);
+
             recordsSection.innerHTML = `<div class="empty-state">${translations.error[currentLang]}</div>`;
         }
     }
@@ -3377,6 +5148,11 @@
         const categoryHeaderWrapper = document.getElementById('categoryHeaderWrapper');
         const globalLabelToggle = document.getElementById('globalCalendarLabelToggle');
         const categoryLikeCount = document.getElementById('categoryLikeCount');
+
+        // 기본적으로 Labels 버튼 숨김 (각 뷰에서 필요시 표시)
+        if (globalLabelToggle) {
+            globalLabelToggle.style.setProperty('display', 'none', 'important');
+        }
 
         // 카테고리 설명과 라벨 버튼 표시
         if (category && category.description) {
@@ -3475,14 +5251,25 @@
     function setupGlobalLabelToggle(show) {
         const globalLabelToggle = document.getElementById('globalCalendarLabelToggle');
 
+        console.log('setupGlobalLabelToggle called:', show, 'currentView:', currentView);
+
+        if (!globalLabelToggle) {
+            console.log('globalLabelToggle not found!');
+            return;
+        }
+
         if (show) {
-            globalLabelToggle.style.display = 'block';
+            console.log('Showing Labels button');
 
             // 기존 이벤트 리스너 제거 (중복 방지)
             const newButton = globalLabelToggle.cloneNode(true);
             globalLabelToggle.parentNode.replaceChild(newButton, globalLabelToggle);
 
             const button = document.getElementById('globalCalendarLabelToggle');
+            // cloneNode 후 명시적으로 display 설정
+            button.style.setProperty('display', 'block', 'important');
+            console.log('After setting display:block, computed style:', window.getComputedStyle(button).display);
+
             let toggleState = 0; // 0: 전체 표시, 1: 날짜 숨김, 2: 요일 숨김, 3: 월 숨김
 
             button.addEventListener('click', function() {
@@ -3510,7 +5297,10 @@
                 }
             });
         } else {
-            globalLabelToggle.style.display = 'none';
+            console.log('Hiding Labels button');
+            globalLabelToggle.style.setProperty('display', 'none', 'important');
+            console.log('After setting display:none, computed style:', window.getComputedStyle(globalLabelToggle).display);
+            console.log('Inline style:', globalLabelToggle.style.display);
         }
     }
 
@@ -3586,8 +5376,9 @@
     function displayCheckCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
+        // Calendar 뷰일 때만 전역 라벨 토글 표시
+        const isCalendarView = currentView === 'calendar';
+        setupGlobalLabelToggle(isCalendarView);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -3729,10 +5520,15 @@
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // 시작일 계산 (생년월일이 있으면 태어난 날, 없으면 100년 전)
+        // 시작일 계산 (API에서 받은 생년월일 우선)
         let startDate;
         let birthYear = null;
-        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+
+        if (userBirthInfo && userBirthInfo.birthYear && userBirthInfo.birthMonth && userBirthInfo.birthDay) {
+            startDate = new Date(userBirthInfo.birthYear, userBirthInfo.birthMonth - 1, userBirthInfo.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = userBirthInfo.birthYear;
+        } else if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
             startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
             startDate.setHours(0, 0, 0, 0);
             birthYear = currentUser.birthYear;
@@ -4459,10 +6255,15 @@
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // 시작일 계산 (생년월일이 있으면 태어난 날, 없으면 100년 전)
+        // 시작일 계산 (API에서 받은 생년월일 우선)
         let startDate;
         let birthYear = null;
-        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+
+        if (userBirthInfo && userBirthInfo.birthYear && userBirthInfo.birthMonth && userBirthInfo.birthDay) {
+            startDate = new Date(userBirthInfo.birthYear, userBirthInfo.birthMonth - 1, userBirthInfo.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = userBirthInfo.birthYear;
+        } else if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
             startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
             startDate.setHours(0, 0, 0, 0);
             birthYear = currentUser.birthYear;
@@ -4897,8 +6698,9 @@
     function displayTimeCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
+        // Calendar 뷰일 때만 전역 라벨 토글 표시
+        const isCalendarView = currentView === 'calendar';
+        setupGlobalLabelToggle(isCalendarView);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -5071,10 +6873,15 @@
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // 시작일 계산
+        // 시작일 계산 (API에서 받은 생년월일 우선)
         let startDate;
         let birthYear = null;
-        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+
+        if (userBirthInfo && userBirthInfo.birthYear && userBirthInfo.birthMonth && userBirthInfo.birthDay) {
+            startDate = new Date(userBirthInfo.birthYear, userBirthInfo.birthMonth - 1, userBirthInfo.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = userBirthInfo.birthYear;
+        } else if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
             startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
             startDate.setHours(0, 0, 0, 0);
             birthYear = currentUser.birthYear;
@@ -5352,6 +7159,9 @@
         if (currentView === 'calendar') {
             // 달력 뷰
             displayTextCalendar(records);
+        } else if (currentView === 'heatmap') {
+            // 히트맵 뷰
+            displayTextHeatmap(records);
         } else {
             // 리스트 뷰
             displayTextList(records);
@@ -5362,8 +7172,9 @@
     function displayTextCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
+        // Calendar 뷰일 때만 전역 라벨 토글 표시
+        const isCalendarView = currentView === 'calendar';
+        setupGlobalLabelToggle(isCalendarView);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -5566,10 +7377,15 @@
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // 시작일 계산
+        // 시작일 계산 (API에서 받은 생년월일 우선)
         let startDate;
         let birthYear = null;
-        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+
+        if (userBirthInfo && userBirthInfo.birthYear && userBirthInfo.birthMonth && userBirthInfo.birthDay) {
+            startDate = new Date(userBirthInfo.birthYear, userBirthInfo.birthMonth - 1, userBirthInfo.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = userBirthInfo.birthYear;
+        } else if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
             startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
             startDate.setHours(0, 0, 0, 0);
             birthYear = currentUser.birthYear;
@@ -5983,8 +7799,9 @@
     function displayNumberCalendar(records) {
         const recordsSection = document.getElementById('recordsSection');
 
-        // 전역 라벨 토글 표시
-        setupGlobalLabelToggle(true);
+        // Calendar 뷰일 때만 전역 라벨 토글 표시
+        const isCalendarView = currentView === 'calendar';
+        setupGlobalLabelToggle(isCalendarView);
 
         // 날짜별로 레코드 맵핑
         const recordsByDate = {};
@@ -6157,10 +7974,15 @@
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // 시작일 계산
+        // 시작일 계산 (API에서 받은 생년월일 우선)
         let startDate;
         let birthYear = null;
-        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+
+        if (userBirthInfo && userBirthInfo.birthYear && userBirthInfo.birthMonth && userBirthInfo.birthDay) {
+            startDate = new Date(userBirthInfo.birthYear, userBirthInfo.birthMonth - 1, userBirthInfo.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = userBirthInfo.birthYear;
+        } else if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
             startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
             startDate.setHours(0, 0, 0, 0);
             birthYear = currentUser.birthYear;
@@ -6318,9 +8140,7 @@
 
         // API로 해당 날짜의 최신 데이터 가져오기
         try {
-            const response = await fetch(`${API_BASE}/text/date?categoryId=${currentCategory.id}&date=${date}`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/text/date?categoryId=${currentCategory.id}&date=${date}`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -6361,7 +8181,7 @@
                 content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">데이터를 불러올 수 없습니다.</div>';
             }
         } catch (error) {
-            console.error('텍스트 데이터 로드 오류:', error);
+
             content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">오류가 발생했습니다.</div>';
         }
     }
@@ -6528,9 +8348,8 @@
                 params.append('success', document.getElementById('editSuccess').checked);
             }
 
-            const response = await fetch(`${endpoint}?${params.toString()}`, {
-                method: 'PUT',
-                credentials: 'include'
+            const response = await authFetch(`${endpoint}?${params.toString()}`, {
+                method: 'PUT'
             });
 
             if (response.ok) {
@@ -6539,7 +8358,7 @@
                 showModalError('수정에 실패했습니다.');
             }
         } catch (error) {
-            console.error('수정 오류:', error);
+
             showModalError('수정 중 오류가 발생했습니다.');
         }
     });
@@ -6560,9 +8379,8 @@
         else if (type === 'CHECKLIST') endpoint = `${API_BASE}/check-list`;
 
         try {
-            const response = await fetch(`${endpoint}?id=${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await authFetch(`${endpoint}?id=${id}`, {
+                method: 'DELETE'
             });
 
             if (response.ok) {
@@ -6571,7 +8389,7 @@
                 showModalError('삭제에 실패했습니다.');
             }
         } catch (error) {
-            console.error('삭제 오류:', error);
+
             showModalError('삭제 중 오류가 발생했습니다.');
         }
     }
@@ -6614,16 +8432,41 @@
                 document.getElementById('userDesc').textContent = `${year}.${month}.${day}`;
             }
         }
+
+        // 알림 시스템 초기화
+        (async () => {
+            await loadUnreadNotifications();
+            await connectSSE();
+        })();
+    }
+
+    function showResetPasswordSection() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('signupSection').style.display = 'none';
+        document.getElementById('resetPasswordSection').style.display = 'block';
+        document.getElementById('mainSection').style.display = 'none';
+        // Clear form
+        document.getElementById('resetPasswordForm').reset();
+        document.getElementById('resetPasswordError').innerHTML = '';
+        document.getElementById('resetPasswordSuccess').innerHTML = '';
+    }
+
+    function showLoginFromReset() {
+        document.getElementById('resetPasswordSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
     }
 
     // 프로필 수정 모달 열기
-    document.getElementById('editProfileBtn').addEventListener('click', () => {
-        if (currentUser) {
-            document.getElementById('profileTitle').value = currentUser.title || '';
-            document.getElementById('profileDescription').value = currentUser.description || '';
-            document.getElementById('profileModal').classList.add('active');
-        }
-    });
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    if (editProfileBtn) {
+        editProfileBtn.addEventListener('click', () => {
+            if (currentUser) {
+                document.getElementById('profileTitle').value = currentUser.title || '';
+                document.getElementById('profileDescription').value = currentUser.description || '';
+                document.getElementById('profileModal').classList.add('active');
+            }
+        });
+    }
 
     // 프로필 수정 모달 닫기
     function closeProfileModal() {
@@ -6645,9 +8488,8 @@
         params.append('description', description);
 
         try {
-            const response = await fetch(`${API_BASE}/user?${params.toString()}`, {
-                method: 'PUT',
-                credentials: 'include'
+            const response = await authFetch(`${API_BASE}/user?${params.toString()}`, {
+                method: 'PUT'
             });
 
             if (response.ok) {
@@ -6674,7 +8516,7 @@
                 showProfileModalError('프로필 수정에 실패했습니다.');
             }
         } catch (error) {
-            console.error('프로필 수정 오류:', error);
+
             showProfileModalError('프로필 수정 중 오류가 발생했습니다.');
         }
     });
@@ -6842,9 +8684,8 @@
                 params.append('success', document.getElementById('addSuccess').checked);
             }
 
-            const response = await fetch(`${endpoint}?${params.toString()}`, {
-                method: 'POST',
-                credentials: 'include'
+            const response = await authFetch(`${endpoint}?${params.toString()}`, {
+                method: 'POST'
             });
 
             if (response.ok) {
@@ -6855,7 +8696,7 @@
                 showAddRecordError(currentLang === 'ko' ? '레코드 추가에 실패했습니다.' : 'Failed to add record.');
             }
         } catch (error) {
-            console.error('레코드 추가 오류:', error);
+
             showAddRecordError(currentLang === 'ko' ? '오류가 발생했습니다.' : 'An error occurred.');
         }
     });
@@ -6873,19 +8714,17 @@
     // 좋아요 개수 로드 (manage.html용)
     async function loadLikeCountForManage(categoryId) {
         try {
-            const response = await fetch(`${API_BASE}/categories/likes/count/${categoryId}`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/categories/likes/count/${categoryId}`);
 
             if (response.ok) {
                 const count = await response.json();
                 const likeElement = document.getElementById('categoryLikeCount');
                 if (likeElement) {
-                    likeElement.textContent = `❤️ ${count} ${translations.likes[currentLang]}`;
+                    likeElement.textContent = `${count} ${translations.likes[currentLang]}`;
                 }
             }
         } catch (error) {
-            console.error('좋아요 개수 로드 오류:', error);
+
         }
     }
 
@@ -6910,43 +8749,38 @@
             return;
         }
 
-        if (currentCategory.visibility !== 'PUBLIC') {
-            alert(currentLang === 'ko' ? 'PUBLIC 카테고리만 댓글 관리가 가능합니다.' : 'Only PUBLIC categories can manage comments.');
-            return;
-        }
-
         currentManagementCategoryId = currentCategory.id;
 
         // 중앙 화면에 댓글 관리 UI 표시
         const recordsSection = document.getElementById('recordsSection');
         recordsSection.innerHTML = `
-            <div style="padding: 20px;">
-                <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">
+            <div style="padding: 24px;">
+                <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 20px; color: #1a202c; padding-bottom: 12px; border-bottom: 3px solid #4299e1;">
                     <span data-lang-ko="댓글 관리" data-lang-en="Comment Management">${currentLang === 'ko' ? '댓글 관리' : 'Comment Management'}</span>
                 </h2>
-                <div style="padding: 15px; background: #fafafa; border: 1px solid #ddd; margin-bottom: 20px;">
-                    <div style="font-size: 13px; color: #666; margin-bottom: 8px;">
+                <div style="padding: 20px; background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px;">
+                    <div style="font-size: 14px; color: #2d3748; margin-bottom: 10px;">
                         <span data-lang-ko="카테고리" data-lang-en="Category">${currentLang === 'ko' ? '카테고리' : 'Category'}</span>:
-                        <span style="font-weight: bold; color: #333;">${currentCategory.title}</span>
+                        <span style="font-weight: 600; color: #1a202c;">${currentCategory.title}</span>
                     </div>
-                    <div style="font-size: 13px; color: #666;">
+                    <div style="font-size: 14px; color: #2d3748;">
                         <span data-lang-ko="총 댓글 수" data-lang-en="Total Comments">${currentLang === 'ko' ? '총 댓글 수' : 'Total Comments'}</span>:
-                        <span id="totalCommentCount" style="font-weight: bold; color: #333;">0</span>
+                        <span id="totalCommentCount" style="font-weight: 600; color: #1a202c;">0</span>
                     </div>
                 </div>
-                <div id="managementCommentsContainer" style="border: 1px solid #ddd; padding: 20px; background: white; margin-bottom: 20px;">
+                <div id="managementCommentsContainer" style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 24px; background: white; margin-bottom: 24px;">
                     <div class="no-comments" data-lang-ko="댓글을 불러오는 중..." data-lang-en="Loading comments...">${currentLang === 'ko' ? '댓글을 불러오는 중...' : 'Loading comments...'}</div>
                 </div>
-                <div style="border: 1px solid #ddd; padding: 15px; background: #fafafa;">
-                    <div style="font-size: 13px; font-weight: bold; margin-bottom: 10px;" id="commentFormTitle">
+                <div style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 20px; background: #f7fafc;">
+                    <div style="font-size: 15px; font-weight: 600; margin-bottom: 12px; color: #2d3748;" id="commentFormTitle">
                         <span data-lang-ko="댓글 작성" data-lang-en="Write a comment">${currentLang === 'ko' ? '댓글 작성' : 'Write a comment'}</span>
                     </div>
-                    <textarea id="managementCommentInput" style="width: 100%; padding: 8px; border: 1px solid #ccc; font-size: 13px; resize: vertical; min-height: 60px; margin-bottom: 10px;" placeholder="${currentLang === 'ko' ? '댓글을 입력하세요...' : 'Write a comment...'}"></textarea>
-                    <div style="display: flex; gap: 8px;">
-                        <button onclick="submitManagementComment()" style="padding: 6px 12px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;">
+                    <textarea id="managementCommentInput" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; resize: vertical; min-height: 80px; margin-bottom: 12px; font-family: inherit;" placeholder="${currentLang === 'ko' ? '댓글을 입력하세요...' : 'Write a comment...'}"></textarea>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="submitManagementComment()" style="padding: 10px 20px; border: 2px solid #4299e1; background: #4299e1; color: white; cursor: pointer; font-size: 14px; font-weight: 500; border-radius: 8px; transition: all 0.2s ease;">
                             <span data-lang-ko="작성" data-lang-en="Submit">${currentLang === 'ko' ? '작성' : 'Submit'}</span>
                         </button>
-                        <button id="cancelCommentBtn" onclick="cancelManagementComment()" style="padding: 6px 12px; border: 1px solid #ccc; background: white; cursor: pointer; font-size: 13px; display: none;">
+                        <button id="cancelCommentBtn" onclick="cancelManagementComment()" style="padding: 10px 20px; border: 2px solid #e2e8f0; background: white; color: #2d3748; cursor: pointer; font-size: 14px; font-weight: 500; border-radius: 8px; transition: all 0.2s ease; display: none;">
                             <span data-lang-ko="취소" data-lang-en="Cancel">${currentLang === 'ko' ? '취소' : 'Cancel'}</span>
                         </button>
                     </div>
@@ -6964,17 +8798,12 @@
     // 댓글 불러오기
     async function loadManagementComments(categoryId) {
         try {
-            console.log('댓글 불러오기 시작:', categoryId);
-            const response = await fetch(`${API_BASE}/category/comment/${categoryId}`, {
-                credentials: 'include'
-            });
+            const response = await authFetch(`${API_BASE}/category/comment/${categoryId}`);
 
             if (response.ok) {
                 allComments = await response.json();
-                console.log('API 응답 댓글:', allComments);
                 renderManagementComments(allComments);
             } else {
-                console.error('댓글 불러오기 실패:', response.status);
                 const container = document.getElementById('managementCommentsContainer');
                 if (container) {
                     container.innerHTML = `
@@ -6985,7 +8814,6 @@
                 }
             }
         } catch (error) {
-            console.error('댓글 불러오기 오류:', error);
             const container = document.getElementById('managementCommentsContainer');
             if (container) {
                 container.innerHTML = `
@@ -7001,8 +8829,6 @@
     function renderManagementComments(comments) {
         const container = document.getElementById('managementCommentsContainer');
         if (!container) return;
-
-        console.log('전체 댓글:', comments);
 
         if (!comments || comments.length === 0) {
             container.innerHTML = `
@@ -7047,15 +8873,12 @@
         const itemClass = depth > 0 ? 'comment-item reply-item' : 'comment-item';
         const marginLeft = depth > 0 ? `margin-left: ${depth * 30}px;` : '';
 
-        // 본인 댓글이면 배경색 변경
-        const myCommentStyle = isMine ? 'background: #fffacd;' : '';
-
         let html = `
-            <div class="${itemClass}" style="${marginLeft} ${myCommentStyle} padding: 12px; border-bottom: 1px solid #ddd;">
+            <div class="${itemClass}" style="${marginLeft} padding: 12px; border-bottom: 1px solid #ddd;">
                 <div class="comment-header">
                     <span class="comment-author" style="font-weight: bold; color: #333;">
                         ${comment.authorEmail}
-                        ${isMine ? '<span style="margin-left: 6px; padding: 2px 6px; background: #4CAF50; color: white; font-size: 10px; border-radius: 3px;">ME</span>' : ''}
+                        ${isMine ? '<span style="margin-left: 6px; padding: 2px 6px; background: #4299e1; color: white; font-size: 10px; border-radius: 3px;">ME</span>' : ''}
                     </span>
                     <span class="comment-date" style="font-size: 11px; color: #999;">${date} ${isUpdated ? updatedText : ''}</span>
                 </div>
@@ -7080,7 +8903,6 @@
 
         // children이 있으면 재귀적으로 렌더링
         if (comment.children && comment.children.length > 0) {
-            console.log(`댓글 ${comment.commentId}의 children:`, comment.children);
             html += comment.children.map(child => renderManagementComment(child, depth + 1)).join('');
         }
 
@@ -7134,12 +8956,8 @@
                 });
             }
 
-            const response = await fetch(url, {
+            const response = await authFetch(url, {
                 method: method,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
                 body: body
             });
 
@@ -7177,7 +8995,7 @@
                 alert(errorText);
             }
         } catch (error) {
-            console.error('댓글 작성 오류:', error);
+
             const errorMsg = currentLang === 'ko'
                 ? '네트워크 오류가 발생했습니다.'
                 : 'Network error occurred.';
@@ -7265,9 +9083,8 @@
         }
 
         try {
-            const response = await fetch(`${API_BASE}/category/comment/${commentId}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await authFetch(`${API_BASE}/category/comment/${commentId}`, {
+                method: 'DELETE'
             });
 
             if (response.ok) {
@@ -7282,12 +9099,476 @@
                 alert(currentLang === 'ko' ? '댓글 삭제에 실패했습니다.' : 'Failed to delete comment.');
             }
         } catch (error) {
-            console.error('댓글 삭제 오류:', error);
+
             alert(currentLang === 'ko' ? '네트워크 오류가 발생했습니다.' : 'Network error occurred.');
         }
     }
 </script>
 
+<!-- 토스트 알림 컨테이너 -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- 알림 목록 모달 -->
+<div class="notification-modal" id="notificationModal">
+    <div class="notification-modal-content">
+        <div class="notification-modal-header">
+            <div class="notification-modal-title" data-lang-en="Notifications" data-lang-ko="알림">알림</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="mark-all-read-btn" data-lang-en="Mark all as read" data-lang-ko="모두 읽음"
+                        onclick="markAllAsRead()">모두 읽음
+                </button>
+                <button class="notification-modal-close" onclick="toggleNotificationModal()">×</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <div class="notification-empty" data-lang-en="No notifications" data-lang-ko="알림이 없습니다">알림이 없습니다</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== NOTIFICATION SYSTEM ==========
+
+    let eventSource = null;
+    let notifications = [];
+    let unreadCount = 0;
+    let isInitialized = false; // 초기화 완료 플래그
+    let reconnectTimer = null; // 재연결 타이머
+    let isPageUnloading = false; // 페이지 언로딩 플래그
+
+    // SSE 연결 종료 함수
+    function disconnectSSE() {
+        if (reconnectTimer) {
+            clearTimeout(reconnectTimer);
+            reconnectTimer = null;
+        }
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+        }
+    }
+
+    // 페이지 로드 시 읽지 않은 알림 가져오기
+    async function loadUnreadNotifications() {
+
+        isInitialized = false; // 초기화 시작
+
+        try {
+            const response = await authFetch(`${API_BASE}/notification/unread`);
+
+            if (response.ok) {
+                const data = await response.json();
+                notifications = data || [];
+
+                // 읽지 않은 개수 가져오기
+                await loadUnreadCount();
+
+                isInitialized = true; // 초기화 완료
+
+            }
+        } catch (error) {
+            isInitialized = true; // 오류여도 초기화 완료로 표시
+        }
+    }
+
+    // 읽지 않은 알림 개수 가져오기
+    async function loadUnreadCount() {
+
+        try {
+            const response = await authFetch(`${API_BASE}/notification/unread/count`);
+
+            if (response.ok) {
+                const count = await response.json();
+
+                // 객체 또는 숫자 처리 (API가 {count: 4} 형태로 반환)
+                let actualCount = 0;
+                if (typeof count === 'object' && count !== null && 'count' in count) {
+                    actualCount = count.count;
+
+                } else if (typeof count === 'number') {
+                    actualCount = count;
+                }
+
+                // 강력한 타입 체크 - 숫자로 변환
+                unreadCount = Number(actualCount) || 0;
+
+                updateNotificationBadge();
+
+            } else {
+                unreadCount = 0;
+            }
+        } catch (error) {
+            unreadCount = 0; // 오류 시 0으로 초기화
+        }
+    }
+
+    // 알림을 읽음 처리
+    async function markNotificationsAsRead(notificationIds) {
+        try {
+            const response = await authFetch(`${API_BASE}/notification/unread`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    notificationIds: notificationIds
+                })
+            });
+
+            if (response.ok) {
+
+                // 읽음 처리 후 개수 업데이트
+                await loadUnreadCount();
+            }
+        } catch (error) {
+
+        }
+    }
+
+    // SSE 연결
+    async function connectSSE() {
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        // AccessToken 갱신 시도
+        try {
+            console.log('[MANAGE SSE] Refreshing access token before SSE connection...');
+            await refreshAccessToken();
+            console.log('[MANAGE SSE] Access token refreshed successfully');
+        } catch (error) {
+            console.error('[MANAGE SSE] Failed to refresh access token:', error);
+            console.warn('[MANAGE SSE] Skipping SSE connection due to token refresh failure');
+            return;
+        }
+
+        // Access Token 가져오기
+        const token = getAccessToken();
+        if (!token) {
+            console.warn('[MANAGE SSE] No AccessToken after refresh - skipping SSE connection');
+            return;
+        }
+
+        console.log('[MANAGE SSE] Token length:', token.length);
+        console.log('[MANAGE SSE] Token preview:', token.substring(0, 50) + '...');
+
+        // EventSourcePolyfill을 사용하여 Authorization 헤더 추가
+        const EventSourcePolyfill = window.EventSourcePolyfill || window.EventSource;
+
+        eventSource = new EventSourcePolyfill(`${API_BASE}/sse/subscribe`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            withCredentials: true
+        });
+
+        eventSource.addEventListener('connected', (event) => {
+            console.log('[MANAGE SSE] Connected event received');
+        });
+
+        eventSource.addEventListener('ping', (event) => {
+            console.log('[MANAGE SSE] Ping received');
+        });
+
+        eventSource.addEventListener('notification', (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                handleNotification(data.body);
+            } catch (error) {
+                console.error('[MANAGE SSE] Error parsing notification:', error);
+            }
+        });
+
+        eventSource.onerror = (error) => {
+            console.error('[MANAGE SSE] Connection error:', error);
+            disconnectSSE();
+
+            // 페이지 언로딩 중이 아니고 토큰이 있으면 재연결
+            if (!isPageUnloading && localStorage.getItem('accessToken')) {
+                reconnectTimer = setTimeout(async () => {
+                    if (!isPageUnloading) {
+                        await connectSSE();
+                    }
+                }, 5000);
+            }
+        };
+    }
+
+    // 알림 처리
+    function handleNotification(notification) {
+        // 알림 저장 (맨 앞에 추가)
+        notifications.unshift(notification);
+
+        // NaN 방지 - 현재 값이 숫자가 아니면 0으로 초기화
+        if (isNaN(unreadCount)) {
+
+            unreadCount = 0;
+        }
+
+        unreadCount++;
+
+        // 배지 업데이트
+        updateNotificationBadge();
+
+        // 토스트 표시
+        showToast(notification);
+
+        // 알림 목록 업데이트 (모달이 열려있으면)
+        if (document.getElementById('notificationModal').classList.contains('active')) {
+            renderNotificationList();
+            updateMarkAllReadButton();
+        }
+    }
+
+    // 배지 업데이트
+    function updateNotificationBadge() {
+        const badge = document.getElementById('notificationBadge');
+        const bell = document.getElementById('notificationBell');
+
+        if (!badge) {
+
+            return;
+        }
+
+        // NaN 체크
+        if (isNaN(unreadCount)) {
+
+            unreadCount = 0;
+        }
+
+        if (unreadCount > 0) {
+            const displayCount = unreadCount > 99 ? '99+' : unreadCount;
+            badge.textContent = displayCount;
+            badge.style.display = 'block';
+
+        } else {
+            badge.style.display = 'none';
+
+        }
+    }
+
+    // 토스트 알림 표시
+    function showToast(notification) {
+        const container = document.getElementById('toastContainer');
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${notification.type.toLowerCase()}`;
+
+        // 타입별 제목
+        let title = '';
+        if (notification.type === 'COMMENT') {
+            title = currentLang === 'ko' ? '새 댓글' : 'New Comment';
+        } else if (notification.type === 'REPLY') {
+            title = currentLang === 'ko' ? '새 대댓글' : 'New Reply';
+        } else {
+            title = currentLang === 'ko' ? '새 좋아요' : 'New Like';
+        }
+
+        const categoryTitle = notification.data.categoryTitle || '';
+        const categoryPrefix = categoryTitle ? `[${categoryTitle}] ` : '';
+
+        // 타입별 메시지
+        let message = '';
+        if (notification.type === 'COMMENT') {
+            message = `${categoryPrefix}${notification.data.senderEmail}: ${notification.data.comment}`;
+        } else if (notification.type === 'REPLY') {
+            const myComment = notification.data.myComment || '';
+            const myCommentPreview = myComment.length > 20 ? myComment.substring(0, 20) + '...' : myComment;
+            message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied'}: "${myCommentPreview}" → ${notification.data.comment}`;
+        } else {
+            message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+        }
+
+        const time = new Date(notification.createdAt).toLocaleTimeString(currentLang === 'ko' ? 'ko-KR' : 'en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        toast.innerHTML = `
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+            <div class="toast-time">${time}</div>
+        `;
+
+        toast.onclick = () => {
+            toggleNotificationModal();
+            toast.remove();
+        };
+
+        container.appendChild(toast);
+
+        // 5초 후 자동 제거
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(400px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
+    // 알림 모달 토글
+    function toggleNotificationModal() {
+        const modal = document.getElementById('notificationModal');
+        modal.classList.toggle('active');
+
+        if (modal.classList.contains('active')) {
+            renderNotificationList();
+            updateMarkAllReadButton();
+        }
+    }
+
+    // 모두 읽음 처리
+    async function markAllAsRead() {
+        if (notifications.length === 0) return;
+
+        const btn = document.querySelector('.mark-all-read-btn');
+        btn.disabled = true;
+        btn.textContent = currentLang === 'ko' ? '처리 중...' : 'Processing...';
+
+        try {
+            // 읽지 않은 알림 ID 수집
+            const unreadIds = notifications
+                .filter(n => n.id)
+                .map(n => n.id);
+
+            if (unreadIds.length > 0) {
+                // 알림 읽음 처리
+                await markNotificationsAsRead(unreadIds);
+
+                // 알림 배열 비우기 (중요!)
+                notifications = [];
+
+                // UI 업데이트
+                unreadCount = 0;
+                updateNotificationBadge();
+
+                // 버튼 업데이트
+                updateMarkAllReadButton();
+
+                // 성공 메시지
+
+                // 모달 닫기
+                toggleNotificationModal();
+            }
+        } catch (error) {
+
+            alert(currentLang === 'ko' ? '알림 처리에 실패했습니다' : 'Failed to mark as read');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = currentLang === 'ko' ? '모두 읽음' : 'Mark all as read';
+        }
+    }
+
+    // 모두 읽음 버튼 상태 업데이트
+    function updateMarkAllReadButton() {
+        const btn = document.querySelector('.mark-all-read-btn');
+        if (btn) {
+            const hasUnread = notifications.some(n => n.id);
+            btn.disabled = !hasUnread || notifications.length === 0;
+        }
+    }
+
+    // 알림 목록 렌더링
+    function renderNotificationList() {
+        const listContainer = document.getElementById('notificationList');
+
+        if (notifications.length === 0) {
+            const emptyText = currentLang === 'ko' ? '알림이 없습니다' : 'No notifications';
+            listContainer.innerHTML = `<div class="notification-empty">${emptyText}</div>`;
+            return;
+        }
+
+        let html = '';
+        notifications.forEach((notif, index) => {
+            // 타입별 텍스트
+            let typeText = '';
+            if (notif.type === 'COMMENT') {
+                typeText = currentLang === 'ko' ? '댓글' : 'Comment';
+            } else if (notif.type === 'REPLY') {
+                typeText = currentLang === 'ko' ? '대댓글' : 'Reply';
+            } else {
+                typeText = currentLang === 'ko' ? '좋아요' : 'Like';
+            }
+
+            const categoryTitle = notif.data.categoryTitle || '';
+            const categoryBadge = categoryTitle
+                ? `<span style="background: #e8e8e8; padding: 2px 6px; font-size: 10px; font-weight: 600; color: #666; margin-right: 4px; border-radius: 2px;">${categoryTitle}</span>`
+                : '';
+
+            // 타입별 컨텐츠
+            let content = '';
+            if (notif.type === 'COMMENT') {
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>: ${notif.data.comment}`;
+            } else if (notif.type === 'REPLY') {
+                const myComment = notif.data.myComment || '';
+                const myCommentPreview = myComment.length > 30 ? myComment.substring(0, 30) + '...' : myComment;
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied to'}: "<span style="color: #666; font-style: italic;">${myCommentPreview}</span>" → ${notif.data.comment}`;
+            } else {
+                content = `${categoryBadge}<span class="notification-item-sender">${notif.data.senderEmail}</span>${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
+            }
+
+            const time = getRelativeTime(new Date(notif.createdAt));
+
+            html += `
+                <div class="notification-item ${index < unreadCount ? 'unread' : ''}">
+                    <div class="notification-item-header">
+                        <span class="notification-item-type ${notif.type.toLowerCase()}">${typeText}</span>
+                        <span class="notification-item-time">${time}</span>
+                    </div>
+                    <div class="notification-item-content">${content}</div>
+                </div>
+            `;
+        });
+
+        listContainer.innerHTML = html;
+    }
+
+    // 상대 시간 계산
+    function getRelativeTime(date) {
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000); // 초 단위
+
+        if (diff < 60) return currentLang === 'ko' ? '방금 전' : 'Just now';
+        if (diff < 3600) return `${Math.floor(diff / 60)}${currentLang === 'ko' ? '분 전' : 'm ago'}`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)}${currentLang === 'ko' ? '시간 전' : 'h ago'}`;
+        return `${Math.floor(diff / 86400)}${currentLang === 'ko' ? '일 전' : 'd ago'}`;
+    }
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('notificationModal').addEventListener('click', (e) => {
+        if (e.target.id === 'notificationModal') {
+            toggleNotificationModal();
+        }
+    });
+
+    // SSE 연결은 showMainSection()에서 처리됨
+    // 페이지 언로드 전 SSE 연결 종료
+    window.addEventListener('beforeunload', () => {
+        disconnectSSE();
+    });
+
+    // 페이지 숨김 시 연결 종료 (모바일/탭 전환 대응)
+    document.addEventListener('visibilitychange', async () => {
+        if (document.hidden) {
+            disconnectSSE();
+        } else if (!isPageUnloading && localStorage.getItem('accessToken')) {
+            // 페이지가 다시 보일 때만 재연결
+            const mainSection = document.getElementById('mainSection');
+            if (mainSection && mainSection.style.display !== 'none') {
+                await connectSSE();
+            }
+        }
+    });
+
+    // 페이지 숨김 이벤트 (iOS Safari 대응)
+    window.addEventListener('pagehide', () => {
+        isPageUnloading = true;
+        disconnectSSE();
+    });
+
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        // CSRF 토큰 로드
+        await loadCsrfToken();
+        // 페이지 로드 완료 - 로그인 체크는 자동으로 실행됨
+    });
+</script>
 
 </body>
 </html>

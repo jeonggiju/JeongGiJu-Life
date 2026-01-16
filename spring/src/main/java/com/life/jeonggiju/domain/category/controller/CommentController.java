@@ -21,7 +21,7 @@ import com.life.jeonggiju.domain.category.service.CommentService;
 import com.life.jeonggiju.domain.user.dto.CreateCommentRequest;
 import com.life.jeonggiju.domain.user.dto.CreateCommentResponse;
 import com.life.jeonggiju.domain.user.dto.CreateReplyRequest;
-import com.life.jeonggiju.security.principal.LifeUserDetails;
+import com.life.jeonggiju.security.core.principal.LifeUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,12 +32,19 @@ public class CommentController {
 
 	private final CommentService commentService;
 
+	@GetMapping("/no-token/{categoryId}")
+	public ResponseEntity<List<FindCommentResponse>> findNoToken(
+		@PathVariable UUID categoryId
+	) {
+		return ResponseEntity.ok(commentService.find(null, categoryId));
+	}
+
 	@GetMapping("/{categoryId}")
 	public ResponseEntity<List<FindCommentResponse>> find(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@PathVariable UUID categoryId
 	) {
-		UUID userId = (userDetails == null) ? null : userDetails.getId();
+		UUID userId = userDetails.getId();
 		return ResponseEntity.ok(commentService.find(userId, categoryId));
 	}
 
@@ -55,7 +62,8 @@ public class CommentController {
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@RequestBody CreateReplyRequest req
 	) {
-		UUID replyId = commentService.createReply(req.getCategoryId(), req.getParentId(), userDetails.getId(), req.getComment());
+		UUID replyId = commentService.createReply(req.getCategoryId(), req.getParentId(), userDetails.getId(),
+			req.getComment());
 		return ResponseEntity.ok(Map.of("commentId", replyId));
 	}
 

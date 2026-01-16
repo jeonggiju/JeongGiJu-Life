@@ -17,4 +17,6 @@ public class FindCategoryResponse {
 	private String title;
 	private RecordType recordType;
 	private Visibility visibility;
+	private long likeCount;
+	private long commentCount;
 }

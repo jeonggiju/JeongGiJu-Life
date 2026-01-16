@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.life.jeonggiju.domain.category.entity.Category;
-import com.life.jeonggiju.domain.category.entity.Comment;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
+import com.life.jeonggiju.domain.category.entity.Comment;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -21,7 +21,8 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "users")
-@Builder @Data
+@Builder
+@Data
 @AllArgsConstructor
 @ToString(exclude = "categories")
 public class User {
@@ -35,6 +36,9 @@ public class User {
 
 	@Column
 	private String username;
+
+	@Column
+	private String nickname;
 
 	@Column(columnDefinition = "TEXT")
 	private String password;
@@ -81,8 +85,9 @@ public class User {
 	protected User() {
 	}
 
-	public void update(String title, String description){
+	public void update(String title, String description, String nickname) {
 		this.title = title;
 		this.description = description;
+		this.nickname = nickname;
 	}
 }
