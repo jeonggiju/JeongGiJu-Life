@@ -354,10 +354,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(4px);
         }
 
         .modal.active {
@@ -366,23 +367,28 @@
 
         .modal-content {
             background: white;
-            padding: 32px;
-            max-width: 550px;
+            padding: 0;
+            max-width: 600px;
             width: 90%;
             max-height: 85vh;
             overflow-y: auto;
-            border: 2px solid #e2e8f0;
+            border: none;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid #e9ecef;
+            padding: 24px;
+            margin-bottom: 0;
+            border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+            border-radius: 12px 12px 0 0;
         }
 
         .modal-title {
@@ -394,13 +400,13 @@
         .modal-close {
             background: #f7fafc;
             border: 2px solid #e2e8f0;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
-            color: #718096;
+            color: #2d3748;
             line-height: 1;
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
@@ -408,9 +414,28 @@
         }
 
         .modal-close:hover {
-            color: #2d3748;
             background: #edf2f7;
             border-color: #cbd5e0;
+            color: #1a202c;
+            transform: scale(1.05);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-content form {
+            padding: 0;  /* form 자체는 패딩 없음 */
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .modal-actions button {
+            flex: 1;
         }
 
         .simple-auth-container {
@@ -849,10 +874,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.6);
             z-index: 9999;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(4px);
         }
 
         .notification-modal.active {
@@ -862,65 +888,82 @@
         .notification-modal-content {
             background: white;
             width: 90%;
-            max-width: 550px;
-            max-height: 75vh;
+            max-width: 600px;
+            max-height: 80vh;
             overflow-y: auto;
             padding: 0;
             position: relative;
-            border: 1px solid #ccc;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
         .notification-modal-header {
-            padding: 14px 16px;
-            border-bottom: 1px solid #ddd;
+            padding: 24px;
+            border-bottom: 2px solid #e2e8f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
-            background: #fafafa;
+            background: white;
             z-index: 1;
+            border-radius: 12px 12px 0 0;
         }
 
         .notification-modal-title {
-            font-size: 15px;
+            font-size: 20px;
             font-weight: 600;
-            color: #333;
+            color: #1a202c;
         }
 
         .notification-modal-close {
-            background: none;
-            border: none;
-            font-size: 22px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            font-size: 24px;
             cursor: pointer;
-            color: #999;
+            color: #2d3748;
             padding: 0;
-            width: 26px;
-            height: 26px;
+            width: 36px;
+            height: 36px;
             line-height: 1;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .notification-modal-close:hover {
-            color: #333;
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            color: #1a202c;
+            transform: scale(1.05);
         }
 
         .mark-all-read-btn {
-            padding: 4px 10px;
-            background: #333;
+            padding: 8px 16px;
+            background: #4299e1;
             color: white;
-            border: none;
+            border: 2px solid #4299e1;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .mark-all-read-btn:hover {
-            background: #000;
+            background: #3182ce;
+            border-color: #3182ce;
+            transform: translateY(-1px);
         }
 
         .mark-all-read-btn:disabled {
-            background: #ccc;
+            background: #cbd5e0;
+            border-color: #cbd5e0;
+            color: #a0aec0;
             cursor: not-allowed;
+            transform: none;
         }
 
         .notification-list {
@@ -928,18 +971,19 @@
         }
 
         .notification-item {
-            padding: 12px 16px;
-            border-bottom: 1px solid #eee;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e2e8f0;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
         }
 
         .notification-item:hover {
-            background: #f5f5f5;
+            background: #f7fafc;
         }
 
         .notification-item.unread {
-            background: #f0f8ff;
+            background: #ebf8ff;
+            border-left: 4px solid #4299e1;
         }
 
         .notification-item-header {
@@ -1622,41 +1666,52 @@
             <div class="modal-title" data-lang-en="Edit Category" data-lang-ko="카테고리 수정">카테고리 수정</div>
             <button class="modal-close" onclick="closeEditCategoryModal()">×</button>
         </div>
-        <div id="editCategoryModalError"></div>
-        <form id="editCategoryForm">
-            <div class="form-group">
-                <label data-lang-en="Title *" data-lang-ko="제목 *" for="editCategoryTitle">제목 *</label>
-                <input id="editCategoryTitle" required type="text">
-            </div>
-            <div class="form-group">
-                <label data-lang-en="Description" data-lang-ko="설명" for="editCategoryDescription">설명</label>
-                <textarea id="editCategoryDescription"></textarea>
-            </div>
-            <div class="form-group">
-                <label data-lang-en="Type" data-lang-ko="타입">타입</label>
-                <input id="editCategoryType" readonly style="background: #f5f5f5; cursor: not-allowed;" type="text">
-            </div>
-            <div class="form-group">
-                <label data-lang-en="Visibility *" data-lang-ko="공개 설정 *" for="editCategoryVisibility">공개 설정 *</label>
-                <select id="editCategoryVisibility" required>
-                    <option data-lang-en="PRIVATE - Only Me" data-lang-ko="PRIVATE - 나만 보기" value="PRIVATE">PRIVATE - 나만
-                        보기
-                    </option>
-                    <option data-lang-en="PUBLIC - Public" data-lang-ko="PUBLIC - 모두에게 공개" value="PUBLIC">PUBLIC - 모두에게
-                        공개
-                    </option>
-                </select>
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 30px;">
-                <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="저장" style="flex: 1;" type="submit">
-                    저장
-                </button>
-                <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeEditCategoryModal()"
-                        style="flex: 1;"
-                        type="button">취소
-                </button>
-            </div>
-        </form>
+        <div class="modal-body">
+            <div id="editCategoryModalError"></div>
+            <form id="editCategoryForm">
+                <div class="form-group">
+                    <label data-lang-en="Title *" data-lang-ko="제목 *" for="editCategoryTitle">제목 *</label>
+                    <input id="editCategoryTitle" required type="text">
+                </div>
+                <div class="form-group">
+                    <label data-lang-en="Description" data-lang-ko="설명" for="editCategoryDescription">설명</label>
+                    <textarea id="editCategoryDescription"></textarea>
+                </div>
+                <div class="form-group">
+                    <label data-lang-en="Type" data-lang-ko="타입">타입</label>
+                    <input id="editCategoryType" readonly style="background: #f5f5f5; cursor: not-allowed;" type="text">
+                    <small data-lang-en="Type cannot be changed."
+                           data-lang-ko="타입은 변경할 수 없습니다." style="display: block; margin-top: 6px; color: #a0aec0; font-size: 12px;">타입은 변경할 수 없습니다.</small>
+                </div>
+                <div class="form-group">
+                    <label data-lang-en="Visibility *" data-lang-ko="공개 설정 *" for="editCategoryVisibility">공개 설정
+                        *</label>
+                    <select id="editCategoryVisibility" required>
+                        <option data-lang-en="PRIVATE - Only Me" data-lang-ko="PRIVATE - 나만 보기" value="PRIVATE">PRIVATE
+                            - 나만
+                            보기
+                        </option>
+                        <option data-lang-en="PUBLIC - Public" data-lang-ko="PUBLIC - 모두에게 공개" value="PUBLIC">PUBLIC -
+                            모두에게
+                            공개
+                        </option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="저장" type="submit">
+                        저장
+                    </button>
+                    <button class="btn" data-lang-en="Delete" data-lang-ko="삭제" onclick="deleteEditingCategory(event)"
+                            type="button">
+                        삭제
+                    </button>
+                    <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeEditCategoryModal()"
+                            type="button">
+                        취소
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -1993,49 +2048,52 @@
         // 모달 생성
         const modal = document.createElement('div');
         modal.id = 'editCategoryModal';
+        modal.className = 'modal active';
         modal.innerHTML = `
-            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;">
-                <div style="background: white; padding: 24px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                    <h3 style="margin: 0 0 20px 0; font-size: 18px;">${t('카테고리 수정', 'Edit Category')}</h3>
-
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">${t('제목', 'Title')}</label>
-                        <input id="editTitle" type="text" value="${category.title}" style="width: 100%; padding: 10px; border: 1px solid #ddd; font-size: 14px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">${t('카테고리 수정', 'Edit Category')}</div>
+                    <button id="closeEditModal" class="modal-close">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="editTitle">${t('제목', 'Title')} *</label>
+                        <input id="editTitle" type="text" value="${category.title}" required>
                     </div>
 
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">${t('설명', 'Description')}</label>
-                        <textarea id="editDescription" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; font-size: 14px;">${category.description || ''}</textarea>
+                    <div class="form-group">
+                        <label for="editDescription">${t('설명', 'Description')}</label>
+                        <textarea id="editDescription" rows="3">${category.description || ''}</textarea>
                     </div>
 
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">${t('타입', 'Type')}</label>
-                        <select id="editRecordType" disabled style="width: 100%; padding: 10px; border: 1px solid #ddd; font-size: 14px; background: #f5f5f5;">
+                    <div class="form-group">
+                        <label for="editRecordType">${t('타입', 'Type')}</label>
+                        <select id="editRecordType" disabled style="background: #f5f5f5; cursor: not-allowed;">
                             <option value="CHECK" ${category.recordType === 'CHECK' ? 'selected' : ''}>${getTypeText('CHECK')}</option>
                             <option value="TIME" ${category.recordType === 'TIME' ? 'selected' : ''}>${getTypeText('TIME')}</option>
                             <option value="TEXT" ${category.recordType === 'TEXT' ? 'selected' : ''}>${getTypeText('TEXT')}</option>
                             <option value="NUMBER" ${category.recordType === 'NUMBER' ? 'selected' : ''}>${getTypeText('NUMBER')}</option>
                             <option value="CHECKLIST" ${category.recordType === 'CHECKLIST' ? 'selected' : ''}>${getTypeText('CHECKLIST')}</option>
                         </select>
-                        <small style="color: #999; font-size: 11px;">${t('타입은 변경할 수 없습니다.', 'Type cannot be changed.')}</small>
+                        <small style="display: block; margin-top: 6px; color: #a0aec0; font-size: 12px;">${t('타입은 변경할 수 없습니다.', 'Type cannot be changed.')}</small>
                     </div>
 
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">${t('공개 설정', 'Visibility')}</label>
-                        <select id="editVisibility" style="width: 100%; padding: 10px; border: 1px solid #ddd; font-size: 14px;">
+                    <div class="form-group">
+                        <label for="editVisibility">${t('공개 설정', 'Visibility')} *</label>
+                        <select id="editVisibility" required>
                             <option value="PRIVATE" ${category.visibility === 'PRIVATE' ? 'selected' : ''}>${t('PRIVATE - 나만 보기', 'PRIVATE - Only Me')}</option>
                             <option value="PUBLIC" ${category.visibility === 'PUBLIC' ? 'selected' : ''}>${t('PUBLIC - 공개', 'PUBLIC - Public')}</option>
                         </select>
                     </div>
 
-                    <div style="display: flex; gap: 10px;">
-                        <button id="saveEditBtn" style="flex: 1; padding: 12px; background: #666; color: white; border: none; font-size: 14px; font-weight: 500; cursor: pointer;">
+                    <div class="modal-actions">
+                        <button id="saveEditBtn" class="btn btn-primary">
                             ${t('저장', 'Save')}
                         </button>
-                        <button id="deleteBtn" style="flex: 1; padding: 12px; background: #999; color: white; border: none; font-size: 14px; font-weight: 500; cursor: pointer;">
+                        <button id="deleteBtn" class="btn">
                             ${t('삭제', 'Delete')}
                         </button>
-                        <button id="cancelEditBtn" style="flex: 1; padding: 12px; background: #999; color: white; border: none; font-size: 14px; font-weight: 500; cursor: pointer;">
+                        <button id="cancelEditBtn" class="btn">
                             ${t('취소', 'Cancel')}
                         </button>
                     </div>
@@ -2060,13 +2118,17 @@
 
         // 삭제 버튼
         document.getElementById('deleteBtn').addEventListener('click', async () => {
-            if (confirm('정말 이 카테고리를 삭제하시겠습니까?')) {
+            if (confirm(t('정말 이 카테고리를 삭제하시겠습니까?', 'Are you sure you want to delete this category?'))) {
                 await deleteCategory(category.id);
                 modal.remove();
             }
         });
 
-        // 취소 버튼
+        // 닫기 및 취소 버튼
+        document.getElementById('closeEditModal').addEventListener('click', () => {
+            modal.remove();
+        });
+
         document.getElementById('cancelEditBtn').addEventListener('click', () => {
             modal.remove();
         });
@@ -2316,13 +2378,14 @@
         // 팝업 생성
         const popup = document.createElement('div');
         popup.id = 'commentsPopup';
+        popup.className = 'modal active';
         popup.innerHTML = `
-            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;">
-                <div style="background: white; padding: 24px; max-width: 600px; width: 90%; max-height: 70vh; overflow-y: auto;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin: 0; font-size: 18px;">${t('댓글 목록', 'Comments')}</h3>
-                        <button id="closeCommentsBtn" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">×</button>
-                    </div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">${t('댓글 목록', 'Comments')}</div>
+                    <button id="closeCommentsBtn" class="modal-close">×</button>
+                </div>
+                <div class="modal-body">
                     <div id="commentsList" style="min-height: 100px;">
                         <p style="text-align: center; color: #999;">댓글을 불러오는 중...</p>
                     </div>
@@ -2359,16 +2422,18 @@
                 const commentsList = document.getElementById('commentsList');
 
                 if (comments.length === 0) {
-                    commentsList.innerHTML = `<p style="text-align: center; color: #999; padding: 20px;">${t('댓글이 없습니다.', 'No comments yet.')}</p>`;
+                    commentsList.innerHTML = `<p style="text-align: center; color: #a0aec0; padding: 20px;">${t('댓글이 없습니다.', 'No comments yet.')}</p>`;
                 } else {
                     commentsList.innerHTML = comments.map(comment => `
-                        <div style="padding: 12px; margin-bottom: 8px; border: 1px solid #e0e0e0;">
-                            <div style="font-weight: 500; font-size: 13px; color: #333; margin-bottom: 4px;">
+                        <div style="padding: 16px; margin-bottom: 12px; border: 2px solid #e2e8f0; border-radius: 8px; transition: all 0.2s ease;"
+                             onmouseover="this.style.borderColor='#cbd5e0'; this.style.background='#f7fafc';"
+                             onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white';">
+                            <div style="font-weight: 600; font-size: 13px; color: #2d3748; margin-bottom: 6px;">
                                 ${comment.authorEmail || t('익명', 'Anonymous')}
-                                ${comment.mine ? `<span style="color: #999; font-size: 11px; margin-left: 6px;">${t('내 댓글', 'My Comment')}</span>` : ''}
+                                ${comment.mine ? `<span style="color: #4299e1; font-size: 11px; margin-left: 8px; font-weight: 500;">${t('내 댓글', 'My Comment')}</span>` : ''}
                             </div>
-                            <div style="font-size: 14px; color: #666; line-height: 1.5; margin-bottom: 4px;">${comment.comment}</div>
-                            <div style="font-size: 11px; color: #999;">${new Date(comment.createdAt).toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US')}</div>
+                            <div style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 8px;">${comment.comment}</div>
+                            <div style="font-size: 11px; color: #a0aec0;">${new Date(comment.createdAt).toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US')}</div>
                         </div>
                     `).join('');
                 }
@@ -2395,13 +2460,14 @@
         // 팝업 생성
         const popup = document.createElement('div');
         popup.id = 'likesPopup';
+        popup.className = 'modal active';
         popup.innerHTML = `
-            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;">
-                <div style="background: white; padding: 24px; max-width: 500px; width: 90%; max-height: 60vh; overflow-y: auto;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin: 0; font-size: 18px;">${t('좋아요한 사람', 'Liked By')}</h3>
-                        <button id="closeLikesBtn" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">×</button>
-                    </div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">${t('좋아요한 사람', 'Liked By')}</div>
+                    <button id="closeLikesBtn" class="modal-close">×</button>
+                </div>
+                <div class="modal-body">
                     <div id="likesList" style="min-height: 100px;">
                         <p style="text-align: center; color: #999;">좋아요 목록을 불러오는 중...</p>
                     </div>
@@ -2439,17 +2505,17 @@
 
                 // LikePersonResponse[]: [{ email: string }, ...]
                 if (likes.length === 0) {
-                    likesList.innerHTML = `<p style="text-align: center; color: #999; padding: 20px;">${t('아직 좋아요가 없습니다.', 'No likes yet.')}</p>`;
+                    likesList.innerHTML = `<p style="text-align: center; color: #a0aec0; padding: 20px;">${t('아직 좋아요가 없습니다.', 'No likes yet.')}</p>`;
                 } else {
                     likesList.innerHTML = likes.map(like => `
-                        <div style="padding: 12px; margin-bottom: 6px; border: 1px solid #e0e0e0; display: flex; align-items: center; transition: background 0.2s;"
-                             onmouseover="this.style.backgroundColor='#f5f5f5';"
-                             onmouseout="this.style.backgroundColor='white';">
-                            <div style="width: 36px; height: 36px; border-radius: 50%; background: #999; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 18px; color: white; font-weight: bold;">
-
+                        <div style="padding: 16px; margin-bottom: 12px; border: 2px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; transition: all 0.2s ease;"
+                             onmouseover="this.style.borderColor='#cbd5e0'; this.style.background='#f7fafc';"
+                             onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white';">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; margin-right: 16px; font-size: 18px; color: white; font-weight: 600;">
+                                ${(like.email || 'A')[0].toUpperCase()}
                             </div>
                             <div style="flex: 1;">
-                                <div style="font-weight: 500; font-size: 14px; color: #333;">${like.email || t('익명', 'Anonymous')}</div>
+                                <div style="font-weight: 600; font-size: 14px; color: #2d3748;">${like.email || t('익명', 'Anonymous')}</div>
                             </div>
                         </div>
                     `).join('');

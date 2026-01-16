@@ -107,6 +107,7 @@ public class Category {
 			.recordType(recordType)
 			.user(user)
 			.visibility(visibility)
+			.createdAt(Instant.now())
 			.build();
 	}
 

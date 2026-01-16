@@ -347,13 +347,27 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            padding: 16px 20px;
+            padding: 12px 20px;
             border-bottom: 2px solid #e2e8f0;
             background: white;
         }
 
         .category-header-wrapper .label-toggle-btn {
             flex-shrink: 0;
+        }
+
+        .category-like-count {
+            margin-left: auto;
+            padding: 6px 14px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3748;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .records-section {
@@ -459,21 +473,22 @@
         }
 
         .check-table td {
-            padding: 12px;
+            padding: 14px;
             text-align: center;
             border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
         }
 
         .date-cell {
             font-weight: 600;
             font-size: 14px;
             color: #2d3748;
-            background: #f8f9fa;
+            background: #f7fafc;
         }
 
         .result-cell {
             font-weight: 600;
-            font-size: 15px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -483,15 +498,17 @@
         }
 
         .result-fail {
-            color: #718096;
+            color: #a0aec0;
         }
 
         .result-cell:hover {
             background: #f7fafc;
+            transform: scale(1.05);
         }
 
         .empty-cell {
             border: none;
+            background: transparent;
         }
 
         /* TIME 테이블 스타일 */
@@ -502,31 +519,36 @@
         }
 
         .time-table td {
-            padding: 12px;
+            padding: 14px;
             text-align: center;
             border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
         }
 
         .time-cell {
-            font-weight: normal;
+            font-weight: 500;
             cursor: pointer;
+            color: #2d3748;
         }
 
         .time-cell:hover {
-            background: #f5f5f5;
+            background: #f7fafc;
+            transform: scale(1.02);
         }
 
         .time-graph-container {
             margin-bottom: 30px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 0;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
         }
 
         .time-graph-title {
             font-size: 15px;
-            font-weight: bold;
-            margin-bottom: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2d3748;
         }
 
         .time-graph-large {
@@ -543,24 +565,26 @@
         .number-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .number-table td {
-            padding: 8px;
+            padding: 12px;
             text-align: center;
-            border: 1px solid #ddd;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
         }
 
         .number-cell {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 14px;
             cursor: pointer;
-            color: #333;
+            color: #2d3748;
         }
 
         .number-cell:hover {
-            background: #f5f5f5;
+            background: #f7fafc;
+            transform: scale(1.02);
         }
 
         .number-graph-large {
@@ -574,14 +598,15 @@
         }
 
         .graph-controls {
-            background: #f9f9f9;
-            padding: 15px;
+            background: #f7fafc;
+            padding: 20px;
             margin-bottom: 20px;
-            border-radius: 0;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
         }
 
         .control-group {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .control-group:last-child {
@@ -591,14 +616,15 @@
         .control-group label {
             display: block;
             font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2d3748;
         }
 
         .control-group input[type="range"] {
             width: 100%;
             height: 6px;
-            background: #ddd;
+            background: #cbd5e0;
             outline: none;
             border-radius: 3px;
             cursor: pointer;
@@ -607,28 +633,41 @@
         .control-group input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #333;
+            width: 18px;
+            height: 18px;
+            background: #4299e1;
             cursor: pointer;
             border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb:hover {
+            background: #3182ce;
+            transform: scale(1.1);
         }
 
         .control-group input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: #333;
+            width: 18px;
+            height: 18px;
+            background: #4299e1;
             cursor: pointer;
             border-radius: 50%;
             border: none;
+            transition: all 0.2s ease;
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb:hover {
+            background: #3182ce;
+            transform: scale(1.1);
         }
 
         .range-labels {
             display: flex;
             justify-content: space-between;
             font-size: 12px;
-            color: #999;
-            margin-top: 5px;
+            color: #718096;
+            margin-top: 8px;
+            font-weight: 500;
         }
 
         .time-range-sliders {
@@ -640,8 +679,9 @@
         .time-slider label {
             display: block;
             font-size: 12px;
-            color: #666;
-            margin-bottom: 5px;
+            color: #718096;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
 
         /* TEXT 달력 스타일 */
@@ -650,42 +690,53 @@
         }
 
         .calendar-year-title {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a202c;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #4299e1;
         }
 
         .calendar-months {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
         }
 
         .calendar-month {
-            border: 1px solid #ddd;
-            padding: 12px;
-            background: #fafafa;
+            border: 2px solid #e2e8f0;
+            padding: 16px;
+            background: #ffffff;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-month:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-color: #cbd5e0;
         }
 
         .calendar-month-title {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
             text-align: center;
+            color: #2d3748;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
+            gap: 3px;
         }
 
         .calendar-weekday {
             text-align: center;
-            font-size: 10px;
-            font-weight: bold;
-            color: #999;
-            padding: 4px 0;
+            font-size: 11px;
+            font-weight: 600;
+            color: #718096;
+            padding: 6px 0;
         }
 
         .calendar-day {
@@ -693,9 +744,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            background: white;
-            border: 1px solid #f0f0f0;
+            font-size: 12px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .calendar-day:hover {
+            background: #edf2f7;
+            transform: scale(1.05);
         }
 
         .calendar-day.empty {
@@ -891,23 +950,29 @@
 
         /* 라벨 토글 버튼 */
         .label-toggle-btn {
-            padding: 5px 10px;
-            border: 1px solid #ccc;
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            min-width: 70px;
+            min-width: 80px;
             text-align: center;
-            font-size: 11px;
+            font-size: 12px;
+            font-weight: 500;
             margin-left: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            color: #2d3748;
         }
 
         .label-toggle-btn:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         .label-toggle-btn.active {
-            background: #e0e0e0;
-            border-color: #999;
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
         }
 
         /* 히트맵 라벨 숨기기 스타일 */
@@ -997,23 +1062,30 @@
             background: #555;
         }
 
-        /* 히트맵 스타일 (100년 뷰) */
+        /* 히트맵 스타일 (100년 뷰) - 정사각형, 균일 간격 */
         .heatmap-container {
             display: flex;
             flex-direction: column;
             gap: 2px;
-            padding: 15px;
+            padding: 20px;
             overflow-x: auto;
             overflow-y: auto;
             max-height: 80vh;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
         }
 
         .heatmap-header {
             display: flex;
             gap: 2px;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .heatmap-months {
@@ -1023,9 +1095,9 @@
 
         .heatmap-month-label {
             font-size: 10px;
-            color: #666;
+            color: #718096;
             text-align: center;
-            font-weight: bold;
+            font-weight: 600;
             flex-shrink: 0;
         }
 
@@ -1036,13 +1108,13 @@
         }
 
         .heatmap-year-label {
-            width: 60px;
+            width: 65px;
             font-size: 11px;
-            color: #666;
+            color: #2d3748;
             text-align: right;
-            padding-right: 8px;
+            padding-right: 10px;
             flex-shrink: 0;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .heatmap-days {
@@ -1051,47 +1123,94 @@
         }
 
         .heatmap-cell {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             cursor: pointer;
-            transition: all 0.1s;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
+            border-radius: 2px;
         }
 
+        /* 셀 개별 호버 효과 - 레이아웃 깨짐 방지 */
         .heatmap-cell:hover {
-            transform: scale(2);
-            z-index: 10;
-            border: 2px solid #000;
-            box-shadow: 0 0 8px rgba(0,0,0,0.4);
+            transform: scale(2.5);
+            z-index: 1000;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
         }
 
         /* CHECK 히트맵 */
         .heatmap-success {
-            background: #22c55e;
+            background: #48bb78;
+        }
+
+        .heatmap-success:hover {
+            background: #38a169;
         }
 
         .heatmap-fail {
-            background: #ef4444;
+            background: #f56565;
+        }
+
+        .heatmap-fail:hover {
+            background: #e53e3e;
         }
 
         .heatmap-partial {
-            background: #f59e0b;
+            background: #ed8936;
+        }
+
+        .heatmap-partial:hover {
+            background: #dd6b20;
         }
 
         /* TIME/TEXT 히트맵 */
         .heatmap-data {
-            background: #00d26a;
+            background: #4299e1;
+        }
+
+        .heatmap-data:hover {
+            background: #3182ce;
         }
 
         /* 과거 + 데이터 없음 */
         .heatmap-past-empty {
-            background: #333;
+            background: #cbd5e0;
+        }
+
+        .heatmap-past-empty:hover {
+            background: #a0aec0;
         }
 
         /* 미래 + 데이터 없음 */
         .heatmap-future-empty {
-            background: #fff;
-            border: 1px solid #ddd;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .heatmap-future-empty:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        /* 스크롤바 스타일 */
+        .heatmap-container::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .heatmap-container::-webkit-scrollbar-track {
+            background: #f7fafc;
+            border-radius: 5px;
+        }
+
+        .heatmap-container::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 5px;
+        }
+
+        .heatmap-container::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
         }
 
         /* TEXT 그룹 스타일 (이전 버전 - 제거) */
@@ -1100,60 +1219,75 @@
         }
 
         .year-header {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a202c;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #4299e1;
         }
 
         .month-group {
-            margin-bottom: 25px;
-            padding-left: 15px;
+            margin-bottom: 30px;
+            padding-left: 0;
         }
 
         .month-header {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 12px;
-            color: #666;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2d3748;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .text-record-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 16px;
+            border-bottom: 2px solid #e2e8f0;
             cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
         }
 
         .text-record-item:hover {
-            background: #fafafa;
-            padding-left: 8px;
+            background: #f7fafc;
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .text-record-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            align-items: center;
         }
 
         .text-record-title {
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a202c;
         }
 
         .text-record-date {
-            font-size: 12px;
-            color: #999;
+            font-size: 13px;
+            color: #718096;
+            font-weight: 500;
         }
 
         .text-record-content {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.4;
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.6;
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: #999;
+            padding: 60px 20px;
+            color: #a0aec0;
+            font-size: 15px;
+            font-weight: 500;
         }
 
         /* 로그인 섹션 스타일 */
@@ -1282,10 +1416,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 3000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(4px);
         }
 
         .modal.active {
@@ -1294,14 +1429,14 @@
 
         .modal-content {
             background: white;
-            padding: 32px;
-            max-width: 550px;
+            padding: 0;
+            max-width: 600px;
             width: 90%;
             max-height: 85vh;
             overflow-y: auto;
-            border: 2px solid #e2e8f0;
+            border: none;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
         .modal-content.modal-large {
@@ -1312,9 +1447,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
+            padding: 24px;
+            margin-bottom: 0;
             border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+            border-radius: 12px 12px 0 0;
         }
 
         .modal-title {
@@ -1326,13 +1466,13 @@
         .modal-close {
             background: #f7fafc;
             border: 2px solid #e2e8f0;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
-            color: #718096;
+            color: #2d3748;
             line-height: 1;
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
@@ -1340,15 +1480,25 @@
         }
 
         .modal-close:hover {
-            color: #2d3748;
             background: #edf2f7;
             border-color: #cbd5e0;
+            color: #1a202c;
+            transform: scale(1.05);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-content form {
+            padding: 24px;
         }
 
         .modal-actions {
             display: flex;
             gap: 10px;
             margin-top: 24px;
+            padding: 0;
         }
 
         .modal-actions button {
@@ -2082,79 +2232,99 @@
 
         /* 댓글 관리 스타일 */
         .comments-container {
-            padding: 20px;
+            padding: 24px;
+            background: white;
         }
 
         .comment-item {
-            border-bottom: 1px solid #ddd;
-            padding: 12px 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 16px;
+            transition: all 0.2s ease;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
         }
 
         .comment-item:last-child {
             border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .comment-item:hover {
+            background: #f7fafc;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .comment-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
         }
 
         .comment-author {
-            font-size: 12px;
-            font-weight: bold;
-            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
         }
 
         .comment-date {
-            font-size: 11px;
-            color: #999;
+            font-size: 12px;
+            color: #718096;
+            font-weight: 500;
         }
 
         .comment-content {
-            font-size: 13px;
-            color: #333;
-            margin-bottom: 6px;
-            line-height: 1.4;
+            font-size: 14px;
+            color: #2d3748;
+            margin-bottom: 10px;
+            line-height: 1.6;
         }
 
         .comment-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
         .comment-action-btn {
-            padding: 4px 8px;
-            border: 1px solid #ccc;
+            padding: 6px 14px;
+            border: 2px solid #e2e8f0;
             background: white;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: #2d3748;
         }
 
         .comment-action-btn:hover {
-            background: #f0f0f0;
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
 
         .comment-action-btn.delete {
-            color: #cc0000;
-            border-color: #cc0000;
+            color: #f56565;
+            border-color: #feb2b2;
         }
 
         .comment-action-btn.delete:hover {
-            background: #ffe0e0;
+            background: #fff5f5;
+            border-color: #fc8181;
         }
 
         .reply-item {
-            padding-left: 15px;
-            border-left: 2px solid #ddd;
+            padding-left: 24px;
+            border-left: 3px solid #cbd5e0;
+            margin-top: 12px;
         }
 
         .no-comments {
             text-align: center;
-            padding: 40px 20px;
-            color: #999;
-            font-size: 13px;
+            padding: 60px 20px;
+            color: #a0aec0;
+            font-size: 15px;
+            font-weight: 500;
         }
 
         /* ========== NOTIFICATION SYSTEM ========== */
@@ -2277,10 +2447,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             z-index: 9999;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(4px);
         }
 
         .notification-modal.active {
@@ -2295,11 +2466,13 @@
             overflow-y: auto;
             padding: 0;
             position: relative;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
         .notification-modal-header {
-            padding: 20px;
-            border-bottom: 1px solid #ddd;
+            padding: 24px;
+            border-bottom: 2px solid #e2e8f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -2307,46 +2480,63 @@
             top: 0;
             background: white;
             z-index: 1;
+            border-radius: 12px 12px 0 0;
         }
 
         .notification-modal-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
+            color: #1a202c;
         }
 
         .notification-modal-close {
-            background: none;
-            border: none;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
             font-size: 24px;
             cursor: pointer;
-            color: #999;
+            color: #2d3748;
             padding: 0;
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             line-height: 1;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .notification-modal-close:hover {
-            color: #333;
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            color: #1a202c;
+            transform: scale(1.05);
         }
 
         .mark-all-read-btn {
-            padding: 4px 10px;
-            background: #333;
+            padding: 8px 16px;
+            background: #4299e1;
             color: white;
-            border: none;
+            border: 2px solid #4299e1;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .mark-all-read-btn:hover {
-            background: #000;
+            background: #3182ce;
+            border-color: #3182ce;
+            transform: translateY(-1px);
         }
 
         .mark-all-read-btn:disabled {
-            background: #ccc;
+            background: #cbd5e0;
+            border-color: #cbd5e0;
+            color: #a0aec0;
             cursor: not-allowed;
+            transform: none;
         }
 
         .notification-list {
@@ -2354,18 +2544,19 @@
         }
 
         .notification-item {
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e2e8f0;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
         }
 
         .notification-item:hover {
-            background: #f9f9f9;
+            background: #f7fafc;
         }
 
         .notification-item.unread {
-            background: #f0f8ff;
+            background: #ebf8ff;
+            border-left: 4px solid #4299e1;
         }
 
         .notification-item-header {
@@ -3267,8 +3458,7 @@
                 <button class="label-toggle-btn" id="globalCalendarLabelToggle" style="display: none;"><span
                         data-lang-en="Labels" data-lang-ko="라벨">라벨</span></button>
                 <div class="category-description" id="categoryDescription"></div>
-                <span class="category-like-count" id="categoryLikeCount"
-                      style="display: none; margin-left: auto; padding: 4px 10px; background: #f5f5f5; border: 1px solid #ddd; font-size: 12px; color: #666;"></span>
+                <span class="category-like-count" id="categoryLikeCount" style="display: none;"></span>
             </div>
 
             <div class="records-section" id="recordsSection">
@@ -8564,33 +8754,33 @@
         // 중앙 화면에 댓글 관리 UI 표시
         const recordsSection = document.getElementById('recordsSection');
         recordsSection.innerHTML = `
-            <div style="padding: 20px;">
-                <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">
+            <div style="padding: 24px;">
+                <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 20px; color: #1a202c; padding-bottom: 12px; border-bottom: 3px solid #4299e1;">
                     <span data-lang-ko="댓글 관리" data-lang-en="Comment Management">${currentLang === 'ko' ? '댓글 관리' : 'Comment Management'}</span>
                 </h2>
-                <div style="padding: 15px; background: #fafafa; border: 1px solid #ddd; margin-bottom: 20px;">
-                    <div style="font-size: 13px; color: #666; margin-bottom: 8px;">
+                <div style="padding: 20px; background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px;">
+                    <div style="font-size: 14px; color: #2d3748; margin-bottom: 10px;">
                         <span data-lang-ko="카테고리" data-lang-en="Category">${currentLang === 'ko' ? '카테고리' : 'Category'}</span>:
-                        <span style="font-weight: bold; color: #333;">${currentCategory.title}</span>
+                        <span style="font-weight: 600; color: #1a202c;">${currentCategory.title}</span>
                     </div>
-                    <div style="font-size: 13px; color: #666;">
+                    <div style="font-size: 14px; color: #2d3748;">
                         <span data-lang-ko="총 댓글 수" data-lang-en="Total Comments">${currentLang === 'ko' ? '총 댓글 수' : 'Total Comments'}</span>:
-                        <span id="totalCommentCount" style="font-weight: bold; color: #333;">0</span>
+                        <span id="totalCommentCount" style="font-weight: 600; color: #1a202c;">0</span>
                     </div>
                 </div>
-                <div id="managementCommentsContainer" style="border: 1px solid #ddd; padding: 20px; background: white; margin-bottom: 20px;">
+                <div id="managementCommentsContainer" style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 24px; background: white; margin-bottom: 24px;">
                     <div class="no-comments" data-lang-ko="댓글을 불러오는 중..." data-lang-en="Loading comments...">${currentLang === 'ko' ? '댓글을 불러오는 중...' : 'Loading comments...'}</div>
                 </div>
-                <div style="border: 1px solid #ddd; padding: 15px; background: #fafafa;">
-                    <div style="font-size: 13px; font-weight: bold; margin-bottom: 10px;" id="commentFormTitle">
+                <div style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 20px; background: #f7fafc;">
+                    <div style="font-size: 15px; font-weight: 600; margin-bottom: 12px; color: #2d3748;" id="commentFormTitle">
                         <span data-lang-ko="댓글 작성" data-lang-en="Write a comment">${currentLang === 'ko' ? '댓글 작성' : 'Write a comment'}</span>
                     </div>
-                    <textarea id="managementCommentInput" style="width: 100%; padding: 8px; border: 1px solid #ccc; font-size: 13px; resize: vertical; min-height: 60px; margin-bottom: 10px;" placeholder="${currentLang === 'ko' ? '댓글을 입력하세요...' : 'Write a comment...'}"></textarea>
-                    <div style="display: flex; gap: 8px;">
-                        <button onclick="submitManagementComment()" style="padding: 6px 12px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;">
+                    <textarea id="managementCommentInput" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; resize: vertical; min-height: 80px; margin-bottom: 12px; font-family: inherit;" placeholder="${currentLang === 'ko' ? '댓글을 입력하세요...' : 'Write a comment...'}"></textarea>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="submitManagementComment()" style="padding: 10px 20px; border: 2px solid #4299e1; background: #4299e1; color: white; cursor: pointer; font-size: 14px; font-weight: 500; border-radius: 8px; transition: all 0.2s ease;">
                             <span data-lang-ko="작성" data-lang-en="Submit">${currentLang === 'ko' ? '작성' : 'Submit'}</span>
                         </button>
-                        <button id="cancelCommentBtn" onclick="cancelManagementComment()" style="padding: 6px 12px; border: 1px solid #ccc; background: white; cursor: pointer; font-size: 13px; display: none;">
+                        <button id="cancelCommentBtn" onclick="cancelManagementComment()" style="padding: 10px 20px; border: 2px solid #e2e8f0; background: white; color: #2d3748; cursor: pointer; font-size: 14px; font-weight: 500; border-radius: 8px; transition: all 0.2s ease; display: none;">
                             <span data-lang-ko="취소" data-lang-en="Cancel">${currentLang === 'ko' ? '취소' : 'Cancel'}</span>
                         </button>
                     </div>
@@ -8683,15 +8873,12 @@
         const itemClass = depth > 0 ? 'comment-item reply-item' : 'comment-item';
         const marginLeft = depth > 0 ? `margin-left: ${depth * 30}px;` : '';
 
-        // 본인 댓글이면 배경색 변경
-        const myCommentStyle = isMine ? 'background: #fffacd;' : '';
-
         let html = `
-            <div class="${itemClass}" style="${marginLeft} ${myCommentStyle} padding: 12px; border-bottom: 1px solid #ddd;">
+            <div class="${itemClass}" style="${marginLeft} padding: 12px; border-bottom: 1px solid #ddd;">
                 <div class="comment-header">
                     <span class="comment-author" style="font-weight: bold; color: #333;">
                         ${comment.authorEmail}
-                        ${isMine ? '<span style="margin-left: 6px; padding: 2px 6px; background: #4CAF50; color: white; font-size: 10px; border-radius: 3px;">ME</span>' : ''}
+                        ${isMine ? '<span style="margin-left: 6px; padding: 2px 6px; background: #4299e1; color: white; font-size: 10px; border-radius: 3px;">ME</span>' : ''}
                     </span>
                     <span class="comment-date" style="font-size: 11px; color: #999;">${date} ${isUpdated ? updatedText : ''}</span>
                 </div>
@@ -8948,9 +9135,6 @@
     let isInitialized = false; // 초기화 완료 플래그
     let reconnectTimer = null; // 재연결 타이머
     let isPageUnloading = false; // 페이지 언로딩 플래그
-    let lastEventId = localStorage.getItem('lastEventId') || ''; // lastEventId 저장
-    let sseReconnectAttempts = 0; // 재연결 시도 횟수
-    const MAX_SSE_RECONNECT_ATTEMPTS = 5; // 최대 재연결 시도 횟수
 
     // SSE 연결 종료 함수
     function disconnectSSE() {
@@ -9062,7 +9246,8 @@
             return;
         }
 
-        console.log('[MANAGE SSE] Connecting with lastEventId:', lastEventId || 'none');
+        console.log('[MANAGE SSE] Token length:', token.length);
+        console.log('[MANAGE SSE] Token preview:', token.substring(0, 50) + '...');
 
         // EventSourcePolyfill을 사용하여 Authorization 헤더 추가
         const EventSourcePolyfill = window.EventSourcePolyfill || window.EventSource;
@@ -9071,89 +9256,37 @@
             headers: {
                 'Authorization': `Bearer ${token}`
             },
-            withCredentials: true,
-            heartbeatTimeout: 300000 // 5분
+            withCredentials: true
         });
 
-        eventSource.onopen = () => {
-            console.log('[MANAGE SSE] Connection opened');
-            sseReconnectAttempts = 0; // 재시도 카운터 리셋
-        };
-
         eventSource.addEventListener('connected', (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                console.log('[MANAGE SSE] Connected event received:', data);
-
-                // lastEventId 저장
-                if (event.lastEventId) {
-                    lastEventId = event.lastEventId;
-                    localStorage.setItem('lastEventId', lastEventId);
-                    console.log('[MANAGE SSE] Saved lastEventId:', lastEventId);
-                }
-            } catch (e) {
-                console.error('[MANAGE SSE] Error parsing connected event:', e);
-            }
+            console.log('[MANAGE SSE] Connected event received');
         });
 
         eventSource.addEventListener('ping', (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                console.log('[MANAGE SSE] Ping received at', new Date().toLocaleTimeString());
-
-                // lastEventId 저장
-                if (event.lastEventId) {
-                    lastEventId = event.lastEventId;
-                    localStorage.setItem('lastEventId', lastEventId);
-                }
-            } catch (e) {
-                console.error('[MANAGE SSE] Error parsing ping event:', e);
-            }
+            console.log('[MANAGE SSE] Ping received');
         });
 
         eventSource.addEventListener('notification', (event) => {
             try {
                 const data = JSON.parse(event.data);
-                console.log('[MANAGE SSE] Notification received:', data);
-
-                // lastEventId 저장
-                if (event.lastEventId) {
-                    lastEventId = event.lastEventId;
-                    localStorage.setItem('lastEventId', lastEventId);
-                    console.log('[MANAGE SSE] Saved lastEventId:', lastEventId);
-                }
-
                 handleNotification(data.body);
             } catch (error) {
                 console.error('[MANAGE SSE] Error parsing notification:', error);
             }
         });
 
-        eventSource.onerror = async (error) => {
+        eventSource.onerror = (error) => {
             console.error('[MANAGE SSE] Connection error:', error);
             disconnectSSE();
 
-            // 재연결 시도
-            if (sseReconnectAttempts < MAX_SSE_RECONNECT_ATTEMPTS && !isPageUnloading) {
-                sseReconnectAttempts++;
-                const delay = Math.min(1000 * Math.pow(2, sseReconnectAttempts), 30000);
-
-                console.log(`[MANAGE SSE] Reconnecting in ${delay}ms... (attempt ${sseReconnectAttempts}/${MAX_SSE_RECONNECT_ATTEMPTS})`);
-
+            // 페이지 언로딩 중이 아니고 토큰이 있으면 재연결
+            if (!isPageUnloading && localStorage.getItem('accessToken')) {
                 reconnectTimer = setTimeout(async () => {
-                    if (!isPageUnloading && localStorage.getItem('accessToken')) {
-                        const refreshed = await refreshAccessToken();
-                        if (refreshed) {
-                            await connectSSE();
-                        } else {
-                            console.error('[MANAGE SSE] Failed to refresh token, stopping reconnection');
-                            sseReconnectAttempts = 0;
-                        }
+                    if (!isPageUnloading) {
+                        await connectSSE();
                     }
-                }, delay);
-            } else {
-                console.error('[MANAGE SSE] Max reconnection attempts reached or page is unloading');
-                sseReconnectAttempts = 0;
+                }, 5000);
             }
         };
     }
