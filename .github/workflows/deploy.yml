@@ -30,14 +30,25 @@ jobs:
       - name: .env 파일 생성
         run: |
           cat > .env << EOF
+          SPRING_PROFILES_ACTIVE=${{secrets.SPRING_PROFILES_ACTVICE}}
+          
           SPRING_DATASOURCE_URL=${{secrets.SPRING_DATASOURCE_URL}}
           SPRING_DATASOURCE_USERNAME=${{secrets.SPRING_DATASOURCE_USERNAME}}
           SPRING_DATASOURCE_PASSWORD=${{secrets.SPRING_DATASOURCE_PASSWORD}}
           
           JWT_ACCESS_KEY=${{secrets.JWT_ACCESS_KEY}}
           JWT_REFRESH_KEY=${{secrets.JWT_REFRESH_KEY}}
+          JWT_ACCESS_TOKEN_EXPIRCATION_MS=${{secrets.JWT_ACCESS_TOKEN_EXPIRCATION_MS}}
+          JWT_REFRESH_TOKEN_EXPIRCATION_MS=${{secrets.JWT_REFRESH_TOKEN_EXPIRCATION_MS}}
+          
+          INIT_ADMIN_EMAIL=${{secrets.INIT_ADMIN_EMAIL}}
+          INIT_ADMIN_PASSWORD=${{secrets.INIT_ADMIN_PASSWORD}}
+          INIT_USER_EMAIL=${{secrets.INIT_USER_EMAIL}}
+          INIT_USER_PASSWORD=${{secrets.INIT_USER_PASSWORD}}
+          
+          APP_COOKIE_SECURE=${{secrets.APP_COOKIE_SECURE}}
+          
           EOF
-
       - name: ECR에 로그인하기
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
