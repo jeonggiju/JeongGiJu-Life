@@ -11,7 +11,7 @@ spring:
 logging:
   level:
     root: info
-    org.springframework.web: debug
-    org.springframework.security: debug
-    org.springdoc: debug
+    org.springframework.web: info
+    org.springframework.security: off
+    org.springdoc: off
 
