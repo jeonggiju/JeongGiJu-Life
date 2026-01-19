@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.life.jeonggiju.domain.user.exception.UserException;
 import com.life.jeonggiju.domain.user.exception.UserNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +14,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(UserNotFoundException.class)
+
+
+	@ExceptionHandler(UserException.class)
 	public ResponseEntity<ErrorResponse> handleUserException(UserNotFoundException ex){
 		ErrorResponse response = new ErrorResponse(ex);
 		return ResponseEntity
