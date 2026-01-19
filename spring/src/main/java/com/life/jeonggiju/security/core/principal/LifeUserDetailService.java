@@ -22,7 +22,6 @@ public class LifeUserDetailService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		log.info(username);
 		User user = userRepository.findByEmail(username).orElseThrow(() -> UserNotFoundException.withEmail(username));
 
 		UserPrincipal principal = UserPrincipal.builder()
