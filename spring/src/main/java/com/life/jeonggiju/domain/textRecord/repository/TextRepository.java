@@ -12,6 +12,7 @@ import com.life.jeonggiju.domain.textRecord.entity.TextRecord;
 public interface TextRepository extends JpaRepository<TextRecord, UUID> {
 
 	List<TextRecord> findAllByCategory_Id(UUID categoryId);
+
 	Optional<List<TextRecord>> findByCategoryIdAndDate(UUID categoryId, LocalDate date);
 
 }

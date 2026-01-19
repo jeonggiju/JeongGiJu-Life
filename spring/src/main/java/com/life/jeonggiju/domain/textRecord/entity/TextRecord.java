@@ -29,7 +29,7 @@ public class TextRecord {
 	private UUID id;
 
 	@ManyToOne
-	@JoinColumn(name="category_id", nullable = false)
+	@JoinColumn(name = "category_id", nullable = false)
 	@JsonIgnore
 	private Category category;
 
@@ -40,13 +40,14 @@ public class TextRecord {
 
 	private LocalDate date;
 
-	protected TextRecord() {}
+	protected TextRecord() {
+	}
 
 	public static TextRecord of(Category category, String title, String text, LocalDate date) {
 		return TextRecord.builder().category(category).title(title).text(text).date(date).build();
 	}
 
-	public void update(String title, String text, LocalDate date){
+	public void update(String title, String text, LocalDate date) {
 		this.title = title;
 		this.text = text;
 		this.date = date;

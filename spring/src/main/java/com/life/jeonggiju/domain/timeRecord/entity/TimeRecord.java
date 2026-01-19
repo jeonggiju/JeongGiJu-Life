@@ -19,7 +19,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-@Table(uniqueConstraints = @UniqueConstraint(name = "uk_time_record_category_date",columnNames = {"category_id", "date"}))
+@Table(uniqueConstraints = @UniqueConstraint(name = "uk_time_record_category_date", columnNames = {"category_id",
+	"date"}))
 @Entity
 @Builder
 @Data
@@ -32,7 +33,7 @@ public class TimeRecord {
 
 	@ManyToOne
 	@JsonIgnore
-	@JoinColumn(name="category_id")
+	@JoinColumn(name = "category_id")
 	private Category category;
 
 	@Column
@@ -40,13 +41,14 @@ public class TimeRecord {
 
 	private LocalDate date;
 
-	protected TimeRecord() {}
+	protected TimeRecord() {
+	}
 
-	public static TimeRecord of(Category category,LocalTime time, LocalDate date) {
+	public static TimeRecord of(Category category, LocalTime time, LocalDate date) {
 		return TimeRecord.builder().category(category).time(time).date(date).build();
 	}
 
-	public void update(LocalTime time,LocalDate date){
+	public void update(LocalTime time, LocalDate date) {
 		this.time = time;
 		this.date = date;
 	}

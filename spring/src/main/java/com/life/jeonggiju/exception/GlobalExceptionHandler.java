@@ -1,6 +1,5 @@
 package com.life.jeonggiju.exception;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,13 +19,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleBaseException(BaseException ex) {
 		ErrorResponse response = new ErrorResponse(ex);
 		return ResponseEntity
-				.status(ex.getErrorCode().getHttpStatus())
-				.body(response);
+			.status(ex.getErrorCode().getHttpStatus())
+			.body(response);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse> handleValidationExceptions(
-			MethodArgumentNotValidException ex) {
+		MethodArgumentNotValidException ex) {
 
 		Map<String, String> errors = new HashMap<>();
 		ex.getBindingResult().getAllErrors().forEach((error) -> {
@@ -41,11 +40,11 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> handleAllExceptions(
-			Exception ex,
-			HttpServletRequest request
+		Exception ex,
+		HttpServletRequest request
 	) {
 		if (request.getHeader("Accept") != null &&
-				request.getHeader("Accept").contains("text/event-stream")) {
+			request.getHeader("Accept").contains("text/event-stream")) {
 			return null;
 		}
 

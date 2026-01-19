@@ -48,11 +48,11 @@ public class Comment {
 	private List<Comment> children = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="category_id")
+	@JoinColumn(name = "category_id")
 	private Category category;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	@UpdateTimestamp
@@ -63,5 +63,6 @@ public class Comment {
 	@Column(nullable = false, updatable = false)
 	public LocalDateTime createdAt;
 
-	protected Comment() {}
+	protected Comment() {
+	}
 }

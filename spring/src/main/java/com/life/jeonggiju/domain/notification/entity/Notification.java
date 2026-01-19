@@ -10,7 +10,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.github.f4b6a3.uuid.UuidCreator;
-import com.life.jeonggiju.domain.notification.event.NotificationCreatedEvent;
 import com.life.jeonggiju.domain.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -73,7 +72,7 @@ public class Notification {
 		}
 	}
 
-	public void read(){
+	public void read() {
 		this.read = true;
 	}
 }

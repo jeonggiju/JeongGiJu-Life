@@ -12,7 +12,9 @@ import com.life.jeonggiju.domain.category.entity.CategoryLike;
 public interface CategoryLikeRepository extends JpaRepository<CategoryLike, UUID> {
 
 	Integer countByCategoryId(UUID categoryId);
+
 	void deleteByUserIdAndCategoryId(UUID userId, UUID categoryId);
+
 	boolean existsByUserIdAndCategoryId(UUID userId, UUID categoryId);
 
 	Optional<CategoryLike> findByUserIdAndCategoryId(UUID userId, UUID categoryId);
