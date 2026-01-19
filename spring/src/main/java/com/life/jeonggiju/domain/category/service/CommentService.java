@@ -21,7 +21,6 @@ import com.life.jeonggiju.domain.notification.service.NotificationService;
 import com.life.jeonggiju.domain.user.dto.CreateCommentRequest;
 import com.life.jeonggiju.domain.user.entity.User;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
-import com.life.jeonggiju.sse.service.SseService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -71,11 +70,14 @@ public class CommentService {
 
 		List<FindCommentResponse> roots = new ArrayList<>();
 		for (FindCommentResponse dto : dtoMap.values()) {
-			if (dto.getParentId() == null) roots.add(dto);
+			if (dto.getParentId() == null)
+				roots.add(dto);
 			else {
 				FindCommentResponse parent = dtoMap.get(dto.getParentId());
-				if (parent == null) roots.add(dto);
-				else parent.getChildren().add(dto);
+				if (parent == null)
+					roots.add(dto);
+				else
+					parent.getChildren().add(dto);
 			}
 		}
 
@@ -84,7 +86,7 @@ public class CommentService {
 
 	@Transactional
 	public UUID createComment(CreateCommentRequest dto, UUID userId) {
-		if(dto.getComment() == null || dto.getComment().isBlank()){
+		if (dto.getComment() == null || dto.getComment().isBlank()) {
 			throw new RuntimeException("댓글 내용은 비울 수 없음");
 		}
 
@@ -103,7 +105,8 @@ public class CommentService {
 		NotificationCreatedDto notificationCreatedDto = NotificationCreatedDto.builder()
 			.receiverId(category.getUser().getId())
 			.senderId(user.getId())
-			.data(Map.of("categoryTitle", category.getTitle(),"senderEmail",user.getEmail(), "comment", saved.getComment()))
+			.data(Map.of("categoryTitle", category.getTitle(), "senderEmail", user.getEmail(), "comment",
+				saved.getComment()))
 			.type(NotificationType.COMMENT)
 			.build();
 		notificationService.notify(notificationCreatedDto);
@@ -137,17 +140,17 @@ public class CommentService {
 		NotificationCreatedDto notificationCreatedDto = NotificationCreatedDto.builder()
 			.receiverId(parent.getUser().getId())
 			.senderId(user.getId())
-			.data(Map.of("categoryTitle", category.getTitle(),"myComment",content,"senderEmail",user.getEmail(), "comment", saved.getComment()))
+			.data(Map.of("categoryTitle", category.getTitle(), "myComment", content, "senderEmail", user.getEmail(),
+				"comment", saved.getComment()))
 			.type(NotificationType.REPLY)
 			.build();
 		notificationService.notify(notificationCreatedDto);
-
 
 		return saved.getId();
 	}
 
 	@Transactional
-	public void delete(UUID commentId, UUID requestUserId){
+	public void delete(UUID commentId, UUID requestUserId) {
 
 		Comment comment = commentRepository.findById(commentId).orElseThrow();
 
@@ -163,7 +166,7 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void update(UpdateCommentRequest dto, UUID requestUserId){
+	public void update(UpdateCommentRequest dto, UUID requestUserId) {
 		Comment comment = commentRepository.findById(dto.getCommentId())
 			.orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
@@ -177,7 +180,6 @@ public class CommentService {
 
 		comment.setComment(dto.getComment());
 	}
-
 
 }
 

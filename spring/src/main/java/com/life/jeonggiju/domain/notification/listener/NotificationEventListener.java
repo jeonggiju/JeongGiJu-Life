@@ -20,7 +20,7 @@ public class NotificationEventListener {
 	private final SseService sseService;
 
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-	public void listen(NotificationCreatedEvent event){
+	public void listen(NotificationCreatedEvent event) {
 		Notification notification = notificationRepository.findById(event.getId()).orElseThrow();
 
 		NotificationPayload payload = NotificationPayload.builder()

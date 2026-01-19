@@ -14,7 +14,7 @@ public class SseHeartbeat {
 	private final SseService sseService;
 
 	@Scheduled(fixedDelay = 15000)
-	public void ping(){
+	public void ping() {
 		sseService.pingAll();
 	}
 }

@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-@Table(uniqueConstraints = @UniqueConstraint(name = "uk_category_date",columnNames = {"category_id", "date"}))
+@Table(uniqueConstraints = @UniqueConstraint(name = "uk_category_date", columnNames = {"category_id", "date"}))
 @Entity
 @Builder
 @Data
@@ -29,7 +29,7 @@ public class CheckRecord {
 	private UUID id;
 
 	@ManyToOne
-	@JoinColumn(name="category_id")
+	@JoinColumn(name = "category_id")
 	@JsonIgnore
 	private Category category;
 
@@ -37,13 +37,14 @@ public class CheckRecord {
 
 	private LocalDate date;
 
-	protected CheckRecord() {}
+	protected CheckRecord() {
+	}
 
 	public static CheckRecord of(Category category, boolean success, LocalDate date) {
 		return CheckRecord.builder().category(category).success(success).date(date).build();
 	}
 
-	public void update(boolean success, LocalDate date){
+	public void update(boolean success, LocalDate date) {
 		this.success = success;
 		this.date = date;
 	}

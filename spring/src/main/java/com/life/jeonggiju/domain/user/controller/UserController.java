@@ -34,14 +34,14 @@ public class UserController {
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(
+	public ResponseEntity<Void> update(
 		@AuthenticationPrincipal LifeUserDetails userDetails, UpdateUserRequest dto) {
 		userService.update(userDetails.getId(), dto);
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> delete(
+	public ResponseEntity<Void> delete(
 		@AuthenticationPrincipal LifeUserDetails userDetails
 	) {
 		userService.delete(userDetails.getId());

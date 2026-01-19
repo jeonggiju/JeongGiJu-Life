@@ -12,5 +12,6 @@ import com.life.jeonggiju.domain.checkList.entity.CheckListRecord;
 public interface CheckListRepository extends JpaRepository<CheckListRecord, UUID> {
 
 	List<CheckListRecord> findAllByCategory_Id(UUID categoryId);
+
 	Optional<List<CheckListRecord>> findByCategoryIdAndDate(UUID categoryId, LocalDate date);
 }

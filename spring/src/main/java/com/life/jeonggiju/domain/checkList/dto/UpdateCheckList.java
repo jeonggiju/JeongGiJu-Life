@@ -6,7 +6,8 @@ import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 
-@Data @Builder
+@Data
+@Builder
 public class UpdateCheckList {
 	private UUID id;
 	private LocalDate date;

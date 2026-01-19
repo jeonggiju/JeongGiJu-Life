@@ -27,12 +27,12 @@ public class NotificationController {
 	@GetMapping
 	public List<UnReadNotificationResponse> getUnRead(
 		@AuthenticationPrincipal LifeUserDetails userDetails
-	){
+	) {
 		return notificationService.getUnRead(userDetails.getId());
 	}
 
 	@GetMapping("/count")
-	UnReadNotificationCountResponse getUnReadCount(@AuthenticationPrincipal LifeUserDetails userDetails){
+	UnReadNotificationCountResponse getUnReadCount(@AuthenticationPrincipal LifeUserDetails userDetails) {
 		return notificationService.countUnRead(userDetails.getId());
 	}
 
@@ -40,7 +40,7 @@ public class NotificationController {
 	public int markAsRead(
 		@AuthenticationPrincipal LifeUserDetails userDetails,
 		@RequestBody MarkNotificationDto dto
-	){
+	) {
 		return notificationService.setRead(dto.getNotificationIds(), userDetails.getId());
 	}
 }

@@ -17,13 +17,13 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
 	void deleteByIdAndUserId(UUID id, UUID userId);
 
 	@Query("""
-        select c
-        from Comment c
-        join fetch c.user u
-        left join fetch c.parent p
-        where c.category.id = :categoryId
-        order by c.createdAt asc
-    """)
+		    select c
+		    from Comment c
+		    join fetch c.user u
+		    left join fetch c.parent p
+		    where c.category.id = :categoryId
+		    order by c.createdAt asc
+		""")
 	List<Comment> findByCategoryId(UUID categoryId);
 
 }

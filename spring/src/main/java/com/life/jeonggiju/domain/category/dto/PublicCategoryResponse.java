@@ -10,14 +10,14 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PublicCategoryResponse{
+public class PublicCategoryResponse {
 
 	private String email;
 	private List<PublicCategoryElement> categories;
 
 	@Data
 	@Builder
-	public static class PublicCategoryElement{
+	public static class PublicCategoryElement {
 		private UUID categoryId;
 		private String title;
 		private RecordType recordType;
