@@ -14,12 +14,14 @@ import com.life.jeonggiju.domain.category.dto.LikePersonResponse;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
 import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
+import com.life.jeonggiju.domain.category.exception.DuplicateLikeException;
 import com.life.jeonggiju.domain.category.repository.CategoryLikeRepository;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.notification.dto.NotificationCreatedDto;
 import com.life.jeonggiju.domain.notification.entity.NotificationType;
 import com.life.jeonggiju.domain.notification.service.NotificationService;
 import com.life.jeonggiju.domain.user.entity.User;
+import com.life.jeonggiju.domain.user.exception.UserNotFoundException;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,15 +30,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CategoryLikeService {
 
+	private final NotificationService notificationService;
+
 	private final CategoryLikeRepository categoryLikeRepository;
 	private final UserRepository userRepository;
 	private final CategoryRepository categoryRepository;
 
-	private final NotificationService notificationService;
 
 	@Transactional(readOnly = true)
 	public List<LikePersonResponse> findUserEmails(UUID categoryId) {
-		Category category = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
+		Category category = categoryRepository.findById(categoryId).orElseThrow(()->CategoryNotFoundException.withId(categoryId));
 		List<CategoryLike> likes = category.getCategoryLikes();
 		List<LikePersonResponse> response = new ArrayList<>();
 
@@ -55,11 +58,11 @@ public class CategoryLikeService {
 	@Transactional
 	public void add(UUID userId, UUID categoryId) {
 		if (categoryLikeRepository.existsByUserIdAndCategoryId(userId, categoryId)) {
-			throw new RuntimeException("중복 좋아요 불가.");
+			throw new DuplicateLikeException();
 		}
 
-		User user = userRepository.findById(userId).orElseThrow();
-		Category category = categoryRepository.findById(categoryId).orElseThrow();
+		User user = userRepository.findById(userId).orElseThrow(()->UserNotFoundException.withUserId(userId));
+		Category category = categoryRepository.findById(categoryId).orElseThrow(()->CategoryNotFoundException.withId(categoryId));
 
 		categoryLikeRepository.save(CategoryLike.of(user, category));
 
@@ -76,8 +79,7 @@ public class CategoryLikeService {
 
 	@Transactional(readOnly = true)
 	public CheckCountCategoryResponse checkCount(UUID userId, UUID categoryId) {
-		Optional<CategoryLike> categoryLikeOpt = categoryLikeRepository.findByUserIdAndCategoryId(userId,
-			categoryId);
+		Optional<CategoryLike> categoryLikeOpt = categoryLikeRepository.findByUserIdAndCategoryId(userId, categoryId);
 		boolean isCheck = categoryLikeOpt.isPresent();
 		Integer count = categoryLikeRepository.countByCategoryId(categoryId);
 
