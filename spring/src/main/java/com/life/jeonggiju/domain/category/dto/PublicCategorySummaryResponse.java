@@ -28,11 +28,14 @@ public class PublicCategorySummaryResponse {
 		UUID categoryId;
 		String categoryTitle;
 		String categoryDesc;
-		String authorNickname;
 		RecordType type;
 		boolean hasLike;
 		boolean isMyCategory;
 		long commentCount;
 		long likeCount;
+
+		String authorNickname;
+		String authorTitle;
+		String authorDesc;
 	}
 }
