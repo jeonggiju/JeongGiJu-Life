@@ -18,6 +18,12 @@ public enum ErrorCode {
 	COMMENT_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "삭제 권한이 없습니다."),
 	COMMENT_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "수정 권한이 없습니다."),
 
+	NUMBER_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "숫자 기록을 찾을 수 없습니다."),
+	TEXT_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "텍스트 기록을 찾을 수 없습니다."),
+	TIME_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "시간 기록을 찾을 수 없습니다."),
+	CHECK_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "체크 기록을 찾을 수 없습니다."),
+	CHECK_LIST_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "체크리스트 기록을 찾을 수 없습니다."),
+
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다"),
 	DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 존재하는 이메일입니다"),
 	ACCOUNT_LOCKED(HttpStatus.FORBIDDEN, "계정이 잠겨있습니다"),
