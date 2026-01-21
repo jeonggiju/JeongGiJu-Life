@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.life.jeonggiju.domain.checkList.entity.CheckListRecord;
+import com.life.jeonggiju.domain.checkListRecord.entity.CheckListRecord;
 import com.life.jeonggiju.domain.checkRecord.entity.CheckRecord;
 import com.life.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.life.jeonggiju.domain.timeRecord.entity.TimeRecord;

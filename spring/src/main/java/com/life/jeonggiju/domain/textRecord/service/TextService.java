@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
+import com.life.jeonggiju.domain.textRecord.exception.TextRecordNotFoundException;
 import com.life.jeonggiju.domain.textRecord.dto.FindTextAllResponse;
 import com.life.jeonggiju.domain.textRecord.dto.FindTextResponse;
 import com.life.jeonggiju.domain.textRecord.dto.SaveText;
@@ -31,7 +32,8 @@ public class TextService {
 	private final TextRepository textRepository;
 
 	public FindTextResponse find(UUID textId) {
-		TextRecord textRecord = textRepository.findById(textId).orElseThrow();
+		TextRecord textRecord = textRepository.findById(textId)
+			.orElseThrow(() -> TextRecordNotFoundException.withId(textId));
 		FindTextResponse response = FindTextResponse.builder()
 			.id(textRecord.getId())
 			.title(textRecord.getTitle())
@@ -41,7 +43,8 @@ public class TextService {
 	}
 
 	public List<FindTextResponse> findByDate(UUID categoryId, LocalDate date) {
-		List<TextRecord> textRecords = textRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
+		List<TextRecord> textRecords = textRepository.findByCategoryIdAndDate(categoryId, date)
+			.orElseThrow(() -> TextRecordNotFoundException.withCategoryIdAndDate(categoryId, date));
 		List<FindTextResponse> result = new ArrayList();
 		for (TextRecord textRecord : textRecords) {
 			result.add(FindTextResponse.builder()
@@ -79,7 +82,8 @@ public class TextService {
 	@Transactional
 	public void save(SaveText dto) {
 		UUID categoryId = dto.getCategoryId();
-		Category category = categoryRepository.findById(categoryId).orElseThrow();
+		Category category = categoryRepository.findById(categoryId)
+			.orElseThrow(() -> CategoryNotFoundException.withId(categoryId));
 		TextRecord textRecord = TextRecord.of(category, dto.getTitle(), dto.getText(), dto.getDate());
 		textRepository.save(textRecord);
 	}
@@ -87,7 +91,8 @@ public class TextService {
 	@Transactional
 	public void update(UpdateText dto) {
 		UUID id = dto.getId();
-		TextRecord textRecord = textRepository.findById(id).orElseThrow();
+		TextRecord textRecord = textRepository.findById(id)
+			.orElseThrow(() -> TextRecordNotFoundException.withId(id));
 		textRecord.update(dto.getTitle(), dto.getText(), dto.getDate());
 		textRepository.save(textRecord);
 	}

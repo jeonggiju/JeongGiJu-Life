@@ -15,6 +15,7 @@ import com.life.jeonggiju.domain.notification.entity.Notification;
 import com.life.jeonggiju.domain.notification.event.NotificationCreatedEvent;
 import com.life.jeonggiju.domain.notification.repository.NotificationRepository;
 import com.life.jeonggiju.domain.user.entity.User;
+import com.life.jeonggiju.domain.user.exception.UserNotFoundException;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -45,8 +46,10 @@ public class NotificationService {
 
 	@Transactional
 	public void notify(NotificationCreatedDto dto) {
-		User receiver = userRepository.findById(dto.getReceiverId()).orElseThrow();
-		User sender = userRepository.findById(dto.getSenderId()).orElseThrow();
+		User receiver = userRepository.findById(dto.getReceiverId())
+			.orElseThrow(() -> UserNotFoundException.withUserId(dto.getReceiverId()));
+		User sender = userRepository.findById(dto.getSenderId())
+			.orElseThrow(() -> UserNotFoundException.withUserId(dto.getSenderId()));
 
 		Notification notification = Notification.builder()
 			.receiver(receiver)

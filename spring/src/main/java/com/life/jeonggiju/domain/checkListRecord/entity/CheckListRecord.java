@@ -1,4 +1,4 @@
-package com.life.jeonggiju.domain.checkList.entity;
+package com.life.jeonggiju.domain.checkListRecord.entity;
 
 import java.time.LocalDate;
 import java.util.UUID;
