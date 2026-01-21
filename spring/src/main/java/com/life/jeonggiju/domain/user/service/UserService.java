@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.life.jeonggiju.domain.user.dto.SignUpRequest;
 import com.life.jeonggiju.domain.user.dto.UpdateUserRequest;
@@ -21,6 +22,7 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
+	@Transactional
 	public void signup(SignUpRequest dto) {
 		User user = User.builder()
 			.username(dto.getUsername())
@@ -37,6 +39,7 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	@Transactional(readOnly = true)
 	public UserFindResponse find(UUID id) {
 		User user = userRepository.findById(id).orElseThrow();
 
@@ -51,13 +54,14 @@ public class UserService {
 			.birthDay(user.getBirthDay())
 			.build();
 	}
-
+	@Transactional
 	public void update(UUID id, UpdateUserRequest dto) {
 		User user = userRepository.findById(id).orElseThrow();
 		user.update(dto.getTitle(), dto.getDescription(), dto.getNickName());
 		userRepository.save(user);
 	}
 
+	@Transactional
 	public void delete(UUID id) {
 		userRepository.deleteById(id);
 	}
