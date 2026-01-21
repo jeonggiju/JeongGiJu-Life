@@ -1,4 +1,4 @@
-package com.life.jeonggiju.domain.checkList.service;
+package com.life.jeonggiju.domain.checkListRecord.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
-import com.life.jeonggiju.domain.checkList.dto.FindCheckListAllResponse;
-import com.life.jeonggiju.domain.checkList.dto.FindCheckListResponse;
-import com.life.jeonggiju.domain.checkList.dto.SaveCheckList;
-import com.life.jeonggiju.domain.checkList.dto.UpdateCheckList;
-import com.life.jeonggiju.domain.checkList.entity.CheckListRecord;
-import com.life.jeonggiju.domain.checkList.repository.CheckListRepository;
+import com.life.jeonggiju.domain.checkListRecord.dto.FindCheckListAllResponse;
+import com.life.jeonggiju.domain.checkListRecord.dto.FindCheckListResponse;
+import com.life.jeonggiju.domain.checkListRecord.dto.SaveCheckList;
+import com.life.jeonggiju.domain.checkListRecord.dto.UpdateCheckList;
+import com.life.jeonggiju.domain.checkListRecord.entity.CheckListRecord;
+import com.life.jeonggiju.domain.checkListRecord.repository.CheckListRepository;
 import com.life.jeonggiju.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
