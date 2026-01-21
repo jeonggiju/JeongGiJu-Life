@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
+import com.life.jeonggiju.domain.checkListRecord.exception.CheckListRecordNotFoundException;
 import com.life.jeonggiju.domain.checkListRecord.dto.FindCheckListAllResponse;
 import com.life.jeonggiju.domain.checkListRecord.dto.FindCheckListResponse;
 import com.life.jeonggiju.domain.checkListRecord.dto.SaveCheckList;
@@ -29,7 +30,8 @@ public class CheckListService {
 	private final CategoryRepository categoryRepository;
 
 	public FindCheckListResponse find(UUID checkId) {
-		CheckListRecord checkListRecord = checkListRepository.findById(checkId).orElseThrow();
+		CheckListRecord checkListRecord = checkListRepository.findById(checkId)
+			.orElseThrow(() -> CheckListRecordNotFoundException.withId(checkId));
 		return FindCheckListResponse.builder().id(checkListRecord.getId()).success(checkListRecord.isSuccess()).date(
 			checkListRecord.getDate()).build();
 	}
@@ -60,12 +62,14 @@ public class CheckListService {
 	}
 
 	public List<CheckListRecord> findByDate(UUID categoryId, LocalDate date) {
-		return checkListRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
+		return checkListRepository.findByCategoryIdAndDate(categoryId, date)
+			.orElseThrow(() -> CheckListRecordNotFoundException.withCategoryIdAndDate(categoryId, date));
 	}
 
 	@Transactional
 	public void save(SaveCheckList dto) {
-		Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow();
+		Category category = categoryRepository.findById(dto.getCategoryId())
+			.orElseThrow(() -> CategoryNotFoundException.withId(dto.getCategoryId()));
 		CheckListRecord checkListRecord = CheckListRecord.of(category, dto.getTodo(), dto.isSuccess(), dto.getDate());
 		checkListRepository.save(checkListRecord);
 	}
@@ -73,7 +77,8 @@ public class CheckListService {
 	@Transactional
 	public void update(UpdateCheckList dto) {
 		UUID id = dto.getId();
-		CheckListRecord checkListRecord = checkListRepository.findById(id).orElseThrow();
+		CheckListRecord checkListRecord = checkListRepository.findById(id)
+			.orElseThrow(() -> CheckListRecordNotFoundException.withId(id));
 		checkListRecord.update(dto.getTodo(), dto.isSuccess(), dto.getDate());
 		checkListRepository.save(checkListRecord);
 	}
