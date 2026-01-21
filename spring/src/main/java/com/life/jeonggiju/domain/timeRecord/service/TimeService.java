@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
+import com.life.jeonggiju.domain.timeRecord.exception.TimeRecordNotFoundException;
 import com.life.jeonggiju.domain.timeRecord.dto.FindTimeAllResponse;
 import com.life.jeonggiju.domain.timeRecord.dto.FindTimeResponse;
 import com.life.jeonggiju.domain.timeRecord.dto.SaveTime;
@@ -29,7 +30,8 @@ public class TimeService {
 	private final CategoryRepository categoryRepository;
 
 	public FindTimeResponse find(UUID timeId) {
-		TimeRecord timeRecord = timeRepository.findById(timeId).orElseThrow();
+		TimeRecord timeRecord = timeRepository.findById(timeId)
+			.orElseThrow(() -> TimeRecordNotFoundException.withId(timeId));
 		return FindTimeResponse.builder()
 			.id(timeRecord.getId())
 			.time(timeRecord.getTime())
@@ -59,7 +61,8 @@ public class TimeService {
 	}
 
 	public FindTimeResponse findByDate(UUID categoryId, LocalDate date) {
-		TimeRecord timeRecord = timeRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
+		TimeRecord timeRecord = timeRepository.findByCategoryIdAndDate(categoryId, date)
+			.orElseThrow(() -> TimeRecordNotFoundException.withCategoryIdAndDate(categoryId, date));
 		return FindTimeResponse.builder()
 			.id(timeRecord.getId())
 			.time(timeRecord.getTime())
@@ -70,7 +73,8 @@ public class TimeService {
 	@Transactional
 	public void save(SaveTime dto) {
 		UUID id = dto.getCategoryId();
-		Category category = categoryRepository.findById(id).orElseThrow();
+		Category category = categoryRepository.findById(id)
+			.orElseThrow(() -> CategoryNotFoundException.withId(id));
 		TimeRecord timeRecord = TimeRecord.of(category, dto.getTime(), dto.getDate());
 		timeRepository.save(timeRecord);
 	}
@@ -78,7 +82,8 @@ public class TimeService {
 	@Transactional
 	public void update(UpdateTime dto) {
 		UUID id = dto.getId();
-		TimeRecord timeRecord = timeRepository.findById(id).orElseThrow();
+		TimeRecord timeRecord = timeRepository.findById(id)
+			.orElseThrow(() -> TimeRecordNotFoundException.withId(id));
 		timeRecord.update(dto.getTime(), dto.getDate());
 		timeRepository.save(timeRecord);
 	}
