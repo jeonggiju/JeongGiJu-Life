@@ -24,6 +24,8 @@ public enum ErrorCode {
 	CHECK_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "체크 기록을 찾을 수 없습니다."),
 	CHECK_LIST_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "체크리스트 기록을 찾을 수 없습니다."),
 
+	NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "알림을 찾을 수 없습니다."),
+
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다"),
 	DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 존재하는 이메일입니다"),
 	ACCOUNT_LOCKED(HttpStatus.FORBIDDEN, "계정이 잠겨있습니다"),

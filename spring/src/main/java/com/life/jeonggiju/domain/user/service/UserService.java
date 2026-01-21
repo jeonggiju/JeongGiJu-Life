@@ -11,6 +11,7 @@ import com.life.jeonggiju.domain.user.dto.UpdateUserRequest;
 import com.life.jeonggiju.domain.user.dto.UserFindResponse;
 import com.life.jeonggiju.domain.user.entity.Authority;
 import com.life.jeonggiju.domain.user.entity.User;
+import com.life.jeonggiju.domain.user.exception.UserNotFoundException;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,8 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public UserFindResponse find(UUID id) {
-		User user = userRepository.findById(id).orElseThrow();
+		User user = userRepository.findById(id)
+			.orElseThrow(() -> UserNotFoundException.withUserId(id));
 
 		return UserFindResponse.builder()
 			.username(user.getUsername())
@@ -56,7 +58,8 @@ public class UserService {
 	}
 	@Transactional
 	public void update(UUID id, UpdateUserRequest dto) {
-		User user = userRepository.findById(id).orElseThrow();
+		User user = userRepository.findById(id)
+			.orElseThrow(() -> UserNotFoundException.withUserId(id));
 		user.update(dto.getTitle(), dto.getDescription(), dto.getNickName());
 		userRepository.save(user);
 	}
