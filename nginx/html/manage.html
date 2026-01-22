@@ -3222,7 +3222,19 @@
         .submit-btn {
             min-width: 100px;
         }
+
+        /* 언어 적용 전 깜빡임 방지 */
+        body { opacity: 0; }
+        body.lang-ready { opacity: 1; transition: opacity 0.05s; }
     </style>
+
+    <!-- 언어 즉시 감지 (HTML 렌더링 전 실행) -->
+    <script>
+        (function() {
+            var lang = localStorage.getItem('language') || 'ko';
+            document.documentElement.setAttribute('data-lang', lang);
+        })();
+    </script>
 </head>
 <body>
 <!-- 로그인 섹션 -->
@@ -3918,6 +3930,9 @@
             const en = element.getAttribute('data-lang-en');
             element.textContent = currentLang === 'ko' ? ko : en;
         });
+
+        // 언어 적용 완료 - body 표시
+        document.body.classList.add('lang-ready');
     }
 
     // 페이지 로드 시 언어 적용
@@ -3931,7 +3946,7 @@
     document.addEventListener('visibilitychange', async () => {
         if (document.hidden) {
             disconnectSSE();
-        } else if (!isPageUnloading && localStorage.getItem('accessToken')) {
+        } else if (!isPageUnloading && accessToken) {
             // 페이지가 다시 보일 때만 재연결
             const mainSection = document.getElementById('mainSection');
             if (mainSection && mainSection.style.display !== 'none') {
@@ -9268,7 +9283,7 @@
             disconnectSSE();
 
             // 페이지 언로딩 중이 아니고 토큰이 있으면 재연결
-            if (!isPageUnloading && localStorage.getItem('accessToken')) {
+            if (!isPageUnloading && accessToken) {
                 reconnectTimer = setTimeout(async () => {
                     if (!isPageUnloading) {
                         await connectSSE();
@@ -9565,7 +9580,7 @@
     document.addEventListener('visibilitychange', async () => {
         if (document.hidden) {
             disconnectSSE();
-        } else if (!isPageUnloading && localStorage.getItem('accessToken')) {
+        } else if (!isPageUnloading && accessToken) {
             // 페이지가 다시 보일 때만 재연결
             const mainSection = document.getElementById('mainSection');
             if (mainSection && mainSection.style.display !== 'none') {

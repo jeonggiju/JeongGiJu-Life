@@ -1321,7 +1321,18 @@
             min-width: 100px;
         }
 
+        /* 언어 적용 전 깜빡임 방지 */
+        body { opacity: 0; }
+        body.lang-ready { opacity: 1; transition: opacity 0.05s; }
     </style>
+
+    <!-- 언어 즉시 감지 (HTML 렌더링 전 실행) -->
+    <script>
+        (function() {
+            var lang = localStorage.getItem('language') || 'ko';
+            document.documentElement.setAttribute('data-lang', lang);
+        })();
+    </script>
 
     <!-- EventSourcePolyfill 라이브러리 (Authorization 헤더 지원) -->
     <script src="https://unpkg.com/event-source-polyfill@1.0.31/src/eventsource.min.js"></script>
@@ -3095,7 +3106,8 @@
             });
         });
 
-        console.log('[INSERT] Language applied successfully');
+        // 언어 적용 완료 - body 표시
+        document.body.classList.add('lang-ready');
     }
 
     // 다국어 텍스트 가져오기 헬퍼 함수
