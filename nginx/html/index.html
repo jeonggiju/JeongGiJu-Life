@@ -209,6 +209,22 @@
             border-color: #adb5bd;
         }
 
+        /* active 상태에서도 liked 스타일 유지 */
+        .category-card.active .like-btn.liked {
+            background: #4299e1;
+            color: white;
+            border-color: #4299e1;
+        }
+
+        .category-card.active .like-btn.liked:hover {
+            background: #3182ce;
+            border-color: #3182ce;
+        }
+
+        .category-card.active .like-btn.liked .like-count {
+            color: white;
+        }
+
         .like-btn.liked {
             background: #4299e1;
             color: white;
@@ -1220,6 +1236,100 @@
             font-size: 12px;
         }
 
+        /* 사용자 정보 팝업 모달 */
+        .user-info-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .user-info-modal.active {
+            display: flex;
+        }
+
+        .user-info-modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .user-info-modal-header {
+            padding: 20px 24px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .user-info-modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #718096;
+            line-height: 1;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .user-info-modal-close:hover {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .user-info-modal-body {
+            padding: 24px;
+        }
+
+        .user-info-field {
+            margin-bottom: 20px;
+        }
+
+        .user-info-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .user-info-value {
+            font-size: 15px;
+            color: #2d3748;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .user-info-value.empty {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
         /* ========== manage.html 추가 CSS ========== */
 
         /* TIME 테이블 */
@@ -1764,7 +1874,7 @@
             height: 18px;  /* 크기 증가: 14px → 18px */
             cursor: pointer;
             transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                        box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
             border-radius: 2px;
             border: 1px solid rgba(0, 0, 0, 0.1);  /* 테두리 추가 */
@@ -2400,7 +2510,7 @@
             min-height: 60px;
             align-items: center;
         }
-    /* 카테고리 카드 액션 버튼 */
+        /* 카테고리 카드 액션 버튼 */
         .category-action-btn {
             min-width: 65px;
         }
@@ -2501,6 +2611,15 @@
                             style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:
                         </td>
                         <td style="padding: 5px 0;"><input id="signupUsername" required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-lang-en="Nickname:" data-lang-ko="닉네임:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Nickname:
+                        </td>
+                        <td style="padding: 5px 0;"><input id="signupNickname" required
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="text">
                         </td>
@@ -3447,7 +3566,7 @@
             username: document.getElementById('signupUsername').value,
             email: document.getElementById('signupEmail').value,
             password: document.getElementById('signupPassword').value,
-            nickname: document.getElementById('signupUsername').value, // nickname 필수
+            nickname: document.getElementById('signupNickname').value,
             title: document.getElementById('signupTitle').value || '',
             description: document.getElementById('signupDescription').value || '',
             birthYear: parseInt(document.getElementById('signupBirthYear').value),
@@ -3601,11 +3720,12 @@
     // 공개 카테고리 로드
     async function loadPublicCategories(isInitial = false) {
         if (isLoading) {
-
+            console.log('[INDEX] Already loading, skipping...');
             return;
         }
 
         isLoading = true;
+        console.log('[INDEX] Starting loadPublicCategories, isInitial:', isInitial);
 
         // 로딩 인디케이터 표시
         const loadingIndicator = document.getElementById('loadingIndicator');
@@ -3620,9 +3740,11 @@
             if (accessToken) {
                 // 로그인 후: /api/category/public/summary (AccessToken 헤더에 포함)
                 url = `${API_BASE}/category/public/summary`;
+                console.log('[INDEX] Using authenticated endpoint (with token)');
             } else {
                 // 로그인 전: /api/category/public/summary/no-token
                 url = `${API_BASE}/category/public/summary/no-token`;
+                console.log('[INDEX] Using public endpoint (no token)');
             }
 
             // 쿼리 파라미터 구성
@@ -3631,29 +3753,39 @@
             // 검색어
             if (currentSearchQuery) {
                 params.append('search', currentSearchQuery);
+                console.log('[INDEX] Search query:', currentSearchQuery);
             }
 
             // 정렬
             params.append('key', currentSortKey);
             params.append('sort', currentSortDirection);
+            console.log('[INDEX] Sort:', currentSortKey, currentSortDirection);
 
             // 페이지네이션 (초기 로드가 아닐 때만)
             if (!isInitial && nextCursor) {
                 params.append('cursor', nextCursor);
+                console.log('[INDEX] Cursor:', nextCursor);
             }
             if (!isInitial && nextIdAfter) {
                 params.append('idAfter', nextIdAfter);
+                console.log('[INDEX] IdAfter:', nextIdAfter);
             }
 
             // 페이지 크기
             params.append('size', '50');
 
             const fullUrl = `${url}?${params.toString()}`;
+            console.log('[INDEX] Full URL:', fullUrl);
 
             const response = await fetchWithCsrf(fullUrl);
+            console.log('[INDEX] Response status:', response.status);
+            console.log('[INDEX] Response ok:', response.ok);
 
             if (response.ok) {
                 const data = await response.json();
+                console.log('[INDEX] Response data:', data);
+                console.log('[INDEX] Contents length:', data.contents ? data.contents.length : 0);
+                console.log('[INDEX] Has next:', data.hasNext);
 
                 // 페이지네이션 정보 업데이트
                 nextCursor = data.nextCursor || null;
@@ -3662,13 +3794,16 @@
 
                 // 새로운 카테고리 추가
                 if (data.contents && Array.isArray(data.contents)) {
+                    console.log('[INDEX] Processing contents array');
                     if (isInitial) {
                         allCategories = data.contents;
                         displayCategories(data.contents, true);
+                        console.log('[INDEX] Initial load complete, categories:', allCategories.length);
                     } else {
                         // 추가 로드: 새로 받은 데이터만 전달
                         allCategories = [...allCategories, ...data.contents];
                         displayCategories(data.contents, false); // 새로 받은 것만!
+                        console.log('[INDEX] Added more categories, total:', allCategories.length);
                     }
 
                     // 스크롤이 생기지 않았으면 추가 로드
@@ -3676,20 +3811,23 @@
                         checkAndLoadMore();
                     }, 100);
                 } else {
+                    console.warn('[INDEX] No contents in response or not an array');
                     if (isInitial) {
                         document.getElementById('categoriesGrid').innerHTML =
                             '<div class="empty-state">공개 카테고리가 없습니다.</div>';
                     }
                 }
             } else {
-
+                const errorText = await response.text();
+                console.error('[INDEX] Failed to load categories:', response.status, errorText);
                 if (isInitial) {
                     document.getElementById('categoriesGrid').innerHTML =
-                        '<div class="empty-state">공개 카테고리를 불러올 수 없습니다.</div>';
+                        `<div class="empty-state">공개 카테고리를 불러올 수 없습니다. (${response.status})</div>`;
                 }
             }
         } catch (error) {
-
+            console.error('[INDEX] Error loading categories:', error);
+            console.error('[INDEX] Error stack:', error.stack);
             if (isInitial) {
                 document.getElementById('categoriesGrid').innerHTML =
                     '<div class="empty-state">오류가 발생했습니다.</div>';
@@ -3705,10 +3843,11 @@
 
     // 카테고리 표시
     function displayCategories(categories, isInitial = true) {
-
+        console.log('[INDEX displayCategories] Called with', categories.length, 'categories, isInitial:', isInitial);
         const grid = document.getElementById('categoriesGrid');
 
         if (!categories || categories.length === 0) {
+            console.log('[INDEX displayCategories] No categories to display');
             if (isInitial) {
                 grid.innerHTML = '<div class="empty-state" data-lang-ko="공개된 카테고리가 없습니다." data-lang-en="No public categories available.">공개된 카테고리가 없습니다.</div>';
                 applyLanguage();
@@ -3716,27 +3855,49 @@
             return;
         }
 
-        const categoriesHtml = categories.map(category => {
+        console.log('[INDEX displayCategories] First category:', categories[0]);
+
+        const categoriesHtml = categories.map((category, index) => {
             // 새로운 API 응답 구조에 맞게 필드 매핑
             const id = category.categoryId || category.id;
             const title = category.categoryTitle || category.title || '제목 없음';
             const description = category.categoryDesc || category.description || '';
             const recordType = category.type || category.recordType;
-            const authorNickname = category.authorNickname || category.email || '익명';
+            const authorNickname = category.authorNickname || category.nickname || '익명';
+            const authorEmail = category.authorEmail || category.email || '';
+            const authorTitle = category.authorTitle || '';
+            const authorDesc = category.authorDesc || '';
             const likeCount = category.likeCount || 0;
             const commentCount = category.commentCount || 0;
             const hasLike = category.hasLike || false;
 
+            console.log(`[INDEX displayCategories] Category ${index}:`, {
+                id, title, recordType, authorNickname, authorEmail, authorTitle, authorDesc, likeCount, commentCount
+            });
+
             // id가 없으면 건너뛰기
             if (!id) {
+                console.warn('[INDEX displayCategories] Skipping category without id:', category);
                 return '';
             }
+
+            // 작성자 정보를 JSON 문자열로 인코딩 (HTML 속성에 안전하게 전달)
+            const authorInfo = JSON.stringify({
+                nickname: authorNickname,
+                email: authorEmail,
+                title: authorTitle,
+                description: authorDesc
+            }).replace(/"/g, '&quot;');
 
             return `
                 <div class="category-card" data-id="${id}" data-type="${recordType}">
                     <div class="category-title">${title}</div>
                     <div class="category-type">${recordType}</div>
-                    <div class="category-meta"><span data-lang-ko="작성자" data-lang-en="Author">작성자</span>: ${authorNickname}</div>
+                    <div class="category-meta">
+                        <span data-lang-ko="작성자" data-lang-en="Author">작성자</span>:
+                        <span style="cursor: pointer; color: #4299e1; text-decoration: underline;"
+                              onclick="showUserInfoDirect(event, '${authorInfo}')">${authorNickname}</span>
+                    </div>
                     <div class="category-actions">
                         <button class="category-action-btn like-btn ${hasLike ? 'liked' : ''}" data-category-id="${id}" onclick="toggleLike(event, '${id}')">
                             <span data-lang-ko="좋아요" data-lang-en="Likes">좋아요</span>
@@ -3750,12 +3911,16 @@
             `;
         }).join('');
 
+        console.log('[INDEX displayCategories] Generated HTML length:', categoriesHtml.length);
+
         if (isInitial) {
             // 초기 로드: 전체 교체
             grid.innerHTML = categoriesHtml;
+            console.log('[INDEX displayCategories] Initial load - replaced grid content');
         } else {
             // 추가 로드: 기존 내용에 추가
             grid.insertAdjacentHTML('beforeend', categoriesHtml);
+            console.log('[INDEX displayCategories] Appended to grid');
         }
 
         // 언어 적용
@@ -3763,7 +3928,9 @@
 
         // 카테고리 클릭 이벤트 (새로 추가된 카드에만)
         const cards = isInitial ? grid.querySelectorAll('.category-card') :
-                                   Array.from(grid.querySelectorAll('.category-card')).slice(-categories.length);
+            Array.from(grid.querySelectorAll('.category-card')).slice(-categories.length);
+
+        console.log('[INDEX displayCategories] Setting up click listeners for', cards.length, 'cards');
 
         cards.forEach(card => {
             // 기존 이벤트 리스너가 없는 경우에만 추가
@@ -5656,6 +5823,42 @@
 
 <!-- 토스트 알림 컨테이너 -->
 <div class="toast-container" id="toastContainer"></div>
+
+<!-- 사용자 정보 팝업 모달 -->
+<div class="user-info-modal" id="userInfoModal">
+    <div class="user-info-modal-content">
+        <div class="user-info-modal-header">
+            <div class="user-info-modal-title" data-lang-en="User Information" data-lang-ko="사용자 정보">사용자 정보</div>
+            <button class="user-info-modal-close" onclick="closeUserInfoModal()">&times;</button>
+        </div>
+        <div class="user-info-modal-body">
+            <div class="user-info-field">
+                <div class="user-info-label" data-lang-en="Username" data-lang-ko="사용자명">사용자명</div>
+                <div class="user-info-value" id="userInfoUsername">-</div>
+            </div>
+            <div class="user-info-field">
+                <div class="user-info-label" data-lang-en="Nickname" data-lang-ko="닉네임">닉네임</div>
+                <div class="user-info-value" id="userInfoNickname">-</div>
+            </div>
+            <div class="user-info-field">
+                <div class="user-info-label" data-lang-en="Email" data-lang-ko="이메일">이메일</div>
+                <div class="user-info-value" id="userInfoEmail">-</div>
+            </div>
+            <div class="user-info-field">
+                <div class="user-info-label" data-lang-en="Title" data-lang-ko="직함">직함</div>
+                <div class="user-info-value" id="userInfoTitle">-</div>
+            </div>
+            <div class="user-info-field">
+                <div class="user-info-label" data-lang-en="Description" data-lang-ko="소개">소개</div>
+                <div class="user-info-value" id="userInfoDescription">-</div>
+            </div>
+            <div class="user-info-field">
+                <div class="user-info-label" data-lang-en="Birth Date" data-lang-ko="생년월일">생년월일</div>
+                <div class="user-info-value" id="userInfoBirthDate">-</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- 알림 목록 모달 -->
 <div class="notification-modal" id="notificationModal">
@@ -9227,6 +9430,77 @@
     window.addEventListener('pagehide', () => {
         isPageUnloading = true;
         disconnectSSE();
+    });
+
+    // ==================== 사용자 정보 팝업 관련 함수 ====================
+
+    // 사용자 정보 표시
+    // 사용자 정보 표시 (이미 받은 데이터 사용)
+    function showUserInfoDirect(event, authorInfoJson) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        try {
+            // HTML 엔티티 디코드 및 JSON 파싱
+            const authorInfo = JSON.parse(authorInfoJson.replace(/&quot;/g, '"'));
+            console.log('[INDEX] Showing user info:', authorInfo);
+
+            // 모달에 정보 채우기
+            document.getElementById('userInfoNickname').textContent = authorInfo.nickname || '-';
+            document.getElementById('userInfoEmail').textContent = authorInfo.email || '-';
+
+            // Username은 숨기기 (API에서 제공하지 않으므로)
+            const usernameField = document.getElementById('userInfoUsername').parentElement;
+            usernameField.style.display = 'none';
+
+            // Title 처리
+            const titleElement = document.getElementById('userInfoTitle');
+            if (authorInfo.title) {
+                titleElement.textContent = authorInfo.title;
+                titleElement.classList.remove('empty');
+            } else {
+                titleElement.textContent = currentLang === 'ko' ? '설정되지 않음' : 'Not set';
+                titleElement.classList.add('empty');
+            }
+
+            // Description 처리
+            const descElement = document.getElementById('userInfoDescription');
+            if (authorInfo.description) {
+                descElement.textContent = authorInfo.description;
+                descElement.classList.remove('empty');
+            } else {
+                descElement.textContent = currentLang === 'ko' ? '설정되지 않음' : 'Not set';
+                descElement.classList.add('empty');
+            }
+
+            // Birth Date는 숨기기 (API에서 제공하지 않으므로)
+            const birthField = document.getElementById('userInfoBirthDate').parentElement;
+            birthField.style.display = 'none';
+
+            // 모달 열기
+            document.getElementById('userInfoModal').classList.add('active');
+        } catch (error) {
+            console.error('Error parsing author info:', error);
+            alert(currentLang === 'ko' ? '사용자 정보를 표시할 수 없습니다.' : 'Failed to display user information.');
+        }
+    }
+
+    // 사용자 정보 모달 닫기
+    function closeUserInfoModal() {
+        document.getElementById('userInfoModal').classList.remove('active');
+
+        // 숨긴 필드들 다시 표시 (다음 사용을 위해)
+        const usernameField = document.getElementById('userInfoUsername').parentElement;
+        const birthField = document.getElementById('userInfoBirthDate').parentElement;
+        usernameField.style.display = '';
+        birthField.style.display = '';
+    }
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('userInfoModal').addEventListener('click', (e) => {
+        if (e.target.id === 'userInfoModal') {
+            closeUserInfoModal();
+        }
     });
 
 </script>
