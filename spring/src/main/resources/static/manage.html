@@ -4862,6 +4862,46 @@
 
     document.getElementById('resetPasswordForm').addEventListener('submit', resetPassword);
 
+    // 회원가입 에러 메시지 변환
+    function getSignupErrorMessage(errorData, lang) {
+        const errorMessages = {
+            // ErrorCode (code 필드)
+            'DUPLICATE_EMAIL': {
+                ko: '이미 사용 중인 이메일입니다.',
+                en: 'This email is already in use.'
+            },
+            'USER_NOT_FOUND': {
+                ko: '사용자를 찾을 수 없습니다.',
+                en: 'User not found.'
+            },
+            'INVALID_CREDENTIALS': {
+                ko: '이메일 또는 비밀번호가 올바르지 않습니다.',
+                en: 'Invalid email or password.'
+            },
+            // ErrorCode message (message 필드)
+            '이미 존재하는 이메일입니다': {
+                ko: '이미 사용 중인 이메일입니다.',
+                en: 'This email is already in use.'
+            },
+            '사용자를 찾을 수 없습니다': {
+                ko: '사용자를 찾을 수 없습니다.',
+                en: 'User not found.'
+            }
+        };
+
+        // code 필드 우선 확인
+        if (errorData.code && errorMessages[errorData.code]) {
+            return errorMessages[errorData.code][lang] || errorMessages[errorData.code]['ko'];
+        }
+
+        // message 필드 확인
+        if (errorData.message && errorMessages[errorData.message]) {
+            return errorMessages[errorData.message][lang] || errorMessages[errorData.message]['ko'];
+        }
+
+        return lang === 'ko' ? '회원가입에 실패했습니다.' : 'Sign up failed.';
+    }
+
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -4911,11 +4951,10 @@
                 }, 1500);
             } else {
                 const errorData = await response.json().catch(() => ({}));
-
-                showError('signupError', currentLang === 'ko' ? '회원가입에 실패했습니다.' : 'Sign up failed.');
+                const errorMsg = getSignupErrorMessage(errorData, currentLang);
+                showError('signupError', errorMsg);
             }
         } catch (error) {
-
             showError('signupError', currentLang === 'ko' ? '회원가입 중 오류가 발생했습니다.' : 'An error occurred during sign up.');
         }
     });

@@ -1,5 +1,9 @@
 package com.life.jeonggiju.exception;
 
+import java.time.Instant;
+import java.util.Map;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +20,27 @@ public class GlobalExceptionHandler {
 		return ResponseEntity
 			.status(ex.getErrorCode().getHttpStatus())
 			.body(response);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+		String message = ex.getMessage();
+		ErrorCode errorCode = ErrorCode.DUPLICATE_EMAIL;
+
+		if (message != null && message.toLowerCase().contains("email")) {
+			errorCode = ErrorCode.DUPLICATE_EMAIL;
+		}
+
+		ErrorResponse response = new ErrorResponse(
+			Instant.now(),
+			errorCode.name(),
+			errorCode.getMessage(),
+			Map.of(),
+			ex.getClass().getSimpleName(),
+			errorCode.getHttpStatus().value()
+		);
+
+		return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
 	}
 
 	@ExceptionHandler(Exception.class)
