@@ -10,4 +10,6 @@ public interface BinaryStorage {
 	InputStream get(UUID userId);
 
 	Boolean exists(UUID userId);
+
+	String getUrl(UUID userId);
 }

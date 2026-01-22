@@ -52,4 +52,11 @@ public class S3BinaryStorage implements BinaryStorage {
 		s3.headObject(headObjectRequest);
 		return true;
 	}
+
+	@Override
+	public String getUrl(UUID userId) {
+		String key = PATH + "/" + userId;
+		return String.format("https://%s.s3.%s.amazonaws.com/%s",
+			config.getBucket(), config.getRegion(), key);
+	}
 }
