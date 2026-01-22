@@ -797,7 +797,7 @@
             min-width: 20px;
             text-align: center;
         }
-/* 토스트 알림 컨테이너 */
+        /* 토스트 알림 컨테이너 */
         .toast-container {
             position: fixed;
             bottom: 20px;
@@ -1306,7 +1306,7 @@
             min-height: 60px;
             align-items: center;
         }
-    /* 카테고리 카드 액션 버튼 */
+        /* 카테고리 카드 액션 버튼 */
         .category-action-btn {
             min-width: 65px;
         }
@@ -1329,7 +1329,7 @@
 <body>
 <!-- 로그인 섹션 -->
 <div id="loginSection"
-     style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
@@ -1391,6 +1391,13 @@
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Username:</td>
                         <td style="padding: 5px 0;"><input id="signupUsername" required
+                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Nickname:</td>
+                        <td style="padding: 5px 0;"><input id="signupNickname" required
                                                            style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
                                                            type="text">
                         </td>
@@ -1801,21 +1808,17 @@
         }
     }
 
-    // AccessToken 저장
+    // AccessToken 저장 (메모리에만 저장 - 보안상 localStorage 사용 안 함)
     function setAccessToken(token) {
         accessToken = token;
-        localStorage.setItem('accessToken', token);
     }
 
     // AccessToken 가져오기
     function getAccessToken() {
-        if (!accessToken) {
-            accessToken = localStorage.getItem('accessToken');
-        }
         return accessToken;
     }
 
-    // AccessToken 갱신
+    // AccessToken 갱신 (RefreshToken 쿠키로 새 AccessToken 발급)
     async function refreshAccessToken() {
         try {
             if (!csrfToken) {
@@ -1824,15 +1827,7 @@
 
             const headers = { 'Content-Type': 'application/json' };
 
-            // 기존 AccessToken이 있으면 헤더에 추가
-            const token = getAccessToken();
-            if (token) {
-                headers['Authorization'] = `Bearer ${token}`;
-                console.log('[INSERT REFRESH] Sending AccessToken:', token.substring(0, 20) + '...');
-            } else {
-                console.log('[INSERT REFRESH] No AccessToken - using RefreshToken cookie only');
-            }
-
+            // CSRF 토큰 추가
             if (csrfToken) {
                 headers['X-XSRF-TOKEN'] = csrfToken;
             }
@@ -1848,23 +1843,23 @@
                 const newToken = data.accessToken || data.access_token || data.token;
                 if (newToken && typeof newToken === 'string') {
                     setAccessToken(newToken);
-                    console.log('[INSERT REFRESH] New AccessToken received:', newToken.substring(0, 20) + '...');
                     return true;
                 }
             }
             return false;
         } catch (error) {
-            console.error('[INSERT REFRESH] Token refresh failed:', error);
             return false;
         }
     }
 
     // 인증된 fetch 요청
     async function authFetch(url, options = {}) {
-        const token = getAccessToken();
-        console.log('[INSERT authFetch] URL:', url);
-        console.log('[INSERT authFetch] AccessToken:', token ? `${token.substring(0, 20)}...` : 'NULL');
+        // CSRF 토큰이 없으면 먼저 가져오기
+        if (!csrfToken) {
+            csrfToken = getCsrfToken();
+        }
 
+        // 기본 옵션 설정
         const defaultOptions = {
             credentials: 'include',
             headers: {
@@ -1873,28 +1868,19 @@
             }
         };
 
-        if (token) {
-            defaultOptions.headers['Authorization'] = `Bearer ${token}`;
-            console.log('[INSERT authFetch] Authorization header set:', `Bearer ${token.substring(0, 20)}...`);
-        } else {
-            console.log('[INSERT authFetch] No token - Authorization header not set');
+        // AccessToken이 있으면 Authorization 헤더 추가
+        if (accessToken) {
+            defaultOptions.headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
+        // POST, PUT, DELETE, PATCH 요청에 CSRF 토큰 추가
         if (options.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method.toUpperCase())) {
-            if (!csrfToken) {
-                csrfToken = getCsrfToken();
-                console.log('[INSERT authFetch] Got CSRF token from cookie:', csrfToken ? csrfToken.substring(0, 20) + '...' : 'NULL');
-            } else {
-                console.log('[INSERT authFetch] Using existing CSRF token:', csrfToken.substring(0, 20) + '...');
-            }
             if (csrfToken) {
                 defaultOptions.headers['X-XSRF-TOKEN'] = csrfToken;
-                console.log('[INSERT authFetch] X-XSRF-TOKEN header set');
-            } else {
-                console.error('[INSERT authFetch] No CSRF token available!');
             }
         }
 
+        // 옵션 병합
         const finalOptions = {
             ...defaultOptions,
             ...options,
@@ -1904,15 +1890,50 @@
             }
         };
 
-        console.log('[INSERT authFetch] Final headers:', finalOptions.headers);
-        return await fetch(url, finalOptions);
+        const response = await fetch(url, finalOptions);
+
+        // 응답 헤더에서 새로운 CSRF 토큰 확인 및 자동 업데이트
+        const responseCsrfToken = response.headers.get('X-CSRF-TOKEN');
+        if (responseCsrfToken) {
+            csrfToken = responseCsrfToken;
+        } else {
+            // 응답 헤더에 없으면 쿠키에서 다시 읽기
+            const cookieToken = getCsrfToken();
+            if (cookieToken && cookieToken !== csrfToken) {
+                csrfToken = cookieToken;
+            }
+        }
+
+        // 401 에러 시 토큰 갱신 시도
+        if (response.status === 401) {
+            const refreshed = await refreshAccessToken();
+            if (refreshed && accessToken) {
+                // 토큰 갱신 성공 - 재시도
+                finalOptions.headers['Authorization'] = `Bearer ${accessToken}`;
+                return await fetch(url, finalOptions);
+            } else {
+                // 토큰 갱신 실패 - RefreshToken 만료 또는 없음
+                currentUser = null;
+                accessToken = null;
+                location.href = location.pathname; // 현재 페이지 새로고침
+                throw new Error('Authentication required');
+            }
+        }
+
+        // 403 에러 시 CSRF 토큰 갱신 후 재시도
+        if (response.status === 403) {
+            await initCsrfToken();
+            if (csrfToken) {
+                finalOptions.headers['X-XSRF-TOKEN'] = csrfToken;
+                return await fetch(url, finalOptions);
+            }
+        }
+
+        return response;
     }
 
-    // 사용자 정보 설정 (로그인 시 이미 인증됨)
+    // 인증 상태 확인
     function checkAuth() {
-        console.log('[INSERT] Auth already verified by login');
-        // 로그인이 성공했으면 이미 인증된 상태
-        // accessToken이 있으면 인증된 것으로 간주
         return !!accessToken;
     }
 
@@ -2970,15 +2991,15 @@
     // 페이지 언로드 전 SSE 연결 종료
     window.addEventListener('beforeunload', () => {
         disconnectSSE();
-                console.log('[INSERT LOGIN] SSE connected');
+        console.log('[INSERT LOGIN] SSE connected');
     });
 
     // 페이지 숨김 시 연결 종료 (모바일/탭 전환 대응)
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             disconnectSSE();
-                console.log('[INSERT LOGIN] SSE connected');
-        } else if (!isPageUnloading && localStorage.getItem('accessToken')) {
+            console.log('[INSERT LOGIN] SSE connected');
+        } else if (!isPageUnloading && accessToken) {
             // 페이지가 다시 보일 때만 재연결
             const mainSection = document.getElementById('mainSection');
             if (mainSection && mainSection.style.display !== 'none') {
@@ -2991,7 +3012,7 @@
     // 페이지 숨김 이벤트 (iOS Safari 대응)
     window.addEventListener('pagehide', () => {
         disconnectSSE();
-                console.log('[INSERT LOGIN] SSE connected');
+        console.log('[INSERT LOGIN] SSE connected');
     });
 
     // 화면 전환 함수들
@@ -3311,7 +3332,7 @@
             username: document.getElementById('signupUsername').value,
             email: document.getElementById('signupEmail').value,
             password: document.getElementById('signupPassword').value,
-            nickname: document.getElementById('signupUsername').value,
+            nickname: document.getElementById('signupNickname').value,
             title: document.getElementById('signupTitle').value || '',
             description: document.getElementById('signupDescription').value || '',
             birthYear: parseInt(document.getElementById('signupBirthYear').value),

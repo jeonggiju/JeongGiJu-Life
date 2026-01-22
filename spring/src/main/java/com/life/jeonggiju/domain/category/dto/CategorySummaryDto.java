@@ -20,6 +20,9 @@ public class CategorySummaryDto {
 	private String categoryDesc;
 	private UUID authorId;
 	private String authorNickname;
+	private String authorTitle;
+	private String authorDesc;
+	private String authorEmail;
 	private RecordType type;
 	private boolean hasLike;
 	private long likeCount;
