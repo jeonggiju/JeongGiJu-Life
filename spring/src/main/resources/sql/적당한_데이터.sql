@@ -24,7 +24,7 @@ CREATE TEMP TABLE tmp_categories (id UUID PRIMARY KEY, record_type TEXT NOT NULL
 -- 1) users 10명
 -- =========================================================
 WITH ins AS (
-INSERT INTO users (id, authority, birth_day, birth_month, birth_year, description, email, password, title, username)
+INSERT INTO users (id, authority, birth_day, birth_month, birth_year, description, email, password, title, username, nickname)
 SELECT
     gen_random_uuid(),
     1,
@@ -35,7 +35,8 @@ SELECT
     'user' || lpad(gs::text, 2, '0') || '@example.com',
     'pass1234',
     'USER',
-    'user' || lpad(gs::text, 2, '0')
+    'user' || lpad(gs::text, 2, '0'),
+    'nickname' || lpad(gs::text, 2, '0')
 FROM generate_series(1, 10) gs
     RETURNING id
 )
