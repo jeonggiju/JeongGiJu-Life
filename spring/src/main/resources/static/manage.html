@@ -1127,7 +1127,7 @@
             height: 14px;
             cursor: pointer;
             transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                        box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
             border-radius: 2px;
         }
@@ -3208,7 +3208,7 @@
             min-height: 60px;
             align-items: center;
         }
-    /* 카테고리 카드 액션 버튼 */
+        /* 카테고리 카드 액션 버튼 */
         .category-action-btn {
             min-width: 65px;
         }
@@ -3227,7 +3227,7 @@
 <body>
 <!-- 로그인 섹션 -->
 <div id="loginSection"
-     style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
@@ -3288,6 +3288,13 @@
                     <tr>
                         <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:</td>
                         <td style="padding: 5px 0;"><input id="signupUsername" required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
+                                                           type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Nickname:</td>
+                        <td style="padding: 5px 0;"><input id="signupNickname" required
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="text">
                         </td>
@@ -3429,6 +3436,7 @@
         <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
         <a class="btn" data-lang-en="Insert Data" data-lang-ko="데이터 입력" href="insert.html">데이터 입력</a>
         <a class="btn" data-lang-en="My Page" data-lang-ko="내 관리" href="manage.html">내 관리</a>
+        <button class="btn" data-lang-en="Edit Profile" data-lang-ko="회원정보 수정" id="editProfileBtn" onclick="openEditProfileModal()">회원정보 수정</button>
         <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()"><span
                 data-lang-en="Alerts" data-lang-ko="알림">알림</span><span class="notification-badge" id="notificationBadge"
                                                                        style="display: none;">0</span>
@@ -3483,33 +3491,6 @@
                 <button class="btn" data-lang-en="Delete" data-lang-ko="삭제" onclick="deleteRecord()" type="button">삭제
                 </button>
                 <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeEditModal()" type="button">
-                    취소
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- 프로필 수정 모달 -->
-<div class="modal" id="profileModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title" data-lang-en="Edit Profile" data-lang-ko="프로필 수정">프로필 수정</div>
-            <button class="modal-close" onclick="closeProfileModal()">×</button>
-        </div>
-        <div id="profileModalError"></div>
-        <form id="profileForm">
-            <div class="form-group">
-                <label data-lang-en="Title" data-lang-ko="타이틀" for="profileTitle">타이틀</label>
-                <input id="profileTitle" placeholder="예: Hi." type="text">
-            </div>
-            <div class="form-group">
-                <label data-lang-en="Description" data-lang-ko="설명" for="profileDescription">설명</label>
-                <textarea id="profileDescription" placeholder="간단한 소개를 입력하세요"></textarea>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="저장" type="submit">저장</button>
-                <button class="btn" data-lang-en="Cancel" data-lang-ko="취소" onclick="closeProfileModal()" type="button">
                     취소
                 </button>
             </div>
@@ -4818,6 +4799,7 @@
             username: document.getElementById('signupUsername').value,
             email: document.getElementById('signupEmail').value,
             password: document.getElementById('signupPassword').value,
+            nickname: document.getElementById('signupNickname').value,
             title: document.getElementById('signupTitle').value || '',
             description: document.getElementById('signupDescription').value || '',
             birthYear: parseInt(birthYear) || new Date().getFullYear(),
@@ -8456,79 +8438,6 @@
         document.getElementById('loginSection').style.display = 'block';
     }
 
-    // 프로필 수정 모달 열기
-    const editProfileBtn = document.getElementById('editProfileBtn');
-    if (editProfileBtn) {
-        editProfileBtn.addEventListener('click', () => {
-            if (currentUser) {
-                document.getElementById('profileTitle').value = currentUser.title || '';
-                document.getElementById('profileDescription').value = currentUser.description || '';
-                document.getElementById('profileModal').classList.add('active');
-            }
-        });
-    }
-
-    // 프로필 수정 모달 닫기
-    function closeProfileModal() {
-        document.getElementById('profileModal').classList.remove('active');
-        document.getElementById('profileModalError').innerHTML = '';
-    }
-
-    // 프로필 수정 폼 제출
-    document.getElementById('profileForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        if (!currentUser) return;
-
-        const title = document.getElementById('profileTitle').value;
-        const description = document.getElementById('profileDescription').value;
-
-        const params = new URLSearchParams();
-        params.append('title', title);
-        params.append('description', description);
-
-        try {
-            const response = await authFetch(`${API_BASE}/user?${params.toString()}`, {
-                method: 'PUT'
-            });
-
-            if (response.ok) {
-                // 업데이트된 user 정보 반영
-                currentUser.title = title;
-                currentUser.description = description;
-
-                // UI 업데이트
-                document.getElementById('userGreeting').textContent = title || 'Hi.';
-
-                // description이 없으면 오늘 날짜 표시
-                if (description) {
-                    document.getElementById('userDesc').textContent = description;
-                } else {
-                    const now = new Date();
-                    const year = String(now.getFullYear()).slice(2);
-                    const month = String(now.getMonth() + 1).padStart(2, '0');
-                    const day = String(now.getDate()).padStart(2, '0');
-                    document.getElementById('userDesc').textContent = `${year}.${month}.${day}`;
-                }
-
-                closeProfileModal();
-            } else {
-                showProfileModalError('프로필 수정에 실패했습니다.');
-            }
-        } catch (error) {
-
-            showProfileModalError('프로필 수정 중 오류가 발생했습니다.');
-        }
-    });
-
-    function showProfileModalError(message) {
-        const element = document.getElementById('profileModalError');
-        element.innerHTML = `<div class="error-message">${message}</div>`;
-        setTimeout(() => {
-            element.innerHTML = '';
-        }, 5000);
-    }
-
     function showError(elementId, message) {
         const element = document.getElementById(elementId);
         element.innerHTML = `<div class="error-message">${message}</div>`;
@@ -9105,6 +9014,84 @@
     }
 </script>
 
+<!-- 회원정보 수정 모달 -->
+<div class="notification-modal" id="editProfileModal" style="display: none;">
+    <div class="notification-modal-content" style="max-width: 500px;">
+        <div class="notification-modal-header">
+            <div class="notification-modal-title" data-lang-en="Edit Profile" data-lang-ko="회원정보 수정">회원정보 수정</div>
+            <button class="notification-modal-close" onclick="closeEditProfileModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+        </div>
+        <div style="padding: 20px;">
+            <form id="editProfileForm">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: right; padding: 8px 12px 8px 0; font-size: 14px; width: 120px;">Username:</td>
+                        <td style="padding: 8px 0;"><input id="editUsername" readonly
+                                                           style="padding: 8px; width: 100%; border: 1px solid #e2e8f0; background: #f7fafc; font-size: 14px; border-radius: 6px;"
+                                                           type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 8px 12px 8px 0; font-size: 14px;">Nickname:</td>
+                        <td style="padding: 8px 0;"><input id="editNickname" required
+                                                           style="padding: 8px; width: 100%; border: 1px solid #e2e8f0; font-size: 14px; border-radius: 6px;"
+                                                           type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 8px 12px 8px 0; font-size: 14px;">Email:</td>
+                        <td style="padding: 8px 0;"><input id="editEmail" readonly
+                                                           style="padding: 8px; width: 100%; border: 1px solid #e2e8f0; background: #f7fafc; font-size: 14px; border-radius: 6px;"
+                                                           type="email">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 8px 12px 8px 0; font-size: 14px;">Title:</td>
+                        <td style="padding: 8px 0;"><input id="editTitle"
+                                                           style="padding: 8px; width: 100%; border: 1px solid #e2e8f0; font-size: 14px; border-radius: 6px;"
+                                                           type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 8px 12px 8px 0; font-size: 14px;">Description:</td>
+                        <td style="padding: 8px 0;"><textarea id="editDescription"
+                                                              style="padding: 8px; width: 100%; border: 1px solid #e2e8f0; font-size: 14px; border-radius: 6px; min-height: 80px; resize: vertical; font-family: inherit;"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 8px 12px 8px 0; font-size: 14px;">Birth Year:</td>
+                        <td style="padding: 8px 0;"><input id="editBirthYear" readonly
+                                                           style="padding: 8px; width: 100%; border: 1px solid #e2e8f0; background: #f7fafc; font-size: 14px; border-radius: 6px;"
+                                                           type="number">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 8px 12px 8px 0; font-size: 14px;">Birth Month:</td>
+                        <td style="padding: 8px 0;"><input id="editBirthMonth" readonly
+                                                           style="padding: 8px; width: 100%; border: 1px solid #e2e8f0; background: #f7fafc; font-size: 14px; border-radius: 6px;"
+                                                           type="number">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding: 8px 12px 8px 0; font-size: 14px;">Birth Day:</td>
+                        <td style="padding: 8px 0;"><input id="editBirthDay" readonly
+                                                           style="padding: 8px; width: 100%; border: 1px solid #e2e8f0; background: #f7fafc; font-size: 14px; border-radius: 6px;"
+                                                           type="number">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 16px 0 0 0;">
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 14px;">
+                                <span data-lang-en="Save Changes" data-lang-ko="변경사항 저장">변경사항 저장</span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- 토스트 알림 컨테이너 -->
 <div class="toast-container" id="toastContainer"></div>
 
@@ -9315,6 +9302,37 @@
             renderNotificationList();
             updateMarkAllReadButton();
         }
+    }
+
+    // 간단한 토스트 알림 (프로필 수정 등에 사용)
+    function showSimpleToast(title, message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type.toLowerCase()}`;
+
+        const time = new Date().toLocaleTimeString(currentLang === 'ko' ? 'ko-KR' : 'en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        toast.innerHTML = `
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+            <div class="toast-time">${time}</div>
+        `;
+
+        toast.onclick = () => {
+            toast.remove();
+        };
+
+        container.appendChild(toast);
+
+        // 3초 후 자동 제거
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 
     // 배지 업데이트
@@ -9560,6 +9578,108 @@
     window.addEventListener('pagehide', () => {
         isPageUnloading = true;
         disconnectSSE();
+    });
+
+    // ==================== 회원정보 수정 관련 함수 ====================
+
+    // 회원정보 수정 모달 열기
+    async function openEditProfileModal() {
+        try {
+            const response = await authFetch(`${API_BASE}/user`);
+            if (response.ok) {
+                const userData = await response.json();
+
+                // 폼에 현재 정보 채우기
+                document.getElementById('editUsername').value = userData.username || '';
+                document.getElementById('editNickname').value = userData.nickname || '';
+                document.getElementById('editEmail').value = userData.email || '';
+                document.getElementById('editTitle').value = userData.title || '';
+                document.getElementById('editDescription').value = userData.description || '';
+                document.getElementById('editBirthYear').value = userData.birthYear || '';
+                document.getElementById('editBirthMonth').value = userData.birthMonth || '';
+                document.getElementById('editBirthDay').value = userData.birthDay || '';
+
+                // 모달 표시
+                document.getElementById('editProfileModal').style.display = 'flex';
+            } else {
+                alert(currentLang === 'ko' ? '사용자 정보를 불러올 수 없습니다.' : 'Failed to load user information.');
+            }
+        } catch (error) {
+            console.error('Error loading user data:', error);
+            alert(currentLang === 'ko' ? '사용자 정보를 불러오는 중 오류가 발생했습니다.' : 'Error loading user information.');
+        }
+    }
+
+    // 회원정보 수정 모달 닫기
+    function closeEditProfileModal() {
+        document.getElementById('editProfileModal').style.display = 'none';
+    }
+
+    // 회원정보 수정 폼 제출
+    document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const updateData = {
+            nickname: document.getElementById('editNickname').value,
+            title: document.getElementById('editTitle').value || '',
+            description: document.getElementById('editDescription').value || ''
+        };
+
+        try {
+            const params = new URLSearchParams(updateData).toString();
+            const response = await authFetch(`${API_BASE}/user?${params}`, {
+                method: 'PUT'
+            });
+
+            if (response.ok) {
+                // 모달 즉시 닫기
+                closeEditProfileModal();
+
+                // 성공 토스트 알림 표시
+                showSimpleToast(
+                    currentLang === 'ko' ? '프로필 수정 완료' : 'Profile Updated',
+                    currentLang === 'ko' ? '회원정보가 성공적으로 수정되었습니다.' : 'Profile updated successfully.',
+                    'comment'
+                );
+
+                // 1초 후 페이지 새로고침
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                const errorText = await response.text();
+                console.error('Profile update failed:', response.status, errorText);
+
+                // 모달 닫기
+                closeEditProfileModal();
+
+                // 실패 토스트 알림 표시
+                showSimpleToast(
+                    currentLang === 'ko' ? '프로필 수정 실패' : 'Profile Update Failed',
+                    currentLang === 'ko' ? '회원정보 수정에 실패했습니다.' : 'Failed to update profile.',
+                    'like'
+                );
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+
+            // 모달 닫기
+            closeEditProfileModal();
+
+            // 에러 토스트 알림 표시
+            showSimpleToast(
+                currentLang === 'ko' ? '오류 발생' : 'Error',
+                currentLang === 'ko' ? '회원정보 수정 중 오류가 발생했습니다.' : 'Error updating profile.',
+                'like'
+            );
+        }
+    });
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('editProfileModal').addEventListener('click', (e) => {
+        if (e.target.id === 'editProfileModal') {
+            closeEditProfileModal();
+        }
     });
 
 
