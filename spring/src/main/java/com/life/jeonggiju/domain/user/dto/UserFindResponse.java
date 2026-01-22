@@ -11,6 +11,7 @@ public class UserFindResponse {
 	private String title;
 	private String nickname;
 	private String description;
+	private String profileImageUrl;
 	private int birthYear;
 	private int birthMonth;
 	private int birthDay;

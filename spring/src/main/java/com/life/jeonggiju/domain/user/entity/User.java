@@ -44,6 +44,9 @@ public class User {
 	private String password;
 
 	@Column
+	private String profileImageUrl;
+
+	@Column
 	private String title;
 
 	@Column
@@ -85,9 +88,12 @@ public class User {
 	protected User() {
 	}
 
-	public void update(String title, String description, String nickname) {
+	public void update(String title, String description, String nickname, String profileImageUrl) {
 		this.title = title;
 		this.description = description;
 		this.nickname = nickname;
+		if (profileImageUrl != null) {
+			this.profileImageUrl = profileImageUrl;
+		}
 	}
 }
