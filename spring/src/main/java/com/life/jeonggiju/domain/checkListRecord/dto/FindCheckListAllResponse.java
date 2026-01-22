@@ -1,4 +1,4 @@
-package com.life.jeonggiju.domain.checkList.dto;
+package com.life.jeonggiju.domain.checkListRecord.dto;
 
 import java.time.LocalDate;
 import java.util.List;

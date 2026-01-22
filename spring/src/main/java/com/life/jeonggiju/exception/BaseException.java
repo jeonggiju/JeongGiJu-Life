@@ -7,7 +7,6 @@ import java.util.Map;
 
 import lombok.Getter;
 
-
 public class BaseException extends RuntimeException {
 	@Getter
 	private final Instant timestamp;
@@ -34,5 +33,7 @@ public class BaseException extends RuntimeException {
 		return this;
 	}
 
-	public Map<String, Object> getDetails() { return Collections.unmodifiableMap(details); }
+	public Map<String, Object> getDetails() {
+		return Collections.unmodifiableMap(details);
+	}
 }

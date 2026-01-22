@@ -13,6 +13,12 @@ import com.life.jeonggiju.domain.category.dto.FindCommentResponse;
 import com.life.jeonggiju.domain.category.dto.UpdateCommentRequest;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.entity.Comment;
+import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
+import com.life.jeonggiju.domain.category.exception.CommentDeleteForbiddenException;
+import com.life.jeonggiju.domain.category.exception.CommentNotFoundException;
+import com.life.jeonggiju.domain.category.exception.CommentUpdateForbiddenException;
+import com.life.jeonggiju.domain.category.exception.EmptyCommentContentException;
+import com.life.jeonggiju.domain.category.exception.ParentCommentMismatchException;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.category.repository.CommentRepository;
 import com.life.jeonggiju.domain.notification.dto.NotificationCreatedDto;
@@ -20,15 +26,14 @@ import com.life.jeonggiju.domain.notification.entity.NotificationType;
 import com.life.jeonggiju.domain.notification.service.NotificationService;
 import com.life.jeonggiju.domain.user.dto.CreateCommentRequest;
 import com.life.jeonggiju.domain.user.entity.User;
+import com.life.jeonggiju.domain.user.exception.UserNotFoundException;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
-import com.life.jeonggiju.sse.service.SseService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-
 	private final CommentRepository commentRepository;
 	private final CategoryRepository categoryRepository;
 	private final UserRepository userRepository;
@@ -71,11 +76,14 @@ public class CommentService {
 
 		List<FindCommentResponse> roots = new ArrayList<>();
 		for (FindCommentResponse dto : dtoMap.values()) {
-			if (dto.getParentId() == null) roots.add(dto);
+			if (dto.getParentId() == null)
+				roots.add(dto);
 			else {
 				FindCommentResponse parent = dtoMap.get(dto.getParentId());
-				if (parent == null) roots.add(dto);
-				else parent.getChildren().add(dto);
+				if (parent == null)
+					roots.add(dto);
+				else
+					parent.getChildren().add(dto);
 			}
 		}
 
@@ -84,12 +92,14 @@ public class CommentService {
 
 	@Transactional
 	public UUID createComment(CreateCommentRequest dto, UUID userId) {
-		if(dto.getComment() == null || dto.getComment().isBlank()){
-			throw new RuntimeException("댓글 내용은 비울 수 없음");
+		if (dto.getComment() == null || dto.getComment().isBlank()) {
+			throw new EmptyCommentContentException();
 		}
 
-		Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow();
-		User user = userRepository.findById(userId).orElseThrow();
+		Category category = categoryRepository.findById(dto.getCategoryId())
+			.orElseThrow(() -> CategoryNotFoundException.withId(dto.getCategoryId()));
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> UserNotFoundException.withUserId(userId));
 
 		Comment saved = commentRepository.save(
 			Comment.builder()
@@ -103,7 +113,8 @@ public class CommentService {
 		NotificationCreatedDto notificationCreatedDto = NotificationCreatedDto.builder()
 			.receiverId(category.getUser().getId())
 			.senderId(user.getId())
-			.data(Map.of("categoryTitle", category.getTitle(),"senderEmail",user.getEmail(), "comment", saved.getComment()))
+			.data(Map.of("categoryTitle", category.getTitle(), "senderEmail", user.getEmail(), "comment",
+				saved.getComment()))
 			.type(NotificationType.COMMENT)
 			.build();
 		notificationService.notify(notificationCreatedDto);
@@ -114,15 +125,18 @@ public class CommentService {
 	@Transactional
 	public UUID createReply(UUID categoryId, UUID parentId, UUID userId, String content) {
 		if (content == null || content.isBlank()) {
-			throw new IllegalArgumentException("댓글 내용은 비어있을 수 없습니다.");
+			throw new EmptyCommentContentException();
 		}
 
-		Category category = categoryRepository.findById(categoryId).orElseThrow();
-		User user = userRepository.findById(userId).orElseThrow();
-		Comment parent = commentRepository.findById(parentId).orElseThrow();
+		Category category = categoryRepository.findById(categoryId)
+			.orElseThrow(() -> CategoryNotFoundException.withId(categoryId));
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> UserNotFoundException.withUserId(userId));
+		Comment parent = commentRepository.findById(parentId)
+			.orElseThrow(() -> CommentNotFoundException.withId(parentId));
 
 		if (!parent.getCategory().getId().equals(categoryId)) {
-			throw new IllegalArgumentException("부모 댓글의 카테고리가 일치하지 않습니다.");
+			throw ParentCommentMismatchException.withIds(categoryId, parentId);
 		}
 
 		Comment saved = commentRepository.save(
@@ -137,47 +151,46 @@ public class CommentService {
 		NotificationCreatedDto notificationCreatedDto = NotificationCreatedDto.builder()
 			.receiverId(parent.getUser().getId())
 			.senderId(user.getId())
-			.data(Map.of("categoryTitle", category.getTitle(),"myComment",content,"senderEmail",user.getEmail(), "comment", saved.getComment()))
+			.data(Map.of("categoryTitle", category.getTitle(), "myComment", content, "senderEmail", user.getEmail(),
+				"comment", saved.getComment()))
 			.type(NotificationType.REPLY)
 			.build();
 		notificationService.notify(notificationCreatedDto);
-
 
 		return saved.getId();
 	}
 
 	@Transactional
-	public void delete(UUID commentId, UUID requestUserId){
-
-		Comment comment = commentRepository.findById(commentId).orElseThrow();
+	public void delete(UUID commentId, UUID requestUserId) {
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> CommentNotFoundException.withId(commentId));
 
 		UUID authorId = comment.getUser().getId();
 		UUID categoryOwnerId = comment.getCategory().getUser().getId();
 
 		boolean canDelete = authorId.equals(requestUserId) || categoryOwnerId.equals(requestUserId);
 		if (!canDelete) {
-			throw new IllegalArgumentException("삭제 권한이 없습니다.");
+			throw CommentDeleteForbiddenException.withIds(commentId, requestUserId);
 		}
 
 		commentRepository.delete(comment);
 	}
 
 	@Transactional
-	public void update(UpdateCommentRequest dto, UUID requestUserId){
+	public void update(UpdateCommentRequest dto, UUID requestUserId) {
 		Comment comment = commentRepository.findById(dto.getCommentId())
-			.orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+			.orElseThrow(() -> CommentNotFoundException.withId(dto.getCommentId()));
 
 		if (!comment.getUser().getId().equals(requestUserId)) {
-			throw new IllegalArgumentException("수정 권한이 없습니다.");
+			throw CommentUpdateForbiddenException.withIds(dto.getCommentId(), requestUserId);
 		}
 
 		if (dto.getComment() == null || dto.getComment().isBlank()) {
-			throw new IllegalArgumentException("댓글 내용은 비어있을 수 없습니다.");
+			throw new EmptyCommentContentException();
 		}
 
 		comment.setComment(dto.getComment());
 	}
-
 
 }
 

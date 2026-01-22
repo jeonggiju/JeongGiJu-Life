@@ -1,4 +1,4 @@
-package com.life.jeonggiju.domain.checkList.dto;
+package com.life.jeonggiju.domain.checkListRecord.dto;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -6,10 +6,11 @@ import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 
-@Data @Builder
-public class UpdateCheckList {
+@Data
+@Builder
+public class FindCheckListResponse {
 	private UUID id;
-	private LocalDate date;
 	private String todo;
 	private boolean success;
+	private LocalDate date;
 }

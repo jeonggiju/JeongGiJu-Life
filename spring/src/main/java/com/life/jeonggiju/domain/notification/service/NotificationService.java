@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import com.life.jeonggiju.domain.notification.dto.NotificationCreatedDto;
 import com.life.jeonggiju.domain.notification.dto.UnReadNotificationCountResponse;
@@ -16,6 +15,7 @@ import com.life.jeonggiju.domain.notification.entity.Notification;
 import com.life.jeonggiju.domain.notification.event.NotificationCreatedEvent;
 import com.life.jeonggiju.domain.notification.repository.NotificationRepository;
 import com.life.jeonggiju.domain.user.entity.User;
+import com.life.jeonggiju.domain.user.exception.UserNotFoundException;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,10 +29,10 @@ public class NotificationService {
 	private final UserRepository userRepository;
 
 	@Transactional(readOnly = true)
-	public List<UnReadNotificationResponse> getUnRead(UUID userId){
+	public List<UnReadNotificationResponse> getUnRead(UUID userId) {
 		List<Notification> unReadNotifications = notificationRepository.findUnreadByReceiverId(userId);
 		List<UnReadNotificationResponse> result = new ArrayList<>();
-		for(Notification notification : unReadNotifications) {
+		for (Notification notification : unReadNotifications) {
 			result.add(UnReadNotificationResponse.builder()
 				.id(notification.getId())
 				.isRead(notification.isRead())
@@ -45,9 +45,11 @@ public class NotificationService {
 	}
 
 	@Transactional
-	public void notify(NotificationCreatedDto dto){
-		User receiver = userRepository.findById(dto.getReceiverId()).orElseThrow();
-		User sender = userRepository.findById(dto.getSenderId()).orElseThrow();
+	public void notify(NotificationCreatedDto dto) {
+		User receiver = userRepository.findById(dto.getReceiverId())
+			.orElseThrow(() -> UserNotFoundException.withUserId(dto.getReceiverId()));
+		User sender = userRepository.findById(dto.getSenderId())
+			.orElseThrow(() -> UserNotFoundException.withUserId(dto.getSenderId()));
 
 		Notification notification = Notification.builder()
 			.receiver(receiver)
@@ -69,7 +71,7 @@ public class NotificationService {
 	}
 
 	@Transactional(readOnly = true)
-	public UnReadNotificationCountResponse countUnRead(UUID userId){
+	public UnReadNotificationCountResponse countUnRead(UUID userId) {
 		int i = notificationRepository.countUnreadByReceiverId(userId);
 		return UnReadNotificationCountResponse.builder().count(i).build();
 	}

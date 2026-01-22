@@ -1,15 +1,15 @@
 package com.life.jeonggiju.log;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Aspect
@@ -19,7 +19,8 @@ public class LoggingAspect {
 	@Value("${logging.aspect.slow-method-threshold:3000}")
 	private long slowMethodThreshold;
 
-	@Around("execution(* com.life.jeonggiju.domain..controller..*(..)) || " + "execution(* com.life.jeonggiju.domain..service..*(..))")
+	@Around("execution(* com.life.jeonggiju.domain..controller..*(..)) || "
+		+ "execution(* com.life.jeonggiju.domain..service..*(..))")
 	public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
 		String className = joinPoint.getTarget().getClass().getSimpleName();
 		String methodName = joinPoint.getSignature().getName();

@@ -12,32 +12,32 @@ import org.springframework.stereotype.Repository;
 import com.life.jeonggiju.domain.notification.entity.Notification;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<Notification, UUID>{
+public interface NotificationRepository extends JpaRepository<Notification, UUID> {
 
 	@Query("""
-		select n
-		from Notification n
-		where n.receiver.id = :userId
-		and n.read = false
-	""")
+			select n
+			from Notification n
+			where n.receiver.id = :userId
+			and n.read = false
+		""")
 	List<Notification> findUnreadByReceiverId(UUID userId);
 
 	@Query("""
-		select count(n)
-		from Notification n
-		where n.receiver.id = :userId
-		and n.read = false
-	""")
+			select count(n)
+			from Notification n
+			where n.receiver.id = :userId
+			and n.read = false
+		""")
 	int countUnreadByReceiverId(UUID userId);
 
 	@Modifying
 	@Query("""
-		update Notification n
-		set n.read = true
-		where n.id in :ids
-		  and n.receiver.id = :receiverId
-		  and n.read = false
-	""")
+			update Notification n
+			set n.read = true
+			where n.id in :ids
+			  and n.receiver.id = :receiverId
+			  and n.read = false
+		""")
 	int markAsRead(@Param("ids") List<UUID> ids, @Param("receiverId") UUID receiverId);
 
 }

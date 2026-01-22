@@ -1,4 +1,4 @@
-package com.life.jeonggiju.domain.checkList.controller;
+package com.life.jeonggiju.domain.checkListRecord.controller;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.life.jeonggiju.domain.checkList.dto.FindCheckListAllResponse;
-import com.life.jeonggiju.domain.checkList.dto.FindCheckListResponse;
-import com.life.jeonggiju.domain.checkList.dto.SaveCheckList;
-import com.life.jeonggiju.domain.checkList.dto.UpdateCheckList;
-import com.life.jeonggiju.domain.checkList.entity.CheckListRecord;
-import com.life.jeonggiju.domain.checkList.service.CheckListService;
+import com.life.jeonggiju.domain.checkListRecord.dto.FindCheckListAllResponse;
+import com.life.jeonggiju.domain.checkListRecord.dto.FindCheckListResponse;
+import com.life.jeonggiju.domain.checkListRecord.dto.SaveCheckList;
+import com.life.jeonggiju.domain.checkListRecord.dto.UpdateCheckList;
+import com.life.jeonggiju.domain.checkListRecord.entity.CheckListRecord;
+import com.life.jeonggiju.domain.checkListRecord.service.CheckListService;
 
 import lombok.RequiredArgsConstructor;
 

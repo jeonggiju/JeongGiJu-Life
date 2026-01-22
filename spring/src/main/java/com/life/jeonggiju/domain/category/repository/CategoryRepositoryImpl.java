@@ -83,7 +83,10 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 				category.title,
 				category.description,
 				user.id,
-				user.username,
+				user.nickname,
+				user.title,
+				user.description,
+				user.email,
 				category.recordType,
 				userLikeExpression,
 				likeCountExpr,
@@ -98,7 +101,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 			String searchTerm = search.trim();
 			BooleanExpression searchCondition = category.title.containsIgnoreCase(searchTerm)
 				.or(category.description.containsIgnoreCase(searchTerm))
-				.or(user.username.containsIgnoreCase(searchTerm));
+				.or(user.nickname.containsIgnoreCase(searchTerm));
 			query.where(searchCondition);
 		}
 
@@ -128,11 +131,14 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 				.categoryDesc(tuple.get(2, String.class))
 				.authorId(tuple.get(3, UUID.class))
 				.authorNickname(tuple.get(4, String.class))
-				.type(tuple.get(5, RecordType.class))
-				.hasLike(Boolean.TRUE.equals(tuple.get(6, Boolean.class)))
-				.likeCount(tuple.get(7, Long.class) != null ? tuple.get(7, Long.class) : 0L)
-				.commentCount(tuple.get(8, Long.class) != null ? tuple.get(8, Long.class) : 0L)
-				.createdAt(tuple.get(9, Instant.class))
+				.authorTitle(tuple.get(5, String.class))
+				.authorDesc(tuple.get(6, String.class))
+				.authorEmail(tuple.get(7, String.class))
+				.type(tuple.get(8, RecordType.class))
+				.hasLike(Boolean.TRUE.equals(tuple.get(9, Boolean.class)))
+				.likeCount(tuple.get(10, Long.class) != null ? tuple.get(10, Long.class) : 0L)
+				.commentCount(tuple.get(11, Long.class) != null ? tuple.get(11, Long.class) : 0L)
+				.createdAt(tuple.get(12, Instant.class))
 				.build())
 			.collect(Collectors.toList());
 	}
@@ -152,7 +158,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 			String searchTerm = search.trim();
 			BooleanExpression searchCondition = category.title.containsIgnoreCase(searchTerm)
 				.or(category.description.containsIgnoreCase(searchTerm))
-				.or(user.username.containsIgnoreCase(searchTerm));
+				.or(user.nickname.containsIgnoreCase(searchTerm));
 			query.where(searchCondition);
 		}
 
@@ -269,7 +275,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 			case createdAt:
 				return category.createdAt.eq(Instant.parse(value));
 			case authorNickname:
-				return user.username.eq(value);
+				return user.nickname.eq(value);
 			default:
 				return null;
 		}
@@ -299,7 +305,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 				Instant instant = Instant.parse(value);
 				return isAsc ? category.createdAt.gt(instant) : category.createdAt.lt(instant);
 			case authorNickname:
-				return isAsc ? user.username.gt(value) : user.username.lt(value);
+				return isAsc ? user.nickname.gt(value) : user.nickname.lt(value);
 			default:
 				return null;
 		}
@@ -357,7 +363,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 			case createdAt:
 				return new OrderSpecifier<>(order, category.createdAt);
 			case authorNickname:
-				return new OrderSpecifier<>(order, user.username);
+				return new OrderSpecifier<>(order, user.nickname);
 			default:
 				return null;
 		}

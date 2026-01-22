@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
+import com.life.jeonggiju.domain.numberRecord.exception.NumberRecordNotFoundException;
 import com.life.jeonggiju.domain.numberRecord.dto.FindNumberAllResponse;
 import com.life.jeonggiju.domain.numberRecord.dto.FindNumberResponse;
 import com.life.jeonggiju.domain.numberRecord.dto.SaveNumber;
@@ -29,7 +30,8 @@ public class NumberService {
 	private final CategoryRepository categoryRepository;
 
 	public FindNumberResponse find(UUID numberId) {
-		NumberRecord numberRecord = numberRepository.findById(numberId).orElseThrow();
+		NumberRecord numberRecord = numberRepository.findById(numberId)
+			.orElseThrow(() -> NumberRecordNotFoundException.withId(numberId));
 		return FindNumberResponse.builder()
 			.id(numberRecord.getId())
 			.number(numberRecord.getNumber())
@@ -58,7 +60,8 @@ public class NumberService {
 	}
 
 	public FindNumberResponse findByDate(UUID categoryId, LocalDate date) {
-		NumberRecord numberRecord = numberRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
+		NumberRecord numberRecord = numberRepository.findByCategoryIdAndDate(categoryId, date)
+			.orElseThrow(() -> NumberRecordNotFoundException.withCategoryIdAndDate(categoryId, date));
 		return FindNumberResponse.builder()
 			.id(numberRecord.getId())
 			.date(numberRecord.getDate())
@@ -68,7 +71,8 @@ public class NumberService {
 	@Transactional
 	public void save(SaveNumber dto) {
 		UUID id = dto.getCategoryId();
-		Category category = categoryRepository.findById(id).orElseThrow();
+		Category category = categoryRepository.findById(id)
+			.orElseThrow(() -> CategoryNotFoundException.withId(id));
 		NumberRecord numberRecord = NumberRecord.of(category, dto.getNumber(), dto.getDate());
 		numberRepository.save(numberRecord);
 	}
@@ -76,7 +80,8 @@ public class NumberService {
 	@Transactional
 	public void update(UpdateNumber dto) {
 		UUID id = dto.getId();
-		NumberRecord NumberRecord = numberRepository.findById(id).orElseThrow();
+		NumberRecord NumberRecord = numberRepository.findById(id)
+			.orElseThrow(() -> NumberRecordNotFoundException.withId(id));
 		NumberRecord.update(dto.getNumber(), dto.getDate());
 		numberRepository.save(NumberRecord);
 	}

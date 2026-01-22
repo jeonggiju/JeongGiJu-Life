@@ -7,6 +7,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import com.life.jeonggiju.domain.notification.dto.NotificationPayload;
 import com.life.jeonggiju.domain.notification.entity.Notification;
 import com.life.jeonggiju.domain.notification.event.NotificationCreatedEvent;
+import com.life.jeonggiju.domain.notification.exception.NotificationNotFoundException;
 import com.life.jeonggiju.domain.notification.repository.NotificationRepository;
 import com.life.jeonggiju.sse.service.SseService;
 
@@ -20,8 +21,9 @@ public class NotificationEventListener {
 	private final SseService sseService;
 
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-	public void listen(NotificationCreatedEvent event){
-		Notification notification = notificationRepository.findById(event.getId()).orElseThrow();
+	public void listen(NotificationCreatedEvent event) {
+		Notification notification = notificationRepository.findById(event.getId())
+			.orElseThrow(() -> NotificationNotFoundException.withId(event.getId()));
 
 		NotificationPayload payload = NotificationPayload.builder()
 			.id(notification.getId())

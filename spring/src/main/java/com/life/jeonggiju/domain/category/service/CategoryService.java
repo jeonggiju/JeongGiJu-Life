@@ -18,9 +18,11 @@ import com.life.jeonggiju.domain.category.dto.SortDir;
 import com.life.jeonggiju.domain.category.dto.UpdateCategory;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.entity.CategoryLike;
+import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.category.repository.CommentRepository;
 import com.life.jeonggiju.domain.user.entity.User;
+import com.life.jeonggiju.domain.user.exception.UserNotFoundException;
 import com.life.jeonggiju.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -33,11 +35,11 @@ public class CategoryService {
 
 	private final CategoryRepository categoryRepository;
 	private final UserRepository userRepository;
-	private final CommentRepository commentRepository;
 
 	@Transactional(readOnly = true)
 	public FindCategoryResponse find(UUID categoryId) {
-		Category category = categoryRepository.findById(categoryId).orElseThrow();
+		Category category = categoryRepository.findById(categoryId).orElseThrow(() -> CategoryNotFoundException.withId(categoryId));
+
 		long likeCount = category.getCategoryLikes().size();
 		long commentCount = category.getComments().size();
 
@@ -51,7 +53,6 @@ public class CategoryService {
 			.likeCount(likeCount)
 			.commentCount(commentCount)
 			.build();
-
 	}
 
 	@Transactional(readOnly = true)
@@ -80,7 +81,7 @@ public class CategoryService {
 
 	@Transactional(readOnly = true)
 	public List<LikeEmailCategoryResponse> findEmailLikeUser(UUID categoryId) {
-		Category category = categoryRepository.findById(categoryId).orElseThrow();
+		Category category = categoryRepository.findById(categoryId).orElseThrow(() -> CategoryNotFoundException.withId(categoryId));
 
 		List<LikeEmailCategoryResponse> result = new ArrayList<>();
 		List<CategoryLike> categoryLike = category.getCategoryLikes();
@@ -91,13 +92,12 @@ public class CategoryService {
 					.email(like.getUser().getEmail())
 					.build());
 		}
-
 		return result;
 	}
 
 	@Transactional
 	public void save(UUID userId, AddCategory dto) {
-		User user = userRepository.findById(userId).orElseThrow();
+		User user = userRepository.findById(userId).orElseThrow(()-> UserNotFoundException.withUserId(userId));
 		Category category = Category.of(dto.getTitle(), dto.getDescription(), dto.getRecordType(), user,
 			dto.getVisibility());
 		categoryRepository.save(category);
@@ -105,7 +105,7 @@ public class CategoryService {
 
 	@Transactional
 	public void update(UpdateCategory dto) {
-		Category category = categoryRepository.findById(dto.getId()).orElseThrow();
+		Category category = categoryRepository.findById(dto.getId()).orElseThrow(() -> CategoryNotFoundException.withId(dto.getId()));
 		category.update(dto.getTitle(), dto.getDescription(), dto.getVisibility());
 		categoryRepository.save(category);
 	}
@@ -154,6 +154,9 @@ public class CategoryService {
 				.categoryTitle(category.getCategoryTitle())
 				.categoryDesc(category.getCategoryDesc())
 				.authorNickname(category.getAuthorNickname())
+				.authorEmail(category.getAuthorEmail())
+				.authorTitle(category.getAuthorTitle())
+				.authorDesc(category.getAuthorDesc())
 				.type(category.getType())
 				.hasLike(category.isHasLike())
 				.isMyCategory(userId != null && userId.equals(category.getAuthorId()))
@@ -204,7 +207,6 @@ public class CategoryService {
 			}
 		}
 
-		String cursor = String.join("|", values);
-		return cursor;
+		return String.join("|", values);
 	}
 }

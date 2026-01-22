@@ -5,7 +5,7 @@ import java.util.UUID;
 import com.life.jeonggiju.exception.BaseException;
 import com.life.jeonggiju.exception.ErrorCode;
 
-public class UserNotFoundException extends BaseException {
+public class UserNotFoundException extends UserException {
 
 	public UserNotFoundException() {
 		super(ErrorCode.USER_NOT_FOUND);

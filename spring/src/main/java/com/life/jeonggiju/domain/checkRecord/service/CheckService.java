@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
+import com.life.jeonggiju.domain.checkRecord.exception.CheckRecordNotFoundException;
 import com.life.jeonggiju.domain.checkRecord.dto.FindCheckAllResponse;
 import com.life.jeonggiju.domain.checkRecord.dto.FindCheckResponse;
 import com.life.jeonggiju.domain.checkRecord.dto.SaveCheck;
@@ -29,7 +30,8 @@ public class CheckService {
 	private final CategoryRepository categoryRepository;
 
 	public FindCheckResponse find(UUID checkId) {
-		CheckRecord checkRecord = checkRepository.findById(checkId).orElseThrow();
+		CheckRecord checkRecord = checkRepository.findById(checkId)
+			.orElseThrow(() -> CheckRecordNotFoundException.withId(checkId));
 		return FindCheckResponse.builder()
 			.id(checkRecord.getId())
 			.success(checkRecord.isSuccess())
@@ -59,7 +61,8 @@ public class CheckService {
 	}
 
 	public FindCheckResponse findByDate(UUID categoryId, LocalDate date) {
-		CheckRecord checkRecord = checkRepository.findByCategoryIdAndDate(categoryId, date).orElseThrow();
+		CheckRecord checkRecord = checkRepository.findByCategoryIdAndDate(categoryId, date)
+			.orElseThrow(() -> CheckRecordNotFoundException.withCategoryIdAndDate(categoryId, date));
 		return FindCheckResponse.builder()
 			.id(checkRecord.getId())
 			.date(checkRecord.getDate())
@@ -69,7 +72,8 @@ public class CheckService {
 
 	@Transactional
 	public void save(SaveCheck dto) {
-		Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow();
+		Category category = categoryRepository.findById(dto.getCategoryId())
+			.orElseThrow(() -> CategoryNotFoundException.withId(dto.getCategoryId()));
 		CheckRecord checkRecord = CheckRecord.of(category, dto.isSuccess(), dto.getDate());
 		checkRepository.save(checkRecord);
 	}
@@ -77,7 +81,8 @@ public class CheckService {
 	@Transactional
 	public void update(UpdateCheck dto) {
 		UUID id = dto.getId();
-		CheckRecord checkRecord = checkRepository.findById(id).orElseThrow();
+		CheckRecord checkRecord = checkRepository.findById(id)
+			.orElseThrow(() -> CheckRecordNotFoundException.withId(id));
 		checkRecord.update(dto.isSuccess(), dto.getDate());
 		checkRepository.save(checkRecord);
 	}
