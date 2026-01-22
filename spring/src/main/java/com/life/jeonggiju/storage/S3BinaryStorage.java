@@ -25,11 +25,12 @@ public class S3BinaryStorage implements BinaryStorage {
 	private static final String PATH = "profile/";
 
 	@Override
-	public void put(UUID userId, byte[] data) {
+	public void put(UUID userId, byte[] data, String contentType) {
 		String key = PATH + "/" +  userId;
 
 		s3.putObject(b -> b.bucket(config.getBucket())
-			.key(key), RequestBody.fromBytes(data));
+			.key(key)
+			.contentType(contentType), RequestBody.fromBytes(data));
 	}
 
 	@Override

@@ -70,7 +70,7 @@ public class UserService {
 		String profileImageUrl = null;
 		if (image != null && !image.isEmpty()) {
 			try {
-				binaryStorage.put(id, image.getBytes());
+				binaryStorage.put(id, image.getBytes(), image.getContentType());
 				profileImageUrl = binaryStorage.getUrl(id);
 			} catch (IOException e) {
 				throw new ProfileImageUploadException(e);

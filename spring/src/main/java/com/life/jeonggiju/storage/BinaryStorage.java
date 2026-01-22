@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 public interface BinaryStorage {
-	void put(UUID userId, byte[] data);
+	void put(UUID userId, byte[] data, String contentType);
 
 	InputStream get(UUID userId);
 
