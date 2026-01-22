@@ -16,5 +16,5 @@ logging:
     org.springdoc: off
 
 storage:
-  type: file
+  type: s3
 
