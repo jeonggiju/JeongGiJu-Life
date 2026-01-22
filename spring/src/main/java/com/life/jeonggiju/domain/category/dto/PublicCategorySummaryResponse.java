@@ -35,6 +35,7 @@ public class PublicCategorySummaryResponse {
 		long likeCount;
 
 		String authorNickname;
+		String authorEmail;
 		String authorTitle;
 		String authorDesc;
 	}

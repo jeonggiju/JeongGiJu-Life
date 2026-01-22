@@ -154,6 +154,7 @@ public class CategoryService {
 				.categoryTitle(category.getCategoryTitle())
 				.categoryDesc(category.getCategoryDesc())
 				.authorNickname(category.getAuthorNickname())
+				.authorEmail(category.getAuthorEmail())
 				.authorTitle(category.getAuthorTitle())
 				.authorDesc(category.getAuthorDesc())
 				.type(category.getType())

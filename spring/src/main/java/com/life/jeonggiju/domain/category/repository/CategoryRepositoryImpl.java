@@ -86,6 +86,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 				user.nickname,
 				user.title,
 				user.description,
+				user.email,
 				category.recordType,
 				userLikeExpression,
 				likeCountExpr,
@@ -132,11 +133,12 @@ public class CategoryRepositoryImpl implements CategoryRepositoryQueryDsl {
 				.authorNickname(tuple.get(4, String.class))
 				.authorTitle(tuple.get(5, String.class))
 				.authorDesc(tuple.get(6, String.class))
-				.type(tuple.get(7, RecordType.class))
-				.hasLike(Boolean.TRUE.equals(tuple.get(8, Boolean.class)))
-				.likeCount(tuple.get(9, Long.class) != null ? tuple.get(9, Long.class) : 0L)
-				.commentCount(tuple.get(10, Long.class) != null ? tuple.get(10, Long.class) : 0L)
-				.createdAt(tuple.get(11, Instant.class))
+				.authorEmail(tuple.get(7, String.class))
+				.type(tuple.get(8, RecordType.class))
+				.hasLike(Boolean.TRUE.equals(tuple.get(9, Boolean.class)))
+				.likeCount(tuple.get(10, Long.class) != null ? tuple.get(10, Long.class) : 0L)
+				.commentCount(tuple.get(11, Long.class) != null ? tuple.get(11, Long.class) : 0L)
+				.createdAt(tuple.get(12, Instant.class))
 				.build())
 			.collect(Collectors.toList());
 	}
