@@ -470,13 +470,15 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            table-layout: fixed;
         }
 
         .check-table td {
-            padding: 14px;
+            padding: 8px;
             text-align: center;
             border: 2px solid #e2e8f0;
             transition: all 0.2s ease;
+            vertical-align: middle;
         }
 
         .date-cell {
@@ -484,6 +486,7 @@
             font-size: 14px;
             color: #2d3748;
             background: #f7fafc;
+            line-height: 1.4;
         }
 
         .result-cell {
@@ -491,6 +494,7 @@
             font-size: 16px;
             cursor: pointer;
             transition: all 0.2s ease;
+            line-height: 1.4;
         }
 
         .result-success {
@@ -516,19 +520,22 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            table-layout: fixed;
         }
 
         .time-table td {
-            padding: 14px;
+            padding: 8px;
             text-align: center;
             border: 2px solid #e2e8f0;
             transition: all 0.2s ease;
+            vertical-align: middle;
         }
 
         .time-cell {
             font-weight: 500;
             cursor: pointer;
             color: #2d3748;
+            line-height: 1.4;
         }
 
         .time-cell:hover {
@@ -566,13 +573,15 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            table-layout: fixed;
         }
 
         .number-table td {
-            padding: 12px;
+            padding: 8px;
             text-align: center;
             border: 2px solid #e2e8f0;
             transition: all 0.2s ease;
+            vertical-align: middle;
         }
 
         .number-cell {
@@ -580,6 +589,7 @@
             font-size: 14px;
             cursor: pointer;
             color: #2d3748;
+            line-height: 1.4;
         }
 
         .number-cell:hover {
@@ -955,13 +965,15 @@
             background: white;
             cursor: pointer;
             min-width: 80px;
-            text-align: center;
             font-size: 12px;
             font-weight: 500;
             margin-left: 8px;
             border-radius: 8px;
             transition: all 0.2s ease;
             color: #2d3748;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .label-toggle-btn:hover {
@@ -2636,7 +2648,7 @@
         button[class*="btn"] {
             /* 고정 크기 */
             height: 32px !important;
-            line-height: 32px !important;
+            line-height: 1 !important;
             padding: 0 14px !important;
 
             /* 레이아웃 */
@@ -3243,21 +3255,28 @@
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
-                <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
+                <a data-lang-en="← Back to Home" data-lang-ko="← 홈으로"
+                   href="index.html"
+                   style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
-            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign In</h2>
+            <h2 data-lang-en="Sign In" data-lang-ko="로그인"
+                style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign In</h2>
             <div id="loginError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="loginForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td data-lang-en="Email:" data-lang-ko="이메일:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:
+                        </td>
                         <td style="padding: 5px 0;"><input id="email" required
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="email">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
+                        <td data-lang-en="Password:" data-lang-ko="비밀번호:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:
+                        </td>
                         <td style="padding: 5px 0;"><input autocomplete="current-password" id="password"
                                                            required
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
@@ -3266,20 +3285,28 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
-                                    type="submit">
-                                Sign In
+                            <button data-lang-en="Sign In"
+                                    data-lang-ko="로그인"
+                                    style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="submit">Sign In
                             </button>
                         </td>
                     </tr>
                 </table>
             </form>
             <div style="text-align: center; margin-top: 10px; font-size: 12px;">
-                <a href="#" id="showResetPassword" style="color: #666; text-decoration: underline;">Forgot your
-                    password?</a>
+                <a data-lang-en="Forgot your password?" data-lang-ko="비밀번호를 잊으셨나요?"
+                   href="#"
+                   id="showResetPassword"
+                   style="color: #666; text-decoration: underline;">Forgot your password?</a>
             </div>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
-                New account? <a href="#" id="showSignup" style="color: #0066cc; text-decoration: underline;">Sign Up</a>
+                <span data-lang-en="New account?" data-lang-ko="계정이 없으신가요?">New account?</span> <a
+                    data-lang-en="Sign Up"
+                    data-lang-ko="회원가입"
+                    href="#"
+                    id="showSignup"
+                    style="color: #0066cc; text-decoration: underline;">Sign Up</a>
             </div>
         </div>
     </div>
@@ -3291,35 +3318,46 @@
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
-                <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
+                <a data-lang-en="← Back to Home" data-lang-ko="← 홈으로"
+                   href="index.html"
+                   style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
-            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign Up</h2>
+            <h2 data-lang-en="Sign Up" data-lang-ko="회원가입"
+                style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign Up</h2>
             <div id="signupError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="signupForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:</td>
+                        <td data-lang-en="Username:" data-lang-ko="사용자명:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupUsername" required
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="text">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Nickname:</td>
+                        <td data-lang-en="Nickname:" data-lang-ko="닉네임:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Nickname:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupNickname" required
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="text">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td data-lang-en="Email:" data-lang-ko="이메일:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupEmail" required
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="email">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
+                        <td data-lang-en="Password:" data-lang-ko="비밀번호:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:
+                        </td>
                         <td style="padding: 5px 0;"><input autocomplete="new-password" id="signupPassword"
                                                            required
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
@@ -3327,35 +3365,45 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Title:</td>
+                        <td data-lang-en="Title:" data-lang-ko="직함:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Title:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupTitle"
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="text">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Description:</td>
+                        <td data-lang-en="Description:" data-lang-ko="설명:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Description:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupDescription"
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="text">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Year:</td>
+                        <td data-lang-en="Birth Year:" data-lang-ko="생년:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Year:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupBirthYear" placeholder="YYYY"
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="number">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Month:</td>
+                        <td data-lang-en="Birth Month:" data-lang-ko="생월:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Month:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupBirthMonth" max="12" min="1" placeholder="MM"
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="number">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Day:</td>
+                        <td data-lang-en="Birth Day:" data-lang-ko="생일:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Day:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupBirthDay" max="31" min="1" placeholder="DD"
                                                            style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="number">
@@ -3363,22 +3411,27 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;"
-                                    type="submit">
-                                Sign Up
+                            <button data-lang-en="Sign Up"
+                                    data-lang-ko="회원가입"
+                                    style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;"
+                                    type="submit">Sign Up
                             </button>
-                            <button id="cancelSignup"
+                            <button data-lang-en="Cancel" data-lang-ko="취소"
+                                    id="cancelSignup"
                                     style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
-                                    type="button">
-                                Cancel
+                                    type="button">Cancel
                             </button>
                         </td>
                     </tr>
                 </table>
             </form>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
-                Already have an account? <a href="#" id="showLogin" style="color: #0066cc; text-decoration: underline;">Sign
-                In</a>
+                <span data-lang-en="Already have an account?"
+                      data-lang-ko="이미 계정이 있으신가요?">Already have an account?</span> <a data-lang-en="Sign In"
+                                                                                      data-lang-ko="로그인"
+                                                                                      href="#"
+                                                                                      id="showLogin"
+                                                                                      style="color: #0066cc; text-decoration: underline;">Sign In</a>
             </div>
         </div>
     </div>
@@ -3390,10 +3443,12 @@
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
-                <a href="#" onclick="showLoginFromReset(); return false;"
+                <a data-lang-en="← Back to Login" data-lang-ko="← 로그인으로"
+                   href="#" onclick="showLoginFromReset(); return false;"
                    style="color: #666; text-decoration: none; font-size: 13px;">← Back to Login</a>
             </div>
-            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Reset Password</h2>
+            <h2 data-lang-en="Reset Password" data-lang-ko="비밀번호 재설정"
+                style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Reset Password</h2>
             <div id="resetPasswordError"
                  style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <div id="resetPasswordSuccess"
@@ -3401,25 +3456,29 @@
             <form id="resetPasswordForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:</td>
+                        <td data-lang-en="Username:" data-lang-ko="사용자명:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:
+                        </td>
                         <td style="padding: 5px 0;">
-                            <input autocomplete="username" id="resetUsername"
-                                   required
+                            <input id="resetUsername" required
                                    style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                    type="text">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td data-lang-en="Email:" data-lang-ko="이메일:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:
+                        </td>
                         <td style="padding: 5px 0;">
-                            <input autocomplete="email" id="resetEmail"
-                                   required
+                            <input id="resetEmail" required
                                    style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                    type="email">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">New Password:</td>
+                        <td data-lang-en="New Password:" data-lang-ko="새 비밀번호:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">New Password:
+                        </td>
                         <td style="padding: 5px 0;">
                             <input autocomplete="new-password" id="resetNewPassword"
                                    required
@@ -3429,9 +3488,10 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
-                                    type="submit">
-                                Reset Password
+                            <button data-lang-en="Reset Password"
+                                    data-lang-ko="비밀번호 재설정"
+                                    style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="submit">Reset Password
                             </button>
                         </td>
                     </tr>
@@ -3446,8 +3506,7 @@
     <div class="top-actions">
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
         <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
-        <a class="btn" data-lang-en="Insert Data" data-lang-ko="데이터 입력" href="insert.html">데이터 입력</a>
-        <a class="btn" data-lang-en="My Page" data-lang-ko="내 관리" href="manage.html">내 관리</a>
+        <a class="btn" data-lang-en="Category" data-lang-ko="카테고리" href="insert.html">카테고리</a>
         <button class="btn" data-lang-en="Edit Profile" data-lang-ko="회원정보 수정" id="editProfileBtn" onclick="openEditProfileModal()">회원정보 수정</button>
         <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()"><span
                 data-lang-en="Alerts" data-lang-ko="알림">알림</span><span class="notification-badge" id="notificationBadge"
@@ -5325,21 +5384,22 @@
             return;
         }
 
-        // 한 행에 표시할 최대 개수 (데이터가 적으면 데이터 개수만큼만)
-        const itemsPerRow = Math.min(10, sortedDates.length);
-
         // 10개씩 행으로 나누기
         let html = '';
         html += `<table class="check-table">`;
 
-        for (let i = 0; i < sortedDates.length; i += itemsPerRow) {
-            const chunk = sortedDates.slice(i, i + itemsPerRow);
+        for (let i = 0; i < sortedDates.length; i += 10) {
+            const chunk = sortedDates.slice(i, i + 10);
 
             // 날짜 행
             html += `<tr>`;
             chunk.forEach(date => {
                 html += `<td class="date-cell">${date}</td>`;
             });
+            // 빈 셀 채우기
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
             html += `</tr>`;
 
             // O/X 행
@@ -5350,6 +5410,10 @@
                 const resultClass = record.success ? 'result-success' : 'result-fail';
                 html += `<td class="result-cell ${resultClass}" data-record-id="${record.id}" data-record-type="CHECK" style="cursor: pointer;">${symbol}</td>`;
             });
+            // 빈 셀 채우기
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
             html += `</tr>`;
         }
 
@@ -6649,20 +6713,21 @@
             return;
         }
 
-        // 한 행에 표시할 최대 개수 (데이터가 적으면 데이터 개수만큼만)
-        const itemsPerRow = Math.min(10, sortedDates.length);
-
         // 테이블만 표시
         let html = `<table class="time-table">`;
 
-        for (let i = 0; i < sortedDates.length; i += itemsPerRow) {
-            const chunk = sortedDates.slice(i, i + itemsPerRow);
+        for (let i = 0; i < sortedDates.length; i += 10) {
+            const chunk = sortedDates.slice(i, i + 10);
 
             // 날짜 행
             html += `<tr>`;
             chunk.forEach(date => {
                 html += `<td class="date-cell">${date}</td>`;
             });
+            // 빈 셀 채우기
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
             html += `</tr>`;
 
             // 시간 행
@@ -6672,6 +6737,10 @@
                 const timeStr = formatTime(record.time);
                 html += `<td class="time-cell" data-record-id="${record.id}" data-record-type="TIME" style="cursor: pointer;">${timeStr}</td>`;
             });
+            // 빈 셀 채우기
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
             html += `</tr>`;
         }
 
@@ -7750,21 +7819,22 @@
             return;
         }
 
-        // 한 행에 표시할 최대 개수 (데이터가 적으면 데이터 개수만큼만)
-        const itemsPerRow = Math.min(10, sortedDates.length);
-
         // 10개씩 행으로 나누기
         let html = '';
         html += `<table class="number-table">`;
 
-        for (let i = 0; i < sortedDates.length; i += itemsPerRow) {
-            const chunk = sortedDates.slice(i, i + itemsPerRow);
+        for (let i = 0; i < sortedDates.length; i += 10) {
+            const chunk = sortedDates.slice(i, i + 10);
 
             // 날짜 행
             html += `<tr>`;
             chunk.forEach(date => {
                 html += `<td class="date-cell">${date}</td>`;
             });
+            // 빈 셀 채우기
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
             html += `</tr>`;
 
             // 숫자 행
@@ -7773,6 +7843,10 @@
                 const record = recordMap[date];
                 html += `<td class="number-cell" data-record-id="${record.id}" data-record-type="NUMBER" style="cursor: pointer;">${record.number}</td>`;
             });
+            // 빈 셀 채우기
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
             html += `</tr>`;
         }
 

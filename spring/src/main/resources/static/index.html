@@ -340,6 +340,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            table-layout: fixed;
         }
 
         .check-table td, .time-table td {
@@ -1349,18 +1350,12 @@
             margin: 0 auto;
         }
 
-        /* NUMBER 테이블 */
-        .number-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-        }
-
         /* NUMBER 테이블 스타일 */
         .number-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            table-layout: fixed;
         }
 
         .number-table td {
@@ -3455,8 +3450,7 @@
         if (isLoggedIn) {
             topActions.innerHTML = `
                 <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
-                <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
-                <a href="insert.html" class="btn" data-lang-ko="데이터 입력" data-lang-en="Insert Data">데이터 입력</a>
+                <a href="insert.html" class="btn" data-lang-ko="카테고리" data-lang-en="Category">카테고리</a>
                 <a href="manage.html" class="btn" data-lang-ko="내 관리" data-lang-en="My Page">내 관리</a>
                 <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()"><span data-lang-ko="알림" data-lang-en="Alerts">알림</span><span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
                 </button>
@@ -8017,20 +8011,21 @@
             return;
         }
 
-        // 한 행에 표시할 최대 개수 (데이터가 적으면 데이터 개수만큼만)
-        const itemsPerRow = Math.min(10, sortedDates.length);
-
         // 테이블만 표시
         let html = `<table class="time-table">`;
 
-        for (let i = 0; i < sortedDates.length; i += itemsPerRow) {
-            const chunk = sortedDates.slice(i, i + itemsPerRow);
+        for (let i = 0; i < sortedDates.length; i += 10) {
+            const chunk = sortedDates.slice(i, i + 10);
 
             // 날짜 행
             html += `<tr>`;
             chunk.forEach(date => {
                 html += `<td class="date-cell">${date}</td>`;
             });
+            // 빈 셀 채우기
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
             html += `</tr>`;
 
             // 시간 행
@@ -8040,6 +8035,10 @@
                 const timeStr = formatTime(record.time);
                 html += `<td class="time-cell" data-record-id="${record.id}" data-record-type="TIME" style="cursor: pointer;">${timeStr}</td>`;
             });
+            // 빈 셀 채우기
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
             html += `</tr>`;
         }
 
@@ -9099,21 +9098,22 @@
             return;
         }
 
-        // 한 행에 표시할 최대 개수 (데이터가 적으면 데이터 개수만큼만)
-        const itemsPerRow = Math.min(10, sortedDates.length);
-
         // 10개씩 행으로 나누기
         let html = '';
         html += `<table class="number-table">`;
 
-        for (let i = 0; i < sortedDates.length; i += itemsPerRow) {
-            const chunk = sortedDates.slice(i, i + itemsPerRow);
+        for (let i = 0; i < sortedDates.length; i += 10) {
+            const chunk = sortedDates.slice(i, i + 10);
 
             // 날짜 행
             html += `<tr>`;
             chunk.forEach(date => {
                 html += `<td class="date-cell">${date}</td>`;
             });
+            // 빈 셀 채우기
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
             html += `</tr>`;
 
             // 숫자 행
@@ -9122,6 +9122,10 @@
                 const record = recordMap[date];
                 html += `<td class="number-cell" data-record-id="${record.id}" data-record-type="NUMBER" style="cursor: pointer;">${record.number}</td>`;
             });
+            // 빈 셀 채우기
+            for (let j = chunk.length; j < 10; j++) {
+                html += `<td class="empty-cell"></td>`;
+            }
             html += `</tr>`;
         }
 
