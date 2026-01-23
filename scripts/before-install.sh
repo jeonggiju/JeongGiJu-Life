@@ -1,1 +1,2 @@
-rm -rf /home/ubuntu/jeonggiju-life/*
+#!/bin/bash
+rm -rf /home/ubuntu/jeonggiju-life
