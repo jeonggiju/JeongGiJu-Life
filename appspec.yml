@@ -9,6 +9,10 @@ permissions:
     group: ubuntu
 
 hooks:
+  BeforeInstall:
+    - location: scripts/before-install.sh
+      timeout: 60
+
   ApplicationStart:
     - location: scripts/start-server.sh
       timeout: 60
