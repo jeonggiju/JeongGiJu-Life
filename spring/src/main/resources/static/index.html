@@ -36,15 +36,14 @@
         body { opacity: 0; }
         body.lang-ready { opacity: 1; transition: opacity 0.05s ease-in; }
     </style>
+    <!-- Common CSS (cached) -->
+    <link rel="stylesheet" href="css/common.css">
     <!-- EventSource Polyfill for custom headers support -->
     <script src="https://unpkg.com/event-source-polyfill@1.0.31/src/eventsource.min.js"></script>
+    <!-- Common JS (cached) -->
+    <script src="js/common.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Page-specific styles for index.html */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: #f8f9fa;
@@ -70,7 +69,7 @@
         }
 
         .subtitle {
-            font-size: 14px;
+            font-size: 20px;
             color: #6c757d;
             font-weight: normal;
         }
@@ -2821,9 +2820,9 @@
     </div>
 
     <div class="header">
-        <div class="greeting" data-lang-en="Public Categories" data-lang-ko="공개 카테고리">공개 카테고리</div>
-        <div class="subtitle" data-lang-en="Explore categories shared by other users"
-             data-lang-ko="다른 사용자들이 공개한 카테고리를 확인하세요">다른 사용자들이 공개한 카테고리를 확인하세요
+        <div class="greeting">Keep for Your Life</div>
+        <div class="subtitle" data-lang-en="Leave your story"
+             data-lang-ko="당신의 이야기를 남기세요">당신의 이야기를 남기세요
         </div>
     </div>
 
@@ -2858,9 +2857,7 @@
     </div>
 
     <div class="categories-grid" id="categoriesGrid">
-        <div class="empty-state" data-lang-en="Loading public categories..." data-lang-ko="공개 카테고리를 불러오는 중...">공개 카테고리를
-            불러오는 중...
-        </div>
+        <div class="empty-state" data-lang-en="Loading..." data-lang-ko="불러오는 중...">불러오는 중...</div>
     </div>
 
     <!-- 무한 스크롤 로딩 인디케이터 -->
@@ -2928,221 +2925,17 @@
 </div>
 
 <script>
-    const API_BASE = 'http://localhost:8080/api';
-    let currentUser = null;
+    // ==================== Page-specific Variables (index.html) ====================
+    // NOTE: Common variables (API_BASE, csrfToken, accessToken, currentUser, etc.)
+    //       and functions (getCsrfToken, initCsrfToken, authFetch, refreshAccessToken, etc.)
+    //       are loaded from js/common.js
+
     let currentCategory = null;
     let allRecords = [];
-    let csrfToken = null;
-    let accessToken = null; // Access Token 저장
     let userBirthInfo = null; // API에서 받은 생년월일 정보 저장
 
-    // CSRF 토큰 가져오기
-    function getCsrfToken() {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'XSRF-TOKEN') {
-                return decodeURIComponent(value);
-            }
-        }
-        return null;
-    }
-
-    // RefreshToken 쿠키 확인 (로그인 여부 판별)
-    // 주의: HttpOnly 쿠키는 JavaScript로 읽을 수 없음
-    // 이 함수는 사용되지 않음 - refreshAccessToken()으로 판별
-    function hasRefreshToken() {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'refreshToken') {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // CSRF 토큰 초기화
-    async function initCsrfToken() {
-        try {
-            // Spring Security의 CookieCsrfTokenRepository 사용 시
-            // 쿠키의 XSRF-TOKEN 값을 그대로 X-XSRF-TOKEN 헤더로 보내면 됨
-            // (SpaCsrfTokenRequestHandler가 XOR 디코딩 처리)
-
-            // 먼저 /api/auth/csrf-token 호출하여 쿠키 설정
-            await fetch(`${API_BASE}/auth/csrf-token`, {
-                credentials: 'include'
-            });
-
-            // 쿠키에서 토큰 읽기
-            csrfToken = getCsrfToken();
-
-        } catch (error) {
-
-        }
-    }
-
-    // fetch 래퍼 함수 (CSRF 토큰 자동 포함)
-    async function fetchWithCsrf(url, options = {}) {
-        // CSRF 토큰이 없으면 먼저 가져오기
-        if (!csrfToken) {
-            csrfToken = getCsrfToken();
-        }
-
-        // 기본 옵션 설정
-        const defaultOptions = {
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                ...(options.headers || {})
-            }
-        };
-
-        // AccessToken이 있으면 Authorization 헤더 추가
-        if (accessToken) {
-            defaultOptions.headers['Authorization'] = `Bearer ${accessToken}`;
-
-        } else {
-
-        }
-
-        // POST, PUT, DELETE, PATCH 요청에 CSRF 토큰 추가
-        if (options.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method.toUpperCase())) {
-            // 쿠키의 XSRF-TOKEN 값을 X-XSRF-TOKEN 헤더로 전송
-            // SpaCsrfTokenRequestHandler가 자동으로 검증 처리
-            if (csrfToken) {
-                defaultOptions.headers['X-XSRF-TOKEN'] = csrfToken;
-            } else {
-
-            }
-        }
-
-        // 옵션 병합
-        const finalOptions = {
-            ...defaultOptions,
-            ...options,
-            headers: {
-                ...defaultOptions.headers,
-                ...options.headers
-            }
-        };
-
-        const response = await fetch(url, finalOptions);
-
-        // ⭐ 중요: 응답 헤더에서 새로운 CSRF 토큰 확인 및 자동 업데이트
-        // Spring Security는 매 요청마다 새 토큰을 발급할 수 있음
-        const responseCsrfToken = response.headers.get('X-CSRF-TOKEN');
-        if (responseCsrfToken) {
-            csrfToken = responseCsrfToken;
-
-        } else {
-            // 응답 헤더에 없으면 쿠키에서 다시 읽기
-            const cookieToken = getCsrfToken();
-            if (cookieToken && cookieToken !== csrfToken) {
-                csrfToken = cookieToken;
-
-            }
-        }
-
-        // 401 에러 시 토큰 갱신 시도
-        if (response.status === 401) {
-
-            const refreshed = await refreshAccessToken();
-            if (refreshed && accessToken) {
-                // 토큰 갱신 성공 - 재시도
-                finalOptions.headers['Authorization'] = `Bearer ${accessToken}`;
-
-                return await fetch(url, finalOptions);
-            } else {
-                // 토큰 갱신 실패 - 이미 RefreshToken이 없는 상태
-
-                currentUser = null;
-                accessToken = null;
-                location.href = location.pathname; // 현재 페이지 새로고침
-                throw new Error('Authentication required');
-            }
-        }
-
-        // 403 에러 시 CSRF 토큰 갱신 후 재시도
-        if (response.status === 403) {
-
-            await initCsrfToken(); // API에서 XOR 인코딩된 토큰 받기
-
-            if (csrfToken) {
-                finalOptions.headers['X-XSRF-TOKEN'] = csrfToken;
-
-                return await fetch(url, finalOptions);
-            }
-        }
-
-        return response;
-    }
-
-    // Access Token 갱신 (RefreshToken 검증)
-    // RefreshToken 쿠키로 새로운 AccessToken 발급
-    // 성공: AccessToken 저장하고 true 반환
-    // 실패: false 반환 (RefreshToken 만료 또는 없음)
-    async function refreshAccessToken() {
-        try {
-
-            // CSRF 토큰 가져오기
-            if (!csrfToken) {
-                csrfToken = getCsrfToken();
-            }
-
-            const headers = {
-                'Content-Type': 'application/json'
-            };
-
-            // CSRF 토큰 추가
-            if (csrfToken) {
-                headers['X-XSRF-TOKEN'] = csrfToken;
-            }
-
-            const response = await fetch(`${API_BASE}/auth/refresh`, {
-                method: 'POST',
-                headers: headers,
-                credentials: 'include' // RefreshToken은 쿠키로 전송
-            });
-
-            if (response.ok) {
-                const text = await response.text();
-
-                let data;
-                try {
-                    data = JSON.parse(text);
-                } catch (e) {
-                    // JSON이 아니면 문자열 그대로 사용
-                    data = text;
-                }
-
-                // 다양한 응답 형식 지원
-                let token;
-                if (typeof data === 'string') {
-                    token = data;
-                } else if (data.accessToken) {
-                    token = data.accessToken;
-                } else if (data.access_token) {
-                    token = data.access_token;
-                } else if (data.token) {
-                    token = data.token;
-                }
-
-                if (token && typeof token === 'string' && token.length > 10) {
-                    accessToken = token;
-
-                    return true;
-                } else {
-
-                }
-            }
-
-            return false;
-        } catch (error) {
-
-            return false;
-        }
-    }
+    // Alias for compatibility - fetchWithCsrf maps to authFetch from common.js
+    const fetchWithCsrf = authFetch;
 
     // 달력 Label 토글 상태 (전역 변수로 관리)
     let calendarLabelToggleState = 0; // 0: 전체 표시, 1: 날짜 숨김, 2: 요일 숨김, 3: 월 숨김
@@ -3198,7 +2991,7 @@
 
     let currentView = 'table';
     let currentWeekStart = null;
-    let currentLang = localStorage.getItem('language') || 'ko'; // 'ko' or 'en'
+    // NOTE: currentLang is defined in common.js
 
     // 페이지네이션 및 필터 상태
     let nextCursor = null;
@@ -3212,10 +3005,10 @@
 
     // 번역 데이터
     const translations = {
-        'publicCategories': { ko: '공개 카테고리', en: 'Public Categories' },
-        'subtitle': { ko: '다른 사용자들이 공개한 카테고리를 확인하세요', en: 'Explore categories shared by other users' },
-        'loading': { ko: '공개 카테고리를 불러오는 중...', en: 'Loading public categories...' },
-        'noCategories': { ko: '공개된 카테고리가 없습니다.', en: 'No public categories available.' },
+        'publicCategories': { ko: 'Keep for Your Life', en: 'Keep for Your Life' },
+        'subtitle': { ko: '당신의 이야기를 남기세요', en: 'Leave your story' },
+        'loading': { ko: '불러오는 중...', en: 'Loading...' },
+        'noCategories': { ko: '아직 공유된 이야기가 없습니다.', en: 'No stories shared yet.' },
         'viewRecords': { ko: '레코드 보기', en: 'View Records' },
         'graph': { ko: '그래프', en: 'Graph' },
         'table': { ko: '테이블', en: 'Table' },
@@ -3848,7 +3641,7 @@
                     console.warn('[INDEX] No contents in response or not an array');
                     if (isInitial) {
                         document.getElementById('categoriesGrid').innerHTML =
-                            '<div class="empty-state">공개 카테고리가 없습니다.</div>';
+                            '<div class="empty-state">아직 공유된 이야기가 없습니다.</div>';
                     }
                 }
             } else {
@@ -3856,7 +3649,7 @@
                 console.error('[INDEX] Failed to load categories:', response.status, errorText);
                 if (isInitial) {
                     document.getElementById('categoriesGrid').innerHTML =
-                        `<div class="empty-state">공개 카테고리를 불러올 수 없습니다. (${response.status})</div>`;
+                        `<div class="empty-state">불러올 수 없습니다. (${response.status})</div>`;
                 }
             }
         } catch (error) {
@@ -3883,7 +3676,7 @@
         if (!categories || categories.length === 0) {
             console.log('[INDEX displayCategories] No categories to display');
             if (isInitial) {
-                grid.innerHTML = '<div class="empty-state" data-lang-ko="공개된 카테고리가 없습니다." data-lang-en="No public categories available.">공개된 카테고리가 없습니다.</div>';
+                grid.innerHTML = '<div class="empty-state" data-lang-ko="아직 공유된 이야기가 없습니다." data-lang-en="No stories shared yet.">아직 공유된 이야기가 없습니다.</div>';
                 applyLanguage();
             }
             return;
@@ -5928,12 +5721,9 @@
 
 <script>
     // ========== NOTIFICATION SYSTEM ==========
+    // NOTE: eventSource, notifications, unreadCount, isPageUnloading are defined in common.js
 
-    let eventSource = null;
-    let notifications = [];
-    let unreadCount = 0;
     let isInitialized = false; // 초기화 완료 플래그
-    let isPageUnloading = false; // 페이지 언로딩 플래그
 
     // 페이지 로드 시 읽지 않은 알림 가져오기
     async function loadUnreadNotifications() {
@@ -6010,8 +5800,7 @@
     }
 
     // SSE 연결 (EventSourcePolyfill 사용)
-    let sseReconnectAttempts = 0;
-    const MAX_SSE_RECONNECT_ATTEMPTS = 3;
+    // NOTE: sseReconnectAttempts, MAX_SSE_RECONNECT_ATTEMPTS are defined in common.js
 
     async function connectSSE() {
         // 이전 연결 종료
