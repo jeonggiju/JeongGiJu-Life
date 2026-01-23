@@ -7,6 +7,13 @@ spring:
     name: jeonggiju
   profiles:
     active: ${SPRING_PROFILES_ACTIVE}
+  web:
+    resources:
+      cache:
+        period: 86400
+        cachecontrol:
+          max-age: 86400
+          cache-public: true
 
 server:
   address: 0.0.0.0

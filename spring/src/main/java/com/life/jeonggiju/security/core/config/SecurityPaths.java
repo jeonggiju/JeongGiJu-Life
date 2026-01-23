@@ -15,6 +15,8 @@ public class SecurityPaths {
 		"/*.html",
 		"/favicon.ico",
 		"/assets/**",
+		"/css/**",
+		"/js/**",
 		"/vite.svg"
 	};
 
