@@ -157,6 +157,7 @@ public class CategoryService {
 				.authorEmail(category.getAuthorEmail())
 				.authorTitle(category.getAuthorTitle())
 				.authorDesc(category.getAuthorDesc())
+				.authorProfileImageUrl(category.getAuthorProfileImageUrl())
 				.type(category.getType())
 				.hasLike(category.isHasLike())
 				.isMyCategory(userId != null && userId.equals(category.getAuthorId()))

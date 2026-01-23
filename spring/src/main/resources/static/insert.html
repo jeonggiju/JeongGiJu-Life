@@ -4,12 +4,47 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Keep for Your Life</title>
+    <!-- 언어 깜빡임 방지: 페이지 로드 전 즉시 언어 적용 -->
+    <script>
+        (function() {
+            var lang = localStorage.getItem('language') || 'ko';
+            window.__savedLang = lang;
+            document.documentElement.setAttribute('data-lang', lang);
+            document.documentElement.lang = lang === 'en' ? 'en' : 'ko';
+            // DOMContentLoaded 전에 즉시 언어 적용
+            document.addEventListener('DOMContentLoaded', function() {
+                // applyLanguage가 호출되기 전에 먼저 텍스트 변경
+                document.querySelectorAll('[data-lang-ko]').forEach(function(el) {
+                    var ko = el.getAttribute('data-lang-ko');
+                    var en = el.getAttribute('data-lang-en');
+                    if (ko && en && el.tagName !== 'OPTION') el.textContent = lang === 'ko' ? ko : en;
+                });
+                document.querySelectorAll('[data-placeholder-ko]').forEach(function(el) {
+                    var ko = el.getAttribute('data-placeholder-ko');
+                    var en = el.getAttribute('data-placeholder-en');
+                    if (ko && en) el.placeholder = lang === 'ko' ? ko : en;
+                });
+                document.querySelectorAll('select option[data-lang-ko]').forEach(function(el) {
+                    var ko = el.getAttribute('data-lang-ko');
+                    var en = el.getAttribute('data-lang-en');
+                    if (ko && en) el.textContent = lang === 'ko' ? ko : en;
+                });
+                // body 표시 (fallback)
+                setTimeout(function() {
+                    document.body.classList.add('lang-ready');
+                }, 10);
+            });
+        })();
+    </script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* 언어 깜빡임 방지: 초기 body 숨김 */
+        body { opacity: 0; }
+        body.lang-ready { opacity: 1; transition: opacity 0.05s ease-in; }
+    </style>
+    <!-- Common CSS (cached) -->
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* Page-specific styles for insert.html */
 
         html, body {
             height: 100%;
@@ -24,86 +59,7 @@
             line-height: 1.5;
         }
 
-        .header {
-            margin-bottom: 32px;
-            background: white;
-            padding: 24px 32px;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-
-        .title {
-            font-size: 26px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #1a202c;
-        }
-
-        .subtitle {
-            font-size: 14px;
-            color: #718096;
-            font-weight: normal;
-        }
-
-        .top-actions {
-            position: absolute;
-            top: 32px;
-            right: 32px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: 2px solid #e2e8f0;
-            background: white;
-            cursor: pointer;
-            min-width: 80px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            color: #2d3748;
-            display: inline-block;
-            border-radius: 8px;
-        }
-
-        .btn:hover {
-            background: #f7fafc;
-            border-color: #cbd5e0;
-            transform: translateY(-1px);
-        }
-
-        .btn-primary {
-            background: #4299e1;
-            border-color: #4299e1;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #3182ce;
-            border-color: #3182ce;
-        }
-
-        .language-toggle {
-            padding: 10px 20px;
-            border: 2px solid #e2e8f0;
-            background: white;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            min-width: 70px;
-            text-align: center;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .language-toggle:hover {
-            background: #f7fafc;
-            border-color: #cbd5e0;
-        }
+        /* Header, title, subtitle, top-actions, btn, language-toggle styles are inherited from common.css */
 
         .content {
             max-width: 1680px;
@@ -757,114 +713,7 @@
             height: 120px !important;
         }
 
-        /* 알림 버튼 */
-        .notification-bell {
-            position: relative;
-            padding: 10px 18px;
-            border: 2px solid #dee2e6;
-            background: white;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            min-width: 80px;
-            text-align: center;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            transition: all 0.15s ease;
-            text-decoration: none;
-            color: #495057;
-            line-height: 1;
-        }
-
-        .notification-bell:hover {
-            background: #f8f9fa;
-            border-color: #adb5bd;
-        }
-
-        /* 알림 배지 */
-        .notification-badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #f56565;
-            color: white;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 7px;
-            border-radius: 12px;
-            min-width: 20px;
-            text-align: center;
-        }
-        /* 토스트 알림 컨테이너 */
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 350px;
-        }
-
-        /* 토스트 알림 */
-        .toast-notification {
-            background: white;
-            border: 1px solid #ddd;
-            border-left: 4px solid #999;
-            padding: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            animation: slideInRight 0.3s ease-out;
-            cursor: pointer;
-        }
-
-        .toast-notification.comment {
-            border-left-color: #666;
-        }
-
-        .toast-notification.reply {
-            border-left-color: #888;
-        }
-
-        .toast-notification.like {
-            border-left-color: #999;
-        }
-
-        .toast-notification:hover {
-            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .toast-title {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .toast-message {
-            font-size: 12px;
-            color: #666;
-            line-height: 1.4;
-        }
-
-        .toast-time {
-            font-size: 10px;
-            color: #999;
-            margin-top: 5px;
-        }
+        /* notification-bell, notification-badge, toast styles are inherited from common.css */
 
         /* 알림 목록 모달 */
         .notification-modal {
@@ -1325,6 +1174,8 @@
 
     <!-- EventSourcePolyfill 라이브러리 (Authorization 헤더 지원) -->
     <script src="https://unpkg.com/event-source-polyfill@1.0.31/src/eventsource.min.js"></script>
+    <!-- Common JS (cached) -->
+    <script src="js/common.js"></script>
 </head>
 <body>
 <!-- 로그인 섹션 -->
@@ -1333,43 +1184,58 @@
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
-                <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
+                <a data-lang-en="← Back to Home" data-lang-ko="← 홈으로"
+                   href="index.html"
+                   style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
-            <h2 style="text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: normal;">Sign In</h2>
-            <div id="loginError"
-                 style="color: #333; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <h2 data-lang-en="Sign In" data-lang-ko="로그인"
+                style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign In</h2>
+            <div id="loginError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="loginForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Email:</td>
+                        <td data-lang-en="Email:" data-lang-ko="이메일:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:
+                        </td>
                         <td style="padding: 5px 0;"><input id="email" required
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="email">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Password:</td>
-                        <td style="padding: 5px 0;"><input id="password" required
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                        <td data-lang-en="Password:" data-lang-ko="비밀번호:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:
+                        </td>
+                        <td style="padding: 5px 0;"><input autocomplete="current-password" id="password"
+                                                           required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="password">
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;"
-                                    type="submit">
-                                Sign In
+                            <button data-lang-en="Sign In"
+                                    data-lang-ko="로그인"
+                                    style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="submit">Sign In
                             </button>
                         </td>
                     </tr>
                 </table>
             </form>
             <div style="text-align: center; margin-top: 10px; font-size: 12px;">
-                <a href="#" id="showResetPassword" style="color: #666; text-decoration: underline;">Forgot your
-                    password?</a>
+                <a data-lang-en="Forgot your password?" data-lang-ko="비밀번호를 잊으셨나요?"
+                   href="#"
+                   id="showResetPassword"
+                   style="color: #666; text-decoration: underline;">Forgot your password?</a>
             </div>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
-                New account? <a href="#" id="showSignup" style="color: #666; text-decoration: underline;">Sign Up</a>
+                <span data-lang-en="New account?" data-lang-ko="계정이 없으신가요?">New account?</span> <a
+                    data-lang-en="Sign Up"
+                    data-lang-ko="회원가입"
+                    href="#"
+                    id="showSignup"
+                    style="color: #0066cc; text-decoration: underline;">Sign Up</a>
             </div>
         </div>
     </div>
@@ -1381,97 +1247,120 @@
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
-                <a href="index.html" style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
+                <a data-lang-en="← Back to Home" data-lang-ko="← 홈으로"
+                   href="index.html"
+                   style="color: #666; text-decoration: none; font-size: 13px;">← Back to Home</a>
             </div>
-            <h2 style="text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: normal;">Sign Up</h2>
-            <div id="signupError"
-                 style="color: #333; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <h2 data-lang-en="Sign Up" data-lang-ko="회원가입"
+                style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Sign Up</h2>
+            <div id="signupError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="signupForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Username:</td>
+                        <td data-lang-en="Username:" data-lang-ko="사용자명:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupUsername" required
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="text">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Nickname:</td>
+                        <td data-lang-en="Nickname:" data-lang-ko="닉네임:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Nickname:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupNickname" required
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="text">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Email:</td>
+                        <td data-lang-en="Email:" data-lang-ko="이메일:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupEmail" required
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="email">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Password:</td>
-                        <td style="padding: 5px 0;"><input id="signupPassword" required
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                        <td data-lang-en="Password:" data-lang-ko="비밀번호:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:
+                        </td>
+                        <td style="padding: 5px 0;"><input autocomplete="new-password" id="signupPassword"
+                                                           required
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="password">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Title:</td>
+                        <td data-lang-en="Title:" data-lang-ko="직함:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Title:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupTitle"
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="text">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Description:</td>
+                        <td data-lang-en="Description:" data-lang-ko="설명:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Description:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupDescription"
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="text">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Birth Year:</td>
-                        <td style="padding: 5px 0;"><input id="signupBirthYear" max="2100" min="1900" placeholder="YYYY"
-                                                           required
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                        <td data-lang-en="Birth Year:" data-lang-ko="생년:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Year:
+                        </td>
+                        <td style="padding: 5px 0;"><input id="signupBirthYear" placeholder="YYYY"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="number">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Birth Month:</td>
+                        <td data-lang-en="Birth Month:" data-lang-ko="생월:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Month:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupBirthMonth" max="12" min="1" placeholder="MM"
-                                                           required
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="number">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Birth Day:</td>
+                        <td data-lang-en="Birth Day:" data-lang-ko="생일:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Birth Day:
+                        </td>
                         <td style="padding: 5px 0;"><input id="signupBirthDay" max="31" min="1" placeholder="DD"
-                                                           required
-                                                           style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                                           style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                                            type="number">
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px; margin-right: 10px;"
-                                    type="submit">
-                                Sign Up
+                            <button data-lang-en="Sign Up"
+                                    data-lang-ko="회원가입"
+                                    style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px; margin-right: 10px;"
+                                    type="submit">Sign Up
                             </button>
-                            <button id="cancelSignup"
-                                    style="padding: 8px 24px; border: 1px solid #999; background: #fff; cursor: pointer; font-size: 13px;"
-                                    type="button">
-                                Cancel
+                            <button data-lang-en="Cancel" data-lang-ko="취소"
+                                    id="cancelSignup"
+                                    style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="button">Cancel
                             </button>
                         </td>
                     </tr>
                 </table>
             </form>
             <div style="text-align: center; margin-top: 20px; font-size: 12px;">
-                Already have an account? <a href="#" id="showLogin" style="color: #666; text-decoration: underline;">Sign
-                In</a>
+                <span data-lang-en="Already have an account?"
+                      data-lang-ko="이미 계정이 있으신가요?">Already have an account?</span> <a data-lang-en="Sign In"
+                                                                                      data-lang-ko="로그인"
+                                                                                      href="#"
+                                                                                      id="showLogin"
+                                                                                      style="color: #0066cc; text-decoration: underline;">Sign In</a>
             </div>
         </div>
     </div>
@@ -1483,47 +1372,55 @@
     <div class="simple-auth-container">
         <div class="simple-auth-box">
             <div style="text-align: left; margin-bottom: 10px;">
-                <a href="#" onclick="showLoginFromReset(); return false;"
+                <a data-lang-en="← Back to Login" data-lang-ko="← 로그인으로"
+                   href="#" onclick="showLoginFromReset(); return false;"
                    style="color: #666; text-decoration: none; font-size: 13px;">← Back to Login</a>
             </div>
-            <h2 style="text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: normal;">Reset
-                Password</h2>
+            <h2 data-lang-en="Reset Password" data-lang-ko="비밀번호 재설정"
+                style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;">Reset Password</h2>
             <div id="resetPasswordError"
-                 style="color: #333; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+                 style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <div id="resetPasswordSuccess"
                  style="color: green; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
             <form id="resetPasswordForm">
                 <table style="margin: 0 auto; border-collapse: collapse;">
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Username:</td>
+                        <td data-lang-en="Username:" data-lang-ko="사용자명:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Username:
+                        </td>
                         <td style="padding: 5px 0;">
                             <input id="resetUsername" required
-                                   style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                    type="text">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">Email:</td>
+                        <td data-lang-en="Email:" data-lang-ko="이메일:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:
+                        </td>
                         <td style="padding: 5px 0;">
                             <input id="resetEmail" required
-                                   style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                    type="email">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding: 5px 10px 5px 0; font-size: 13px;">New Password:</td>
+                        <td data-lang-en="New Password:" data-lang-ko="새 비밀번호:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">New Password:
+                        </td>
                         <td style="padding: 5px 0;">
                             <input autocomplete="new-password" id="resetNewPassword"
                                    required
-                                   style="padding: 6px; width: 200px; border: 1px solid #ccc; font-size: 13px;"
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;"
                                    type="password">
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 15px;">
-                            <button style="padding: 8px 24px; border: 1px solid #999; background: #e0e0e0; cursor: pointer; font-size: 13px;"
-                                    type="submit">
-                                Reset Password
+                            <button data-lang-en="Reset Password"
+                                    data-lang-ko="비밀번호 재설정"
+                                    style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;"
+                                    type="submit">Reset Password
                             </button>
                         </td>
                     </tr>
@@ -1538,7 +1435,6 @@
     <div class="top-actions">
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
         <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
-        <a class="btn" data-lang-en="Insert Data" data-lang-ko="데이터 입력" href="insert.html">데이터 입력</a>
         <a class="btn" data-lang-en="View Data" data-lang-ko="내 관리" href="manage.html">내 관리</a>
         <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()">
             <span data-lang-en="Alerts" data-lang-ko="알림">알림</span>
@@ -1765,177 +1661,22 @@
 
 <script>
 
-    // ==================== API 및 인증 관련 ====================
-
-    const API_BASE = 'http://localhost:8080/api';
-    let csrfToken = null;
-    let accessToken = null;
-    let currentUser = null;
+    // ==================== Page-specific Variables (insert.html) ====================
     let categories = [];
-    let currentLang = localStorage.getItem('language') || 'ko';
 
-    // SSE 관련 변수
-    let eventSource = null;
-    let reconnectTimer = null;
-    let isPageUnloading = false;
-    let notifications = [];
-    let unreadCount = 0;
-    let lastEventId = localStorage.getItem('lastEventId') || ''; // lastEventId 저장
-    let sseReconnectAttempts = 0; // 재연결 시도 횟수
-    const MAX_SSE_RECONNECT_ATTEMPTS = 5; // 최대 재연결 시도 횟수
-
-    // CSRF 토큰 가져오기
-    function getCsrfToken() {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'XSRF-TOKEN') {
-                return decodeURIComponent(value);
-            }
-        }
-        return null;
-    }
-
-    // CSRF 토큰 초기화
-    async function initCsrfToken() {
-        try {
-            await fetch(`${API_BASE}/auth/csrf-token`, {
-                credentials: 'include'
-            });
-            csrfToken = getCsrfToken();
-        } catch (error) {
-            console.error('CSRF token init failed:', error);
+    // Language change callback for page-specific re-rendering
+    function onLanguageChange() {
+        if (categories.length > 0) {
+            renderCategoryList();
         }
     }
 
-    // AccessToken 저장 (메모리에만 저장 - 보안상 localStorage 사용 안 함)
-    function setAccessToken(token) {
-        accessToken = token;
-    }
+    // ==================== Page-specific Functions ====================
 
-    // AccessToken 가져오기
-    function getAccessToken() {
-        return accessToken;
-    }
-
-    // AccessToken 갱신 (RefreshToken 쿠키로 새 AccessToken 발급)
-    async function refreshAccessToken() {
-        try {
-            if (!csrfToken) {
-                csrfToken = getCsrfToken();
-            }
-
-            const headers = { 'Content-Type': 'application/json' };
-
-            // CSRF 토큰 추가
-            if (csrfToken) {
-                headers['X-XSRF-TOKEN'] = csrfToken;
-            }
-
-            const response = await fetch(`${API_BASE}/auth/refresh`, {
-                method: 'POST',
-                headers: headers,
-                credentials: 'include'  // RefreshToken 쿠키 자동 전송
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const newToken = data.accessToken || data.access_token || data.token;
-                if (newToken && typeof newToken === 'string') {
-                    setAccessToken(newToken);
-                    return true;
-                }
-            }
-            return false;
-        } catch (error) {
-            return false;
-        }
-    }
-
-    // 인증된 fetch 요청
-    async function authFetch(url, options = {}) {
-        // CSRF 토큰이 없으면 먼저 가져오기
-        if (!csrfToken) {
-            csrfToken = getCsrfToken();
-        }
-
-        // 기본 옵션 설정
-        const defaultOptions = {
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                ...(options.headers || {})
-            }
-        };
-
-        // AccessToken이 있으면 Authorization 헤더 추가
-        if (accessToken) {
-            defaultOptions.headers['Authorization'] = `Bearer ${accessToken}`;
-        }
-
-        // POST, PUT, DELETE, PATCH 요청에 CSRF 토큰 추가
-        if (options.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method.toUpperCase())) {
-            if (csrfToken) {
-                defaultOptions.headers['X-XSRF-TOKEN'] = csrfToken;
-            }
-        }
-
-        // 옵션 병합
-        const finalOptions = {
-            ...defaultOptions,
-            ...options,
-            headers: {
-                ...defaultOptions.headers,
-                ...options.headers
-            }
-        };
-
-        const response = await fetch(url, finalOptions);
-
-        // 응답 헤더에서 새로운 CSRF 토큰 확인 및 자동 업데이트
-        const responseCsrfToken = response.headers.get('X-CSRF-TOKEN');
-        if (responseCsrfToken) {
-            csrfToken = responseCsrfToken;
-        } else {
-            // 응답 헤더에 없으면 쿠키에서 다시 읽기
-            const cookieToken = getCsrfToken();
-            if (cookieToken && cookieToken !== csrfToken) {
-                csrfToken = cookieToken;
-            }
-        }
-
-        // 401 에러 시 토큰 갱신 시도
-        if (response.status === 401) {
-            const refreshed = await refreshAccessToken();
-            if (refreshed && accessToken) {
-                // 토큰 갱신 성공 - 재시도
-                finalOptions.headers['Authorization'] = `Bearer ${accessToken}`;
-                return await fetch(url, finalOptions);
-            } else {
-                // 토큰 갱신 실패 - RefreshToken 만료 또는 없음
-                currentUser = null;
-                accessToken = null;
-                location.href = location.pathname; // 현재 페이지 새로고침
-                throw new Error('Authentication required');
-            }
-        }
-
-        // 403 에러 시 CSRF 토큰 갱신 후 재시도
-        if (response.status === 403) {
-            await initCsrfToken();
-            if (csrfToken) {
-                finalOptions.headers['X-XSRF-TOKEN'] = csrfToken;
-                return await fetch(url, finalOptions);
-            }
-        }
-
-        return response;
-    }
-
-    // 인증 상태 확인
-    function checkAuth() {
-        return !!accessToken;
-    }
+    // NOTE: Common functions (getCsrfToken, initCsrfToken, setAccessToken, getAccessToken,
+    //       refreshAccessToken, authFetch, checkAuth, applyLanguage, t, getTypeText,
+    //       toggleLanguage, showToast, formatTimeAgo, connectSSE, etc.)
+    //       are now loaded from js/common.js
 
     // 카테고리 로드
     async function loadCategories() {
@@ -3094,6 +2835,9 @@
                 }
             });
         });
+
+        // 언어 적용 완료 후 body 표시
+        document.body.classList.add('lang-ready');
 
         console.log('[INSERT] Language applied successfully');
     }
