@@ -23,6 +23,7 @@ public class CategorySummaryDto {
 	private String authorTitle;
 	private String authorDesc;
 	private String authorEmail;
+	private String authorProfileImageUrl;
 	private RecordType type;
 	private boolean hasLike;
 	private long likeCount;

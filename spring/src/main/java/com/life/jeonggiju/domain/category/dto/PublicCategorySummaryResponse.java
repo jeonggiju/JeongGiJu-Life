@@ -38,5 +38,6 @@ public class PublicCategorySummaryResponse {
 		String authorEmail;
 		String authorTitle;
 		String authorDesc;
+		String authorProfileImageUrl;
 	}
 }
