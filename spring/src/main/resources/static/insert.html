@@ -32,6 +32,19 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
+        .greeting {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a202c;
+        }
+
+        .user-desc {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 0;
+        }
+
         .title {
             font-size: 26px;
             font-weight: 600;
@@ -1604,9 +1617,15 @@
     </div>
 
     <div class="header">
-        <div class="title" data-lang-en="Category Management" data-lang-ko="카테고리 관리">카테고리 관리</div>
-        <div class="subtitle" data-lang-en="Add and manage your categories" data-lang-ko="카테고리를 추가하고 관리하세요">카테고리를 추가하고
-            관리하세요
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <img id="headerProfileImage"
+                 src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3QgZmlsbD0iI2UyZThmMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjM1IiByPSIyMCIgZmlsbD0iI2EwYWVjMCIvPjxlbGxpcHNlIGN4PSI1MCIgY3k9Ijg1IiByeD0iMzUiIHJ5PSIyNSIgZmlsbD0iI2EwYWVjMCIvPjwvc3ZnPg=="
+                 alt="Profile"
+                 style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; flex-shrink: 0;">
+            <div>
+                <div class="greeting" id="userGreeting">Hi.</div>
+                <div class="user-desc" id="userDesc"></div>
+            </div>
         </div>
     </div>
 
@@ -3089,6 +3108,31 @@
         document.getElementById('signupSection').style.display = 'none';
         document.getElementById('resetPasswordSection').style.display = 'none';
         document.getElementById('mainSection').style.display = 'block';
+
+        // User 정보 표시
+        if (currentUser) {
+            // title: null이면 "Hi."
+            const greeting = currentUser.title || 'Hi.';
+            document.getElementById('userGreeting').textContent = greeting;
+
+            // description: null이면 오늘 날짜 (YY.MM.DD)
+            if (currentUser.description) {
+                document.getElementById('userDesc').textContent = currentUser.description;
+            } else {
+                // 오늘 날짜 표시
+                const now = new Date();
+                const year = String(now.getFullYear()).slice(2);
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                document.getElementById('userDesc').textContent = `${year}.${month}.${day}`;
+            }
+
+            // 프로필 이미지 설정
+            const headerProfileImg = document.getElementById('headerProfileImage');
+            if (currentUser.profileImageUrl) {
+                headerProfileImg.src = currentUser.profileImageUrl;
+            }
+        }
     }
 
     function showResetPasswordSection() {
@@ -3226,18 +3270,28 @@
             isLoggedIn = true;
             console.log('[INSERT] Login status: LOGGED IN');
 
+            // 사용자 정보 가져오기
+            console.log('[INSERT] Step 3: Loading user info');
+            try {
+                const userResponse = await authFetch(`${API_BASE}/user`);
+                if (userResponse.ok) {
+                    currentUser = await userResponse.json();
+                    console.log('[INSERT] User info loaded:', currentUser);
+                }
+            } catch (error) {
+                console.error('[INSERT] Failed to load user info:', error);
+            }
+
             // 메인 섹션 표시
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('signupSection').style.display = 'none';
-            document.getElementById('mainSection').style.display = 'block';
+            showMainSection();
             console.log('[INSERT] UI: Showing main section');
 
             // 카테고리 로드
-            console.log('[INSERT] Step 3: Loading categories');
+            console.log('[INSERT] Step 4: Loading categories');
             await loadCategories();
 
             // SSE 연결
-            console.log('[INSERT] Step 4: Connecting SSE');
+            console.log('[INSERT] Step 5: Connecting SSE');
             await connectSSE();
 
         } else {
@@ -3352,6 +3406,17 @@
                 const cookies = document.cookie.split(';').map(c => c.trim());
                 const hasRefreshToken = cookies.some(c => c.startsWith('REFRESH_TOKEN='));
                 console.log('[INSERT LOGIN] Has REFRESH_TOKEN cookie after login:', hasRefreshToken);
+
+                // 사용자 정보 가져오기
+                try {
+                    const userResponse = await authFetch(`${API_BASE}/user`);
+                    if (userResponse.ok) {
+                        currentUser = await userResponse.json();
+                        console.log('[INSERT LOGIN] User info loaded:', currentUser);
+                    }
+                } catch (error) {
+                    console.error('[INSERT LOGIN] Failed to load user info:', error);
+                }
 
                 // 메인 섹션 표시
                 showMainSection();

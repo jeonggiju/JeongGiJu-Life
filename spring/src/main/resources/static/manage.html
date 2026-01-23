@@ -3516,8 +3516,16 @@
     </div>
 
     <div class="header">
-        <div class="greeting" id="userGreeting">Hi.</div>
-        <div class="user-desc" id="userDesc"></div>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <img id="headerProfileImage"
+                 src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3QgZmlsbD0iI2UyZThmMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjM1IiByPSIyMCIgZmlsbD0iI2EwYWVjMCIvPjxlbGxpcHNlIGN4PSI1MCIgY3k9Ijg1IiByeD0iMzUiIHJ5PSIyNSIgZmlsbD0iI2EwYWVjMCIvPjwvc3ZnPg=="
+                 alt="Profile"
+                 style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; flex-shrink: 0;">
+            <div>
+                <div class="greeting" id="userGreeting">Hi.</div>
+                <div class="user-desc" id="userDesc"></div>
+            </div>
+        </div>
     </div>
 
     <div class="main-layout">
@@ -3738,6 +3746,11 @@
                 ...options.headers
             }
         };
+
+        // FormData를 사용할 때는 Content-Type 헤더를 삭제 (브라우저가 자동으로 multipart/form-data 설정)
+        if (options.body instanceof FormData) {
+            delete finalOptions.headers['Content-Type'];
+        }
 
         const response = await fetch(url, finalOptions);
 
@@ -8541,6 +8554,12 @@
                 const day = String(now.getDate()).padStart(2, '0');
                 document.getElementById('userDesc').textContent = `${year}.${month}.${day}`;
             }
+
+            // 프로필 이미지 설정
+            const headerProfileImg = document.getElementById('headerProfileImage');
+            if (currentUser.profileImageUrl) {
+                headerProfileImg.src = currentUser.profileImageUrl;
+            }
         }
 
         // 알림 시스템 초기화
@@ -9150,7 +9169,25 @@
             <button class="notification-modal-close" onclick="closeEditProfileModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
         </div>
         <div style="padding: 20px;">
-            <form id="editProfileForm">
+            <form id="editProfileForm" enctype="multipart/form-data">
+                <!-- 프로필 이미지 섹션 -->
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="position: relative; display: inline-block;">
+                        <img id="editProfileImage"
+                             src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3QgZmlsbD0iI2UyZThmMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjM1IiByPSIyMCIgZmlsbD0iI2EwYWVjMCIvPjxlbGxpcHNlIGN4PSI1MCIgY3k9Ijg1IiByeD0iMzUiIHJ5PSIyNSIgZmlsbD0iI2EwYWVjMCIvPjwvc3ZnPg=="
+                             alt="Profile"
+                             style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; background: #f7fafc;">
+                        <label for="editProfileImageInput"
+                               style="position: absolute; bottom: 0; right: 0; width: 32px; height: 32px; background: var(--primary-color, #4a6cf7); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; transition: background 0.2s;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </label>
+                        <input type="file" id="editProfileImageInput" accept="image/*" style="display: none;" onchange="previewProfileImage(this)">
+                    </div>
+                    <p style="margin-top: 8px; font-size: 12px; color: #718096;" data-lang-en="Click camera icon to change photo" data-lang-ko="카메라 아이콘을 클릭하여 사진 변경">카메라 아이콘을 클릭하여 사진 변경</p>
+                </div>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <td style="text-align: right; padding: 8px 12px 8px 0; font-size: 14px; width: 120px;">Username:</td>
@@ -9727,6 +9764,18 @@
                 document.getElementById('editBirthMonth').value = userData.birthMonth || '';
                 document.getElementById('editBirthDay').value = userData.birthDay || '';
 
+                // 프로필 이미지 설정
+                const profileImg = document.getElementById('editProfileImage');
+                const defaultAvatar = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3QgZmlsbD0iI2UyZThmMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjM1IiByPSIyMCIgZmlsbD0iI2EwYWVjMCIvPjxlbGxpcHNlIGN4PSI1MCIgY3k9Ijg1IiByeD0iMzUiIHJ5PSIyNSIgZmlsbD0iI2EwYWVjMCIvPjwvc3ZnPg==';
+                if (userData.profileImageUrl) {
+                    profileImg.src = userData.profileImageUrl;
+                } else {
+                    profileImg.src = defaultAvatar;
+                }
+
+                // 파일 입력 초기화
+                document.getElementById('editProfileImageInput').value = '';
+
                 // 모달 표시
                 document.getElementById('editProfileModal').style.display = 'flex';
             } else {
@@ -9743,20 +9792,53 @@
         document.getElementById('editProfileModal').style.display = 'none';
     }
 
+    // 프로필 이미지 미리보기
+    function previewProfileImage(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+
+            // 파일 크기 체크 (5MB 제한)
+            if (file.size > 5 * 1024 * 1024) {
+                alert(currentLang === 'ko' ? '이미지 크기는 5MB 이하여야 합니다.' : 'Image size must be 5MB or less.');
+                input.value = '';
+                return;
+            }
+
+            // 이미지 타입 체크
+            if (!file.type.startsWith('image/')) {
+                alert(currentLang === 'ko' ? '이미지 파일만 업로드 가능합니다.' : 'Only image files are allowed.');
+                input.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('editProfileImage').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
     // 회원정보 수정 폼 제출
     document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const updateData = {
-            nickname: document.getElementById('editNickname').value,
-            title: document.getElementById('editTitle').value || '',
-            description: document.getElementById('editDescription').value || ''
-        };
+        // FormData 생성 (multipart/form-data)
+        const formData = new FormData();
+        formData.append('nickName', document.getElementById('editNickname').value);
+        formData.append('title', document.getElementById('editTitle').value || '');
+        formData.append('description', document.getElementById('editDescription').value || '');
+
+        // 이미지 파일이 선택된 경우 추가
+        const imageInput = document.getElementById('editProfileImageInput');
+        if (imageInput.files && imageInput.files[0]) {
+            formData.append('image', imageInput.files[0]);
+        }
 
         try {
-            const params = new URLSearchParams(updateData).toString();
-            const response = await authFetch(`${API_BASE}/user?${params}`, {
-                method: 'PUT'
+            const response = await authFetch(`${API_BASE}/user`, {
+                method: 'PUT',
+                body: formData
             });
 
             if (response.ok) {
