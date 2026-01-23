@@ -53,86 +53,12 @@
             line-height: 1.5;
         }
 
-        .header {
-            margin-bottom: 30px;
-            background: white;
-            padding: 30px 40px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-        }
-
-        .greeting {
-            font-size: 26px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #1a1a1a;
-        }
-
+        /* Page-specific override for branding subtitle */
         .subtitle {
             font-size: 20px;
-            color: #6c757d;
-            font-weight: normal;
         }
 
-        .top-actions {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .btn {
-            padding: 10px 18px;
-            border: 2px solid #dee2e6;
-            background: white;
-            cursor: pointer;
-            min-width: 80px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.15s ease;
-            text-decoration: none;
-            color: #495057;
-            display: inline-block;
-            border-radius: 6px;
-        }
-
-        .btn:hover {
-            background: #f8f9fa;
-            border-color: #adb5bd;
-        }
-
-        .btn-primary {
-            background: #4299e1;
-            border-color: #4299e1;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #3182ce;
-            border-color: #3182ce;
-        }
-
-        .language-toggle {
-            padding: 10px 18px;
-            border: 2px solid #dee2e6;
-            background: white;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            min-width: 70px;
-            text-align: center;
-            border-radius: 6px;
-            transition: all 0.15s ease;
-            color: #495057;
-        }
-
-        .language-toggle:hover {
-            background: #f8f9fa;
-            border-color: #adb5bd;
-        }
+        /* btn, btn-primary, language-toggle styles are inherited from common.css */
 
         .categories-grid {
             display: grid;
@@ -983,116 +909,7 @@
         }
 
         /* ========== NOTIFICATION SYSTEM ========== */
-
-        /* 알림 벨 아이콘 */
-        .notification-bell {
-            position: relative;
-            padding: 10px 18px;
-            border: 2px solid #dee2e6;
-            background: white;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            min-width: 80px;
-            text-align: center;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            transition: all 0.15s ease;
-            text-decoration: none;
-            color: #495057;
-            line-height: 1;
-        }
-
-        .notification-bell:hover {
-            background: #f8f9fa;
-            border-color: #adb5bd;
-        }
-
-        /* 읽지 않은 알림 배지 */
-        .notification-badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #f56565;
-            color: white;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 7px;
-            border-radius: 12px;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        /* 토스트 알림 컨테이너 */
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 350px;
-        }
-
-        /* 토스트 알림 */
-        .toast-notification {
-            background: white;
-            border: 1px solid #ddd;
-            border-left: 4px solid #4CAF50;
-            padding: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            animation: slideInRight 0.3s ease-out;
-            cursor: pointer;
-        }
-
-        .toast-notification.comment {
-            border-left-color: #2196F3;
-        }
-
-        .toast-notification.reply {
-            border-left-color: #9C27B0;
-        }
-
-        .toast-notification.like {
-            border-left-color: #ff4081;
-        }
-
-        .toast-notification:hover {
-            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .toast-title {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .toast-message {
-            font-size: 12px;
-            color: #666;
-            line-height: 1.4;
-        }
-
-        .toast-time {
-            font-size: 10px;
-            color: #999;
-            margin-top: 5px;
-        }
+        /* notification-bell, notification-badge, toast styles are inherited from common.css */
 
         /* 알림 목록 모달 */
         .notification-modal {

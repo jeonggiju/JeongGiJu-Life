@@ -93,6 +93,28 @@ body {
     border-color: #3182ce;
 }
 
+/* ===== Header Styles ===== */
+.header {
+    margin-bottom: 32px;
+    background: white;
+    padding: 24px 32px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.greeting, .title {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #1a202c;
+}
+
+.subtitle, .user-desc {
+    font-size: 16px;
+    color: #718096;
+    font-weight: normal;
+}
+
 /* ===== Top Actions ===== */
 .top-actions {
     position: absolute;
@@ -333,7 +355,7 @@ body {
 .toast-notification {
     background: white;
     border: 1px solid #ddd;
-    border-left: 4px solid #999;
+    border-left: 4px solid #4CAF50;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -341,9 +363,9 @@ body {
     cursor: pointer;
 }
 
-.toast-notification.comment { border-left-color: #666; }
-.toast-notification.reply { border-left-color: #888; }
-.toast-notification.like { border-left-color: #999; }
+.toast-notification.comment { border-left-color: #2196F3; }
+.toast-notification.reply { border-left-color: #9C27B0; }
+.toast-notification.like { border-left-color: #ff4081; }
 
 .toast-notification:hover {
     box-shadow: 0 6px 16px rgba(0,0,0,0.2);
