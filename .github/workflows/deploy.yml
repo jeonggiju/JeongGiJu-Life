@@ -15,7 +15,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-
       - name: env 주입 및 빌드
         run: ./gradlew :spring:clean :spring:build
 
