@@ -4,6 +4,38 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Keep for Your Life</title>
+    <!-- 언어 깜빡임 방지: 페이지 로드 전 즉시 언어 적용 -->
+    <script>
+        (function() {
+            var lang = localStorage.getItem('language') || 'ko';
+            window.__savedLang = lang;
+            document.documentElement.setAttribute('data-lang', lang);
+            document.documentElement.lang = lang === 'en' ? 'en' : 'ko';
+            // DOMContentLoaded 전에 즉시 언어 적용
+            document.addEventListener('DOMContentLoaded', function() {
+                // applyLanguage가 호출되기 전에 먼저 텍스트 변경
+                document.querySelectorAll('[data-lang-ko]').forEach(function(el) {
+                    var ko = el.getAttribute('data-lang-ko');
+                    var en = el.getAttribute('data-lang-en');
+                    if (ko && en) el.textContent = lang === 'ko' ? ko : en;
+                });
+                document.querySelectorAll('[data-placeholder-ko]').forEach(function(el) {
+                    var ko = el.getAttribute('data-placeholder-ko');
+                    var en = el.getAttribute('data-placeholder-en');
+                    if (ko && en) el.placeholder = lang === 'ko' ? ko : en;
+                });
+                // body 표시 (fallback)
+                setTimeout(function() {
+                    document.body.classList.add('lang-ready');
+                }, 10);
+            });
+        })();
+    </script>
+    <style>
+        /* 언어 깜빡임 방지: 초기 body 숨김 */
+        body { opacity: 0; }
+        body.lang-ready { opacity: 1; transition: opacity 0.05s ease-in; }
+    </style>
     <!-- EventSource Polyfill for custom headers support -->
     <script src="https://unpkg.com/event-source-polyfill@1.0.31/src/eventsource.min.js"></script>
     <style>
@@ -3249,6 +3281,9 @@
                 option.textContent = currentLang === 'ko' ? ko : en;
             });
         });
+
+        // 언어 적용 완료 후 body 표시
+        document.body.classList.add('lang-ready');
     }
 
     // 페이지 로드
@@ -3440,7 +3475,6 @@
         if (isLoggedIn) {
             topActions.innerHTML = `
                 <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
-                <a href="index.html" class="btn" data-lang-ko="홈" data-lang-en="Home">홈</a>
                 <a href="insert.html" class="btn" data-lang-ko="데이터 입력" data-lang-en="Insert Data">데이터 입력</a>
                 <a href="manage.html" class="btn" data-lang-ko="내 관리" data-lang-en="My Page">내 관리</a>
                 <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()"><span data-lang-ko="알림" data-lang-en="Alerts">알림</span><span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
@@ -3867,12 +3901,13 @@
             const authorEmail = category.authorEmail || category.email || '';
             const authorTitle = category.authorTitle || '';
             const authorDesc = category.authorDesc || '';
+            const authorProfileImageUrl = category.authorProfileImageUrl || '';
             const likeCount = category.likeCount || 0;
             const commentCount = category.commentCount || 0;
             const hasLike = category.hasLike || false;
 
             console.log(`[INDEX displayCategories] Category ${index}:`, {
-                id, title, recordType, authorNickname, authorEmail, authorTitle, authorDesc, likeCount, commentCount
+                id, title, recordType, authorNickname, authorEmail, authorTitle, authorDesc, authorProfileImageUrl, likeCount, commentCount
             });
 
             // id가 없으면 건너뛰기
@@ -3886,17 +3921,24 @@
                 nickname: authorNickname,
                 email: authorEmail,
                 title: authorTitle,
-                description: authorDesc
+                description: authorDesc,
+                profileImageUrl: authorProfileImageUrl
             }).replace(/"/g, '&quot;');
 
             return `
                 <div class="category-card" data-id="${id}" data-type="${recordType}">
                     <div class="category-title">${title}</div>
                     <div class="category-type">${recordType}</div>
-                    <div class="category-meta">
-                        <span data-lang-ko="작성자" data-lang-en="Author">작성자</span>:
-                        <span style="cursor: pointer; color: #4299e1; text-decoration: underline;"
-                              onclick="showUserInfoDirect(event, '${authorInfo}')">${authorNickname}</span>
+                    <div class="category-meta" style="display: flex; align-items: center; gap: 8px;">
+                        ${authorProfileImageUrl ?
+                            `<img src="${authorProfileImageUrl}" alt="${authorNickname}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0;">` :
+                            `<div style="width: 24px; height: 24px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #718096;">${authorNickname.charAt(0).toUpperCase()}</div>`
+                        }
+                        <span>
+                            <span data-lang-ko="작성자" data-lang-en="Author">작성자</span>:
+                            <span style="cursor: pointer; color: #4299e1; text-decoration: underline;"
+                                  onclick="showUserInfoDirect(event, '${authorInfo}')">${authorNickname}</span>
+                        </span>
                     </div>
                     <div class="category-actions">
                         <button class="category-action-btn like-btn ${hasLike ? 'liked' : ''}" data-category-id="${id}" onclick="toggleLike(event, '${id}')">
@@ -5832,6 +5874,12 @@
             <button class="user-info-modal-close" onclick="closeUserInfoModal()">&times;</button>
         </div>
         <div class="user-info-modal-body">
+            <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+                <div id="userInfoProfileImageWrapper" style="display: none;">
+                    <img id="userInfoProfileImage" src="" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0;">
+                </div>
+                <div id="userInfoProfilePlaceholder" style="width: 80px; height: 80px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #718096; font-weight: 600;"></div>
+            </div>
             <div class="user-info-field">
                 <div class="user-info-label" data-lang-en="Username" data-lang-ko="사용자명">사용자명</div>
                 <div class="user-info-value" id="userInfoUsername">-</div>
@@ -9444,6 +9492,21 @@
             // HTML 엔티티 디코드 및 JSON 파싱
             const authorInfo = JSON.parse(authorInfoJson.replace(/&quot;/g, '"'));
             console.log('[INDEX] Showing user info:', authorInfo);
+
+            // 프로필 이미지 처리
+            const profileImageWrapper = document.getElementById('userInfoProfileImageWrapper');
+            const profileImage = document.getElementById('userInfoProfileImage');
+            const profilePlaceholder = document.getElementById('userInfoProfilePlaceholder');
+
+            if (authorInfo.profileImageUrl) {
+                profileImage.src = authorInfo.profileImageUrl;
+                profileImageWrapper.style.display = 'block';
+                profilePlaceholder.style.display = 'none';
+            } else {
+                profileImageWrapper.style.display = 'none';
+                profilePlaceholder.style.display = 'flex';
+                profilePlaceholder.textContent = (authorInfo.nickname || '?').charAt(0).toUpperCase();
+            }
 
             // 모달에 정보 채우기
             document.getElementById('userInfoNickname').textContent = authorInfo.nickname || '-';
