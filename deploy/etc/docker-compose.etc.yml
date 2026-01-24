@@ -20,8 +20,6 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./postgres/init:/docker-entrypoint-initdb.d:ro
-    networks:
-      - app-network
     restart: unless-stopped
 
 volumes:
