@@ -1,0 +1,5 @@
+name: spring-deploy.yml
+on:
+  push:
+    branches:
+jobs:
