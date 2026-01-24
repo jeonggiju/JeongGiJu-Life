@@ -73,7 +73,7 @@ jobs:
       - name: 압축하기
         run: |
           cp deploy/spring/appspec.yml ./appspec.yml
-          cp -r deploy/spring/scripts ./scripts
+          rm -rf ./scripts && cp -r deploy/spring/scripts ./scripts
           cp deploy/spring/docker-compose.spring.yml ./docker-compose.spring.yml
           tar -czvf $GITHUB_SHA.tar.gz \
             appspec.yml \

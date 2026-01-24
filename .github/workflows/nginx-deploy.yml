@@ -36,7 +36,7 @@ jobs:
       - name: 압축하기
         run: |
           cp deploy/nginx/appspec.yml ./appspec.yml
-          cp -r deploy/nginx/scripts ./scripts
+          rm -rf ./scripts && cp -r deploy/nginx/scripts ./scripts
           cp deploy/nginx/docker-compose.nginx.yml ./docker-compose.nginx.yml
           tar -czvf $GITHUB_SHA.tar.gz \
             appspec.yml \

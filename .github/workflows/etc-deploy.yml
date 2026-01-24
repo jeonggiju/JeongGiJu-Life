@@ -34,7 +34,7 @@ jobs:
       - name: 압축하기
         run: |
           cp deploy/etc/appspec.yml ./appspec.yml
-          cp -r deploy/etc/scripts ./scripts
+          rm -rf ./scripts && cp -r deploy/etc/scripts ./scripts
           cp deploy/etc/docker-compose.etc.yml ./docker-compose.etc.yml
           tar -czvf $GITHUB_SHA.tar.gz \
             appspec.yml \
