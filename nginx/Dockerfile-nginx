@@ -2,7 +2,7 @@ FROM nginx:alpine
 
 COPY ./nginx/conf/default.conf /etc/nginx/conf.d/default.conf
 
-COPY ./nginx/html/ /usr/share/nginx/html/
+COPY ./nginx/static/ /usr/share/nginx/static/
 
 RUN apk add --no-cache curl
 
