@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/ubuntu/spring
+cd /home/ubuntu/keep4life/spring
 
 echo "==Start Deploy Spring=="
 

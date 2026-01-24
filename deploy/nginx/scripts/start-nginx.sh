@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/ubuntu/nginx
+cd /home/ubuntu/keep4life/nginx
 
 echo "==Start Deploy Nginx=="
 

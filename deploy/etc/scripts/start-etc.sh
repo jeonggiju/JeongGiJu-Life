@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/ubuntu/etc
+cd /home/ubuntu/keep4life/etc
 
 echo "==Start Deploy DB, Certbot=="
 
