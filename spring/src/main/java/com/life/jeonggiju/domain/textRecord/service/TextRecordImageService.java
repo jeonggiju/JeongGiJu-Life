@@ -1,0 +1,117 @@
+package com.life.jeonggiju.domain.textRecord.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.life.jeonggiju.config.S3Config;
+import com.life.jeonggiju.domain.textRecord.entity.TextRecord;
+import com.life.jeonggiju.domain.textRecord.entity.TextRecordImage;
+import com.life.jeonggiju.domain.textRecord.exception.TextRecordNotFoundException;
+import com.life.jeonggiju.domain.textRecord.repository.TextRecordImageRepository;
+import com.life.jeonggiju.domain.textRecord.repository.TextRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+@ConditionalOnProperty(name = "storage.type", havingValue = "s3")
+public class TextRecordImageService {
+
+	private final S3Config s3Config;
+	private final S3Client s3Client;
+	private final TextRepository textRepository;
+	private final TextRecordImageRepository imageRepository;
+
+	private static final String PATH_PREFIX = "text-record";
+
+	@Transactional
+	public List<String> uploadImages(UUID textRecordId, List<MultipartFile> files) {
+		TextRecord textRecord = textRepository.findById(textRecordId)
+			.orElseThrow(() -> TextRecordNotFoundException.withId(textRecordId));
+
+		int currentOrder = imageRepository.countByTextRecordId(textRecordId);
+		List<String> uploadedUrls = new ArrayList<>();
+
+		for (MultipartFile file : files) {
+			String imageUrl = uploadToS3(textRecordId, file);
+			TextRecordImage image = TextRecordImage.of(textRecord, imageUrl, currentOrder++);
+			imageRepository.save(image);
+			uploadedUrls.add(imageUrl);
+		}
+
+		return uploadedUrls;
+	}
+
+	@Transactional
+	public void deleteImage(UUID textRecordId, UUID imageId) {
+		TextRecordImage image = imageRepository.findById(imageId)
+			.orElseThrow(() -> new IllegalArgumentException("Image not found: " + imageId));
+
+		if (!image.getTextRecord().getId().equals(textRecordId)) {
+			throw new IllegalArgumentException("Image does not belong to the specified text record");
+		}
+
+		deleteFromS3(image.getImageUrl());
+		imageRepository.delete(image);
+	}
+
+	public List<String> getImageUrls(UUID textRecordId) {
+		return imageRepository.findByTextRecordIdOrderByDisplayOrderAsc(textRecordId)
+			.stream()
+			.map(TextRecordImage::getImageUrl)
+			.toList();
+	}
+
+	private String uploadToS3(UUID textRecordId, MultipartFile file) {
+		String originalFilename = file.getOriginalFilename();
+		String extension = originalFilename != null && originalFilename.contains(".")
+			? originalFilename.substring(originalFilename.lastIndexOf("."))
+			: "";
+		String key = PATH_PREFIX + "/" + textRecordId + "/" + UUID.randomUUID() + extension;
+
+		try {
+			s3Client.putObject(
+				b -> b.bucket(s3Config.getBucket())
+					.key(key)
+					.contentType(file.getContentType()),
+				RequestBody.fromBytes(file.getBytes())
+			);
+		} catch (Exception e) {
+			log.error("Failed to upload image to S3", e);
+			throw new RuntimeException("Failed to upload image", e);
+		}
+
+		return String.format("https://%s.s3.%s.amazonaws.com/%s",
+			s3Config.getBucket(), s3Config.getRegion(), key);
+	}
+
+	private void deleteFromS3(String imageUrl) {
+		String key = extractKeyFromUrl(imageUrl);
+
+		try {
+			s3Client.deleteObject(DeleteObjectRequest.builder()
+				.bucket(s3Config.getBucket())
+				.key(key)
+				.build());
+		} catch (Exception e) {
+			log.error("Failed to delete image from S3: {}", imageUrl, e);
+		}
+	}
+
+	private String extractKeyFromUrl(String imageUrl) {
+		String prefix = String.format("https://%s.s3.%s.amazonaws.com/",
+			s3Config.getBucket(), s3Config.getRegion());
+		return imageUrl.replace(prefix, "");
+	}
+}
