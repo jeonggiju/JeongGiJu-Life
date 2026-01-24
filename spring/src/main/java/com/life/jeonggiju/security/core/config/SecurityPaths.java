@@ -44,6 +44,7 @@ public class SecurityPaths {
 		"/api/number/all",
 		"/api/check/all",
 		"/default-ui.css",
+		"/actuator/**",
 	};
 	public static final String[] PUBLIC_PATHS = combineArrays(
 		STATIC_RESOURCES,
