@@ -1,4 +1,4 @@
-name: spring-deploy.yml
+name: Deploy Spring To Ec2
 on:
   push:
     branches:
