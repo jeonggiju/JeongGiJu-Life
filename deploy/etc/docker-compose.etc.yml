@@ -11,6 +11,8 @@ services:
   db:
     image: postgres:16
     container_name: postgres-db
+    env_file:
+      - .env
     environment:
       POSTGRES_DB: app
       POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
@@ -20,6 +22,30 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    container_name: postgres-exporter
+    env_file:
+      - .env
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${SPRING_DATASOURCE_USERNAME}:${SPRING_DATASOURCE_PASSWORD}@postgres-db:5432/app?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter
+    container_name: nginx-exporter
+    command:
+      - '-nginx.scrape-uri=http://nginx-server:80/stub_status'
+    ports:
+      - "9113:9113"
     networks:
       - app-network
     restart: unless-stopped
