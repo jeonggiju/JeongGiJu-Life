@@ -9362,7 +9362,7 @@
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
-                    'X-CSRF-TOKEN': csrfToken
+                    'X-XSRF-TOKEN': csrfToken
                 },
                 credentials: 'include',
                 body: formData
