@@ -6,7 +6,7 @@ on:
     paths:
       - "nginx/**"
       - "deploy/nginx/**"
-      - "./.github/workflows/nginx-deploy.yml"
+      - ".github/workflows/nginx-deploy.yml"
 jobs:
   deploy:
     runs-on: ubuntu-latest

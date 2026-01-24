@@ -6,7 +6,7 @@ on:
       - deploy/directory
     paths:
       - "deploy/etc/**"
-      - "./.github/workflows/etc-deploy.yml"
+      - ".github/workflows/etc-deploy.yml"
 jobs:
   deploy:
     runs-on: ubuntu-latest
