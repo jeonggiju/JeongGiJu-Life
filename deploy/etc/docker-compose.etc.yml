@@ -26,6 +26,8 @@ services:
 
 volumes:
   pgdata:
+    external:
+      name: jeonggiju-life_pgdata
 
 networks:
   app-network:
