@@ -43,8 +43,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
     expose:
-      - "8080"   # API
-      - "8081"   # actuator/prometheus (추천: management 포트)
+      - "8080"
+      - "8081"
     networks:
       - app-network
     restart: unless-stopped

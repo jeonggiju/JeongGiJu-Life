@@ -2,18 +2,17 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/jeonggiju-life
+    destination: /home/ubuntu/keep4life/nginx
 permissions:
   - object: /
     owner: ubuntu
     group: ubuntu
-
 hooks:
   BeforeInstall:
-    - location: scripts/before-install.sh
+    - location: scripts/before-nginx.sh
       timeout: 60
 
   ApplicationStart:
-    - location: scripts/start-spring.sh
-      timeout: 60
+    - location: scripts/start-nginx.sh
+      timeout: 300
       runas: ubuntu
