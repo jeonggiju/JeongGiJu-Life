@@ -31,10 +31,6 @@ jobs:
   
           EOF
 
-      - name: ECR에 로그인하기
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
       - name: 압축하기
         run: |
           cp deploy/etc/appspec.yml ./appspec.yml
@@ -51,7 +47,7 @@ jobs:
 
       - name: Code Deploy를 활용해 EC2에 프로젝트 코드 배포
         run: aws deploy create-deployment
-          --application-name jeonggiju-life
+          --application-name Keep4Life-Etc
           --deployment-config-name CodeDeployDefault.AllAtOnce
-          --deployment-group-name jeonggiju-deploy-group
+          --deployment-group-name keep-for-life-etc-group
           --s3-location bucket=jeongiju-life,bundleType=tgz,key=$GITHUB_SHA.tar.gz
