@@ -45,12 +45,12 @@ jobs:
             docker-compose.nginx.yml
 
       - name: S3에 프로젝트 폴더 업로드하기
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.tar.gz s3://jeongiju-life/$GITHUB_SHA.tar.gz
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.tar.gz s3://jeongiju-life/nginx/$GITHUB_SHA.tar.gz
 
       - name: Code Deploy를 활용해 EC2에 프로젝트 코드 배포
         run: aws deploy create-deployment
           --application-name Keep4Life-Nginx
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name keep-for-life-nginx-group
-          --s3-location bucket=jeongiju-life,bundleType=tgz,key=$GITHUB_SHA.tar.gz
+          --s3-location bucket=jeongiju-life,bundleType=tgz,key=nginx/$GITHUB_SHA.tar.gz
 

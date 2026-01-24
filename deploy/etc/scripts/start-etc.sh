@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/ubuntu/nginx
+cd /home/ubuntu/etc
 
 echo "==Start Deploy DB, Certbot=="
 
