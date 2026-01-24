@@ -2458,6 +2458,77 @@
         }
     }
 
+    let isInitialized = false; // 초기화 완료 플래그
+
+    // 페이지 로드 시 읽지 않은 알림 가져오기
+    async function loadUnreadNotifications() {
+        isInitialized = false; // 초기화 시작
+
+        try {
+            const response = await authFetch(`${API_BASE}/notification/unread`);
+
+            if (response.ok) {
+                const data = await response.json();
+                notifications = data || [];
+
+                // 읽지 않은 개수 가져오기
+                await loadUnreadCount();
+
+                isInitialized = true; // 초기화 완료
+            }
+        } catch (error) {
+            console.error('[INSERT] Failed to load notifications:', error);
+            isInitialized = true; // 오류여도 초기화 완료로 표시
+        }
+    }
+
+    // 읽지 않은 알림 개수 가져오기
+    async function loadUnreadCount() {
+        try {
+            const response = await authFetch(`${API_BASE}/notification/unread/count`);
+
+            if (response.ok) {
+                const count = await response.json();
+
+                // 객체 또는 숫자 처리 (API가 {count: 4} 형태로 반환)
+                let actualCount = 0;
+                if (typeof count === 'object' && count !== null && 'count' in count) {
+                    actualCount = count.count;
+                } else if (typeof count === 'number') {
+                    actualCount = count;
+                }
+
+                // 강력한 타입 체크 - 숫자로 변환
+                unreadCount = Number(actualCount) || 0;
+
+                updateNotificationBadge();
+            } else {
+                unreadCount = 0;
+            }
+        } catch (error) {
+            console.error('[INSERT] Failed to load unread count:', error);
+            unreadCount = 0; // 오류 시 0으로 초기화
+        }
+    }
+
+    // 알림을 읽음 처리
+    async function markNotificationsAsRead(notificationIds) {
+        try {
+            const response = await authFetch(`${API_BASE}/notification/unread`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    notificationIds: notificationIds
+                })
+            });
+
+            if (response.ok) {
+                // 읽음 처리 후 개수 업데이트
+                await loadUnreadCount();
+            }
+        } catch (error) {
+            console.error('[INSERT] Failed to mark notifications as read:', error);
+        }
+    }
 
     // 알림 처리
     function handleNotification(notification) {
@@ -2966,8 +3037,12 @@
             console.log('[INSERT] Step 4: Loading categories');
             await loadCategories();
 
+            // 알림 로드
+            console.log('[INSERT] Step 5: Loading notifications');
+            await loadUnreadNotifications();
+
             // SSE 연결
-            console.log('[INSERT] Step 5: Connecting SSE');
+            console.log('[INSERT] Step 6: Connecting SSE');
             await connectSSE();
 
         } else {
