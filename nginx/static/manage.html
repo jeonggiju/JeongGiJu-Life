@@ -9358,7 +9358,25 @@
         }
 
         try {
-            const response = await fetch(`${API_BASE}/user`, {
+            // accessToken 확인 및 갱신
+            if (!accessToken) {
+                const refreshed = await refreshAccessToken();
+                if (!refreshed) {
+                    showSimpleToast(
+                        currentLang === 'ko' ? '인증 오류' : 'Auth Error',
+                        currentLang === 'ko' ? '다시 로그인해주세요.' : 'Please login again.',
+                        'like'
+                    );
+                    return;
+                }
+            }
+
+            // CSRF 토큰 확인
+            if (!csrfToken) {
+                csrfToken = getCsrfToken();
+            }
+
+            let response = await fetch(`${API_BASE}/user`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
@@ -9367,6 +9385,22 @@
                 credentials: 'include',
                 body: formData
             });
+
+            // 401 응답 시 토큰 갱신 후 재시도
+            if (response.status === 401) {
+                const refreshed = await refreshAccessToken();
+                if (refreshed && accessToken) {
+                    response = await fetch(`${API_BASE}/user`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'X-XSRF-TOKEN': csrfToken
+                        },
+                        credentials: 'include',
+                        body: formData
+                    });
+                }
+            }
 
             if (response.ok) {
                 // 모달 즉시 닫기
