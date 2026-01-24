@@ -69,11 +69,64 @@
 
         .category-card {
             border: 2px solid #e9ecef;
-            padding: 20px;
+            padding: 16px;
             background: white;
             cursor: pointer;
             transition: all 0.15s ease;
             border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .category-card-row1 {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .category-card-image {
+            flex-shrink: 0;
+            width: 64px;
+            height: 64px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .category-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .category-card-image .initial {
+            font-size: 22px;
+            font-weight: 600;
+            color: #718096;
+        }
+
+        .category-card-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .category-card-row2 {
+            font-size: 13px;
+            color: #6c757d;
+            margin-top: -6px;
+            margin-bottom: -6px;
+        }
+
+        .category-card-row3 {
+            display: flex;
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 2px solid #f1f3f5;
         }
 
         .category-card:hover {
@@ -118,19 +171,11 @@
         .category-meta {
             font-size: 13px;
             color: #6c757d;
-            margin-top: 10px;
         }
 
         .category-actions {
-            margin-top: 12px;
             display: flex;
             gap: 8px;
-            padding-top: 12px;
-            border-top: 2px solid #f1f3f5;
-        }
-
-        .category-card.active .category-actions {
-            border-top-color: #dee2e6;
         }
 
         .category-action-btn {
@@ -297,6 +342,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            table-layout: fixed;
         }
 
         .check-table td, .time-table td {
@@ -1092,11 +1138,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.5);
             z-index: 10001;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(4px);
         }
 
         .user-info-modal.active {
@@ -1106,16 +1151,17 @@
         .user-info-modal-content {
             background: white;
             width: 90%;
-            max-width: 500px;
+            max-width: 420px;
+            border: 2px solid #dee2e6;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
             overflow: hidden;
         }
 
         .user-info-modal-header {
             padding: 20px 24px;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e2e8f0;
+            background: white;
+            border-bottom: 2px solid #e9ecef;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1124,7 +1170,7 @@
         .user-info-modal-title {
             font-size: 18px;
             font-weight: 600;
-            color: #2d3748;
+            color: #212529;
         }
 
         .user-info-modal-close {
@@ -1132,7 +1178,7 @@
             border: none;
             font-size: 28px;
             cursor: pointer;
-            color: #718096;
+            color: #adb5bd;
             line-height: 1;
             padding: 0;
             width: 32px;
@@ -1140,42 +1186,146 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 4px;
-            transition: all 0.2s ease;
+            border-radius: 6px;
+            transition: all 0.15s ease;
         }
 
         .user-info-modal-close:hover {
-            background: #e2e8f0;
-            color: #2d3748;
+            color: #495057;
+            background: #f8f9fa;
         }
 
         .user-info-modal-body {
             padding: 24px;
         }
 
-        .user-info-field {
+        .user-info-profile-section {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f1f3f5;
             margin-bottom: 20px;
         }
 
-        .user-info-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #718096;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
+        .user-info-profile-image {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e9ecef;
         }
 
-        .user-info-value {
-            font-size: 15px;
-            color: #2d3748;
-            line-height: 1.5;
+        .user-info-profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info-profile-image .initial {
+            font-size: 32px;
+            font-weight: 600;
+            color: #6c757d;
+        }
+
+        .user-info-profile-details {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .user-info-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .user-info-row-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6c757d;
+            flex-shrink: 0;
+        }
+
+        .user-info-row-value {
+            font-size: 14px;
+            color: #212529;
             word-break: break-word;
         }
 
-        .user-info-value.empty {
-            color: #a0aec0;
+        .user-info-row-value.empty {
+            color: #adb5bd;
             font-style: italic;
+        }
+
+        .user-info-description-section {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .user-info-description-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .user-info-description-text {
+            font-size: 14px;
+            color: #495057;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .user-info-description-text.empty {
+            color: #adb5bd;
+            font-style: italic;
+        }
+
+        .user-info-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .user-info-meta-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .user-info-meta-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .user-info-meta-value {
+            font-size: 14px;
+            color: #212529;
+            font-weight: 500;
+        }
+
+        .user-info-meta-value.empty {
+            color: #adb5bd;
+            font-style: italic;
+            font-weight: 400;
         }
 
         /* ========== manage.html 추가 CSS ========== */
@@ -2492,7 +2642,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td data-lang-en="Title:" data-lang-ko="직함:"
+                        <td data-lang-en="Title:" data-lang-ko="제목:"
                             style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Title:
                         </td>
                         <td style="padding: 5px 0;"><input id="signupTitle"
@@ -3537,20 +3687,24 @@
 
             return `
                 <div class="category-card" data-id="${id}" data-type="${recordType}">
-                    <div class="category-title">${title}</div>
-                    <div class="category-type">${recordType}</div>
-                    <div class="category-meta" style="display: flex; align-items: center; gap: 8px;">
-                        ${authorProfileImageUrl ?
-                            `<img src="${authorProfileImageUrl}" alt="${authorNickname}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0;">` :
-                            `<div style="width: 24px; height: 24px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #718096;">${authorNickname.charAt(0).toUpperCase()}</div>`
-                        }
-                        <span>
-                            <span data-lang-ko="작성자" data-lang-en="Author">작성자</span>:
-                            <span style="cursor: pointer; color: #4299e1; text-decoration: underline;"
-                                  onclick="showUserInfoDirect(event, '${authorInfo}')">${authorNickname}</span>
-                        </span>
+                    <div class="category-card-row1">
+                        <div class="category-card-image">
+                            ${authorProfileImageUrl ?
+                                `<img src="${authorProfileImageUrl}" alt="${authorNickname}">` :
+                                `<span class="initial">${authorNickname.charAt(0).toUpperCase()}</span>`
+                            }
+                        </div>
+                        <div class="category-card-info">
+                            <div class="category-title">${title}</div>
+                            <div class="category-type">${recordType}</div>
+                        </div>
                     </div>
-                    <div class="category-actions">
+                    <div class="category-card-row2">
+                        <span data-lang-ko="작성자" data-lang-en="Author">작성자</span>:
+                        <span style="cursor: pointer; color: #4299e1; text-decoration: underline;"
+                              onclick="showUserInfoDirect(event, '${authorInfo}')">${authorNickname}</span>
+                    </div>
+                    <div class="category-card-row3">
                         <button class="category-action-btn like-btn ${hasLike ? 'liked' : ''}" data-category-id="${id}" onclick="toggleLike(event, '${id}')">
                             <span data-lang-ko="좋아요" data-lang-en="Likes">좋아요</span>
                             <span class="like-count" id="like-count-${id}">${likeCount}</span>
@@ -5480,39 +5634,48 @@
 <div class="user-info-modal" id="userInfoModal">
     <div class="user-info-modal-content">
         <div class="user-info-modal-header">
-            <div class="user-info-modal-title" data-lang-en="User Information" data-lang-ko="사용자 정보">사용자 정보</div>
+            <div class="user-info-modal-title" data-lang-en="Profile" data-lang-ko="프로필">프로필</div>
             <button class="user-info-modal-close" onclick="closeUserInfoModal()">&times;</button>
         </div>
         <div class="user-info-modal-body">
-            <div style="display: flex; justify-content: center; margin-bottom: 16px;">
-                <div id="userInfoProfileImageWrapper" style="display: none;">
-                    <img id="userInfoProfileImage" src="" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0;">
+            <!-- 프로필 섹션: 이미지 + 기본 정보 -->
+            <div class="user-info-profile-section">
+                <div class="user-info-profile-image">
+                    <img id="userInfoProfileImage" src="" alt="Profile" style="display: none;">
+                    <span class="initial" id="userInfoProfilePlaceholder"></span>
                 </div>
-                <div id="userInfoProfilePlaceholder" style="width: 80px; height: 80px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #718096; font-weight: 600;"></div>
+                <div class="user-info-profile-details">
+                    <div class="user-info-row">
+                        <span class="user-info-row-label" data-lang-en="Nickname:" data-lang-ko="닉네임:">닉네임:</span>
+                        <span class="user-info-row-value" id="userInfoNickname">-</span>
+                    </div>
+                    <div class="user-info-row">
+                        <span class="user-info-row-label" data-lang-en="Title:" data-lang-ko="제목:">제목:</span>
+                        <span class="user-info-row-value" id="userInfoTitle">-</span>
+                    </div>
+                    <div class="user-info-row">
+                        <span class="user-info-row-label" data-lang-en="Email:" data-lang-ko="이메일:">이메일:</span>
+                        <span class="user-info-row-value" id="userInfoEmail">-</span>
+                    </div>
+                </div>
             </div>
-            <div class="user-info-field">
-                <div class="user-info-label" data-lang-en="Username" data-lang-ko="사용자명">사용자명</div>
-                <div class="user-info-value" id="userInfoUsername">-</div>
+
+            <!-- 소개 섹션 -->
+            <div class="user-info-description-section">
+                <div class="user-info-description-label" data-lang-en="Description" data-lang-ko="설명">설명</div>
+                <div class="user-info-description-text" id="userInfoDescription">-</div>
             </div>
-            <div class="user-info-field">
-                <div class="user-info-label" data-lang-en="Nickname" data-lang-ko="닉네임">닉네임</div>
-                <div class="user-info-value" id="userInfoNickname">-</div>
-            </div>
-            <div class="user-info-field">
-                <div class="user-info-label" data-lang-en="Email" data-lang-ko="이메일">이메일</div>
-                <div class="user-info-value" id="userInfoEmail">-</div>
-            </div>
-            <div class="user-info-field">
-                <div class="user-info-label" data-lang-en="Title" data-lang-ko="직함">직함</div>
-                <div class="user-info-value" id="userInfoTitle">-</div>
-            </div>
-            <div class="user-info-field">
-                <div class="user-info-label" data-lang-en="Description" data-lang-ko="소개">소개</div>
-                <div class="user-info-value" id="userInfoDescription">-</div>
-            </div>
-            <div class="user-info-field">
-                <div class="user-info-label" data-lang-en="Birth Date" data-lang-ko="생년월일">생년월일</div>
-                <div class="user-info-value" id="userInfoBirthDate">-</div>
+
+            <!-- 메타 정보 그리드 -->
+            <div class="user-info-meta">
+                <div class="user-info-meta-item">
+                    <div class="user-info-meta-label" data-lang-en="Username" data-lang-ko="사용자명">사용자명</div>
+                    <div class="user-info-meta-value" id="userInfoUsername">-</div>
+                </div>
+                <div class="user-info-meta-item">
+                    <div class="user-info-meta-label" data-lang-en="Birth Date" data-lang-ko="생년월일">생년월일</div>
+                    <div class="user-info-meta-value" id="userInfoBirthDate">-</div>
+                </div>
             </div>
         </div>
     </div>
@@ -9100,17 +9263,16 @@
             console.log('[INDEX] Showing user info:', authorInfo);
 
             // 프로필 이미지 처리
-            const profileImageWrapper = document.getElementById('userInfoProfileImageWrapper');
             const profileImage = document.getElementById('userInfoProfileImage');
             const profilePlaceholder = document.getElementById('userInfoProfilePlaceholder');
 
             if (authorInfo.profileImageUrl) {
                 profileImage.src = authorInfo.profileImageUrl;
-                profileImageWrapper.style.display = 'block';
+                profileImage.style.display = 'block';
                 profilePlaceholder.style.display = 'none';
             } else {
-                profileImageWrapper.style.display = 'none';
-                profilePlaceholder.style.display = 'flex';
+                profileImage.style.display = 'none';
+                profilePlaceholder.style.display = 'block';
                 profilePlaceholder.textContent = (authorInfo.nickname || '?').charAt(0).toUpperCase();
             }
 
@@ -9118,8 +9280,9 @@
             document.getElementById('userInfoNickname').textContent = authorInfo.nickname || '-';
             document.getElementById('userInfoEmail').textContent = authorInfo.email || '-';
 
-            // Username은 숨기기 (API에서 제공하지 않으므로)
-            const usernameField = document.getElementById('userInfoUsername').parentElement;
+            // Username 처리 (API에서 제공하지 않으면 숨김)
+            const usernameElement = document.getElementById('userInfoUsername');
+            const usernameField = usernameElement.parentElement;
             usernameField.style.display = 'none';
 
             // Title 처리
@@ -9128,7 +9291,7 @@
                 titleElement.textContent = authorInfo.title;
                 titleElement.classList.remove('empty');
             } else {
-                titleElement.textContent = currentLang === 'ko' ? '설정되지 않음' : 'Not set';
+                titleElement.textContent = '-';
                 titleElement.classList.add('empty');
             }
 
@@ -9138,7 +9301,7 @@
                 descElement.textContent = authorInfo.description;
                 descElement.classList.remove('empty');
             } else {
-                descElement.textContent = currentLang === 'ko' ? '설정되지 않음' : 'Not set';
+                descElement.textContent = currentLang === 'ko' ? '소개가 없습니다.' : 'No introduction.';
                 descElement.classList.add('empty');
             }
 

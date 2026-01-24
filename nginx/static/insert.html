@@ -1444,9 +1444,14 @@
     </div>
 
     <div class="header">
-        <div class="title" data-lang-en="Category Management" data-lang-ko="카테고리 관리">카테고리 관리</div>
-        <div class="subtitle" data-lang-en="Add and manage your categories" data-lang-ko="카테고리를 추가하고 관리하세요">카테고리를 추가하고
-            관리하세요
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div id="userProfileImageWrapper" style="display: none;">
+                <img id="userProfileImage" src="" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0;">
+            </div>
+            <div>
+                <div class="greeting" id="userGreeting">Hi.</div>
+                <div class="user-desc" id="userDesc"></div>
+            </div>
         </div>
     </div>
 
@@ -2774,6 +2779,34 @@
         document.getElementById('signupSection').style.display = 'none';
         document.getElementById('resetPasswordSection').style.display = 'none';
         document.getElementById('mainSection').style.display = 'block';
+
+        // User 정보 표시
+        if (currentUser) {
+            // title: null이면 "Hi."
+            const greeting = currentUser.title || 'Hi.';
+            document.getElementById('userGreeting').textContent = greeting;
+
+            // description: null이면 오늘 날짜 (YY.MM.DD)
+            if (currentUser.description) {
+                document.getElementById('userDesc').textContent = currentUser.description;
+            } else {
+                const now = new Date();
+                const year = String(now.getFullYear()).slice(2);
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                document.getElementById('userDesc').textContent = `${year}.${month}.${day}`;
+            }
+
+            // 프로필 이미지 표시
+            const profileImageWrapper = document.getElementById('userProfileImageWrapper');
+            const profileImage = document.getElementById('userProfileImage');
+            if (currentUser.profileImageUrl) {
+                profileImage.src = currentUser.profileImageUrl;
+                profileImageWrapper.style.display = 'block';
+            } else {
+                profileImageWrapper.style.display = 'none';
+            }
+        }
     }
 
     function showResetPasswordSection() {
@@ -2913,18 +2946,28 @@
             isLoggedIn = true;
             console.log('[INSERT] Login status: LOGGED IN');
 
+            // 사용자 정보 조회
+            console.log('[INSERT] Step 3: Fetching user info');
+            try {
+                const userResponse = await authFetch(`${API_BASE}/user`);
+                if (userResponse.ok) {
+                    currentUser = await userResponse.json();
+                    console.log('[INSERT] User info loaded:', currentUser);
+                }
+            } catch (error) {
+                console.error('[INSERT] Failed to fetch user info:', error);
+            }
+
             // 메인 섹션 표시
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('signupSection').style.display = 'none';
-            document.getElementById('mainSection').style.display = 'block';
+            showMainSection();
             console.log('[INSERT] UI: Showing main section');
 
             // 카테고리 로드
-            console.log('[INSERT] Step 3: Loading categories');
+            console.log('[INSERT] Step 4: Loading categories');
             await loadCategories();
 
             // SSE 연결
-            console.log('[INSERT] Step 4: Connecting SSE');
+            console.log('[INSERT] Step 5: Connecting SSE');
             await connectSSE();
 
         } else {
@@ -2980,7 +3023,35 @@
                 showResetPasswordSection();
             });
         }
+
+        // 로그아웃 버튼
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', logout);
+        }
     });
+
+    // 로그아웃 처리
+    async function logout() {
+        try {
+            await authFetch(`${API_BASE}/auth/sign-out`, {
+                method: 'POST'
+            });
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+
+        // SSE 연결 종료
+        disconnectSSE();
+
+        // 상태 초기화
+        accessToken = null;
+        currentUser = null;
+        isLoggedIn = false;
+
+        // 페이지 새로고침
+        location.reload();
+    }
 
     // ==================== 인증 관련 함수 ====================
 
