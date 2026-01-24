@@ -11,4 +11,10 @@ services:
     volumes:
       - /home/ubuntu/certbot/conf:/etc/letsencrypt:ro
       - /home/ubuntu/certbot/www:/var/www/certbot:ro
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    external: true
 
