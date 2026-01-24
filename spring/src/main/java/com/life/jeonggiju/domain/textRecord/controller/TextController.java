@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.life.jeonggiju.domain.textRecord.dto.FindTextAllResponse;
 import com.life.jeonggiju.domain.textRecord.dto.FindTextResponse;
@@ -54,10 +56,11 @@ public class TextController {
 
 	@PostMapping
 	public ResponseEntity<Void> save(
-		SaveText dto
+		@RequestPart("data") SaveText dto,
+		@RequestPart(value = "images", required = false) List<MultipartFile> images
 	) {
 		try {
-			textService.save(dto);
+			textService.save(dto, images);
 			return ResponseEntity.ok().build();
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
@@ -66,9 +69,10 @@ public class TextController {
 
 	@PutMapping
 	public ResponseEntity<Void> update(
-		UpdateText dto
+		@RequestPart("data") UpdateText dto,
+		@RequestPart(value = "images", required = false) List<MultipartFile> images
 	) {
-		textService.update(dto);
+		textService.update(dto, images);
 		return ResponseEntity.ok().build();
 	}
 
@@ -77,5 +81,4 @@ public class TextController {
 		textService.delete(id);
 		return ResponseEntity.ok().build();
 	}
-
 }
