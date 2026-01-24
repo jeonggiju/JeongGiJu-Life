@@ -2,7 +2,7 @@ name: Deploy Spring To Ec2
 on:
   push:
     branches:
-      - deploy/directory
+      - production
     paths:
       - "spring/**"
       - "deploy/spring/**"

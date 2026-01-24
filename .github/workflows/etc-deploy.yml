@@ -3,7 +3,7 @@ name: Deploy DB, CertBot To EC2
 on:
   push:
     branches:
-      - deploy/directory
+      - production
     paths:
       - "deploy/etc/**"
       - ".github/workflows/etc-deploy.yml"
