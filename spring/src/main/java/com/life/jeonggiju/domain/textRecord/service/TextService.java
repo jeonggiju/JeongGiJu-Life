@@ -55,15 +55,11 @@ public class TextService {
 			.orElseThrow(() -> TextRecordNotFoundException.withCategoryIdAndDate(categoryId, date));
 		List<FindTextResponse> result = new ArrayList<>();
 		for (TextRecord textRecord : textRecords) {
-			List<String> imageUrls = textRecord.getImages().stream()
-				.map(TextRecordImage::getImageUrl)
-				.toList();
 			result.add(FindTextResponse.builder()
 				.id(textRecord.getId())
 				.title(textRecord.getTitle())
 				.text(textRecord.getText())
 				.date(textRecord.getDate())
-				.imageUrls(imageUrls)
 				.build());
 		}
 		return result;
@@ -75,15 +71,11 @@ public class TextService {
 
 		List<FindTextAllResponse.Content> result = new ArrayList<>();
 		for (TextRecord textRecord : allByCategoryId) {
-			List<String> imageUrls = textRecord.getImages().stream()
-				.map(TextRecordImage::getImageUrl)
-				.toList();
 			result.add(FindTextAllResponse.Content.builder()
 				.id(textRecord.getId())
 				.title(textRecord.getTitle())
 				.text(textRecord.getText())
 				.date(textRecord.getDate())
-				.imageUrls(imageUrls)
 				.build());
 		}
 

@@ -27,7 +27,7 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 @Service
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "storage.type", havingValue = "s3")
-public class TextRecordImageService {
+public class TextRecordImageService{
 
 	private static final String PATH_PREFIX = "text-record";
 	private final S3Config s3Config;
@@ -58,6 +58,14 @@ public class TextRecordImageService {
 		for (TextRecordImage image : images) {
 			deleteFromS3(image.getImageUrl());
 		}
+	}
+
+	@Transactional
+	public void deleteImageByUrl(String imageUrl) {
+		TextRecordImage image = imageRepository.findByImageUrl(imageUrl)
+			.orElseThrow(() -> TextRecordImageException.deleteFailed(imageUrl, "이미지를 찾을 수 없습니다."));
+		deleteFromS3(imageUrl);
+		imageRepository.delete(image);
 	}
 
 	public List<String> getImageUrls(UUID textRecordId) {

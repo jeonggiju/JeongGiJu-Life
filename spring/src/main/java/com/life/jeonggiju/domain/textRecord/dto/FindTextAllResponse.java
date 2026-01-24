@@ -23,6 +23,5 @@ public class FindTextAllResponse {
 		private String title;
 		private String text;
 		private LocalDate date;
-		private List<String> imageUrls;
 	}
 }
