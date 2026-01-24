@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.life.jeonggiju.config.S3Config;
 import com.life.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.life.jeonggiju.domain.textRecord.entity.TextRecordImage;
+import com.life.jeonggiju.domain.textRecord.exception.TextRecordImageException;
 import com.life.jeonggiju.domain.textRecord.exception.TextRecordNotFoundException;
 import com.life.jeonggiju.domain.textRecord.repository.TextRecordImageRepository;
 import com.life.jeonggiju.domain.textRecord.repository.TextRepository;
@@ -28,12 +29,11 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 @ConditionalOnProperty(name = "storage.type", havingValue = "s3")
 public class TextRecordImageService {
 
+	private static final String PATH_PREFIX = "text-record";
 	private final S3Config s3Config;
 	private final S3Client s3Client;
 	private final TextRepository textRepository;
 	private final TextRecordImageRepository imageRepository;
-
-	private static final String PATH_PREFIX = "text-record";
 
 	@Transactional
 	public List<String> uploadImages(UUID textRecordId, List<MultipartFile> files) {
@@ -53,17 +53,11 @@ public class TextRecordImageService {
 		return uploadedUrls;
 	}
 
-	@Transactional
-	public void deleteImage(UUID textRecordId, UUID imageId) {
-		TextRecordImage image = imageRepository.findById(imageId)
-			.orElseThrow(() -> new IllegalArgumentException("Image not found: " + imageId));
-
-		if (!image.getTextRecord().getId().equals(textRecordId)) {
-			throw new IllegalArgumentException("Image does not belong to the specified text record");
+	public void deleteAllImages(UUID textRecordId) {
+		List<TextRecordImage> images = imageRepository.findByTextRecordIdOrderByDisplayOrderAsc(textRecordId);
+		for (TextRecordImage image : images) {
+			deleteFromS3(image.getImageUrl());
 		}
-
-		deleteFromS3(image.getImageUrl());
-		imageRepository.delete(image);
 	}
 
 	public List<String> getImageUrls(UUID textRecordId) {
@@ -88,8 +82,7 @@ public class TextRecordImageService {
 				RequestBody.fromBytes(file.getBytes())
 			);
 		} catch (Exception e) {
-			log.error("Failed to upload image to S3", e);
-			throw new RuntimeException("Failed to upload image", e);
+			throw TextRecordImageException.uploadFailed(textRecordId, e.getMessage());
 		}
 
 		return String.format("https://%s.s3.%s.amazonaws.com/%s",
@@ -105,7 +98,7 @@ public class TextRecordImageService {
 				.key(key)
 				.build());
 		} catch (Exception e) {
-			log.error("Failed to delete image from S3: {}", imageUrl, e);
+			throw TextRecordImageException.deleteFailed(imageUrl, e.getMessage());
 		}
 	}
 
