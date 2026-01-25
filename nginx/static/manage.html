@@ -1195,45 +1195,85 @@
             border-bottom: 2px solid #e2e8f0;
         }
 
+        .month-group-items {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
         .text-record-item {
-            padding: 16px;
-            border-bottom: 2px solid #e2e8f0;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
             cursor: pointer;
             transition: all 0.2s ease;
             background: white;
             border-radius: 6px;
-            margin-bottom: 8px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
         }
 
         .text-record-item:hover {
             background: #f7fafc;
-            transform: translateX(4px);
+            border-color: #adb5bd;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .text-record-header {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 4px;
             margin-bottom: 8px;
-            align-items: center;
         }
 
         .text-record-title {
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
             color: #1a202c;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .text-record-date {
-            font-size: 13px;
+            font-size: 12px;
             color: #718096;
             font-weight: 500;
         }
 
         .text-record-content {
-            font-size: 14px;
+            font-size: 13px;
             color: #4a5568;
-            line-height: 1.6;
+            line-height: 1.5;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            flex: 1;
+        }
+
+        @media (max-width: 1200px) {
+            .month-group-items {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .month-group-items {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .month-group-items {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .month-group-items {
+                grid-template-columns: 1fr;
+            }
         }
 
         .empty-state {
@@ -1394,7 +1434,199 @@
         }
 
         .modal-content.modal-large {
-            max-width: 750px;
+            max-width: 900px;
+            width: 90%;
+        }
+
+        /* TEXT 전용 큰 모달 */
+        .modal-content.modal-text {
+            max-width: 1200px;
+            width: 95%;
+            max-height: 90vh;
+        }
+
+        .modal-content.modal-text .modal-body {
+            padding: 24px;
+            max-height: calc(90vh - 140px);
+            overflow-y: auto;
+        }
+
+        /* TEXT 모달 2열 그리드 레이아웃 */
+        .text-modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            min-height: 400px;
+        }
+
+        .text-modal-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .text-modal-left .form-group {
+            margin-bottom: 0;
+        }
+
+        .text-modal-left .form-group:last-child {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-modal-left textarea {
+            flex: 1;
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .text-modal-right {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+        }
+
+        .text-modal-right .image-carousel {
+            max-width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-height: 400px;
+        }
+
+        .text-modal-right .carousel-container {
+            flex: 1;
+            min-height: 200px;
+            max-height: 350px;
+            overflow: hidden;
+        }
+
+        .text-modal-right .carousel-image {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .text-modal-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* 이미지 없을 때 플레이스홀더 */
+        .image-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            min-height: 200px;
+            max-height: 350px;
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            color: #a0aec0;
+        }
+
+        /* 이미지 삭제 버튼 */
+        .image-delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(220, 38, 38, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background 0.2s;
+        }
+
+        .image-delete-btn:hover {
+            background: rgba(185, 28, 28, 1);
+        }
+
+        /* 커스텀 파일 입력 스타일 */
+        .custom-file-input {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .custom-file-input input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .custom-file-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .custom-file-label:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .custom-file-label-icon {
+            font-size: 18px;
+        }
+
+        .custom-file-selected {
+            font-size: 13px;
+            color: #4a5568;
+            padding: 8px 12px;
+            background: #f7fafc;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .custom-file-selected.has-files {
+            display: block;
+        }
+
+        /* TEXT 타입일 때 기존 modal-actions 숨기기 */
+        .modal-content.modal-text .modal-actions {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .text-modal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .text-modal-right .carousel-container {
+                height: 200px;
+            }
         }
 
         .modal-header {
@@ -1461,7 +1693,7 @@
 
         /* 텍스트 팝업 스타일 */
         .text-popup-item {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .text-popup-item-header {
@@ -1478,10 +1710,15 @@
         }
 
         .text-popup-item-content {
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 15px;
+            line-height: 1.8;
             color: #2d3748;
             white-space: pre-wrap;
+            min-height: 100px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
         }
 
         .text-popup-divider {
@@ -3067,6 +3304,89 @@
         .submit-btn {
             min-width: 100px;
         }
+
+        /* 이미지 캐러셀 */
+        .image-carousel {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-image {
+            display: none;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .carousel-image.active {
+            display: block;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .carousel-prev {
+            left: 8px;
+        }
+
+        .carousel-next {
+            right: 8px;
+        }
+
+        .carousel-indicator {
+            text-align: center;
+            padding: 8px;
+            font-size: 13px;
+            color: #718096;
+            background: #edf2f7;
+        }
+
+        /* 이미지 프리뷰 */
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .image-preview-item {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 2px solid #e2e8f0;
+        }
     </style>
 </head>
 <body>
@@ -3327,7 +3647,7 @@
     <div class="top-actions">
         <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
         <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
-        <a class="btn" data-lang-en="Insert Data" data-lang-ko="데이터 입력" href="insert.html">데이터 입력</a>
+        <a class="btn" data-lang-en="Category" data-lang-ko="카테고리" href="insert.html">카테고리</a>
         <button class="btn" data-lang-en="Edit Profile" data-lang-ko="회원정보 수정" id="editProfileBtn" onclick="openEditProfileModal()">회원정보 수정</button>
         <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()"><span
                 data-lang-en="Alerts" data-lang-ko="알림">알림</span><span class="notification-badge" id="notificationBadge"
@@ -3382,8 +3702,8 @@
             <div class="modal-title" data-lang-en="Edit Record" data-lang-ko="레코드 수정">레코드 수정</div>
             <button class="modal-close" onclick="closeEditModal()">×</button>
         </div>
-        <div id="editModalError"></div>
-        <form id="editForm">
+        <form id="editForm" class="modal-body">
+            <div id="editModalError"></div>
             <div id="editFormContent"></div>
             <div class="modal-actions">
                 <button class="btn btn-primary" data-lang-en="Save" data-lang-ko="수정" type="submit">수정</button>
@@ -3399,12 +3719,12 @@
 
 <!-- 텍스트 팝업 모달 -->
 <div class="modal" id="textPopupModal">
-    <div class="modal-content modal-large">
+    <div class="modal-content modal-text">
         <div class="modal-header">
             <div class="modal-title" id="textPopupTitle"></div>
             <button class="modal-close" onclick="closeTextPopup()">×</button>
         </div>
-        <div id="textPopupContent"></div>
+        <div class="modal-body" id="textPopupContent"></div>
     </div>
 </div>
 
@@ -3454,6 +3774,130 @@
     let currentWeekStart = null; // 주간 뷰에서 현재 표시 중인 주의 시작일
     let currentMonthStart = null; // 월간 뷰에서 현재 표시 중인 월의 시작일
     let userBirthInfo = null; // API에서 받은 생년월일 정보 저장
+    let currentCarouselIndex = 0; // 캐러셀 현재 인덱스
+    let currentEditImageUrls = []; // 현재 편집 중인 이미지 URL 목록
+    let deletedImageUrls = []; // 삭제할 이미지 URL 목록
+
+    // 이미지 캐러셀 함수
+    function prevImage() {
+        const images = document.querySelectorAll('#editImageCarousel .carousel-image');
+        if (images.length === 0) return;
+        images[currentCarouselIndex].classList.remove('active');
+        currentCarouselIndex = (currentCarouselIndex - 1 + images.length) % images.length;
+        images[currentCarouselIndex].classList.add('active');
+        updateCarouselIndicator(images.length);
+    }
+
+    function nextImage() {
+        const images = document.querySelectorAll('#editImageCarousel .carousel-image');
+        if (images.length === 0) return;
+        images[currentCarouselIndex].classList.remove('active');
+        currentCarouselIndex = (currentCarouselIndex + 1) % images.length;
+        images[currentCarouselIndex].classList.add('active');
+        updateCarouselIndicator(images.length);
+    }
+
+    function updateCarouselIndicator(total) {
+        const indicator = document.querySelector('#editImageCarousel .carousel-indicator');
+        if (indicator) {
+            indicator.textContent = `${currentCarouselIndex + 1} / ${total}`;
+        }
+    }
+
+    // 현재 표시된 이미지 삭제
+    async function deleteCurrentImage() {
+        const images = document.querySelectorAll('#editImageCarousel .carousel-image');
+        if (images.length === 0) return;
+
+        const currentImage = images[currentCarouselIndex];
+        const imageUrl = currentImage.getAttribute('data-url');
+
+        if (!confirm(currentLang === 'ko' ? '이 이미지를 삭제하시겠습니까?' : 'Delete this image?')) {
+            return;
+        }
+
+        try {
+            // API 호출로 이미지 삭제
+            const response = await authFetch(`${API_BASE}/text/image?imageUrl=${encodeURIComponent(imageUrl)}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete image');
+            }
+
+            // UI에서 이미지 제거
+            currentImage.remove();
+            currentEditImageUrls = currentEditImageUrls.filter(url => url !== imageUrl);
+
+            const remainingImages = document.querySelectorAll('#editImageCarousel .carousel-image');
+
+            if (remainingImages.length === 0) {
+                // 모든 이미지가 삭제됨 - 플레이스홀더 표시
+                const carousel = document.getElementById('editImageCarousel');
+                carousel.outerHTML = `
+                    <div class="image-placeholder" id="editImagePlaceholder">
+                        <div>${currentLang === 'ko' ? '이미지 없음' : 'No images'}</div>
+                    </div>
+                `;
+                // 이미지 삭제 버튼 숨기기
+                const deleteBtn = document.getElementById('deleteImageBtn');
+                if (deleteBtn) deleteBtn.style.display = 'none';
+            } else {
+                // 인덱스 조정
+                if (currentCarouselIndex >= remainingImages.length) {
+                    currentCarouselIndex = remainingImages.length - 1;
+                }
+                remainingImages[currentCarouselIndex].classList.add('active');
+                updateCarouselIndicator(remainingImages.length);
+            }
+        } catch (error) {
+            console.error('Error deleting image:', error);
+            alert(currentLang === 'ko' ? '이미지 삭제에 실패했습니다.' : 'Failed to delete image.');
+        }
+    }
+
+    // 파일 선택 시 레이블 업데이트 (편집 모달용)
+    function updateFileLabel(input) {
+        const selectedDiv = document.getElementById('editImagesSelected');
+        if (!selectedDiv) return;
+
+        if (input.files && input.files.length > 0) {
+            const fileNames = Array.from(input.files).map(f => f.name).join(', ');
+            selectedDiv.textContent = `${input.files.length}${currentLang === 'ko' ? '개 파일 선택됨: ' : ' files selected: '}${fileNames}`;
+            selectedDiv.classList.add('has-files');
+        } else {
+            selectedDiv.textContent = '';
+            selectedDiv.classList.remove('has-files');
+        }
+    }
+
+    // 파일 선택 시 레이블 업데이트 (추가 모달용)
+    function updateAddFileLabel(input) {
+        const selectedDiv = document.getElementById('addImagesSelected');
+        if (!selectedDiv) return;
+
+        if (input.files && input.files.length > 0) {
+            const fileNames = Array.from(input.files).map(f => f.name).join(', ');
+            selectedDiv.textContent = `${input.files.length}${currentLang === 'ko' ? '개 파일 선택됨: ' : ' files selected: '}${fileNames}`;
+            selectedDiv.classList.add('has-files');
+        } else {
+            selectedDiv.textContent = '';
+            selectedDiv.classList.remove('has-files');
+        }
+
+        // 이미지 프리뷰도 업데이트
+        const preview = document.getElementById('addImagePreview');
+        if (preview) {
+            preview.innerHTML = '';
+            for (const file of input.files) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'image-preview-item';
+                preview.appendChild(img);
+            }
+        }
+    }
 
     // Helper functions for compatibility
     function removeAccessToken() {
@@ -6981,13 +7425,14 @@
 
                 html += `<div class="month-group">`;
                 html += `<div class="month-header">${parseInt(monthNum)}월</div>`;
+                html += `<div class="month-group-items">`;
 
                 // 날짜순 정렬 (최신순)
                 monthRecords.sort((a, b) => b.date.localeCompare(a.date));
 
                 monthRecords.forEach(record => {
                     html += `
-                            <div class="text-record-item" data-record-id="${record.id}" data-record-type="TEXT" style="cursor: pointer;">
+                            <div class="text-record-item" data-record-id="${record.id}" data-record-type="TEXT">
                                 <div class="text-record-header">
                                     <span class="text-record-title">${record.title}</span>
                                     <span class="text-record-date">${record.date}</span>
@@ -6997,6 +7442,7 @@
                         `;
                 });
 
+                html += `</div>`; // month-group-items
                 html += `</div>`; // month-group
             });
 
@@ -7790,15 +8236,38 @@
         return html;
     }
 
+    // 텍스트 팝업용 캐러셀 인덱스 (레코드 ID별로 관리)
+    let popupCarouselIndices = {};
+
+    function popupPrevImage(recordId) {
+        const carousel = document.querySelector(`#popupCarousel-${recordId}`);
+        if (!carousel) return;
+        const images = carousel.querySelectorAll('.carousel-image');
+        if (images.length === 0) return;
+        const currentIdx = popupCarouselIndices[recordId] || 0;
+        images[currentIdx].classList.remove('active');
+        popupCarouselIndices[recordId] = (currentIdx - 1 + images.length) % images.length;
+        images[popupCarouselIndices[recordId]].classList.add('active');
+        carousel.querySelector('.carousel-indicator').textContent = `${popupCarouselIndices[recordId] + 1} / ${images.length}`;
+    }
+
+    function popupNextImage(recordId) {
+        const carousel = document.querySelector(`#popupCarousel-${recordId}`);
+        if (!carousel) return;
+        const images = carousel.querySelectorAll('.carousel-image');
+        if (images.length === 0) return;
+        const currentIdx = popupCarouselIndices[recordId] || 0;
+        images[currentIdx].classList.remove('active');
+        popupCarouselIndices[recordId] = (currentIdx + 1) % images.length;
+        images[popupCarouselIndices[recordId]].classList.add('active');
+        carousel.querySelector('.carousel-indicator').textContent = `${popupCarouselIndices[recordId] + 1} / ${images.length}`;
+    }
+
     // 텍스트 팝업 표시
     async function showTextPopup(records, date) {
         const modal = document.getElementById('textPopupModal');
         const content = document.getElementById('textPopupContent');
         const title = document.getElementById('textPopupTitle');
-
-        title.textContent = date;
-        content.innerHTML = '<div style="text-align: center; padding: 20px;">데이터를 불러오는 중...</div>';
-        modal.classList.add('active');
 
         // API로 해당 날짜의 최신 데이터 가져오기
         try {
@@ -7808,32 +8277,106 @@
                 const data = await response.json();
 
                 if (!data || data.length === 0) {
-                    content.innerHTML = `<div style="text-align: center; padding: 20px; color: #999;">${translations.noData[currentLang]}</div>`;
                     return;
                 }
 
+                // 기록이 1개면 바로 편집 모달 열기
+                if (data.length === 1) {
+                    openEditModal(data[0].id, 'TEXT', data[0]);
+                    return;
+                }
+
+                // 여러 개일 때만 선택 팝업 표시
+                title.textContent = date;
+                content.innerHTML = '<div style="text-align: center; padding: 20px;">데이터를 불러오는 중...</div>';
+                modal.classList.add('active');
+
+                // 각 레코드의 이미지 정보 가져오기
+                const recordsWithImages = await Promise.all(data.map(async (record) => {
+                    try {
+                        const detailResponse = await authFetch(`${API_BASE}/text?textId=${record.id}`);
+                        if (detailResponse.ok) {
+                            const detailData = await detailResponse.json();
+                            return { ...record, imageUrls: detailData.imageUrls || [] };
+                        }
+                    } catch (e) {
+                        console.error('Failed to load images for record', record.id, e);
+                    }
+                    return { ...record, imageUrls: [] };
+                }));
+
+                // 캐러셀 인덱스 초기화
+                popupCarouselIndices = {};
+                recordsWithImages.forEach(r => popupCarouselIndices[r.id] = 0);
+
                 let html = '';
-                data.forEach((record, index) => {
-                    html += `<div class="text-popup-item">`;
-                    html += `<div class="text-popup-item-header">`;
-                    html += `<span class="text-popup-item-title">${record.title}</span>`;
-                    html += `<button class="btn-small" data-record-id="${record.id}" data-record-type="TEXT" data-lang-ko="수정" data-lang-en="Edit">${translations.edit[currentLang]}</button>`;
-                    html += `</div>`;
-                    html += `<div class="text-popup-item-content">${record.text}</div>`;
-                    html += `</div>`;
-                    if (index < data.length - 1) {
-                        html += `<div class="text-popup-divider"></div>`;
+                recordsWithImages.forEach((record, index) => {
+                    const imageUrls = record.imageUrls || [];
+                    const hasImages = imageUrls.length > 0;
+
+                    if (hasImages) {
+                        const imageCarouselHtml = `
+                            <div class="image-carousel" id="popupCarousel-${record.id}">
+                                <button type="button" class="carousel-btn carousel-prev" onclick="popupPrevImage('${record.id}')">&#10094;</button>
+                                <div class="carousel-container">
+                                    ${imageUrls.map((url, idx) => `<img src="${url}" class="carousel-image ${idx === 0 ? 'active' : ''}" data-index="${idx}">`).join('')}
+                                </div>
+                                <button type="button" class="carousel-btn carousel-next" onclick="popupNextImage('${record.id}')">&#10095;</button>
+                                <div class="carousel-indicator">1 / ${imageUrls.length}</div>
+                            </div>
+                        `;
+
+                        html += `
+                            <div class="text-popup-item" data-record-id="${record.id}" data-record-type="TEXT" style="cursor: pointer; transition: background-color 0.2s;">
+                                <div class="text-modal-grid">
+                                    <div class="text-modal-left">
+                                        <div class="form-group">
+                                            <label>${translations.titleLabel[currentLang]}</label>
+                                            <div class="text-popup-item-title" style="font-size: 18px; font-weight: 600; padding: 8px 0;">${record.title}</div>
+                                        </div>
+                                        <div class="form-group" style="flex: 1;">
+                                            <label>${translations.content[currentLang]}</label>
+                                            <div class="text-popup-item-content" style="white-space: pre-wrap; padding: 12px; background: #f7fafc; border-radius: 8px; min-height: 150px; max-height: 250px; overflow-y: auto;">${record.text}</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-modal-right">
+                                        <label>${currentLang === 'ko' ? '이미지' : 'Images'}</label>
+                                        ${imageCarouselHtml}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="text-popup-item" data-record-id="${record.id}" data-record-type="TEXT" style="cursor: pointer; transition: background-color 0.2s;">
+                                <div class="form-group">
+                                    <label>${translations.titleLabel[currentLang]}</label>
+                                    <div class="text-popup-item-title" style="font-size: 18px; font-weight: 600; padding: 8px 0;">${record.title}</div>
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label>${translations.content[currentLang]}</label>
+                                    <div class="text-popup-item-content" style="white-space: pre-wrap; padding: 12px; background: #f7fafc; border-radius: 8px; min-height: 150px; max-height: 300px; overflow-y: auto;">${record.text}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    if (index < recordsWithImages.length - 1) {
+                        html += `<div class="text-popup-divider" style="margin: 24px 0; border-top: 2px solid #e2e8f0;"></div>`;
                     }
                 });
 
                 content.innerHTML = html;
 
-                // 수정 버튼 클릭 이벤트 리스너 추가
-                content.querySelectorAll('[data-record-id]').forEach(btn => {
-                    btn.addEventListener('click', function() {
+                // 항목 클릭 이벤트 리스너 추가
+                content.querySelectorAll('.text-popup-item[data-record-id]').forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        // 캐러셀 버튼 클릭은 무시
+                        if (e.target.closest('.carousel-btn')) return;
+
                         const recordId = this.getAttribute('data-record-id');
                         const recordType = this.getAttribute('data-record-type');
-                        const record = data.find(r => r.id === recordId);
+                        const record = recordsWithImages.find(r => r.id === recordId);
                         if (record) {
                             openEditModal(recordId, recordType, record);
                         }
@@ -7843,7 +8386,7 @@
                 content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">데이터를 불러올 수 없습니다.</div>';
             }
         } catch (error) {
-
+            console.error('Error in showTextPopup:', error);
             content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">오류가 발생했습니다.</div>';
         }
     }
@@ -7869,7 +8412,7 @@
     let currentEditRecord = null;
 
     // 수정 모달 열기
-    function openEditModal(id, type, record) {
+    async function openEditModal(id, type, record) {
         // TEXT 타입일 때는 텍스트 팝업 먼저 닫기
         if (type === 'TEXT') {
             closeTextPopup();
@@ -7877,7 +8420,15 @@
 
         currentEditRecord = { id, type, record };
         const modal = document.getElementById('editModal');
+        const modalContent = modal.querySelector('.modal-content');
         const formContent = document.getElementById('editFormContent');
+
+        // TEXT 타입일 때 큰 모달 적용
+        if (type === 'TEXT') {
+            modalContent.classList.add('modal-text');
+        } else {
+            modalContent.classList.remove('modal-text');
+        }
 
         let html = '';
 
@@ -7895,7 +8446,74 @@
                     </div>
                 `;
         } else if (type === 'TEXT') {
-            html = `
+            // 캐러셀 인덱스 초기화
+            currentCarouselIndex = 0;
+            // 상세 조회 API로 이미지 정보 가져오기
+            let imageUrls = [];
+            try {
+                const detailResponse = await authFetch(`${API_BASE}/text?textId=${id}`);
+                if (detailResponse.ok) {
+                    const detailData = await detailResponse.json();
+                    imageUrls = detailData.imageUrls || [];
+                }
+            } catch (e) {
+                console.error('Failed to load images', e);
+            }
+
+            // 이미지 URL 저장 (삭제 기능용)
+            currentEditImageUrls = imageUrls;
+
+            const hasImages = imageUrls.length > 0;
+            let imageCarouselHtml = '';
+            if (hasImages) {
+                imageCarouselHtml = `
+                    <div class="image-carousel" id="editImageCarousel">
+                        <button type="button" class="carousel-btn carousel-prev" onclick="prevImage()">&#10094;</button>
+                        <div class="carousel-container">
+                            ${imageUrls.map((url, idx) => `<img src="${url}" class="carousel-image ${idx === 0 ? 'active' : ''}" data-index="${idx}" data-url="${url}">`).join('')}
+                        </div>
+                        <button type="button" class="carousel-btn carousel-next" onclick="nextImage()">&#10095;</button>
+                        <div class="carousel-indicator">1 / ${imageUrls.length}</div>
+                    </div>
+                `;
+            }
+
+            if (hasImages) {
+                html = `
+                    <div class="text-modal-grid">
+                        <div class="text-modal-left">
+                            <div class="form-group">
+                                <label for="editDate" data-lang-ko="날짜" data-lang-en="Date">${translations.date[currentLang]} *</label>
+                                <input type="date" id="editDate" required value="${record.date || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label for="editTitle" data-lang-ko="제목" data-lang-en="Title">${translations.titleLabel[currentLang]} *</label>
+                                <input type="text" id="editTitle" required value="${record.title || ''}">
+                            </div>
+                            <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
+                                <label for="editText" data-lang-ko="내용" data-lang-en="Content">${translations.content[currentLang]} *</label>
+                                <textarea id="editText" required style="flex: 1; min-height: 200px;">${record.text || ''}</textarea>
+                            </div>
+                        </div>
+                        <div class="text-modal-right">
+                            <label>${currentLang === 'ko' ? '이미지' : 'Images'}</label>
+                            ${imageCarouselHtml}
+                            <div class="custom-file-selected" id="editImagesSelected"></div>
+                        </div>
+                        <div class="text-modal-actions">
+                            <button class="btn btn-primary" type="submit" data-lang-ko="저장" data-lang-en="Save">${currentLang === 'ko' ? '저장' : 'Save'}</button>
+                            <div class="custom-file-input" style="margin: 0;">
+                                <input type="file" id="editImages" multiple accept="image/*" onchange="updateFileLabel(this)">
+                                <label for="editImages" class="btn">${currentLang === 'ko' ? '이미지 추가' : 'Add Images'}</label>
+                            </div>
+                            <button class="btn" type="button" id="deleteImageBtn" onclick="deleteCurrentImage()" data-lang-ko="이미지 삭제" data-lang-en="Delete Image">${currentLang === 'ko' ? '이미지 삭제' : 'Delete Image'}</button>
+                            <button class="btn" type="button" onclick="deleteRecord()" data-lang-ko="삭제" data-lang-en="Delete">${currentLang === 'ko' ? '삭제' : 'Delete'}</button>
+                            <button class="btn" type="button" onclick="closeEditModal()" data-lang-ko="취소" data-lang-en="Cancel">${currentLang === 'ko' ? '취소' : 'Cancel'}</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                html = `
                     <div class="form-group">
                         <label for="editDate" data-lang-ko="날짜" data-lang-en="Date">${translations.date[currentLang]} *</label>
                         <input type="date" id="editDate" required value="${record.date || ''}">
@@ -7904,11 +8522,23 @@
                         <label for="editTitle" data-lang-ko="제목" data-lang-en="Title">${translations.titleLabel[currentLang]} *</label>
                         <input type="text" id="editTitle" required value="${record.title || ''}">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
                         <label for="editText" data-lang-ko="내용" data-lang-en="Content">${translations.content[currentLang]} *</label>
-                        <textarea id="editText" required>${record.text || ''}</textarea>
+                        <textarea id="editText" required style="flex: 1; min-height: 300px;">${record.text || ''}</textarea>
+                    </div>
+                    <div class="custom-file-selected" id="editImagesSelected"></div>
+                    <div class="text-modal-actions" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+                        <button class="btn btn-primary" type="submit" data-lang-ko="저장" data-lang-en="Save">${currentLang === 'ko' ? '저장' : 'Save'}</button>
+                        <div class="custom-file-input" style="margin: 0;">
+                            <input type="file" id="editImages" multiple accept="image/*" onchange="updateFileLabel(this)">
+                            <label for="editImages" class="btn">${currentLang === 'ko' ? '이미지 추가' : 'Add Images'}</label>
+                        </div>
+                        <button class="btn" type="button" id="deleteImageBtn" onclick="deleteCurrentImage()" style="display: none;" data-lang-ko="이미지 삭제" data-lang-en="Delete Image">${currentLang === 'ko' ? '이미지 삭제' : 'Delete Image'}</button>
+                        <button class="btn" type="button" onclick="deleteRecord()" data-lang-ko="삭제" data-lang-en="Delete">${currentLang === 'ko' ? '삭제' : 'Delete'}</button>
+                        <button class="btn" type="button" onclick="closeEditModal()" data-lang-ko="취소" data-lang-en="Cancel">${currentLang === 'ko' ? '취소' : 'Cancel'}</button>
                     </div>
                 `;
+            }
         } else if (type === 'TIME') {
             const timeValue = record.time ? (typeof record.time === 'object' ?
                 `${String(record.time.hour || 0).padStart(2, '0')}:${String(record.time.minute || 0).padStart(2, '0')}:${String(record.time.second || 0).padStart(2, '0')}`
@@ -7986,33 +8616,45 @@
         params.append('id', id);
 
         try {
+            let response;
+
             if (type === 'CHECK') {
                 endpoint = `${API_BASE}/check`;
                 params.append('date', document.getElementById('editDate').value);
                 params.append('success', document.getElementById('editSuccess').checked);
+                response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'PUT' });
             } else if (type === 'TEXT') {
                 endpoint = `${API_BASE}/text`;
-                params.append('date', document.getElementById('editDate').value);
-                params.append('title', document.getElementById('editTitle').value);
-                params.append('text', document.getElementById('editText').value);
+                const formData = new FormData();
+                const textData = {
+                    id: id,
+                    title: document.getElementById('editTitle').value,
+                    text: document.getElementById('editText').value,
+                    date: document.getElementById('editDate').value
+                };
+                formData.append('data', new Blob([JSON.stringify(textData)], { type: 'application/json' }));
+                const imageFiles = document.getElementById('editImages').files;
+                for (let i = 0; i < imageFiles.length; i++) {
+                    formData.append('images', imageFiles[i]);
+                }
+                response = await authFetch(endpoint, { method: 'PUT', body: formData });
             } else if (type === 'TIME') {
                 endpoint = `${API_BASE}/time`;
                 params.append('date', document.getElementById('editDate').value);
                 params.append('time', document.getElementById('editTime').value);
+                response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'PUT' });
             } else if (type === 'NUMBER') {
                 endpoint = `${API_BASE}/number`;
                 params.append('date', document.getElementById('editDate').value);
                 params.append('number', document.getElementById('editNumber').value);
+                response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'PUT' });
             } else if (type === 'CHECKLIST') {
                 endpoint = `${API_BASE}/check-list`;
                 params.append('date', document.getElementById('editDate').value);
                 params.append('todo', document.getElementById('editTodo').value);
                 params.append('success', document.getElementById('editSuccess').checked);
+                response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'PUT' });
             }
-
-            const response = await authFetch(`${endpoint}?${params.toString()}`, {
-                method: 'PUT'
-            });
 
             if (response.ok) {
                 refreshAfterEdit();
@@ -8193,6 +8835,18 @@
                     <label for="addText">${translations.content[currentLang]} *</label>
                     <textarea id="addText" required style="min-height: 150px;" placeholder="${currentLang === 'ko' ? '내용을 입력하세요' : 'Enter content'}"></textarea>
                 </div>
+                <div class="form-group">
+                    <label>${currentLang === 'ko' ? '이미지' : 'Images'}</label>
+                    <div class="custom-file-input">
+                        <input type="file" id="addImages" multiple accept="image/*" onchange="updateAddFileLabel(this)">
+                        <label for="addImages" class="custom-file-label">
+                            <span class="custom-file-label-icon">📷</span>
+                            <span>${currentLang === 'ko' ? '이미지 추가' : 'Add Images'}</span>
+                        </label>
+                        <div class="custom-file-selected" id="addImagesSelected"></div>
+                    </div>
+                    <div id="addImagePreview" class="image-preview-container"></div>
+                </div>
             `;
         } else if (type === 'TIME') {
             formHtml = `
@@ -8237,6 +8891,23 @@
 
         formContainer.innerHTML = formHtml;
         modal.classList.add('active');
+
+        // TEXT 타입일 때 이미지 프리뷰 이벤트 등록
+        if (type === 'TEXT') {
+            const addImagesInput = document.getElementById('addImages');
+            if (addImagesInput) {
+                addImagesInput.addEventListener('change', function() {
+                    const preview = document.getElementById('addImagePreview');
+                    preview.innerHTML = '';
+                    for (const file of this.files) {
+                        const img = document.createElement('img');
+                        img.src = URL.createObjectURL(file);
+                        img.className = 'image-preview-item';
+                        preview.appendChild(img);
+                    }
+                });
+            }
+        }
     }
 
     // 데이터 추가 모달 닫기
@@ -8264,28 +8935,41 @@
             const date = document.getElementById('addDate').value;
             params.append('date', date);
 
+            let response;
+
             if (type === 'CHECK') {
                 endpoint = `${API_BASE}/check`;
                 params.append('success', document.getElementById('addSuccess').checked);
+                response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'POST' });
             } else if (type === 'TEXT') {
                 endpoint = `${API_BASE}/text`;
-                params.append('title', document.getElementById('addTitle').value);
-                params.append('text', document.getElementById('addText').value);
+                const formData = new FormData();
+                const textData = {
+                    categoryId: currentCategory.id,
+                    title: document.getElementById('addTitle').value,
+                    text: document.getElementById('addText').value,
+                    date: date
+                };
+                formData.append('data', new Blob([JSON.stringify(textData)], { type: 'application/json' }));
+                const imageFiles = document.getElementById('addImages').files;
+                for (let i = 0; i < imageFiles.length; i++) {
+                    formData.append('images', imageFiles[i]);
+                }
+                response = await authFetch(endpoint, { method: 'POST', body: formData });
             } else if (type === 'TIME') {
                 endpoint = `${API_BASE}/time`;
                 params.append('time', document.getElementById('addTime').value);
+                response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'POST' });
             } else if (type === 'NUMBER') {
                 endpoint = `${API_BASE}/number`;
                 params.append('number', document.getElementById('addNumber').value);
+                response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'POST' });
             } else if (type === 'CHECKLIST') {
                 endpoint = `${API_BASE}/check-list`;
                 params.append('todo', document.getElementById('addTodo').value);
                 params.append('success', document.getElementById('addSuccess').checked);
+                response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'POST' });
             }
-
-            const response = await authFetch(`${endpoint}?${params.toString()}`, {
-                method: 'POST'
-            });
 
             if (response.ok) {
                 closeAddRecordModal();
