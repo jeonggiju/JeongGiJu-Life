@@ -73,6 +73,7 @@ body {
 .language-toggle:hover {
     background: #f7fafc;
     border-color: #cbd5e0;
+    transform: translateY(-1px);
 }
 
 .submit-btn {
@@ -303,7 +304,7 @@ body {
 /* ===== Notification Bell ===== */
 .notification-bell {
     position: relative;
-    padding: 10px 18px;
+    padding: 10px 20px;
     border: 2px solid #e2e8f0;
     background: white;
     cursor: pointer;
@@ -315,15 +316,15 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
     text-decoration: none;
     color: #2d3748;
-    line-height: 1;
 }
 
 .notification-bell:hover {
     background: #f7fafc;
     border-color: #cbd5e0;
+    transform: translateY(-1px);
 }
 
 .notification-badge {
@@ -651,7 +652,7 @@ body {
 }
 
 /* ===== Layout Stabilization ===== */
-.btn, .language-toggle, .toggle-btn,
+.btn, .language-toggle, .notification-bell, .toggle-btn,
 .add-record-btn, .submit-btn,
 .btn-edit, .btn-delete, .btn-view-likes,
 .category-action-btn, .comment-btn,
