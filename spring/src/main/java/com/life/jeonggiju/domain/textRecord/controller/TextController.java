@@ -10,12 +10,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.life.jeonggiju.domain.textRecord.dto.FindTextAllResponse;
 import com.life.jeonggiju.domain.textRecord.dto.FindTextResponse;
 import com.life.jeonggiju.domain.textRecord.dto.SaveText;
 import com.life.jeonggiju.domain.textRecord.dto.UpdateText;
+import com.life.jeonggiju.domain.textRecord.service.TextRecordImageService;
 import com.life.jeonggiju.domain.textRecord.service.TextService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TextController {
 
 	private final TextService textService;
+	private final TextRecordImageService imageService;
 
 	@GetMapping
 	public ResponseEntity<FindTextResponse> find(
@@ -54,10 +59,11 @@ public class TextController {
 
 	@PostMapping
 	public ResponseEntity<Void> save(
-		SaveText dto
+		@RequestPart("data") SaveText dto,
+		@RequestPart(value = "images", required = false) List<MultipartFile> images
 	) {
 		try {
-			textService.save(dto);
+			textService.save(dto, images);
 			return ResponseEntity.ok().build();
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
@@ -66,9 +72,10 @@ public class TextController {
 
 	@PutMapping
 	public ResponseEntity<Void> update(
-		UpdateText dto
+		@RequestPart("data") UpdateText dto,
+		@RequestPart(value = "images", required = false) List<MultipartFile> images
 	) {
-		textService.update(dto);
+		textService.update(dto, images);
 		return ResponseEntity.ok().build();
 	}
 
@@ -78,4 +85,9 @@ public class TextController {
 		return ResponseEntity.ok().build();
 	}
 
+	@DeleteMapping("/image")
+	public ResponseEntity<Void> deleteImage(@RequestParam String imageUrl) {
+		imageService.deleteImageByUrl(imageUrl);
+		return ResponseEntity.ok().build();
+	}
 }

@@ -12,6 +12,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.life.jeonggiju.security.api.handler.SpaCsrfTokenRequestHandler;
 import com.life.jeonggiju.security.authentication.jwt.filter.JwtAuthenticationFilter;
+import com.life.jeonggiju.security.authentication.jwt.handler.JwtAuthenticationEntryPoint;
 import com.life.jeonggiju.security.authentication.local.handler.LifeLoginSuccessHandler;
 import com.life.jeonggiju.security.authentication.local.handler.LifeLogoutSuccessHandler;
 
@@ -26,7 +27,8 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http,
 		LifeLoginSuccessHandler lifeLoginSuccessHandler,
 		LifeLogoutSuccessHandler lifeLogoutSuccessHandler,
-		JwtAuthenticationFilter jwtAuthenticationFilter
+		JwtAuthenticationFilter jwtAuthenticationFilter,
+		JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint
 	) throws Exception {
 		http
 			.authorizeHttpRequests(auth -> auth
@@ -51,6 +53,9 @@ public class SecurityConfig {
 			)
 			.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			)
+			.exceptionHandling(exception -> exception
+				.authenticationEntryPoint(jwtAuthenticationEntryPoint)
 			)
 			.addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
