@@ -53,9 +53,16 @@
             line-height: 1.5;
         }
 
-        /* Page-specific override for branding subtitle */
-        .subtitle {
-            font-size: 20px;
+        /* Page-specific override for branding header */
+        .header .greeting {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .header .subtitle {
+            font-size: 15px;
+            color: #64748b;
         }
 
         /* btn, btn-primary, language-toggle styles are inherited from common.css */
@@ -415,18 +422,21 @@
 
         /* TEXT 리스트 */
         .text-list {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
             gap: 12px;
         }
 
         .text-item {
-            padding: 18px;
+            padding: 14px;
             background: white;
             border: 2px solid #e9ecef;
             cursor: pointer;
             transition: all 0.15s ease;
             border-radius: 6px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
         }
 
         .text-item:hover {
@@ -436,24 +446,57 @@
 
         .text-item-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 8px;
         }
 
         .text-item-title {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            max-width: 70%;
             color: #212529;
         }
 
         .text-item-date {
-            font-size: 13px;
+            font-size: 12px;
             color: #6c757d;
+        }
+
+        .text-item .category-description {
+            font-size: 13px;
+            color: #495057;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            flex: 1;
+        }
+
+        @media (max-width: 1200px) {
+            .text-list {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .text-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .text-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .text-list {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* CHECKLIST */
@@ -471,24 +514,49 @@
         }
 
         .checklist-items {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
             gap: 10px;
         }
 
         .checklist-item {
-            padding: 14px;
+            padding: 12px;
             background: white;
             border: 2px solid #e9ecef;
             display: flex;
-            align-items: center;
-            gap: 12px;
+            flex-direction: column;
+            gap: 8px;
             border-radius: 6px;
             transition: all 0.15s ease;
+            min-height: 80px;
         }
 
         .checklist-item:hover {
             border-color: #adb5bd;
+        }
+
+        @media (max-width: 1200px) {
+            .checklist-items {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .checklist-items {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .checklist-items {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checklist-items {
+                grid-template-columns: 1fr;
+            }
         }
 
         .checklist-checkbox {
@@ -2522,6 +2590,117 @@
         .submit-btn {
             min-width: 100px;
         }
+
+        /* 텍스트 읽기 전용 팝업 스타일 */
+        .text-readonly-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            min-height: 350px;
+        }
+
+        .text-readonly-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .text-readonly-left .form-group {
+            margin-bottom: 0;
+        }
+
+        .text-readonly-left .form-group:last-child {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-readonly-right {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+        }
+
+        .text-readonly-right .image-carousel {
+            max-width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-height: 350px;
+        }
+
+        .text-readonly-right .carousel-container {
+            flex: 1;
+            min-height: 200px;
+            max-height: 300px;
+            overflow: hidden;
+        }
+
+        .text-readonly-right .carousel-image {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .text-readonly-content {
+            flex: 1;
+            white-space: pre-wrap;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 8px;
+            min-height: 150px;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        .text-readonly-title {
+            font-size: 18px;
+            font-weight: 600;
+            padding: 8px 0;
+        }
+
+        .text-readonly-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            min-height: 200px;
+            max-height: 300px;
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            color: #a0aec0;
+        }
+
+        .text-readonly-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+            justify-content: flex-end;
+        }
+
+        .text-popup-divider {
+            margin: 24px 0;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .text-readonly-grid {
+                grid-template-columns: 1fr;
+            }
+            .text-readonly-right .carousel-container {
+                height: 200px;
+                min-height: 150px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2891,6 +3070,17 @@
     </div>
 </div>
 
+<!-- 텍스트 읽기 전용 팝업 모달 -->
+<div class="modal" id="textReadonlyModal" onclick="if(event.target === this) closeTextReadonlyPopup()">
+    <div class="modal-content modal-text" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title" id="textReadonlyTitle"></div>
+            <button class="modal-close" onclick="closeTextReadonlyPopup()">×</button>
+        </div>
+        <div class="modal-body" id="textReadonlyContent"></div>
+    </div>
+</div>
+
 <script>
     // ==================== Page-specific Variables (index.html) ====================
     // NOTE: Common variables (API_BASE, csrfToken, accessToken, currentUser, etc.)
@@ -2899,6 +3089,7 @@
 
     let currentCategory = null;
     let allRecords = [];
+    let readonlyCarouselIndices = {};
     let userBirthInfo = null; // API에서 받은 생년월일 정보 저장
 
     // Alias for compatibility - fetchWithCsrf maps to authFetch from common.js
@@ -2946,8 +3137,147 @@
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
     }
 
+    // 텍스트 읽기 전용 팝업용 캐러셀
+    function readonlyPrevImage(recordId) {
+        const carousel = document.querySelector(`#readonlyCarousel-${recordId}`);
+        if (!carousel) return;
+        const images = carousel.querySelectorAll('.carousel-image');
+        if (images.length === 0) return;
+        const currentIdx = readonlyCarouselIndices[recordId] || 0;
+        images[currentIdx].classList.remove('active');
+        readonlyCarouselIndices[recordId] = (currentIdx - 1 + images.length) % images.length;
+        images[readonlyCarouselIndices[recordId]].classList.add('active');
+        carousel.querySelector('.carousel-indicator').textContent = `${readonlyCarouselIndices[recordId] + 1} / ${images.length}`;
+    }
+
+    function readonlyNextImage(recordId) {
+        const carousel = document.querySelector(`#readonlyCarousel-${recordId}`);
+        if (!carousel) return;
+        const images = carousel.querySelectorAll('.carousel-image');
+        if (images.length === 0) return;
+        const currentIdx = readonlyCarouselIndices[recordId] || 0;
+        images[currentIdx].classList.remove('active');
+        readonlyCarouselIndices[recordId] = (currentIdx + 1) % images.length;
+        images[readonlyCarouselIndices[recordId]].classList.add('active');
+        carousel.querySelector('.carousel-indicator').textContent = `${readonlyCarouselIndices[recordId] + 1} / ${images.length}`;
+    }
+
+    // 텍스트 읽기 전용 팝업 열기
+    async function showTextReadonlyPopup(record) {
+        const modal = document.getElementById('textReadonlyModal');
+        const content = document.getElementById('textReadonlyContent');
+        const title = document.getElementById('textReadonlyTitle');
+
+        title.textContent = record.date || '';
+        content.innerHTML = '<div style="text-align: center; padding: 20px;">Loading...</div>';
+        modal.classList.add('active');
+
+        try {
+            // 이미지 정보 가져오기
+            let imageUrls = record.imageUrls || [];
+            if (imageUrls.length === 0 && currentCategory) {
+                const detailResponse = await authFetch(`${API_BASE}/text?textId=${record.id}`);
+                if (detailResponse.ok) {
+                    const detailData = await detailResponse.json();
+                    imageUrls = detailData.imageUrls || [];
+                }
+            }
+
+            // 캐러셀 인덱스 초기화
+            readonlyCarouselIndices[record.id] = 0;
+
+            const hasImages = imageUrls.length > 0;
+            let imageCarouselHtml = '';
+            if (hasImages) {
+                imageCarouselHtml = `
+                    <div class="image-carousel" id="readonlyCarousel-${record.id}">
+                        <button type="button" class="carousel-btn carousel-prev" onclick="readonlyPrevImage('${record.id}')">&#10094;</button>
+                        <div class="carousel-container">
+                            ${imageUrls.map((url, idx) => `<img src="${url}" class="carousel-image ${idx === 0 ? 'active' : ''}" data-index="${idx}">`).join('')}
+                        </div>
+                        <button type="button" class="carousel-btn carousel-next" onclick="readonlyNextImage('${record.id}')">&#10095;</button>
+                        <div class="carousel-indicator">1 / ${imageUrls.length}</div>
+                    </div>
+                `;
+            }
+
+            let html = '';
+            if (hasImages) {
+                html = `
+                    <div class="text-readonly-grid">
+                        <div class="text-readonly-left">
+                            <div class="form-group">
+                                <label>${currentLang === 'ko' ? '제목' : 'Title'}</label>
+                                <div class="text-readonly-title">${record.title || ''}</div>
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>${currentLang === 'ko' ? '내용' : 'Content'}</label>
+                                <div class="text-readonly-content">${record.text || ''}</div>
+                            </div>
+                        </div>
+                        <div class="text-readonly-right">
+                            <label>${currentLang === 'ko' ? '이미지' : 'Images'}</label>
+                            ${imageCarouselHtml}
+                        </div>
+                    </div>
+                    <div class="text-readonly-actions">
+                        <button class="btn" onclick="closeTextReadonlyPopup()">${currentLang === 'ko' ? '닫기' : 'Close'}</button>
+                    </div>
+                `;
+            } else {
+                html = `
+                    <div class="form-group">
+                        <label>${currentLang === 'ko' ? '제목' : 'Title'}</label>
+                        <div class="text-readonly-title">${record.title || ''}</div>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>${currentLang === 'ko' ? '내용' : 'Content'}</label>
+                        <div class="text-readonly-content" style="max-height: 400px;">${record.text || ''}</div>
+                    </div>
+                    <div class="text-readonly-actions">
+                        <button class="btn" onclick="closeTextReadonlyPopup()">${currentLang === 'ko' ? '닫기' : 'Close'}</button>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+        } catch (error) {
+            console.error('Error in showTextReadonlyPopup:', error);
+            content.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc2626;">오류가 발생했습니다.</div>';
+        }
+    }
+
+    // 텍스트 읽기 전용 팝업 닫기
+    function closeTextReadonlyPopup() {
+        document.getElementById('textReadonlyModal').classList.remove('active');
+    }
+
+    // 날짜로 텍스트 팝업 열기 (Calendar/Heatmap용)
+    async function showTextPopup(records, date) {
+        // 해당 날짜의 레코드 찾기
+        const dateRecords = allRecords.filter(r => r.date === date);
+
+        if (dateRecords.length === 0) {
+            return;
+        }
+
+        // 레코드가 1개면 바로 팝업
+        if (dateRecords.length === 1) {
+            showTextReadonlyPopup(dateRecords[0]);
+            return;
+        }
+
+        // 여러 개면 첫 번째 것 표시 (또는 선택 UI 추가 가능)
+        showTextReadonlyPopup(dateRecords[0]);
+    }
+
     function openEditModal(recordId, type, record) {
-        // index.html은 조회 전용 - 수정 기능 없음
+        // TEXT 타입일 때 읽기 전용 팝업 표시
+        if (type === 'TEXT' && record) {
+            showTextReadonlyPopup(record);
+            return;
+        }
+        // 다른 타입은 조회 전용 - 수정 기능 없음
         return;
     }
 
@@ -3235,7 +3565,7 @@
         if (isLoggedIn) {
             topActions.innerHTML = `
                 <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
-                <a href="insert.html" class="btn" data-lang-ko="데이터 입력" data-lang-en="Insert Data">데이터 입력</a>
+                <a href="insert.html" class="btn" data-lang-ko="카테고리" data-lang-en="Category">카테고리</a>
                 <a href="manage.html" class="btn" data-lang-ko="내 관리" data-lang-en="My Page">내 관리</a>
                 <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()"><span data-lang-ko="알림" data-lang-en="Alerts">알림</span><span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
                 </button>
@@ -3954,6 +4284,7 @@
         } else if (category.type === 'TEXT') {
             viewToggle.innerHTML = `
                 <button class="toggle-btn ${currentView === 'weekly' ? 'active' : ''}" onclick="switchView('weekly')" data-lang-ko="주간" data-lang-en="Weekly">주간</button>
+                <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" onclick="switchView('calendar')" data-lang-ko="달력" data-lang-en="Calendar">달력</button>
                 <button class="toggle-btn ${currentView === 'list' ? 'active' : ''}" onclick="switchView('list')" data-lang-ko="리스트" data-lang-en="List">리스트</button>
                 <button class="toggle-btn" onclick="openHeatmapModal()" data-lang-ko="100년" data-lang-en="100Y">100년</button>
             `;
@@ -4005,6 +4336,8 @@
         } else if (category.type === 'TEXT') {
             if (currentView === 'weekly') {
                 displayTextWeekly(records, content);
+            } else if (currentView === 'calendar') {
+                displayTextCalendar(records, content);
             } else {
                 displayTextList(records, content);
             }
@@ -4905,7 +5238,7 @@
 
             if (dateRecords.length > 0) {
                 dateRecords.forEach(record => {
-                    html += `<div class="text-weekly-item">`;
+                    html += `<div class="text-weekly-item" data-record-id="${record.id}" data-record-type="TEXT" style="cursor: pointer;">`;
                     html += `<div class="text-weekly-title">${record.title}</div>`;
                     html += `<div class="text-weekly-text">${record.text}</div>`;
                     html += `</div>`;
@@ -4921,6 +5254,18 @@
         html += '</div>';
 
         container.innerHTML = html;
+
+        // 클릭 이벤트 리스너 추가
+        container.querySelectorAll('.text-weekly-item[data-record-id]').forEach(item => {
+            item.addEventListener('click', function() {
+                const recordId = this.getAttribute('data-record-id');
+                const recordType = this.getAttribute('data-record-type');
+                const record = records.find(r => String(r.id) === String(recordId));
+                if (record) {
+                    openEditModal(recordId, recordType, record);
+                }
+            });
+        });
     }
 
     // TEXT 리스트 뷰
@@ -4930,7 +5275,7 @@
         let html = '<div class="text-list">';
         sortedRecords.forEach(record => {
             html += `
-                <div class="text-item">
+                <div class="text-item" data-record-id="${record.id}" data-record-type="TEXT" style="cursor: pointer;">
                     <div class="text-item-header">
                         <div class="text-item-title">${record.title}</div>
                         <div class="text-item-date">${record.date}</div>
@@ -4941,6 +5286,142 @@
         });
         html += '</div>';
         container.innerHTML = html;
+
+        // 클릭 이벤트 리스너 추가
+        container.querySelectorAll('.text-item[data-record-id]').forEach(item => {
+            item.addEventListener('click', function() {
+                const recordId = this.getAttribute('data-record-id');
+                const recordType = this.getAttribute('data-record-type');
+                const record = records.find(r => String(r.id) === String(recordId));
+                if (record) {
+                    openEditModal(recordId, recordType, record);
+                }
+            });
+        });
+    }
+
+    // TEXT 달력 뷰
+    function displayTextCalendar(records, container) {
+        const recordsSection = container || document.getElementById('recordsContent');
+
+        // 날짜별로 레코드 맵핑
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                if (!recordsByDate[record.date]) {
+                    recordsByDate[record.date] = [];
+                }
+                recordsByDate[record.date].push(record);
+            }
+        });
+
+        // 연도별로 그룹화
+        const yearMap = {};
+        Object.keys(recordsByDate).forEach(date => {
+            const year = date.split('-')[0];
+            if (!yearMap[year]) {
+                yearMap[year] = {};
+            }
+            const month = date.split('-')[1];
+            if (!yearMap[year][month]) {
+                yearMap[year][month] = {};
+            }
+            yearMap[year][month][date] = recordsByDate[date];
+        });
+
+        // 년도 정렬 (오래된 순)
+        const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        let html = '';
+
+        // Label 버튼
+        html += `<div style="margin: -20px -20px 0 -20px; padding: 12px 20px; background: white; display: flex; justify-content: flex-start; align-items: center; border-bottom: 1px solid #e0e0e0;">`;
+        html += `<button class="label-toggle-btn" onclick="toggleCalendarLabels()" id="inlineCalendarLabelToggle" style="margin: 0;">`;
+        html += `<span data-lang-ko="Label" data-lang-en="Label">Label</span>`;
+        html += `</button>`;
+        html += `</div>`;
+
+        html += `<div id="calendarContainer" style="margin-top: 0;">`;
+
+        sortedYears.forEach(year => {
+            html += `<div class="calendar-year">`;
+            html += `<div class="calendar-year-title">${year}${translations.year[currentLang]}</div>`;
+
+            // 월별 달력 (1~12월)
+            html += `<div class="calendar-months">`;
+            for (let month = 1; month <= 12; month++) {
+                const monthStr = String(month).padStart(2, '0');
+                const monthData = yearMap[year][monthStr] || {};
+
+                html += generateTextMonthCalendar(year, month, monthData);
+            }
+            html += `</div>`;
+            html += `</div>`;
+        });
+
+        html += `</div>`;
+
+        recordsSection.innerHTML = html;
+        applyLanguage();
+
+        // 클릭 이벤트 리스너 추가
+        recordsSection.querySelectorAll('[data-click-type="text-popup"]').forEach(cell => {
+            cell.addEventListener('click', function() {
+                const dateStr = this.getAttribute('data-date');
+                showTextPopup(null, dateStr);
+            });
+        });
+    }
+
+    // TEXT 월별 달력 생성
+    function generateTextMonthCalendar(year, month, monthData) {
+        const monthStr = String(month).padStart(2, '0');
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        const monthNameKo = `${month}월`;
+        const monthNameEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][month - 1];
+
+        let html = `<div class="calendar-month">`;
+        html += `<div class="calendar-month-title" data-lang-ko="${monthNameKo}" data-lang-en="${monthNameEn}">${currentLang === 'ko' ? monthNameKo : monthNameEn}</div>`;
+        html += `<div class="calendar-grid">`;
+
+        // 요일 헤더
+        const weekDaysKo = ['일', '월', '화', '수', '목', '금', '토'];
+        const weekDaysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        for (let i = 0; i < 7; i++) {
+            html += `<div class="calendar-weekday" data-lang-ko="${weekDaysKo[i]}" data-lang-en="${weekDaysEn[i]}">${currentLang === 'ko' ? weekDaysKo[i] : weekDaysEn[i]}</div>`;
+        }
+
+        // 첫 주 빈 칸
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += `<div class="calendar-day empty"></div>`;
+        }
+
+        // 날짜들
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayStr = String(day).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
+            const records = monthData[dateStr];
+
+            if (records && records.length > 0) {
+                html += `<div class="calendar-day has-data" data-date="${dateStr}" data-click-type="text-popup" style="cursor: pointer;" title="${records.length}개">${day}</div>`;
+            } else {
+                html += `<div class="calendar-day">${day}</div>`;
+            }
+        }
+
+        html += `</div>`;
+        html += `</div>`;
+
+        return html;
     }
 
     // CHECKLIST 주간 뷰
@@ -6384,11 +6865,11 @@
     function renderComments(comments, depth = 0) {
         return comments.map(comment => {
             const indent = depth * 30;
-            const authorBadge = comment.mine ? '<span style="background: #ffd700; color: #000; padding: 2px 6px; font-size: 10px; margin-left: 5px; font-weight: 600;">ME</span>' : '';
+            const authorBadge = comment.mine ? '<span style="background: #4299e1; color: #fff; padding: 2px 6px; font-size: 10px; margin-left: 5px; font-weight: 600; border-radius: 3px;">ME</span>' : '';
             const updatedBadge = comment.updated ? `<span style="color: #999; font-size: 11px; margin-left: 5px;">(${currentLang === 'ko' ? '수정됨' : 'edited'})</span>` : '';
 
             let html = `
-                <div style="margin-left: ${indent}px; margin-bottom: 15px; padding: 10px; background: ${comment.mine ? '#fffacd' : '#f9f9f9'}; border-left: 3px solid ${comment.mine ? '#ffd700' : '#ddd'};">
+                <div style="margin-left: ${indent}px; margin-bottom: 15px; padding: 10px; background: #f9f9f9; border-left: 3px solid #ddd;">
                     <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
                         <strong>${comment.authorEmail}</strong>${authorBadge}${updatedBadge}
                         <span style="margin-left: 10px; font-size: 11px; color: #999;">${new Date(comment.createdAt).toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US')}</span>
@@ -8327,8 +8808,8 @@
     }
 
     // TEXT 달력 뷰
-    function displayTextCalendar(records) {
-        const recordsSection = document.getElementById('recordsContent');
+    function displayTextCalendar(records, container) {
+        const recordsSection = container || document.getElementById('recordsContent');
 
 
         // 날짜별로 레코드 맵핑
@@ -8499,7 +8980,7 @@
             item.addEventListener('click', function() {
                 const recordId = this.getAttribute('data-record-id');
                 const recordType = this.getAttribute('data-record-type');
-                const record = allRecords.find(r => r.id === recordId);
+                const record = allRecords.find(r => String(r.id) === String(recordId));
                 if (record) {
                     openEditModal(recordId, recordType, record);
                 }

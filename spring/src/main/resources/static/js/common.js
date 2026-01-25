@@ -87,10 +87,13 @@ async function authFetch(url, options = {}) {
         csrfToken = getCsrfToken();
     }
 
+    // FormData인 경우 Content-Type을 설정하지 않음 (브라우저가 자동으로 boundary 설정)
+    const isFormData = options.body instanceof FormData;
+
     const defaultOptions = {
         credentials: 'include',
         headers: {
-            'Content-Type': 'application/json',
+            ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
             ...(options.headers || {})
         }
     };
@@ -114,6 +117,11 @@ async function authFetch(url, options = {}) {
         }
     };
 
+    // FormData인 경우 Content-Type 헤더 제거 (혹시 options.headers에 있을 경우)
+    if (isFormData) {
+        delete finalOptions.headers['Content-Type'];
+    }
+
     const response = await fetch(url, finalOptions);
 
     const responseCsrfToken = response.headers.get('X-CSRF-TOKEN');
@@ -134,7 +142,8 @@ async function authFetch(url, options = {}) {
         } else {
             currentUser = null;
             accessToken = null;
-            location.href = location.pathname;
+            // 로그인 페이지(index.html)로 직접 리다이렉트
+            window.location.href = '/';
             throw new Error('Authentication required');
         }
     }
