@@ -43,6 +43,7 @@ public class SecurityPaths {
 		"/api/text/all",
 		"/api/number/all",
 		"/api/check/all",
+		"/api/expense/all",
 		"/default-ui.css",
 		"/actuator/**",
 	};
