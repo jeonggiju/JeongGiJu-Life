@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.life.jeonggiju.domain.checkListRecord.entity.CheckListRecord;
 import com.life.jeonggiju.domain.checkRecord.entity.CheckRecord;
+import com.life.jeonggiju.domain.expenseRecord.entity.ExpenseRecord;
 import com.life.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.life.jeonggiju.domain.timeRecord.entity.TimeRecord;
 import com.life.jeonggiju.domain.user.entity.User;
@@ -95,6 +96,12 @@ public class Category {
 		cascade = CascadeType.ALL,
 		orphanRemoval = true)
 	private List<CheckListRecord> checkListRecords = new ArrayList<>();
+
+
+	@OneToMany(mappedBy = "category",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true)
+	private List<ExpenseRecord> expenseRecords = new ArrayList<>();
 
 	protected Category() {
 	}
