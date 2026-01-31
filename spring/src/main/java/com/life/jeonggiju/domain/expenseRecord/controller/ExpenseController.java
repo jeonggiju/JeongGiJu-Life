@@ -1,7 +1,6 @@
 package com.life.jeonggiju.domain.expenseRecord.controller;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -13,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.life.jeonggiju.domain.expenseRecord.dto.FindExpenseAllResponse;
+import com.life.jeonggiju.domain.expenseRecord.dto.FindExpenseByDateResponse;
 import com.life.jeonggiju.domain.expenseRecord.dto.FindExpenseResponse;
 import com.life.jeonggiju.domain.expenseRecord.dto.SaveExpense;
 import com.life.jeonggiju.domain.expenseRecord.dto.UpdateExpense;
-import com.life.jeonggiju.domain.expenseRecord.entity.ExpenseRecord;
 import com.life.jeonggiju.domain.expenseRecord.service.ExpenseService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class ExpenseController {
 	private final ExpenseService expenseService;
 
 	@GetMapping("/date")
-	public ResponseEntity<List<ExpenseRecord>> findByDate(UUID categoryId, LocalDate date) {
+	public ResponseEntity<FindExpenseByDateResponse> findByDate(UUID categoryId, LocalDate date) {
 		return ResponseEntity.ok(expenseService.findByDate(categoryId, date));
 	}
 

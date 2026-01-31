@@ -12,6 +12,7 @@ import com.life.jeonggiju.domain.category.entity.Category;
 import com.life.jeonggiju.domain.category.exception.CategoryNotFoundException;
 import com.life.jeonggiju.domain.category.repository.CategoryRepository;
 import com.life.jeonggiju.domain.expenseRecord.dto.FindExpenseAllResponse;
+import com.life.jeonggiju.domain.expenseRecord.dto.FindExpenseByDateResponse;
 import com.life.jeonggiju.domain.expenseRecord.dto.FindExpenseResponse;
 import com.life.jeonggiju.domain.expenseRecord.dto.SaveExpense;
 import com.life.jeonggiju.domain.expenseRecord.dto.UpdateExpense;
@@ -91,9 +92,35 @@ public class ExpenseService {
 			.build();
 	}
 
-	public List<ExpenseRecord> findByDate(UUID categoryId, LocalDate date) {
-		return expenseRepository.findByCategoryIdAndDate(categoryId, date)
+	public FindExpenseByDateResponse findByDate(UUID categoryId, LocalDate date) {
+		List<ExpenseRecord> records = expenseRepository.findByCategoryIdAndDate(categoryId, date)
 			.orElseThrow(() -> ExpenseRecordNotFoundException.withCategoryIdAndDate(categoryId, date));
+
+		List<FindExpenseByDateResponse.Content> contents = records.stream()
+			.map(record -> {
+				List<FindExpenseByDateResponse.TagInfo> tagInfos = record.getTags().stream()
+					.map(rt -> FindExpenseByDateResponse.TagInfo.builder()
+						.id(rt.getExpenseTag().getId())
+						.name(rt.getExpenseTag().getName())
+						.build())
+					.toList();
+
+				return FindExpenseByDateResponse.Content.builder()
+					.id(record.getId())
+					.amount(record.getAmount())
+					.expenseType(record.getExpenseType())
+					.paymentMethod(record.getPaymentMethod())
+					.merchant(record.getMerchant())
+					.memo(record.getMemo())
+					.tags(tagInfos)
+					.build();
+			})
+			.toList();
+
+		return FindExpenseByDateResponse.builder()
+			.date(date)
+			.contents(contents)
+			.build();
 	}
 
 	@Transactional
