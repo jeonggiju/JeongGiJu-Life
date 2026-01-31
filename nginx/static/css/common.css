@@ -124,6 +124,7 @@ body {
     display: flex;
     gap: 12px;
     align-items: center;
+    overflow: visible;
 }
 
 /* ===== Form Styles ===== */
@@ -318,6 +319,7 @@ body {
     border-radius: 8px;
     transition: all 0.2s ease;
     text-decoration: none;
+    overflow: visible !important;
     color: #2d3748;
 }
 
@@ -652,12 +654,12 @@ body {
 }
 
 /* ===== Layout Stabilization ===== */
-.btn, .language-toggle, .notification-bell, .toggle-btn,
+.btn, .language-toggle, .toggle-btn,
 .add-record-btn, .submit-btn,
 .btn-edit, .btn-delete, .btn-view-likes,
 .category-action-btn, .comment-btn,
 .modal-btn,
-button[class*="btn"]:not(.label-toggle-btn) {
+button[class*="btn"]:not(.label-toggle-btn):not(.notification-bell) {
     height: 32px !important;
     line-height: 32px !important;
     padding: 0 14px !important;
