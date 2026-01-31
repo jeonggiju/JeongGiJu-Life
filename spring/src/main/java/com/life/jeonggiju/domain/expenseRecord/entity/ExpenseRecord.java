@@ -50,8 +50,6 @@ public class ExpenseRecord {
 	@Enumerated(EnumType.STRING)
 	private PaymentMethod paymentMethod;
 
-	private String expenseCategory;
-
 	private String merchant;
 
 	private String memo;
@@ -62,13 +60,12 @@ public class ExpenseRecord {
 	}
 
 	public static ExpenseRecord of(Category category, double amount, ExpenseType expenseType,
-		PaymentMethod paymentMethod, String expenseCategory, String merchant, String memo, LocalDate date) {
+		PaymentMethod paymentMethod, String merchant, String memo, LocalDate date) {
 		return ExpenseRecord.builder()
 			.category(category)
 			.amount(amount)
 			.expenseType(expenseType)
 			.paymentMethod(paymentMethod)
-			.expenseCategory(expenseCategory)
 			.merchant(merchant)
 			.memo(memo)
 			.date(date)
@@ -76,11 +73,10 @@ public class ExpenseRecord {
 	}
 
 	public void update(double amount, ExpenseType expenseType, PaymentMethod paymentMethod,
-		String expenseCategory, String merchant, String memo, LocalDate date) {
+		String merchant, String memo, LocalDate date) {
 		this.amount = amount;
 		this.expenseType = expenseType;
 		this.paymentMethod = paymentMethod;
-		this.expenseCategory = expenseCategory;
 		this.merchant = merchant;
 		this.memo = memo;
 		this.date = date;
