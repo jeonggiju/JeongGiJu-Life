@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.life.jeonggiju.domain.checkListRecord.entity.CheckListRecord;
 import com.life.jeonggiju.domain.checkRecord.entity.CheckRecord;
+import com.life.jeonggiju.domain.expenseRecord.entity.ExpenseRecord;
 import com.life.jeonggiju.domain.textRecord.entity.TextRecord;
 import com.life.jeonggiju.domain.timeRecord.entity.TimeRecord;
 import com.life.jeonggiju.domain.user.entity.User;
@@ -70,6 +71,7 @@ public class Category {
 		orphanRemoval = true
 	)
 	@ToString.Exclude
+	@Builder.Default
 	private List<TextRecord> textRecords = new ArrayList<>();
 	@OneToMany(
 		mappedBy = "category",
@@ -77,6 +79,7 @@ public class Category {
 		orphanRemoval = true
 	)
 	@ToString.Exclude
+	@Builder.Default
 	private List<CheckRecord> checkRecords = new ArrayList<>();
 	@OneToMany(
 		mappedBy = "category",
@@ -84,17 +87,27 @@ public class Category {
 		orphanRemoval = true
 	)
 	@ToString.Exclude
+	@Builder.Default
 	private List<TimeRecord> timeRecords = new ArrayList<>();
 
 	@OneToMany(mappedBy = "category",
 		cascade = CascadeType.ALL,
 		orphanRemoval = true)
+	@Builder.Default
 	private List<Comment> comments = new ArrayList<>();
 
 	@OneToMany(mappedBy = "category",
 		cascade = CascadeType.ALL,
 		orphanRemoval = true)
+	@Builder.Default
 	private List<CheckListRecord> checkListRecords = new ArrayList<>();
+
+
+	@OneToMany(mappedBy = "category",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true)
+	@Builder.Default
+	private List<ExpenseRecord> expenseRecords = new ArrayList<>();
 
 	protected Category() {
 	}
