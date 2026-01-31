@@ -23,6 +23,8 @@ public enum ErrorCode {
 	TIME_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "시간 기록을 찾을 수 없습니다."),
 	CHECK_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "체크 기록을 찾을 수 없습니다."),
 	CHECK_LIST_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "체크리스트 기록을 찾을 수 없습니다."),
+	EXPENSE_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "가계부 기록을 찾을 수 없습니다."),
+	EXPENSE_TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "가계부 태그를 찾을 수 없습니다."),
 
 	NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "알림을 찾을 수 없습니다."),
 

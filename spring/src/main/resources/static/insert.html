@@ -1504,6 +1504,9 @@
                             <option data-lang-en="CHECKLIST - Todo List" data-lang-ko="CHECKLIST - 할일 목록"
                                     value="CHECKLIST">CHECKLIST - 할일 목록
                             </option>
+                            <option data-lang-en="EXPENSE - Budget Record" data-lang-ko="EXPENSE - 가계부 기록"
+                                    value="EXPENSE">EXPENSE - 가계부 기록
+                            </option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -1841,6 +1844,7 @@
                             <option value="TEXT" ${category.recordType === 'TEXT' ? 'selected' : ''}>${getTypeText('TEXT')}</option>
                             <option value="NUMBER" ${category.recordType === 'NUMBER' ? 'selected' : ''}>${getTypeText('NUMBER')}</option>
                             <option value="CHECKLIST" ${category.recordType === 'CHECKLIST' ? 'selected' : ''}>${getTypeText('CHECKLIST')}</option>
+                            <option value="EXPENSE" ${category.recordType === 'EXPENSE' ? 'selected' : ''}>${getTypeText('EXPENSE')}</option>
                         </select>
                         <small style="display: block; margin-top: 6px; color: #a0aec0; font-size: 12px;">${t('타입은 변경할 수 없습니다.', 'Type cannot be changed.')}</small>
                     </div>
@@ -2958,7 +2962,8 @@
             'TIME': { ko: '시간', en: 'Time' },
             'TEXT': { ko: '텍스트', en: 'Text' },
             'NUMBER': { ko: '숫자', en: 'Number' },
-            'CHECKLIST': { ko: '체크리스트', en: 'Checklist' }
+            'CHECKLIST': { ko: '체크리스트', en: 'Checklist' },
+            'EXPENSE': { ko: '가계부', en: 'Expense' }
         };
         return typeMap[type] ? typeMap[type][currentLang] : type;
     }

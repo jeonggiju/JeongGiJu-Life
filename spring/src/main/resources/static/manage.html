@@ -648,7 +648,7 @@
 
         .calendar-months {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(6, 1fr);
             gap: 16px;
         }
 
@@ -780,6 +780,21 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
+        .hide-calendar-days .calendar-day.expense-income {
+            background: #00d26a !important;
+            box-shadow: 0 1px 3px rgba(0, 210, 106, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.expense-only {
+            background: #ff3b30 !important;
+            box-shadow: 0 1px 3px rgba(255, 59, 48, 0.3);
+        }
+
+        .hide-calendar-days .calendar-day.expense-mixed {
+            background: linear-gradient(135deg, #00d26a 50%, #ff3b30 50%) !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
         .hide-calendar-days .heatmap-data {
             background: #00d26a !important;
             box-shadow: 0 1px 3px rgba(0, 210, 106, 0.3);
@@ -830,6 +845,21 @@
         .hide-calendar-weekdays .calendar-day.has-data-number {
             background: #000000 !important;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.expense-income {
+            background: #00d26a !important;
+            box-shadow: 0 2px 6px rgba(0, 210, 106, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.expense-only {
+            background: #ff3b30 !important;
+            box-shadow: 0 2px 6px rgba(255, 59, 48, 0.4);
+        }
+
+        .hide-calendar-weekdays .calendar-day.expense-mixed {
+            background: linear-gradient(135deg, #00d26a 50%, #ff3b30 50%) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
         .hide-calendar-weekdays .heatmap-data {
@@ -883,6 +913,21 @@
         .hide-calendar-all .calendar-day.has-data-number {
             background: #000000 !important;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.expense-income {
+            background: #00d26a !important;
+            box-shadow: 0 4px 10px rgba(0, 210, 106, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.expense-only {
+            background: #ff3b30 !important;
+            box-shadow: 0 4px 10px rgba(255, 59, 48, 0.5);
+        }
+
+        .hide-calendar-all .calendar-day.expense-mixed {
+            background: linear-gradient(135deg, #00d26a 50%, #ff3b30 50%) !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .hide-calendar-all .heatmap-data {
@@ -1402,6 +1447,342 @@
             border-radius: 8px;
         }
 
+        /* ========== EXPENSE FORM STYLES ========== */
+
+        .expense-form-section {
+            padding: 14px 0;
+        }
+
+        .expense-form-section + .expense-form-section {
+            border-top: 1px solid #edf2f7;
+        }
+
+        .expense-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+        }
+
+        /* Top row: toggle + amount side by side */
+        .expense-top-row {
+            display: flex;
+            align-items: stretch;
+            gap: 12px;
+            padding: 14px 0;
+        }
+
+        .expense-top-row + .expense-grid {
+            border-top: 1px solid #edf2f7;
+        }
+
+        /* Segmented Control (Expense/Income) */
+        .expense-type-toggle {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 3px;
+            gap: 0;
+            flex-shrink: 0;
+        }
+
+        .expense-top-row .expense-type-toggle {
+            flex-direction: column;
+            width: 90px;
+        }
+
+        .expense-type-toggle .toggle-option {
+            flex: 1;
+            padding: 8px 0;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            color: #718096;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .expense-type-toggle .toggle-option.active[data-value="EXPENSE"] {
+            background: #fff;
+            color: #e53e3e;
+            font-weight: 600;
+        }
+
+        .expense-type-toggle .toggle-option.active[data-value="INCOME"] {
+            background: #fff;
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .expense-type-toggle .toggle-option:hover:not(.active) {
+            color: #4a5568;
+        }
+
+        /* Amount input */
+        .expense-amount-wrap {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .expense-amount-wrap input {
+            font-size: 22px !important;
+            font-weight: 700;
+            padding: 12px 12px 12px 30px !important;
+            letter-spacing: -0.5px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            transition: border-color 0.2s;
+            background: #fafbfc;
+        }
+
+        .expense-amount-wrap input:focus {
+            outline: none;
+            border-color: #4299e1;
+            background: #fff;
+        }
+
+        .expense-amount-wrap .currency-symbol {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            font-weight: 600;
+            color: #a0aec0;
+            pointer-events: none;
+        }
+
+        /* Payment method pills */
+        .payment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 7px 0;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            color: #4a5568;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .payment-option:hover {
+            border-color: #cbd5e0;
+            background: #f7fafc;
+        }
+
+        .payment-option.active {
+            border-color: #4299e1;
+            background: #ebf8ff;
+            color: #2b6cb0;
+        }
+
+        .payment-option .payment-icon {
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        /* Tag chips */
+        .expense-tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            min-height: 24px;
+        }
+
+        .expense-tag-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 4px 9px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+            border: 1.5px solid #e2e8f0;
+            background: #fff;
+            color: #4a5568;
+        }
+
+        .expense-tag-chip:hover {
+            border-color: #cbd5e0;
+        }
+
+        .expense-tag-chip.selected {
+            background: #ebf8ff;
+            border-color: #90cdf4;
+            color: #2b6cb0;
+        }
+
+        .expense-tag-chip .tag-delete {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            font-size: 11px;
+            line-height: 1;
+            color: #a0aec0;
+            transition: all 0.15s ease;
+            margin-left: 1px;
+        }
+
+        .expense-tag-chip .tag-delete:hover {
+            background: #fed7d7;
+            color: #e53e3e;
+        }
+
+        .expense-tag-chip.selected .tag-delete:hover {
+            background: #fed7d7;
+            color: #e53e3e;
+        }
+
+        .tag-add-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .tag-add-row input {
+            flex: 1;
+            padding: 7px 10px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .tag-add-row input:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+
+        .tag-add-row button {
+            padding: 7px 12px;
+            background: #f7fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #4a5568;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+
+        .tag-add-row button:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        /* Expense form shared input style */
+        .expense-date-input,
+        .expense-subtle-input {
+            padding: 9px 11px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            width: 100%;
+            background: #fafbfc;
+            transition: all 0.2s;
+        }
+
+        .expense-date-input:focus,
+        .expense-subtle-input:focus {
+            outline: none;
+            border-color: #4299e1;
+            background: #fff;
+        }
+
+        textarea.expense-subtle-input {
+            resize: vertical;
+            min-height: 72px;
+        }
+
+        /* Tighter spacing inside grid columns */
+        .expense-grid .form-group {
+            margin-bottom: 10px !important;
+        }
+
+        .expense-grid .form-group label {
+            font-size: 12px !important;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        /* Expense form 2-column grid */
+        .expense-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 20px;
+            padding-top: 14px;
+        }
+
+        .expense-grid > .expense-form-section {
+            border-top: none;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .expense-grid > .expense-form-section:first-child {
+            border-right: 1px solid #edf2f7;
+            padding-right: 20px;
+        }
+
+        @media (max-width: 560px) {
+            .expense-top-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .expense-top-row .expense-type-toggle {
+                flex-direction: row;
+                width: 100%;
+            }
+            .expense-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .expense-grid > .expense-form-section:first-child {
+                border-right: none;
+                padding-right: 0;
+                border-bottom: 1px solid #edf2f7;
+                padding-bottom: 14px;
+            }
+            .expense-grid > .expense-form-section:last-child {
+                padding-top: 14px;
+            }
+            .expense-amount-wrap input {
+                font-size: 20px !important;
+                padding: 10px 10px 10px 26px !important;
+            }
+            .expense-amount-wrap .currency-symbol {
+                font-size: 14px;
+            }
+        }
+
+        /* ========== END EXPENSE FORM STYLES ========== */
+
         /* 모달 */
         .modal {
             display: none;
@@ -1411,7 +1792,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.6);
-            z-index: 3000;
+            z-index: 3100;
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(4px);
@@ -1896,6 +2277,537 @@
             font-size: 13px;
         }
 
+        /* EXPENSE 스타일 */
+        .expense-list-container {
+            padding: 20px;
+        }
+
+        .expense-date-group {
+            margin-bottom: 24px;
+        }
+
+        .expense-date-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 4px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .expense-date {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .expense-summary {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .expense-summary .income {
+            color: #16a34a;
+        }
+
+        .expense-summary .expense {
+            color: #dc2626;
+        }
+
+        /* EXPENSE 필터 바 */
+        .expense-filter-bar {
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            flex-wrap: wrap;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .expense-filter-btn {
+            padding: 6px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
+        }
+
+        .expense-filter-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .expense-filter-reset {
+            padding: 6px 8px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .expense-filter-select {
+            padding: 6px 10px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .expense-date-range-filter {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .expense-filter-date {
+            padding: 5px 8px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        .expense-filter-summary {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        /* EXPENSE 월간 뷰 - 개선된 셀 디자인 */
+
+        /* 셀 전체 배경 제거 → 좌측 세로 바로 국소 강조 */
+        .expense-monthly-income,
+        .expense-monthly-expense,
+        .expense-monthly-mixed {
+            background: #fff !important;
+            position: relative;
+        }
+
+        .expense-monthly-income::before,
+        .expense-monthly-expense::before,
+        .expense-monthly-mixed::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            border-radius: 2px;
+        }
+
+        .expense-monthly-income::before {
+            background: #22c55e; /* 채도 낮춘 초록 */
+        }
+
+        .expense-monthly-expense::before {
+            background: #ef4444; /* 채도 낮춘 빨강 */
+        }
+
+        .expense-monthly-mixed::before {
+            background: linear-gradient(180deg, #22c55e 50%, #ef4444 50%);
+        }
+
+        /* 날짜 숫자: 작고 연한 보조 정보 */
+        .monthly-day .monthly-day-number {
+            font-size: 11px;
+            font-weight: 400;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        /* 요일 색상 유지 */
+        .monthly-day.sunday .monthly-day-number {
+            color: #f87171;
+        }
+
+        .monthly-day.saturday .monthly-day-number {
+            color: #60a5fa;
+        }
+
+        /* 금액 요약: 핵심 정보로 강조 */
+        .expense-monthly-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding-left: 6px;
+        }
+
+        .expense-monthly-income-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #16a34a;
+            letter-spacing: -0.3px;
+        }
+
+        .expense-monthly-expense-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #dc2626;
+            letter-spacing: -0.3px;
+        }
+
+        /* 셀 기본 스타일 */
+        .monthly-day {
+            cursor: pointer;
+            min-height: 70px;
+            padding: 6px 8px;
+            border: 1px solid #f1f5f9;
+            transition: all 0.15s ease;
+        }
+
+        .monthly-day:hover {
+            background: #f8fafc !important;
+            border-color: #e2e8f0;
+        }
+
+        .monthly-day.empty {
+            background: #fafafa;
+            cursor: default;
+        }
+
+        .monthly-day.empty:hover {
+            background: #fafafa !important;
+        }
+
+        /* 데이터 있는 셀 hover 시 살짝 들어올림 효과 */
+        .monthly-day.expense-monthly-income:hover,
+        .monthly-day.expense-monthly-expense:hover,
+        .monthly-day.expense-monthly-mixed:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transform: translateY(-1px);
+        }
+
+        .expense-items-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .expense-item {
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.15s;
+        }
+
+        .expense-item:hover {
+            border-color: #cbd5e0;
+        }
+
+        .expense-item-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .expense-item-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .expense-item-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .expense-type-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            width: fit-content;
+        }
+
+        .expense-type-badge.income {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .expense-type-badge.expense {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .expense-merchant {
+            font-size: 13px;
+            font-weight: 500;
+            color: #2d3748;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .expense-amount {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .expense-amount.income {
+            color: #16a34a;
+        }
+
+        .expense-amount.expense {
+            color: #dc2626;
+        }
+
+        .expense-payment {
+            font-size: 11px;
+            color: #a0aec0;
+        }
+
+        .expense-memo {
+            padding: 6px 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #4a5568;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .expense-tags {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .expense-tag {
+            display: inline-block;
+            padding: 1px 6px;
+            background: #edf2f7;
+            border-radius: 4px;
+            font-size: 10px;
+            color: #4a5568;
+        }
+
+        .expense-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: auto;
+            padding-top: 6px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .expense-edit-btn, .expense-delete-btn {
+            flex: 1;
+            padding: 5px 0;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .expense-edit-btn:hover {
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
+        }
+
+        .expense-delete-btn:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+            color: white;
+        }
+
+        @media (max-width: 1024px) {
+            .expense-items-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .expense-items-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .expense-items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* EXPENSE 달력 */
+        .calendar-day.expense-income {
+            background: #dcfce7;
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .calendar-day.expense-only {
+            background: #fee2e2;
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .calendar-day.expense-mixed {
+            background: linear-gradient(135deg, #dcfce7 50%, #fee2e2 50%);
+            font-weight: bold;
+        }
+
+        /* EXPENSE 모달 */
+        .expense-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .expense-modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid #e2e8f0;
+        }
+
+        .expense-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 2px solid #e2e8f0;
+            background: #f8f9fa;
+        }
+
+        .expense-modal-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: #2d3748;
+        }
+
+        .expense-modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #718096;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .expense-modal-close:hover {
+            color: #2d3748;
+        }
+
+        #expenseModalBody {
+            padding: 16px;
+        }
+
+        .expense-modal-item {
+            padding: 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .expense-modal-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .expense-modal-item.income {
+            border-left: 4px solid #16a34a;
+        }
+
+        .expense-modal-item.expense {
+            border-left: 4px solid #dc2626;
+        }
+
+        .expense-modal-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .expense-modal-item-body {
+            font-size: 13px;
+            color: #4a5568;
+        }
+
+        .expense-modal-item-body > div {
+            margin-bottom: 4px;
+        }
+
+        .expense-modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            justify-content: flex-end;
+        }
+
+        .expense-modal-actions button {
+            padding: 6px 14px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .expense-modal-actions button:first-child:hover {
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
+        }
+
+        .expense-modal-actions button:last-child:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+            color: white;
+        }
+
+        /* EXPENSE 히트맵 */
+        .heatmap-expense-mixed {
+            background: linear-gradient(135deg, #00d26a 50%, #ff3b30 50%) !important;
+        }
+
+        .heatmap-expense-mixed:hover {
+            opacity: 0.85;
+        }
+
         /* CHECKLIST 주간 뷰 */
         .weekly-nav {
             display: flex;
@@ -2268,6 +3180,10 @@
         /* 월간 뷰 - 완료율 배경색 제거 */
 
         @media (max-width: 1024px) {
+            .calendar-months {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
             .monthly-day {
                 min-height: 80px;
             }
@@ -2278,6 +3194,10 @@
         }
 
         @media (max-width: 768px) {
+            .calendar-months {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             .monthly-grid {
                 gap: 4px;
             }
@@ -2294,6 +3214,12 @@
             .monthly-todo-item {
                 font-size: 10px;
                 padding: 2px 4px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-months {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -2341,10 +3267,6 @@
             .time-table td {
                 padding: 8px 4px;
                 font-size: 12px;
-            }
-
-            .calendar-months {
-                grid-template-columns: 1fr;
             }
 
             .time-graph-large canvas {
@@ -3745,6 +4667,17 @@
     </div>
 </div>
 
+<!-- EXPENSE 상세 모달 -->
+<div class="expense-modal" id="expenseModal" onclick="closeExpenseModal()">
+    <div class="expense-modal-content" onclick="event.stopPropagation()">
+        <div class="expense-modal-header">
+            <h3 id="expenseModalDate"></h3>
+            <button class="expense-modal-close" onclick="closeExpenseModal()">×</button>
+        </div>
+        <div id="expenseModalBody"></div>
+    </div>
+</div>
+
 <!-- 데이터 추가 모달 -->
 <div class="modal" id="addRecordModal">
     <div class="modal-content">
@@ -3755,7 +4688,7 @@
         <div class="modal-body">
             <div id="addRecordFormContainer"></div>
             <div id="addRecordError"></div>
-            <button class="btn-primary" id="submitAddRecord" style="width: 100%; padding: 12px; margin-top: 20px;"
+            <button class="btn-primary" id="submitAddRecord" style="width: 100%; padding: 12px; margin-top: 20px; border-radius: 10px; border: none; box-shadow: none;"
                     type="button">추가
             </button>
         </div>
@@ -4168,6 +5101,8 @@
             renderNumberHeatmap(allRecords, content);
         } else if (currentCategory.type === 'CHECKLIST') {
             renderChecklistHeatmap(allRecords, content);
+        } else if (currentCategory.type === 'EXPENSE') {
+            renderExpenseHeatmap(allRecords, content);
         }
 
         modal.classList.add('active');
@@ -4726,6 +5661,118 @@
         });
     }
 
+    // EXPENSE 히트맵 렌더링 (모달용)
+    function renderExpenseHeatmap(records, container) {
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                if (!recordsByDate[record.date]) {
+                    recordsByDate[record.date] = [];
+                }
+                recordsByDate[record.date].push(record);
+            }
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        let startDate;
+        let birthYear = null;
+        if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+            startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = currentUser.birthYear;
+        } else {
+            startDate = new Date(today);
+            startDate.setFullYear(startDate.getFullYear() - 100);
+            birthYear = startDate.getFullYear();
+        }
+
+        const totalYears = 100;
+
+        let html = '<div class="heatmap-container">';
+        html += '<div class="heatmap-header">';
+        html += '<div class="heatmap-year-label"></div>';
+        html += '<div class="heatmap-months">';
+        const monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        for (let m = 0; m < 12; m++) {
+            const monthName = `${m + 1}${translations.month[currentLang]}`;
+            const CELL = 18;
+            const GAP = 2;
+            const UNIT = CELL + GAP;
+            const width = (monthDays[m] * UNIT) - GAP;
+            html += `<div class="heatmap-month-label" style="width: ${width}px;">${monthName}</div>`;
+        }
+        html += '</div></div>';
+
+        for (let year = 0; year < totalYears; year++) {
+            const yearLabel = birthYear + year;
+
+            const isLeapYear = (yearLabel % 4 === 0 && yearLabel % 100 !== 0) || (yearLabel % 400 === 0);
+            const daysInYear = isLeapYear ? 366 : 365;
+
+            html += '<div class="heatmap-row">';
+            html += `<div class="heatmap-year-label">${yearLabel}</div>`;
+            html += '<div class="heatmap-days">';
+
+            for (let day = 0; day < daysInYear; day++) {
+                const date = new Date(yearLabel, 0, day + 1);
+                date.setHours(0, 0, 0, 0);
+
+                if (date > new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)) {
+                    html += `<div class="heatmap-cell heatmap-future-empty" title="미래"></div>`;
+                    continue;
+                }
+
+                const yr = date.getFullYear();
+                const mo = String(date.getMonth() + 1).padStart(2, '0');
+                const dy = String(date.getDate()).padStart(2, '0');
+                const dateStr = `${yr}-${mo}-${dy}`;
+                const dateRecords = recordsByDate[dateStr];
+                const isPast = date < today;
+
+                let className = 'heatmap-cell';
+                let title = dateStr;
+
+                if (dateRecords && dateRecords.length > 0) {
+                    const totalIncome = dateRecords.filter(r => r.expenseType === 'INCOME').reduce((s, r) => s + r.amount, 0);
+                    const totalExpense = dateRecords.filter(r => r.expenseType === 'EXPENSE').reduce((s, r) => s + r.amount, 0);
+
+                    if (totalIncome > 0 && totalExpense > 0) {
+                        className += ' heatmap-expense-mixed';
+                    } else if (totalIncome > 0) {
+                        className += ' heatmap-success';
+                    } else {
+                        className += ' heatmap-fail';
+                    }
+
+                    title = `${dateStr} (+${totalIncome.toLocaleString()} / -${totalExpense.toLocaleString()})`;
+                    html += `<div class="${className}" title="${title}" data-expense-heatmap-date="${dateStr}" style="cursor: pointer;"></div>`;
+                } else if (isPast) {
+                    className += ' heatmap-past-empty';
+                    html += `<div class="${className}" title="${title}"></div>`;
+                } else {
+                    className += ' heatmap-future-empty';
+                    html += `<div class="${className}" title="${title}"></div>`;
+                }
+            }
+
+            html += '</div></div>';
+        }
+
+        html += '</div>';
+        container.innerHTML = html;
+
+        // 클릭 이벤트 리스너
+        container.querySelectorAll('[data-expense-heatmap-date]').forEach(cell => {
+            cell.addEventListener('click', function() {
+                const dateStr = this.getAttribute('data-expense-heatmap-date');
+                const dateRecords = recordsByDate[dateStr] || [];
+                openExpenseModal(dateStr, dateRecords);
+            });
+        });
+    }
+
     // 활성 버튼 설정
     function setActiveButton(activeBtn) {
         const viewToggle = document.getElementById('viewToggle');
@@ -5208,6 +6255,9 @@
                 case 'CHECKLIST':
                     endpoint = `${API_BASE}/check-list/all?categoryId=${category.id}`;
                     break;
+                case 'EXPENSE':
+                    endpoint = `${API_BASE}/expense/all?categoryId=${category.id}`;
+                    break;
             }
 
             const response = await authFetch(endpoint);
@@ -5320,6 +6370,18 @@
                     <button class="toggle-btn ${currentView === 'monthly' ? 'active' : ''}" id="monthlyViewBtn" data-lang-ko="월간" data-lang-en="Monthly">${currentLang === 'ko' ? '월간' : 'Monthly'}</button>
                     <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn" data-lang-ko="100년" data-lang-en="100Y">${translations.heatmap[currentLang]}</button>
                 `;
+        } else if (category.type === 'EXPENSE') {
+            // EXPENSE는 리스트, 달력, 월간, 그래프, 히트맵 뷰 지원
+            if (currentView !== 'calendar' && currentView !== 'list' && currentView !== 'heatmap' && currentView !== 'graph' && currentView !== 'monthly') {
+                currentView = 'list';
+            }
+            viewToggle.innerHTML = `
+                    <button class="toggle-btn ${currentView === 'graph' ? 'active' : ''}" id="graphViewBtn" data-lang-ko="그래프" data-lang-en="Graph">${translations.graph[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'list' ? 'active' : ''}" id="listViewBtn" data-lang-ko="리스트" data-lang-en="List">${translations.list[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'calendar' ? 'active' : ''}" id="calendarViewBtn" data-lang-ko="달력" data-lang-en="Calendar">${translations.calendar[currentLang]}</button>
+                    <button class="toggle-btn ${currentView === 'monthly' ? 'active' : ''}" id="monthlyViewBtn" data-lang-ko="월간" data-lang-en="Monthly">${currentLang === 'ko' ? '월간' : 'Monthly'}</button>
+                    <button class="toggle-btn ${currentView === 'heatmap' ? 'active' : ''}" id="heatmapViewBtn" data-lang-ko="100년" data-lang-en="100Y">${translations.heatmap[currentLang]}</button>
+                `;
         }
 
         // 이벤트 재등록
@@ -5335,6 +6397,8 @@
             displayTextRecords(records);
         } else if (category.type === 'CHECKLIST') {
             displayChecklistRecords(records);
+        } else if (category.type === 'EXPENSE') {
+            displayExpenseRecords(records);
         }
     }
 
@@ -5732,6 +6796,1068 @@
                 }
             });
         });
+    }
+
+    // EXPENSE: 리스트, 달력, 그래프 또는 히트맵 표시
+    function displayExpenseRecords(records) {
+        if (currentView === 'list') {
+            displayExpenseList(records);
+        } else if (currentView === 'calendar') {
+            displayExpenseCalendar(records);
+        } else if (currentView === 'graph') {
+            displayExpenseGraph(records);
+        } else if (currentView === 'monthly') {
+            displayExpenseMonthly(records);
+        } else {
+            displayExpenseHeatmap(records);
+        }
+    }
+
+    // EXPENSE 그래프 필터 상태
+    let expenseGraphSortAsc = true; // true=오래된순(그래프 기본), false=최신순
+    let expenseGraphMonthFilter = '';
+    let expenseGraphDateFrom = '';
+    let expenseGraphDateTo = '';
+
+    // EXPENSE 그래프 뷰
+    function displayExpenseGraph(records) {
+        const recordsSection = document.getElementById('recordsSection');
+        setupGlobalLabelToggle(false);
+
+        if (!records || records.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        // 사용 가능한 월 목록 추출
+        const monthSet = new Set();
+        records.forEach(r => {
+            if (r.date) monthSet.add(r.date.substring(0, 7));
+        });
+        const availableMonths = [...monthSet].sort((a, b) => b.localeCompare(a));
+
+        // 필터 적용
+        let filtered = records.filter(r => {
+            if (!r.date) return false;
+            if (expenseGraphMonthFilter && !r.date.startsWith(expenseGraphMonthFilter)) return false;
+            if (expenseGraphDateFrom && r.date < expenseGraphDateFrom) return false;
+            if (expenseGraphDateTo && r.date > expenseGraphDateTo) return false;
+            return true;
+        });
+
+        // 날짜별로 수입/지출 합산
+        const dailyData = {};
+        filtered.forEach(record => {
+            if (record.date) {
+                if (!dailyData[record.date]) {
+                    dailyData[record.date] = { income: 0, expense: 0 };
+                }
+                if (record.expenseType === 'INCOME') {
+                    dailyData[record.date].income += record.amount;
+                } else {
+                    dailyData[record.date].expense += record.amount;
+                }
+            }
+        });
+
+        const sortedDates = Object.keys(dailyData).sort((a, b) =>
+            expenseGraphSortAsc ? a.localeCompare(b) : b.localeCompare(a)
+        );
+
+        // 필터 바 HTML
+        let html = `<div class="expense-filter-bar">`;
+
+        // 정렬 토글
+        html += `<button class="expense-filter-btn" id="expenseGraphSortToggle">
+                    ${expenseGraphSortAsc
+                        ? (currentLang === 'ko' ? '오래된순 →' : 'Oldest →')
+                        : (currentLang === 'ko' ? '최신순 ←' : 'Newest ←')}
+                 </button>`;
+
+        // 월별 필터
+        html += `<select class="expense-filter-select" id="expenseGraphMonthFilter">`;
+        html += `<option value="">${currentLang === 'ko' ? '전체 월' : 'All months'}</option>`;
+        availableMonths.forEach(m => {
+            const [y, mo] = m.split('-');
+            const label = currentLang === 'ko' ? `${y}년 ${parseInt(mo)}월` : `${y}-${mo}`;
+            html += `<option value="${m}" ${expenseGraphMonthFilter === m ? 'selected' : ''}>${label}</option>`;
+        });
+        html += `</select>`;
+
+        // 날짜 범위
+        html += `<div class="expense-date-range-filter">`;
+        html += `<input type="date" class="expense-filter-date" id="expenseGraphDateFrom" value="${expenseGraphDateFrom}">`;
+        html += `<span style="color:#999;font-size:13px;">~</span>`;
+        html += `<input type="date" class="expense-filter-date" id="expenseGraphDateTo" value="${expenseGraphDateTo}">`;
+        if (expenseGraphDateFrom || expenseGraphDateTo) {
+            html += `<button class="expense-filter-btn expense-filter-reset" id="expenseGraphDateReset">✕</button>`;
+        }
+        html += `</div>`;
+
+        html += `</div>`;
+
+        // 필터 요약
+        const totalFiltered = filtered.length;
+        const totalIncome = filtered.filter(r => r.expenseType === 'INCOME').reduce((s, r) => s + r.amount, 0);
+        const totalExpenseAmt = filtered.filter(r => r.expenseType === 'EXPENSE').reduce((s, r) => s + r.amount, 0);
+        html += `<div class="expense-filter-summary">`;
+        html += `<span>${currentLang === 'ko' ? '총' : 'Total'} ${totalFiltered}${currentLang === 'ko' ? '건' : ' records'}</span>`;
+        html += `<span style="color:#38a169;font-weight:600;">+₩${totalIncome.toLocaleString()}</span>`;
+        html += `<span style="color:#e53e3e;font-weight:600;">-₩${totalExpenseAmt.toLocaleString()}</span>`;
+        html += `<span style="font-weight:700;color:${totalIncome - totalExpenseAmt >= 0 ? '#38a169' : '#e53e3e'};">= ₩${(totalIncome - totalExpenseAmt).toLocaleString()}</span>`;
+        html += `</div>`;
+
+        if (sortedDates.length === 0) {
+            html += `<div class="empty-state">${currentLang === 'ko' ? '필터 조건에 맞는 데이터가 없습니다.' : 'No data matches the filter.'}</div>`;
+            recordsSection.innerHTML = html;
+            setupExpenseGraphFilterEvents(records);
+            return;
+        }
+
+        const graphData = sortedDates.map(date => ({
+            date: date,
+            income: dailyData[date].income,
+            expense: dailyData[date].expense
+        }));
+
+        // 값 범위 계산
+        const allValues = graphData.flatMap(d => [d.income, d.expense]);
+        const minValue = Math.min(...allValues);
+        const maxValue = Math.max(...allValues);
+        const valueRange = maxValue - minValue || 1;
+        let rangeMin = Math.floor(minValue - valueRange * 0.1);
+        let rangeMax = Math.ceil(maxValue + valueRange * 0.1);
+        if (rangeMin < 0) rangeMin = 0;
+
+        // 캔버스
+        html += `<div class="number-graph-large">`;
+        html += `<canvas id="expenseGraph" width="1200" height="500"></canvas>`;
+        html += `</div>`;
+
+        // 범례
+        html += `<div style="display: flex; justify-content: center; gap: 24px; margin: 10px 0 6px;">`;
+        html += `<span style="display: flex; align-items: center; gap: 6px; font-size: 13px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#38a169;"></span>${currentLang === 'ko' ? '수입' : 'Income'}</span>`;
+        html += `<span style="display: flex; align-items: center; gap: 6px; font-size: 13px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#e53e3e;"></span>${currentLang === 'ko' ? '지출' : 'Expense'}</span>`;
+        html += `</div>`;
+
+        // 그래프 컨트롤 (금액 범위만)
+        html += `<div class="graph-controls">`;
+        html += `<div class="control-group">`;
+        html += `<label>${currentLang === 'ko' ? '금액 범위' : 'Amount Range'}: <span id="expenseValueRangeValue">₩${rangeMin.toLocaleString()} ~ ₩${rangeMax.toLocaleString()}</span></label>`;
+        html += `<div class="time-range-sliders">`;
+        html += `<div class="time-slider">`;
+        html += `<label>${translations.min[currentLang]}</label>`;
+        html += `<input type="range" id="minExpenseSlider" min="${rangeMin}" max="${rangeMax}" value="${rangeMin}" step="1">`;
+        html += `</div>`;
+        html += `<div class="time-slider">`;
+        html += `<label>${translations.max[currentLang]}</label>`;
+        html += `<input type="range" id="maxExpenseSlider" min="${rangeMin}" max="${rangeMax}" value="${rangeMax}" step="1">`;
+        html += `</div>`;
+        html += `</div>`;
+        html += `</div>`;
+        html += `</div>`;
+
+        recordsSection.innerHTML = html;
+
+        // 필터 이벤트 바인딩
+        setupExpenseGraphFilterEvents(records);
+
+        // 초기 그래프 그리기
+        drawExpenseGraphLarge(graphData, graphData.length, rangeMin, rangeMax);
+
+        // 금액 범위 슬라이더 이벤트
+        const minSlider = document.getElementById('minExpenseSlider');
+        const maxSlider = document.getElementById('maxExpenseSlider');
+        const valueRangeValue = document.getElementById('expenseValueRangeValue');
+
+        if (minSlider) {
+            minSlider.addEventListener('input', (e) => {
+                let minV = parseFloat(e.target.value);
+                let maxV = parseFloat(maxSlider.value);
+                if (minV >= maxV) { minV = maxV - 1; minSlider.value = minV; }
+                valueRangeValue.textContent = `₩${minV.toLocaleString()} ~ ₩${maxV.toLocaleString()}`;
+                drawExpenseGraphLarge(graphData, graphData.length, minV, maxV);
+            });
+        }
+
+        if (maxSlider) {
+            maxSlider.addEventListener('input', (e) => {
+                let minV = parseFloat(minSlider.value);
+                let maxV = parseFloat(e.target.value);
+                if (maxV <= minV) { maxV = minV + 1; maxSlider.value = maxV; }
+                valueRangeValue.textContent = `₩${minV.toLocaleString()} ~ ₩${maxV.toLocaleString()}`;
+                drawExpenseGraphLarge(graphData, graphData.length, minV, maxV);
+            });
+        }
+    }
+
+    // EXPENSE 그래프 필터 이벤트 바인딩
+    function setupExpenseGraphFilterEvents(records) {
+        const sortBtn = document.getElementById('expenseGraphSortToggle');
+        const monthSelect = document.getElementById('expenseGraphMonthFilter');
+        const dateFrom = document.getElementById('expenseGraphDateFrom');
+        const dateTo = document.getElementById('expenseGraphDateTo');
+        const dateReset = document.getElementById('expenseGraphDateReset');
+
+        if (sortBtn) {
+            sortBtn.addEventListener('click', () => {
+                expenseGraphSortAsc = !expenseGraphSortAsc;
+                displayExpenseGraph(records);
+            });
+        }
+        if (monthSelect) {
+            monthSelect.addEventListener('change', (e) => {
+                expenseGraphMonthFilter = e.target.value;
+                expenseGraphDateFrom = '';
+                expenseGraphDateTo = '';
+                displayExpenseGraph(records);
+            });
+        }
+        if (dateFrom) {
+            dateFrom.addEventListener('change', (e) => {
+                expenseGraphDateFrom = e.target.value;
+                expenseGraphMonthFilter = '';
+                displayExpenseGraph(records);
+            });
+        }
+        if (dateTo) {
+            dateTo.addEventListener('change', (e) => {
+                expenseGraphDateTo = e.target.value;
+                expenseGraphMonthFilter = '';
+                displayExpenseGraph(records);
+            });
+        }
+        if (dateReset) {
+            dateReset.addEventListener('click', () => {
+                expenseGraphDateFrom = '';
+                expenseGraphDateTo = '';
+                displayExpenseGraph(records);
+            });
+        }
+    }
+
+    // EXPENSE 그래프 캔버스 그리기
+    function drawExpenseGraphLarge(data, dateRange, minValue, maxValue) {
+        const canvas = document.getElementById('expenseGraph');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 70;
+
+        // 캔버스 초기화
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, width, height);
+
+        if (data.length === 0) return;
+
+        const filteredData = data.slice(-dateRange);
+        if (filteredData.length === 0) return;
+
+        const xStep = (width - padding * 2) / (filteredData.length - 1 || 1);
+        const yRange = maxValue - minValue || 1;
+
+        // Y축 격자선
+        ctx.strokeStyle = '#e5e5e5';
+        ctx.lineWidth = 1;
+        const valueStep = yRange / 6;
+        for (let i = 0; i <= 6; i++) {
+            const val = minValue + valueStep * i;
+            const y = padding + (height - padding * 2) * (1 - (val - minValue) / yRange);
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.stroke();
+
+            // Y축 레이블
+            ctx.fillStyle = '#999';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText('₩' + Math.round(val).toLocaleString(), padding - 10, y + 4);
+        }
+
+        // 수입 라인 그리기
+        drawLine(ctx, filteredData, 'income', '#38a169', padding, width, height, minValue, yRange, xStep);
+        // 지출 라인 그리기
+        drawLine(ctx, filteredData, 'expense', '#e53e3e', padding, width, height, minValue, yRange, xStep);
+
+        // X축 레이블
+        ctx.fillStyle = '#999';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'center';
+        const labelStep = Math.max(1, Math.ceil(filteredData.length / 10));
+        filteredData.forEach((point, index) => {
+            if (index % labelStep === 0 || index === filteredData.length - 1) {
+                const x = padding + index * xStep;
+                ctx.fillText(point.date, x, height - 25);
+            }
+        });
+
+        function drawLine(ctx, data, field, color, padding, width, height, minValue, yRange, xStep) {
+            // 선
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            let firstPoint = true;
+            data.forEach((point, index) => {
+                const val = point[field];
+                if (val >= minValue && val <= minValue + yRange) {
+                    const x = padding + index * xStep;
+                    const y = padding + (height - padding * 2) * (1 - (val - minValue) / yRange);
+                    if (firstPoint) { ctx.moveTo(x, y); firstPoint = false; }
+                    else { ctx.lineTo(x, y); }
+                }
+            });
+            ctx.stroke();
+
+            // 점
+            data.forEach((point, index) => {
+                const val = point[field];
+                if (val >= minValue && val <= minValue + yRange) {
+                    const x = padding + index * xStep;
+                    const y = padding + (height - padding * 2) * (1 - (val - minValue) / yRange);
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+        }
+    }
+
+    // EXPENSE 리스트 필터 상태
+    let expenseListSortAsc = false; // false=최신순, true=오래된순
+    let expenseListMonthFilter = ''; // ''=전체, '2026-01' 형태
+    let expenseListDateFrom = '';
+    let expenseListDateTo = '';
+
+    // EXPENSE 리스트 뷰
+    function displayExpenseList(records) {
+        const recordsSection = document.getElementById('recordsSection');
+        setupGlobalLabelToggle(false);
+
+        if (!records || records.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            return;
+        }
+
+        // 사용 가능한 월 목록 추출
+        const monthSet = new Set();
+        records.forEach(r => {
+            if (r.date) monthSet.add(r.date.substring(0, 7));
+        });
+        const availableMonths = [...monthSet].sort((a, b) => b.localeCompare(a));
+
+        // 필터 컨트롤 바
+        let html = `<div class="expense-filter-bar">`;
+
+        // 정렬 토글
+        html += `<button class="expense-filter-btn" id="expenseSortToggle">
+                    ${expenseListSortAsc
+                        ? (currentLang === 'ko' ? '오래된순 ↑' : 'Oldest ↑')
+                        : (currentLang === 'ko' ? '최신순 ↓' : 'Newest ↓')}
+                 </button>`;
+
+        // 월별 필터
+        html += `<select class="expense-filter-select" id="expenseMonthFilter">`;
+        html += `<option value="">${currentLang === 'ko' ? '전체 월' : 'All months'}</option>`;
+        availableMonths.forEach(m => {
+            const [y, mo] = m.split('-');
+            const label = currentLang === 'ko' ? `${y}년 ${parseInt(mo)}월` : `${y}-${mo}`;
+            html += `<option value="${m}" ${expenseListMonthFilter === m ? 'selected' : ''}>${label}</option>`;
+        });
+        html += `</select>`;
+
+        // 날짜 범위
+        html += `<div class="expense-date-range-filter">`;
+        html += `<input type="date" class="expense-filter-date" id="expenseDateFrom" value="${expenseListDateFrom}" placeholder="${currentLang === 'ko' ? '시작일' : 'From'}">`;
+        html += `<span style="color:#999;font-size:13px;">~</span>`;
+        html += `<input type="date" class="expense-filter-date" id="expenseDateTo" value="${expenseListDateTo}" placeholder="${currentLang === 'ko' ? '종료일' : 'To'}">`;
+        if (expenseListDateFrom || expenseListDateTo) {
+            html += `<button class="expense-filter-btn expense-filter-reset" id="expenseDateReset">✕</button>`;
+        }
+        html += `</div>`;
+
+        html += `</div>`;
+
+        // 필터 적용
+        let filtered = records.filter(r => {
+            if (!r.date) return false;
+            if (expenseListMonthFilter && !r.date.startsWith(expenseListMonthFilter)) return false;
+            if (expenseListDateFrom && r.date < expenseListDateFrom) return false;
+            if (expenseListDateTo && r.date > expenseListDateTo) return false;
+            return true;
+        });
+
+        // 날짜별 그룹화
+        const recordsByDate = {};
+        filtered.forEach(record => {
+            if (!recordsByDate[record.date]) {
+                recordsByDate[record.date] = [];
+            }
+            recordsByDate[record.date].push(record);
+        });
+
+        const sortedDates = Object.keys(recordsByDate).sort((a, b) =>
+            expenseListSortAsc ? a.localeCompare(b) : b.localeCompare(a)
+        );
+
+        if (sortedDates.length === 0) {
+            html += `<div class="empty-state">${currentLang === 'ko' ? '필터 조건에 맞는 데이터가 없습니다.' : 'No data matches the filter.'}</div>`;
+            recordsSection.innerHTML = html;
+            setupExpenseFilterEvents(records);
+            return;
+        }
+
+        // 필터 요약
+        const totalFiltered = filtered.length;
+        const totalIncome = filtered.filter(r => r.expenseType === 'INCOME').reduce((s, r) => s + r.amount, 0);
+        const totalExpenseAmt = filtered.filter(r => r.expenseType === 'EXPENSE').reduce((s, r) => s + r.amount, 0);
+        html += `<div class="expense-filter-summary">`;
+        html += `<span>${currentLang === 'ko' ? '총' : 'Total'} ${totalFiltered}${currentLang === 'ko' ? '건' : ' records'}</span>`;
+        html += `<span style="color:#38a169;font-weight:600;">+₩${totalIncome.toLocaleString()}</span>`;
+        html += `<span style="color:#e53e3e;font-weight:600;">-₩${totalExpenseAmt.toLocaleString()}</span>`;
+        html += `<span style="font-weight:700;color:${totalIncome - totalExpenseAmt >= 0 ? '#38a169' : '#e53e3e'};">= ₩${(totalIncome - totalExpenseAmt).toLocaleString()}</span>`;
+        html += `</div>`;
+
+        html += `<div class="expense-list-container">`;
+
+        sortedDates.forEach(date => {
+            const dateRecords = recordsByDate[date];
+            const dayIncome = dateRecords.filter(r => r.expenseType === 'INCOME').reduce((sum, r) => sum + r.amount, 0);
+            const dayExpense = dateRecords.filter(r => r.expenseType === 'EXPENSE').reduce((sum, r) => sum + r.amount, 0);
+
+            html += `<div class="expense-date-group">`;
+            html += `<div class="expense-date-header">
+                        <span class="expense-date">${date}</span>
+                        <span class="expense-summary">
+                            ${dayIncome > 0 ? `<span class="income">+${dayIncome.toLocaleString()}</span>` : ''}
+                            ${dayExpense > 0 ? `<span class="expense">-${dayExpense.toLocaleString()}</span>` : ''}
+                        </span>
+                     </div>`;
+            html += `<div class="expense-items-grid">`;
+
+            dateRecords.forEach(record => {
+                const isIncome = record.expenseType === 'INCOME';
+                const typeClass = isIncome ? 'income' : 'expense';
+                const typeText = isIncome ? (currentLang === 'ko' ? '수입' : 'Income') : (currentLang === 'ko' ? '지출' : 'Expense');
+                const paymentText = getPaymentMethodText(record.paymentMethod);
+                const tagsHtml = record.tags && record.tags.length > 0
+                    ? record.tags.map(t => `<span class="expense-tag">${t.name}</span>`).join('')
+                    : '';
+
+                html += `<div class="expense-item ${typeClass}" data-id="${record.id}">
+                            <div class="expense-item-main">
+                                <div class="expense-item-left">
+                                    <span class="expense-type-badge ${typeClass}">${typeText}</span>
+                                    <span class="expense-merchant">${record.merchant || '-'}</span>
+                                </div>
+                                <div class="expense-item-right">
+                                    <span class="expense-amount ${typeClass}">${isIncome ? '+' : '-'}${record.amount.toLocaleString()}</span>
+                                    <span class="expense-payment">${paymentText}</span>
+                                </div>
+                            </div>
+                            ${tagsHtml ? `<div class="expense-tags">${tagsHtml}</div>` : ''}
+                            ${record.memo ? `<div class="expense-memo">${record.memo}</div>` : ''}
+                            <div class="expense-actions">
+                                <button class="expense-edit-btn" onclick="openEditModal('${record.id}', 'EXPENSE', ${JSON.stringify(record).replace(/"/g, '&quot;')})">${currentLang === 'ko' ? '수정' : 'Edit'}</button>
+                                <button class="expense-delete-btn" onclick="deleteRecord('${record.id}', 'EXPENSE')">${currentLang === 'ko' ? '삭제' : 'Delete'}</button>
+                            </div>
+                        </div>`;
+            });
+
+            html += `</div>`;
+            html += `</div>`;
+        });
+
+        html += `</div>`;
+        recordsSection.innerHTML = html;
+        setupExpenseFilterEvents(records);
+    }
+
+    // EXPENSE 필터 이벤트 바인딩
+    function setupExpenseFilterEvents(records) {
+        const sortBtn = document.getElementById('expenseSortToggle');
+        const monthSelect = document.getElementById('expenseMonthFilter');
+        const dateFrom = document.getElementById('expenseDateFrom');
+        const dateTo = document.getElementById('expenseDateTo');
+        const dateReset = document.getElementById('expenseDateReset');
+
+        if (sortBtn) {
+            sortBtn.addEventListener('click', () => {
+                expenseListSortAsc = !expenseListSortAsc;
+                displayExpenseList(records);
+            });
+        }
+        if (monthSelect) {
+            monthSelect.addEventListener('change', (e) => {
+                expenseListMonthFilter = e.target.value;
+                // 월 필터 선택 시 날짜 범위 초기화
+                expenseListDateFrom = '';
+                expenseListDateTo = '';
+                displayExpenseList(records);
+            });
+        }
+        if (dateFrom) {
+            dateFrom.addEventListener('change', (e) => {
+                expenseListDateFrom = e.target.value;
+                expenseListMonthFilter = ''; // 날짜 범위 선택 시 월 필터 초기화
+                displayExpenseList(records);
+            });
+        }
+        if (dateTo) {
+            dateTo.addEventListener('change', (e) => {
+                expenseListDateTo = e.target.value;
+                expenseListMonthFilter = '';
+                displayExpenseList(records);
+            });
+        }
+        if (dateReset) {
+            dateReset.addEventListener('click', () => {
+                expenseListDateFrom = '';
+                expenseListDateTo = '';
+                displayExpenseList(records);
+            });
+        }
+    }
+
+    // EXPENSE 월간 뷰용 현재 월 상태
+    let expenseMonthStart = null;
+
+    // EXPENSE 월간 뷰
+    function displayExpenseMonthly(records) {
+        const recordsSection = document.getElementById('recordsSection');
+        setupGlobalLabelToggle(false);
+
+        // 날짜별로 레코드 그룹화
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                if (!recordsByDate[record.date]) {
+                    recordsByDate[record.date] = [];
+                }
+                recordsByDate[record.date].push(record);
+            }
+        });
+
+        // 현재 월 초기화
+        if (!expenseMonthStart) {
+            const today = new Date();
+            expenseMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+            expenseMonthStart.setHours(0, 0, 0, 0);
+        }
+
+        const year = expenseMonthStart.getFullYear();
+        const month = expenseMonthStart.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        const monthTitle = currentLang === 'ko'
+            ? `${year}년 ${month + 1}월`
+            : `${year}-${String(month + 1).padStart(2, '0')}`;
+
+        // 이번 달 합계 계산
+        let monthIncome = 0;
+        let monthExpense = 0;
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dayRecords = recordsByDate[dateStr] || [];
+            dayRecords.forEach(r => {
+                if (r.expenseType === 'INCOME') monthIncome += r.amount;
+                else monthExpense += r.amount;
+            });
+        }
+
+        let html = '';
+
+        // 월간 네비게이션
+        html += '<div class="monthly-nav">';
+        html += `<button class="monthly-nav-btn" id="expensePrevMonthBtn">◀</button>`;
+        html += `<div class="monthly-title-container">`;
+        html += `<div class="monthly-title">${monthTitle}</div>`;
+        html += `<input type="month" id="expenseMonthPicker" class="month-picker" value="${year}-${String(month + 1).padStart(2, '0')}">`;
+        html += `</div>`;
+        html += `<button class="monthly-nav-btn" id="expenseNextMonthBtn">▶</button>`;
+        html += '</div>';
+
+        // 월 합계 요약
+        html += `<div class="expense-filter-summary" style="justify-content: center;">`;
+        html += `<span style="color:#38a169;font-weight:600;">+₩${monthIncome.toLocaleString()}</span>`;
+        html += `<span style="color:#e53e3e;font-weight:600;">-₩${monthExpense.toLocaleString()}</span>`;
+        html += `<span style="font-weight:700;color:${monthIncome - monthExpense >= 0 ? '#38a169' : '#e53e3e'};">= ₩${(monthIncome - monthExpense).toLocaleString()}</span>`;
+        html += `</div>`;
+
+        // 월간 그리드
+        html += '<div class="monthly-grid">';
+
+        // 요일 헤더
+        const dayNames = [
+            translations.sun[currentLang],
+            translations.mon[currentLang],
+            translations.tue[currentLang],
+            translations.wed[currentLang],
+            translations.thu[currentLang],
+            translations.fri[currentLang],
+            translations.sat[currentLang]
+        ];
+
+        dayNames.forEach(dayName => {
+            html += `<div class="monthly-day-header">${dayName}</div>`;
+        });
+
+        // 첫 주 빈 칸
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += `<div class="monthly-day empty"></div>`;
+        }
+
+        // 날짜들
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month, day);
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dateRecords = recordsByDate[dateStr] || [];
+            const dayOfWeek = date.getDay();
+
+            // 수입/지출 계산
+            let dayIncome = 0;
+            let dayExpense = 0;
+            dateRecords.forEach(r => {
+                if (r.expenseType === 'INCOME') dayIncome += r.amount;
+                else dayExpense += r.amount;
+            });
+
+            // 색상 결정
+            let colorClass = '';
+            if (dateRecords.length > 0) {
+                if (dayIncome > 0 && dayExpense > 0) {
+                    colorClass = 'expense-monthly-mixed';
+                } else if (dayIncome > 0) {
+                    colorClass = 'expense-monthly-income';
+                } else {
+                    colorClass = 'expense-monthly-expense';
+                }
+            }
+
+            // 요일 클래스
+            let dayClass = '';
+            if (dayOfWeek === 0) dayClass = 'sunday';
+            else if (dayOfWeek === 6) dayClass = 'saturday';
+
+            html += `<div class="monthly-day ${colorClass} ${dayClass}" data-expense-monthly-date="${dateStr}">`;
+            html += `<div class="monthly-day-number">${day}</div>`;
+
+            if (dateRecords.length > 0) {
+                html += `<div class="expense-monthly-summary">`;
+                if (dayIncome > 0) {
+                    html += `<div class="expense-monthly-income-text">+${dayIncome.toLocaleString()}</div>`;
+                }
+                if (dayExpense > 0) {
+                    html += `<div class="expense-monthly-expense-text">-${dayExpense.toLocaleString()}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+        }
+
+        // 마지막 주 빈 칸
+        const totalCells = startDayOfWeek + daysInMonth;
+        const remainingCells = 7 - (totalCells % 7);
+        if (remainingCells < 7) {
+            for (let i = 0; i < remainingCells; i++) {
+                html += `<div class="monthly-day empty"></div>`;
+            }
+        }
+
+        html += '</div>';
+        recordsSection.innerHTML = html;
+
+        // 네비게이션 이벤트
+        document.getElementById('expensePrevMonthBtn').addEventListener('click', () => {
+            expenseMonthStart.setMonth(expenseMonthStart.getMonth() - 1);
+            displayExpenseMonthly(records);
+        });
+
+        document.getElementById('expenseNextMonthBtn').addEventListener('click', () => {
+            expenseMonthStart.setMonth(expenseMonthStart.getMonth() + 1);
+            displayExpenseMonthly(records);
+        });
+
+        document.getElementById('expenseMonthPicker').addEventListener('change', (e) => {
+            const [y, m] = e.target.value.split('-');
+            expenseMonthStart = new Date(parseInt(y), parseInt(m) - 1, 1);
+            displayExpenseMonthly(records);
+        });
+
+        // 날짜 클릭 이벤트
+        recordsSection.querySelectorAll('[data-expense-monthly-date]').forEach(cell => {
+            cell.addEventListener('click', function() {
+                const dateStr = this.getAttribute('data-expense-monthly-date');
+                const dateRecords = recordsByDate[dateStr] || [];
+                if (dateRecords.length > 0) {
+                    openExpenseModal(dateStr, dateRecords);
+                } else {
+                    openAddRecordModalWithDate(dateStr);
+                }
+            });
+        });
+    }
+
+    // EXPENSE 달력 뷰
+    function displayExpenseCalendar(records) {
+        const recordsSection = document.getElementById('recordsSection');
+        setupGlobalLabelToggle(true);
+
+        // 날짜별로 레코드 그룹화
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                if (!recordsByDate[record.date]) {
+                    recordsByDate[record.date] = [];
+                }
+                recordsByDate[record.date].push(record);
+            }
+        });
+
+        // 연도별로 그룹화
+        const yearMap = {};
+        Object.keys(recordsByDate).forEach(date => {
+            const year = date.split('-')[0];
+            if (!yearMap[year]) {
+                yearMap[year] = {};
+            }
+            const month = date.split('-')[1];
+            if (!yearMap[year][month]) {
+                yearMap[year][month] = {};
+            }
+            yearMap[year][month][date] = recordsByDate[date];
+        });
+
+        const sortedYears = Object.keys(yearMap).sort((a, b) => a.localeCompare(b));
+
+        if (sortedYears.length === 0) {
+            recordsSection.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+            setupGlobalLabelToggle(false);
+            return;
+        }
+
+        let html = `<div id="calendarContainer">`;
+
+        sortedYears.forEach(year => {
+            html += `<div class="calendar-year">`;
+            html += `<div class="calendar-year-title">${year}${translations.year[currentLang]}</div>`;
+            html += `<div class="calendar-months">`;
+
+            for (let month = 1; month <= 12; month++) {
+                const monthStr = String(month).padStart(2, '0');
+                const monthData = yearMap[year][monthStr] || {};
+                html += generateExpenseMonthCalendar(year, month, monthData);
+            }
+
+            html += `</div></div>`;
+        });
+
+        html += `</div>`;
+        recordsSection.innerHTML = html;
+
+        // 라벨 토글 버튼 이벤트 (4단계 순환)
+        const labelToggleBtn = document.getElementById('calendarLabelToggle');
+        if (labelToggleBtn) {
+            let toggleState = 0;
+            labelToggleBtn.addEventListener('click', function() {
+                const container = document.getElementById('calendarContainer');
+                container.classList.remove('hide-calendar-days', 'hide-calendar-weekdays', 'hide-calendar-all');
+                toggleState = (toggleState + 1) % 4;
+                if (toggleState === 1) {
+                    container.classList.add('hide-calendar-days');
+                    this.classList.add('active');
+                } else if (toggleState === 2) {
+                    container.classList.add('hide-calendar-weekdays');
+                    this.classList.add('active');
+                } else if (toggleState === 3) {
+                    container.classList.add('hide-calendar-all');
+                    this.classList.add('active');
+                } else {
+                    this.classList.remove('active');
+                }
+            });
+        }
+
+        // 클릭 이벤트 리스너 추가
+        recordsSection.querySelectorAll('[data-expense-date]').forEach(cell => {
+            cell.addEventListener('click', function() {
+                const dateStr = this.getAttribute('data-expense-date');
+                const hasData = this.getAttribute('data-has-data') === 'true';
+
+                if (hasData) {
+                    const dateRecords = recordsByDate[dateStr] || [];
+                    openExpenseModal(dateStr, dateRecords);
+                } else {
+                    openAddRecordModalWithDate(dateStr);
+                }
+            });
+        });
+    }
+
+    // EXPENSE 월별 달력 생성
+    function generateExpenseMonthCalendar(year, month, monthData) {
+        const monthStr = String(month).padStart(2, '0');
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        let html = `<div class="calendar-month">`;
+        html += `<div class="calendar-month-title">${month}${translations.month[currentLang]}</div>`;
+        html += `<div class="calendar-grid">`;
+
+        // 요일 헤더
+        const weekDays = [
+            translations.sun[currentLang],
+            translations.mon[currentLang],
+            translations.tue[currentLang],
+            translations.wed[currentLang],
+            translations.thu[currentLang],
+            translations.fri[currentLang],
+            translations.sat[currentLang]
+        ];
+        weekDays.forEach(day => {
+            html += `<div class="calendar-weekday">${day}</div>`;
+        });
+
+        // 첫 주 빈 칸
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += `<div class="calendar-day empty"></div>`;
+        }
+
+        // 날짜
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayStr = String(day).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
+            const dateRecords = monthData[dateStr];
+
+            if (dateRecords && dateRecords.length > 0) {
+                const totalIncome = dateRecords.filter(r => r.expenseType === 'INCOME').reduce((s, r) => s + r.amount, 0);
+                const totalExpense = dateRecords.filter(r => r.expenseType === 'EXPENSE').reduce((s, r) => s + r.amount, 0);
+
+                let className = '';
+                if (totalIncome > 0 && totalExpense > 0) {
+                    className = 'expense-mixed';
+                } else if (totalIncome > 0) {
+                    className = 'expense-income';
+                } else {
+                    className = 'expense-only';
+                }
+
+                html += `<div class="calendar-day ${className}" data-expense-date="${dateStr}" data-has-data="true" style="cursor: pointer;">${day}</div>`;
+            } else {
+                html += `<div class="calendar-day" data-expense-date="${dateStr}" data-has-data="false" style="cursor: pointer;">${day}</div>`;
+            }
+        }
+
+        html += `</div>`;
+        html += `</div>`;
+        return html;
+    }
+
+    // EXPENSE 히트맵 뷰
+    function displayExpenseHeatmap(records) {
+        const recordsSection = document.getElementById('recordsSection');
+        setupGlobalLabelToggle(false);
+
+        // 날짜별로 레코드 그룹화
+        const recordsByDate = {};
+        records.forEach(record => {
+            if (record.date) {
+                if (!recordsByDate[record.date]) {
+                    recordsByDate[record.date] = [];
+                }
+                recordsByDate[record.date].push(record);
+            }
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 시작일 계산
+        let startDate;
+        let birthYear = null;
+
+        if (userBirthInfo && userBirthInfo.birthYear && userBirthInfo.birthMonth && userBirthInfo.birthDay) {
+            startDate = new Date(userBirthInfo.birthYear, userBirthInfo.birthMonth - 1, userBirthInfo.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = userBirthInfo.birthYear;
+        } else if (currentUser && currentUser.birthYear && currentUser.birthMonth && currentUser.birthDay) {
+            startDate = new Date(currentUser.birthYear, currentUser.birthMonth - 1, currentUser.birthDay);
+            startDate.setHours(0, 0, 0, 0);
+            birthYear = currentUser.birthYear;
+        } else {
+            startDate = new Date(today);
+            startDate.setFullYear(startDate.getFullYear() - 100);
+            birthYear = startDate.getFullYear();
+        }
+
+        const totalYears = 100;
+
+        let html = '<div class="heatmap-container">';
+
+        // 월 헤더
+        html += '<div class="heatmap-header">';
+        html += '<div class="heatmap-year-label"></div>';
+        html += '<div class="heatmap-months">';
+        const monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        for (let m = 0; m < 12; m++) {
+            const monthName = `${m + 1}${translations.month[currentLang]}`;
+            const width = (monthDays[m] * 18) - 2;
+            html += `<div class="heatmap-month-label" style="width: ${width}px;">${monthName}</div>`;
+        }
+        html += '</div>';
+        html += '</div>';
+
+        // 년도별로 표시
+        for (let year = 0; year < totalYears; year++) {
+            const yearLabel = birthYear + year;
+
+            const isLeapYear = (yearLabel % 4 === 0 && yearLabel % 100 !== 0) || (yearLabel % 400 === 0);
+            const daysInYear = isLeapYear ? 366 : 365;
+
+            html += '<div class="heatmap-row">';
+            html += `<div class="heatmap-year-label">${yearLabel}</div>`;
+            html += '<div class="heatmap-days">';
+
+            for (let day = 0; day < daysInYear; day++) {
+                const date = new Date(yearLabel, 0, day + 1);
+                date.setHours(0, 0, 0, 0);
+
+                if (date > new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000)) {
+                    html += `<div class="heatmap-cell heatmap-future-empty" title="${currentLang === 'ko' ? '미래' : 'Future'}"></div>`;
+                    continue;
+                }
+
+                const yr = date.getFullYear();
+                const mo = String(date.getMonth() + 1).padStart(2, '0');
+                const dy = String(date.getDate()).padStart(2, '0');
+                const dateStr = `${yr}-${mo}-${dy}`;
+
+                const dateRecords = recordsByDate[dateStr];
+                const isPast = date < today;
+
+                let className = 'heatmap-cell';
+                let title = dateStr;
+
+                if (dateRecords && dateRecords.length > 0) {
+                    const totalIncome = dateRecords.filter(r => r.expenseType === 'INCOME').reduce((s, r) => s + r.amount, 0);
+                    const totalExpense = dateRecords.filter(r => r.expenseType === 'EXPENSE').reduce((s, r) => s + r.amount, 0);
+
+                    if (totalIncome > 0 && totalExpense > 0) {
+                        className += ' heatmap-expense-mixed';
+                    } else if (totalIncome > 0) {
+                        className += ' heatmap-success';
+                    } else {
+                        className += ' heatmap-fail';
+                    }
+
+                    title = `${dateStr} (+${totalIncome.toLocaleString()} / -${totalExpense.toLocaleString()})`;
+                    html += `<div class="${className}" title="${title}" data-expense-heatmap-date="${dateStr}" style="cursor: pointer;"></div>`;
+                } else if (isPast) {
+                    className += ' heatmap-past-empty';
+                    html += `<div class="${className}" title="${title}"></div>`;
+                } else {
+                    className += ' heatmap-future-empty';
+                    html += `<div class="${className}" title="${title}"></div>`;
+                }
+            }
+
+            html += '</div>'; // heatmap-days
+            html += '</div>'; // heatmap-row
+        }
+
+        html += '</div>'; // heatmap-container
+        recordsSection.innerHTML = html;
+
+        // 클릭 이벤트 리스너
+        recordsSection.querySelectorAll('[data-expense-heatmap-date]').forEach(cell => {
+            cell.addEventListener('click', function() {
+                const dateStr = this.getAttribute('data-expense-heatmap-date');
+                const dateRecords = recordsByDate[dateStr] || [];
+                openExpenseModal(dateStr, dateRecords);
+            });
+        });
+    }
+
+    // EXPENSE 모달 열기
+    function openExpenseModal(date, dateRecords) {
+        const modal = document.getElementById('expenseModal');
+        const modalDate = document.getElementById('expenseModalDate');
+        const modalBody = document.getElementById('expenseModalBody');
+
+        modalDate.textContent = date;
+
+        if (!dateRecords || dateRecords.length === 0) {
+            // fallback: allRecords에서 찾기
+            dateRecords = allRecords.filter(r => r.date === date);
+        }
+
+        if (dateRecords.length === 0) {
+            modalBody.innerHTML = `<div class="empty-state">${translations.noData[currentLang]}</div>`;
+        } else {
+            let html = '';
+            dateRecords.forEach(record => {
+                const isIncome = record.expenseType === 'INCOME';
+                const typeClass = isIncome ? 'income' : 'expense';
+                const typeText = isIncome ? (currentLang === 'ko' ? '수입' : 'Income') : (currentLang === 'ko' ? '지출' : 'Expense');
+                const tagsHtml = record.tags && record.tags.length > 0
+                    ? record.tags.map(t => `<span class="expense-tag">${t.name}</span>`).join('')
+                    : '';
+
+                html += `<div class="expense-modal-item ${typeClass}">
+                            <div class="expense-modal-item-header">
+                                <span class="expense-type-badge ${typeClass}">${typeText}</span>
+                                <span class="expense-amount ${typeClass}">${isIncome ? '+' : '-'}${record.amount.toLocaleString()}</span>
+                            </div>
+                            <div class="expense-modal-item-body">
+                                <div><strong>${currentLang === 'ko' ? '거래처' : 'Merchant'}:</strong> ${record.merchant || '-'}</div>
+                                <div><strong>${currentLang === 'ko' ? '결제수단' : 'Payment'}:</strong> ${getPaymentMethodText(record.paymentMethod)}</div>
+                                ${record.memo ? `<div><strong>${currentLang === 'ko' ? '메모' : 'Memo'}:</strong> ${record.memo}</div>` : ''}
+                                ${tagsHtml ? `<div class="expense-tags">${tagsHtml}</div>` : ''}
+                            </div>
+                            <div class="expense-modal-actions">
+                                <button onclick="openEditModal('${record.id}', 'EXPENSE', ${JSON.stringify(record).replace(/"/g, '&quot;')})">${currentLang === 'ko' ? '수정' : 'Edit'}</button>
+                                <button onclick="deleteRecord('${record.id}', 'EXPENSE')">${currentLang === 'ko' ? '삭제' : 'Delete'}</button>
+                            </div>
+                        </div>`;
+            });
+
+            // 추가 버튼
+            html += `
+                <button class="btn-primary" onclick="closeExpenseModal(); openAddRecordModalWithDate('${date}');"
+                    style="width: 100%; margin-top: 16px; padding: 10px; background: #666; border: 1px solid #666; border-radius: 8px; color: white; cursor: pointer; font-size: 14px;">
+                    ${currentLang === 'ko' ? '+ 기록 추가' : '+ Add Record'}
+                </button>
+            `;
+
+            modalBody.innerHTML = html;
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    // EXPENSE 모달 닫기
+    function closeExpenseModal() {
+        document.getElementById('expenseModal').style.display = 'none';
+    }
+
+    // 결제수단 텍스트 변환
+    function getPaymentMethodText(method) {
+        const methodMap = {
+            'CASH': { ko: '현금', en: 'Cash' },
+            'CARD': { ko: '카드', en: 'Card' },
+            'TRANSFER': { ko: '계좌이체', en: 'Transfer' },
+            'OTHER': { ko: '기타', en: 'Other' }
+        };
+        return methodMap[method] ? methodMap[method][currentLang] : method || '-';
     }
 
     // CHECKLIST: 달력 또는 히트맵 표시
@@ -8581,10 +10707,76 @@
                         </label>
                     </div>
                 `;
+        } else if (type === 'EXPENSE') {
+            html = `
+                    <input type="hidden" id="editExpenseType" value="${record.expenseType || 'EXPENSE'}">
+                    <input type="hidden" id="editPaymentMethod" value="${record.paymentMethod || 'CARD'}">
+
+                    <div class="expense-top-row">
+                        <div class="expense-type-toggle" id="editExpenseTypeToggle">
+                            <button type="button" class="toggle-option ${record.expenseType === 'EXPENSE' || !record.expenseType ? 'active' : ''}" data-value="EXPENSE" onclick="selectExpenseType(this, 'edit')">${currentLang === 'ko' ? '지출' : 'Expense'}</button>
+                            <button type="button" class="toggle-option ${record.expenseType === 'INCOME' ? 'active' : ''}" data-value="INCOME" onclick="selectExpenseType(this, 'edit')">${currentLang === 'ko' ? '수입' : 'Income'}</button>
+                        </div>
+                        <div class="expense-amount-wrap">
+                            <span class="currency-symbol">\u20A9</span>
+                            <input type="number" id="editAmount" required step="1" min="0" value="${record.amount || 0}">
+                        </div>
+                    </div>
+
+                    <div class="expense-grid">
+                        <div class="expense-form-section">
+                            <div class="expense-section-label">${currentLang === 'ko' ? '상세 정보' : 'DETAILS'}</div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="editDate" style="font-size: 13px; color: #718096;">${translations.date[currentLang]}</label>
+                                <input type="date" id="editDate" class="expense-date-input" required value="${record.date || ''}">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label style="font-size: 13px; color: #718096; margin-bottom: 8px; display: block;">${currentLang === 'ko' ? '결제수단' : 'Payment'}</label>
+                                <div class="payment-options" id="editPaymentOptions">
+                                    <div class="payment-option ${record.paymentMethod === 'CARD' || !record.paymentMethod ? 'active' : ''}" data-value="CARD" onclick="selectPayment(this, 'edit')">
+                                        <span class="payment-icon">\uD83D\uDCB3</span>${currentLang === 'ko' ? '카드' : 'Card'}
+                                    </div>
+                                    <div class="payment-option ${record.paymentMethod === 'CASH' ? 'active' : ''}" data-value="CASH" onclick="selectPayment(this, 'edit')">
+                                        <span class="payment-icon">\uD83D\uDCB5</span>${currentLang === 'ko' ? '현금' : 'Cash'}
+                                    </div>
+                                    <div class="payment-option ${record.paymentMethod === 'TRANSFER' ? 'active' : ''}" data-value="TRANSFER" onclick="selectPayment(this, 'edit')">
+                                        <span class="payment-icon">\uD83C\uDFE6</span>${currentLang === 'ko' ? '이체' : 'Transfer'}
+                                    </div>
+                                    <div class="payment-option ${record.paymentMethod === 'OTHER' ? 'active' : ''}" data-value="OTHER" onclick="selectPayment(this, 'edit')">
+                                        <span class="payment-icon">\u2022\u2022\u2022</span>${currentLang === 'ko' ? '기타' : 'Other'}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="editMerchant" style="font-size: 13px; color: #718096;">${currentLang === 'ko' ? '거래처' : 'Merchant'}</label>
+                                <input type="text" id="editMerchant" class="expense-subtle-input" value="${record.merchant || ''}">
+                            </div>
+                        </div>
+                        <div class="expense-form-section">
+                            <div class="expense-section-label">${currentLang === 'ko' ? '메모 & 태그' : 'MEMO & TAGS'}</div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <textarea id="editMemo" class="expense-subtle-input">${record.memo || ''}</textarea>
+                            </div>
+                            <div>
+                                <div class="expense-tag-list" id="editTagList"></div>
+                                <div class="tag-add-row">
+                                    <input type="text" id="editNewTagName" placeholder="${currentLang === 'ko' ? '새 태그' : 'New tag'}" onkeydown="if(event.key==='Enter'){event.preventDefault();createAndAddTagForEdit();}">
+                                    <button type="button" onclick="createAndAddTagForEdit()">+ ${currentLang === 'ko' ? '태그' : 'Tag'}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
         }
 
         formContent.innerHTML = html;
         modal.classList.add('active');
+
+        // EXPENSE 타입일 때 태그 목록 로드
+        if (type === 'EXPENSE') {
+            const existingTagIds = (record.tags || []).map(t => t.id);
+            loadTagsForEditForm(existingTagIds);
+        }
     }
 
     // 수정 모달 닫기
@@ -8654,6 +10846,18 @@
                 params.append('todo', document.getElementById('editTodo').value);
                 params.append('success', document.getElementById('editSuccess').checked);
                 response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'PUT' });
+            } else if (type === 'EXPENSE') {
+                endpoint = `${API_BASE}/expense`;
+                params.append('date', document.getElementById('editDate').value);
+                params.append('amount', document.getElementById('editAmount').value);
+                params.append('expenseType', document.getElementById('editExpenseType').value);
+                params.append('paymentMethod', document.getElementById('editPaymentMethod').value);
+                params.append('merchant', document.getElementById('editMerchant').value);
+                params.append('memo', document.getElementById('editMemo').value);
+                editExistingTagIds.forEach(tagId => {
+                    params.append('tagIds', tagId);
+                });
+                response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'PUT' });
             }
 
             if (response.ok) {
@@ -8681,6 +10885,7 @@
         else if (type === 'TIME') endpoint = `${API_BASE}/time`;
         else if (type === 'NUMBER') endpoint = `${API_BASE}/number`;
         else if (type === 'CHECKLIST') endpoint = `${API_BASE}/check-list`;
+        else if (type === 'EXPENSE') endpoint = `${API_BASE}/expense`;
 
         try {
             const response = await authFetch(`${endpoint}?id=${id}`, {
@@ -8887,10 +11092,76 @@
                     </label>
                 </div>
             `;
+        } else if (type === 'EXPENSE') {
+            formHtml = `
+                <input type="hidden" id="addExpenseType" value="EXPENSE">
+                <input type="hidden" id="addPaymentMethod" value="CARD">
+
+                <div class="expense-top-row">
+                    <div class="expense-type-toggle" id="addExpenseTypeToggle">
+                        <button type="button" class="toggle-option active" data-value="EXPENSE" onclick="selectExpenseType(this, 'add')">${currentLang === 'ko' ? '지출' : 'Expense'}</button>
+                        <button type="button" class="toggle-option" data-value="INCOME" onclick="selectExpenseType(this, 'add')">${currentLang === 'ko' ? '수입' : 'Income'}</button>
+                    </div>
+                    <div class="expense-amount-wrap">
+                        <span class="currency-symbol">\u20A9</span>
+                        <input type="number" id="addAmount" required step="1" min="0" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="expense-grid">
+                    <div class="expense-form-section">
+                        <div class="expense-section-label">${currentLang === 'ko' ? '상세 정보' : 'DETAILS'}</div>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="addDate" style="font-size: 13px; color: #718096;">${translations.date[currentLang]}</label>
+                            <input type="date" id="addDate" class="expense-date-input" required value="${dateStr}">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label style="font-size: 13px; color: #718096; margin-bottom: 8px; display: block;">${currentLang === 'ko' ? '결제수단' : 'Payment'}</label>
+                            <div class="payment-options" id="addPaymentOptions">
+                                <div class="payment-option active" data-value="CARD" onclick="selectPayment(this, 'add')">
+                                    <span class="payment-icon">\uD83D\uDCB3</span>${currentLang === 'ko' ? '카드' : 'Card'}
+                                </div>
+                                <div class="payment-option" data-value="CASH" onclick="selectPayment(this, 'add')">
+                                    <span class="payment-icon">\uD83D\uDCB5</span>${currentLang === 'ko' ? '현금' : 'Cash'}
+                                </div>
+                                <div class="payment-option" data-value="TRANSFER" onclick="selectPayment(this, 'add')">
+                                    <span class="payment-icon">\uD83C\uDFE6</span>${currentLang === 'ko' ? '이체' : 'Transfer'}
+                                </div>
+                                <div class="payment-option" data-value="OTHER" onclick="selectPayment(this, 'add')">
+                                    <span class="payment-icon">\u2022\u2022\u2022</span>${currentLang === 'ko' ? '기타' : 'Other'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="addMerchant" style="font-size: 13px; color: #718096;">${currentLang === 'ko' ? '거래처' : 'Merchant'}</label>
+                            <input type="text" id="addMerchant" class="expense-subtle-input" placeholder="${currentLang === 'ko' ? '예: 스타벅스' : 'e.g., Starbucks'}">
+                        </div>
+                    </div>
+                    <div class="expense-form-section">
+                        <div class="expense-section-label">${currentLang === 'ko' ? '메모 & 태그' : 'MEMO & TAGS'}</div>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <textarea id="addMemo" class="expense-subtle-input" placeholder="${currentLang === 'ko' ? '메모를 입력하세요' : 'Enter memo'}"></textarea>
+                        </div>
+                        <div>
+                            <div class="expense-tag-list" id="addTagList"></div>
+                            <div class="tag-add-row">
+                                <input type="text" id="addNewTagName" placeholder="${currentLang === 'ko' ? '새 태그' : 'New tag'}" onkeydown="if(event.key==='Enter'){event.preventDefault();createAndAddTag();}">
+                                <button type="button" onclick="createAndAddTag()">+ ${currentLang === 'ko' ? '태그' : 'Tag'}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         formContainer.innerHTML = formHtml;
         modal.classList.add('active');
+
+        // EXPENSE 타입일 때 태그 목록 로드
+        if (type === 'EXPENSE') {
+            addSelectedTagIds = new Set();
+            loadTagsForAddForm();
+        }
 
         // TEXT 타입일 때 이미지 프리뷰 이벤트 등록
         if (type === 'TEXT') {
@@ -8907,6 +11178,155 @@
                     }
                 });
             }
+        }
+    }
+
+    // ========== EXPENSE UI HELPERS ==========
+
+    // Segmented control: Expense/Income toggle
+    function selectExpenseType(el, prefix) {
+        const toggle = el.parentElement;
+        toggle.querySelectorAll('.toggle-option').forEach(btn => btn.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById(prefix + 'ExpenseType').value = el.dataset.value;
+    }
+
+    // Payment method pill selection
+    function selectPayment(el, prefix) {
+        const container = el.parentElement;
+        container.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById(prefix + 'PaymentMethod').value = el.dataset.value;
+    }
+
+    // ========== TAG FUNCTIONS (Add form) ==========
+    let addSelectedTagIds = new Set();
+
+    async function loadTagsForAddForm() {
+        try {
+            const response = await authFetch(`${API_BASE}/expense/tag/all`);
+            if (response.ok) {
+                const tags = await response.json();
+                renderAddTagList(tags);
+            }
+        } catch (error) {
+            // ignore
+        }
+    }
+
+    function renderAddTagList(tags) {
+        const container = document.getElementById('addTagList');
+        if (!container) return;
+        container.innerHTML = tags.map(tag => `
+            <span class="expense-tag-chip ${addSelectedTagIds.has(tag.id) ? 'selected' : ''}"
+                  data-tag-id="${tag.id}"
+                  onclick="toggleAddTag(this, '${tag.id}')">
+                ${tag.name}
+                <span class="tag-delete" onclick="event.stopPropagation(); deleteTag('${tag.id}', 'add')" title="${currentLang === 'ko' ? '삭제' : 'Delete'}">&times;</span>
+            </span>
+        `).join('');
+    }
+
+    function toggleAddTag(el, tagId) {
+        if (addSelectedTagIds.has(tagId)) {
+            addSelectedTagIds.delete(tagId);
+            el.classList.remove('selected');
+        } else {
+            addSelectedTagIds.add(tagId);
+            el.classList.add('selected');
+        }
+    }
+
+    async function createAndAddTag() {
+        const input = document.getElementById('addNewTagName');
+        const name = input.value.trim();
+        if (!name) return;
+
+        try {
+            const params = new URLSearchParams();
+            params.append('name', name);
+            const response = await authFetch(`${API_BASE}/expense/tag?${params.toString()}`, { method: 'POST' });
+            if (response.ok) {
+                input.value = '';
+                await loadTagsForAddForm();
+            }
+        } catch (error) {
+            // ignore
+        }
+    }
+
+    async function deleteTag(tagId, mode) {
+        if (!confirm(currentLang === 'ko' ? '이 태그를 삭제하시겠습니까?' : 'Delete this tag?')) return;
+        try {
+            const response = await authFetch(`${API_BASE}/expense/tag?id=${tagId}`, { method: 'DELETE' });
+            if (response.ok) {
+                addSelectedTagIds.delete(tagId);
+                editExistingTagIds.delete(tagId);
+                if (mode === 'add') {
+                    await loadTagsForAddForm();
+                } else {
+                    await loadTagsForEditForm(editExistingTagIds);
+                }
+            }
+        } catch (error) {
+            // ignore
+        }
+    }
+
+    // ========== TAG FUNCTIONS (Edit form) ==========
+    let editExistingTagIds = new Set();
+
+    async function loadTagsForEditForm(existingTagIds) {
+        editExistingTagIds = existingTagIds instanceof Set ? existingTagIds : new Set(existingTagIds || []);
+        try {
+            const response = await authFetch(`${API_BASE}/expense/tag/all`);
+            if (response.ok) {
+                const tags = await response.json();
+                renderEditTagList(tags);
+            }
+        } catch (error) {
+            // ignore
+        }
+    }
+
+    function renderEditTagList(tags) {
+        const container = document.getElementById('editTagList');
+        if (!container) return;
+        container.innerHTML = tags.map(tag => `
+            <span class="expense-tag-chip ${editExistingTagIds.has(tag.id) ? 'selected' : ''}"
+                  data-tag-id="${tag.id}"
+                  onclick="toggleEditTag(this, '${tag.id}')">
+                ${tag.name}
+                <span class="tag-delete" onclick="event.stopPropagation(); deleteTag('${tag.id}', 'edit')" title="${currentLang === 'ko' ? '삭제' : 'Delete'}">&times;</span>
+            </span>
+        `).join('');
+    }
+
+    function toggleEditTag(el, tagId) {
+        if (editExistingTagIds.has(tagId)) {
+            editExistingTagIds.delete(tagId);
+            el.classList.remove('selected');
+        } else {
+            editExistingTagIds.add(tagId);
+            el.classList.add('selected');
+        }
+    }
+
+    async function createAndAddTagForEdit() {
+        const input = document.getElementById('editNewTagName');
+        const name = input.value.trim();
+        if (!name) return;
+
+        try {
+            const params = new URLSearchParams();
+            params.append('name', name);
+            const response = await authFetch(`${API_BASE}/expense/tag?${params.toString()}`, { method: 'POST' });
+            if (response.ok) {
+                input.value = '';
+                await loadTagsForEditForm(editExistingTagIds);
+            }
+        } catch (error) {
+            // ignore
         }
     }
 
@@ -8968,6 +11388,19 @@
                 endpoint = `${API_BASE}/check-list`;
                 params.append('todo', document.getElementById('addTodo').value);
                 params.append('success', document.getElementById('addSuccess').checked);
+                response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'POST' });
+            } else if (type === 'EXPENSE') {
+                endpoint = `${API_BASE}/expense`;
+                params.append('amount', document.getElementById('addAmount').value);
+                params.append('expenseType', document.getElementById('addExpenseType').value);
+                params.append('paymentMethod', document.getElementById('addPaymentMethod').value);
+                const merchant = document.getElementById('addMerchant').value;
+                if (merchant) params.append('merchant', merchant);
+                const memo = document.getElementById('addMemo').value;
+                if (memo) params.append('memo', memo);
+                addSelectedTagIds.forEach(tagId => {
+                    params.append('tagIds', tagId);
+                });
                 response = await authFetch(`${endpoint}?${params.toString()}`, { method: 'POST' });
             }
 
