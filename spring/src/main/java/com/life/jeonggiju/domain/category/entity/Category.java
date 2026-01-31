@@ -71,6 +71,7 @@ public class Category {
 		orphanRemoval = true
 	)
 	@ToString.Exclude
+	@Builder.Default
 	private List<TextRecord> textRecords = new ArrayList<>();
 	@OneToMany(
 		mappedBy = "category",
@@ -78,6 +79,7 @@ public class Category {
 		orphanRemoval = true
 	)
 	@ToString.Exclude
+	@Builder.Default
 	private List<CheckRecord> checkRecords = new ArrayList<>();
 	@OneToMany(
 		mappedBy = "category",
@@ -85,22 +87,26 @@ public class Category {
 		orphanRemoval = true
 	)
 	@ToString.Exclude
+	@Builder.Default
 	private List<TimeRecord> timeRecords = new ArrayList<>();
 
 	@OneToMany(mappedBy = "category",
 		cascade = CascadeType.ALL,
 		orphanRemoval = true)
+	@Builder.Default
 	private List<Comment> comments = new ArrayList<>();
 
 	@OneToMany(mappedBy = "category",
 		cascade = CascadeType.ALL,
 		orphanRemoval = true)
+	@Builder.Default
 	private List<CheckListRecord> checkListRecords = new ArrayList<>();
 
 
 	@OneToMany(mappedBy = "category",
 		cascade = CascadeType.ALL,
 		orphanRemoval = true)
+	@Builder.Default
 	private List<ExpenseRecord> expenseRecords = new ArrayList<>();
 
 	protected Category() {
