@@ -24,11 +24,15 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
-		String message = ex.getMessage();
-		ErrorCode errorCode = ErrorCode.DUPLICATE_EMAIL;
+		String message = ex.getMessage() != null ? ex.getMessage().toLowerCase() : "";
+		ErrorCode errorCode;
 
-		if (message != null && message.toLowerCase().contains("email")) {
+		if (message.contains("email")) {
 			errorCode = ErrorCode.DUPLICATE_EMAIL;
+		} else if (message.contains("uk_user_category") || message.contains("category_like")) {
+			errorCode = ErrorCode.DUPLICATE_LIKE;
+		} else {
+			errorCode = ErrorCode.DATA_INTEGRITY_VIOLATION;
 		}
 
 		ErrorResponse response = new ErrorResponse(

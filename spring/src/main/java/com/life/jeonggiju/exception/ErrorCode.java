@@ -11,6 +11,7 @@ public enum ErrorCode {
 	CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다."),
 
 	DUPLICATE_LIKE(HttpStatus.CONFLICT, "중복 좋아요는 불가합니다."),
+	DATA_INTEGRITY_VIOLATION(HttpStatus.CONFLICT, "데이터 무결성 제약조건을 위반했습니다."),
 
 	COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
 	EMPTY_COMMENT_CONTENT(HttpStatus.BAD_REQUEST, "댓글 내용은 비어있을 수 없습니다."),
