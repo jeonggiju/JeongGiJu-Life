@@ -45,7 +45,19 @@ public enum ErrorCode {
 	PROFILE_IMAGE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 이미지 업로드에 실패했습니다."),
 
 	TEXT_RECORD_IMAGE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다."),
-	TEXT_RECORD_IMAGE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 삭제에 실패했습니다.");
+	TEXT_RECORD_IMAGE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 삭제에 실패했습니다."),
+
+	FRIENDSHIP_NOT_FOUND(HttpStatus.NOT_FOUND, "친구 요청을 찾을 수 없습니다."),
+	DUPLICATE_FRIENDSHIP_REQUEST(HttpStatus.CONFLICT, "이미 친구 요청을 보냈습니다."),
+	ALREADY_FRIENDS(HttpStatus.CONFLICT, "이미 친구 관계입니다."),
+	SELF_FRIENDSHIP_REQUEST(HttpStatus.BAD_REQUEST, "자기 자신에게 친구 요청을 보낼 수 없습니다."),
+	FRIENDSHIP_REQUEST_NOT_PENDING(HttpStatus.BAD_REQUEST, "대기 중인 친구 요청이 아닙니다."),
+	FRIENDSHIP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 친구 요청에 대한 권한이 없습니다."),
+
+	CHAT_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "채팅방을 찾을 수 없습니다."),
+	CHAT_ROOM_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 채팅방에 대한 권한이 없습니다."),
+	CHAT_NOT_FRIENDS(HttpStatus.BAD_REQUEST, "친구 관계인 사용자만 대화할 수 있습니다."),
+	CHAT_EMPTY_MESSAGE(HttpStatus.BAD_REQUEST, "메시지 내용은 비어있을 수 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

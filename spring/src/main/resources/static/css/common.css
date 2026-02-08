@@ -132,7 +132,7 @@ body {
     margin-bottom: 18px;
 }
 
-.form-group label {
+.form-group label:not(.btn) {
     display: block;
     margin-bottom: 8px;
     font-size: 14px;
