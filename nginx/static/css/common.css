@@ -132,7 +132,7 @@ body {
     margin-bottom: 18px;
 }
 
-.form-group label {
+.form-group label:not(.btn) {
     display: block;
     margin-bottom: 8px;
     font-size: 14px;
@@ -658,8 +658,8 @@ body {
 .add-record-btn, .submit-btn,
 .btn-edit, .btn-delete, .btn-view-likes,
 .category-action-btn, .comment-btn,
-.modal-btn,
-button[class*="btn"]:not(.label-toggle-btn):not(.notification-bell) {
+.modal-btn, .notification-bell,
+button[class*="btn"]:not(.label-toggle-btn) {
     height: 32px !important;
     line-height: 32px !important;
     padding: 0 14px !important;

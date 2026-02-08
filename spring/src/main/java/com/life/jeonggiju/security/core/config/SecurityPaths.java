@@ -12,6 +12,7 @@ public class SecurityPaths {
 		"/index.html",
 		"/insert.html",
 		"/manage.html",
+		"/social.html",
 		"/*.html",
 		"/favicon.ico",
 		"/assets/**",

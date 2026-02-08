@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Keep for Your Life</title>
+    <!-- 언어 깜빡임 방지: 페이지 로드 전 즉시 언어 적용 -->
+    <script>
+        (function() {
+            var lang = localStorage.getItem('language') || 'ko';
+            window.__savedLang = lang;
+            document.documentElement.setAttribute('data-lang', lang);
+            document.documentElement.lang = lang === 'en' ? 'en' : 'ko';
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('[data-lang-ko]').forEach(function(el) {
+                    var ko = el.getAttribute('data-lang-ko');
+                    var en = el.getAttribute('data-lang-en');
+                    if (ko && en && el.tagName !== 'OPTION') el.textContent = lang === 'ko' ? ko : en;
+                });
+                document.querySelectorAll('[data-placeholder-ko]').forEach(function(el) {
+                    var ko = el.getAttribute('data-placeholder-ko');
+                    var en = el.getAttribute('data-placeholder-en');
+                    if (ko && en) el.placeholder = lang === 'ko' ? ko : en;
+                });
+                setTimeout(function() {
+                    document.body.classList.add('lang-ready');
+                }, 10);
+            });
+        })();
+    </script>
+    <style>
+        /* 언어 깜빡임 방지: 초기 body 숨김 */
+        body { opacity: 0; }
+        body.lang-ready { opacity: 1; transition: opacity 0.05s ease-in; }
+    </style>
+    <!-- Common CSS (cached) -->
+    <link rel="stylesheet" href="css/common.css">
+    <!-- EventSource Polyfill for custom headers support -->
+    <script src="https://unpkg.com/event-source-polyfill@1.0.31/src/eventsource.min.js"></script>
+    <!-- Common JS (cached) -->
+    <script src="js/common.js"></script>
+    <style>
+        /* Page-specific styles for social.html */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        /* ========== 소셜 레이아웃 ========== */
+        .social-layout {
+            display: flex;
+            gap: 0;
+            height: calc(100vh - 180px);
+            margin-top: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+
+        /* 좌측 패널 */
+        .social-left {
+            width: 320px;
+            min-width: 320px;
+            border-right: 2px solid #e9ecef;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        .social-tabs {
+            display: flex;
+            border-bottom: 2px solid #e9ecef;
+            flex-shrink: 0;
+        }
+
+        .social-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #718096;
+            background: #f8f9fa;
+            border: none;
+            transition: all 0.15s ease;
+        }
+
+        .social-tab:hover {
+            background: #edf2f7;
+        }
+
+        .social-tab.active {
+            color: #2d3748;
+            background: white;
+            border-bottom: 2px solid #2d3748;
+            margin-bottom: -2px;
+        }
+
+        .social-tab .tab-badge {
+            display: inline-block;
+            background: #e53e3e;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 10px;
+            margin-left: 4px;
+        }
+
+        .social-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .social-list::-webkit-scrollbar { width: 6px; }
+        .social-list::-webkit-scrollbar-track { background: #f8f9fa; }
+        .social-list::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 3px; }
+
+        /* 리스트 아이템 공통 */
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f3f5;
+            transition: background 0.1s;
+        }
+
+        .social-item:hover { background: #f8f9fa; }
+        .social-item.active { background: #edf2f7; }
+
+        .social-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            color: #718096;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .social-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .social-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .social-item-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .social-item-sub {
+            font-size: 12px;
+            color: #a0aec0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        .social-item-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            flex-shrink: 0;
+            gap: 4px;
+        }
+
+        .social-item-time {
+            font-size: 11px;
+            color: #a0aec0;
+        }
+
+        .unread-badge {
+            display: inline-block;
+            background: #e53e3e;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 10px;
+            min-width: 8px;
+            text-align: center;
+        }
+
+        .chat-btn {
+            padding: 4px 10px;
+            font-size: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            color: #4a5568;
+            transition: all 0.15s;
+        }
+
+        .chat-btn:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        .social-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        /* ========== 우측 패널 ========== */
+        .social-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        /* 우측: 친구 관리 영역 */
+        .friend-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .friend-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .friend-search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .friend-search-box input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .friend-search-box input:focus { border-color: #4299e1; }
+
+        .friend-search-box button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #4299e1;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .friend-search-box button:hover { background: #3182ce; }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .search-result-item .social-avatar { width: 36px; height: 36px; font-size: 14px; }
+
+        .request-btn {
+            padding: 5px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .request-btn.send { background: #4299e1; color: white; }
+        .request-btn.send:hover { background: #3182ce; }
+        .request-btn.accept { background: #48bb78; color: white; }
+        .request-btn.accept:hover { background: #38a169; }
+        .request-btn.reject { background: #e2e8f0; color: #4a5568; }
+        .request-btn.reject:hover { background: #cbd5e0; }
+
+        .pending-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .pending-item .social-avatar { width: 36px; height: 36px; font-size: 14px; }
+
+        .pending-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        /* ========== 우측: 채팅 영역 ========== */
+        .chat-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        #chatConversation {
+            flex: 1;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 14px 20px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .chat-header-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .chat-header-email {
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 0;
+        }
+
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-track { background: #f8f9fa; }
+        .chat-messages::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 3px; }
+
+        .chat-message {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .chat-message.mine {
+            align-self: flex-end;
+            background: #4299e1;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.other {
+            align-self: flex-start;
+            background: #edf2f7;
+            color: #2d3748;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-message-time {
+            font-size: 10px;
+            margin-top: 4px;
+            opacity: 0.7;
+        }
+
+        .chat-message.mine .chat-message-time { text-align: right; }
+        .chat-message.other .chat-message-time { text-align: left; }
+
+        .chat-date-separator {
+            text-align: center;
+            font-size: 11px;
+            color: #a0aec0;
+            padding: 8px 0;
+        }
+
+        .chat-input-area {
+            padding: 12px 16px;
+            border-top: 2px solid #e9ecef;
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-input-area input:focus { border-color: #4299e1; }
+
+        .chat-input-area button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #4299e1;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .chat-input-area button:hover { background: #3182ce; }
+
+        .chat-placeholder {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0aec0;
+            font-size: 14px;
+        }
+
+        /* ========== 상단 액션 버튼 ========== */
+        .top-actions .btn {
+            min-width: 110px !important;
+        }
+
+        .top-actions .language-toggle {
+            min-width: 65px !important;
+        }
+
+        .top-actions .notification-bell {
+            min-width: 110px !important;
+        }
+
+        /* ========== 반응형 ========== */
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .top-actions {
+                position: static;
+                margin-bottom: 16px;
+                flex-direction: column;
+            }
+            .social-layout {
+                flex-direction: column;
+                height: auto;
+                min-height: calc(100vh - 180px);
+            }
+            .social-left {
+                width: 100%;
+                min-width: 0;
+                max-height: 300px;
+                border-right: none;
+                border-bottom: 2px solid #e9ecef;
+            }
+            .social-right { min-height: 400px; }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- 토스트 알림 컨테이너 -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- 알림 모달 -->
+<div class="notification-modal" id="notificationModal">
+    <div class="notification-modal-content">
+        <div class="notification-modal-header">
+            <div class="notification-modal-title" data-lang-en="Notifications" data-lang-ko="알림">알림</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="mark-all-read-btn" data-lang-en="Mark all as read" data-lang-ko="모두 읽음"
+                        onclick="markAllAsRead()">모두 읽음
+                </button>
+                <button class="notification-modal-close" onclick="toggleNotificationModal()">×</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <div class="notification-empty" data-lang-en="No notifications" data-lang-ko="알림이 없습니다">알림이 없습니다</div>
+        </div>
+    </div>
+</div>
+
+<!-- 로그인 섹션 -->
+<div id="loginSection"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="simple-auth-container">
+        <div class="simple-auth-box">
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px; font-weight: 600;"
+                data-lang-ko="로그인" data-lang-en="Sign In">Sign In</h2>
+            <div id="loginError" style="color: red; margin-bottom: 10px; text-align: center; font-size: 13px;"></div>
+            <form id="loginForm">
+                <table style="margin: 0 auto; border-collapse: collapse;">
+                    <tr>
+                        <td data-lang-ko="이메일:" data-lang-en="Email:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Email:</td>
+                        <td style="padding: 5px 0;">
+                            <input id="email" required type="email"
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-lang-ko="비밀번호:" data-lang-en="Password:"
+                            style="text-align: right; padding: 5px 10px 5px 0; font-size: 14px;">Password:</td>
+                        <td style="padding: 5px 0;">
+                            <input id="password" required type="password" autocomplete="current-password"
+                                   style="padding: 5px; width: 200px; border: 1px solid #999; font-size: 14px;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding-top: 15px;">
+                            <button type="submit" data-lang-ko="로그인" data-lang-en="Sign In"
+                                    style="padding: 6px 20px; border: 1px solid #999; background: #f0f0f0; cursor: pointer; font-size: 14px;">
+                                Sign In
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div style="text-align: center; margin-top: 20px; font-size: 12px;">
+                <a href="index.html" style="color: #0066cc; text-decoration: underline;"
+                   data-lang-ko="홈으로 돌아가기" data-lang-en="Back to Home">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 메인 섹션 -->
+<div id="mainSection" style="display: none;">
+    <div class="top-actions">
+        <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()">EN</button>
+        <a class="btn" data-lang-en="Home" data-lang-ko="홈" href="index.html">홈</a>
+        <a class="btn" data-lang-en="Category" data-lang-ko="카테고리" href="insert.html">카테고리</a>
+        <a class="btn" data-lang-en="My Page" data-lang-ko="내 관리" href="manage.html">내 관리</a>
+        <button class="notification-bell" id="notificationBell" onclick="toggleNotificationModal()">
+            <span data-lang-en="Alerts" data-lang-ko="알림">알림</span>
+            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+        </button>
+        <button class="btn btn-primary" data-lang-en="Logout" data-lang-ko="로그아웃" id="logoutBtn">로그아웃</button>
+    </div>
+
+    <div class="header">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div id="userProfileImageWrapper" style="display: none;">
+                <img id="userProfileImage" src="" alt="Profile"
+                     style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0;">
+            </div>
+            <div>
+                <div class="greeting" id="userGreeting">Hi.</div>
+                <div class="user-desc" id="userDesc"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 소셜 레이아웃 -->
+    <div class="social-layout">
+        <!-- 좌측 패널: 탭 + 목록 -->
+        <div class="social-left">
+            <div class="social-tabs">
+                <button class="social-tab active" id="tabFriends" onclick="switchTab('friends')"
+                        data-lang-ko="친구" data-lang-en="Friends">친구</button>
+                <button class="social-tab" id="tabChat" onclick="switchTab('chat')"
+                        data-lang-ko="채팅" data-lang-en="Chat">채팅
+                    <span class="tab-badge" id="chatBadge" style="display: none;">0</span>
+                </button>
+            </div>
+            <!-- 친구 목록 -->
+            <div class="social-list" id="friendList">
+                <div class="social-empty" data-lang-ko="친구가 없습니다" data-lang-en="No friends yet">친구가 없습니다</div>
+            </div>
+            <!-- 채팅방 목록 -->
+            <div class="social-list" id="chatRoomList" style="display: none;">
+                <div class="social-empty" data-lang-ko="채팅이 없습니다" data-lang-en="No chats yet">채팅이 없습니다</div>
+            </div>
+        </div>
+
+        <!-- 우측 패널 -->
+        <div class="social-right">
+            <!-- 친구 관리 패널 (기본) -->
+            <div class="friend-panel" id="friendPanel">
+                <!-- 사용자 검색 -->
+                <div class="friend-section-title" data-lang-ko="사용자 검색" data-lang-en="Search Users">사용자 검색</div>
+                <div class="friend-search-box">
+                    <input type="text" id="userSearchInput"
+                           data-placeholder-ko="닉네임 또는 이메일로 검색" data-placeholder-en="Search by nickname or email"
+                           placeholder="닉네임 또는 이메일로 검색">
+                    <button onclick="searchUsers()" data-lang-ko="검색" data-lang-en="Search">검색</button>
+                </div>
+                <div id="searchResults"></div>
+
+                <!-- 받은 친구 요청 -->
+                <div class="friend-section-title" style="margin-top: 24px;"
+                     data-lang-ko="받은 친구 요청" data-lang-en="Friend Requests">받은 친구 요청</div>
+                <div id="pendingRequests">
+                    <div class="social-empty" data-lang-ko="받은 요청이 없습니다" data-lang-en="No pending requests">받은 요청이 없습니다</div>
+                </div>
+            </div>
+
+            <!-- 채팅 패널 (숨김) -->
+            <div class="chat-panel" id="chatPanel" style="display: none;">
+                <div class="chat-placeholder" id="chatPlaceholder"
+                     data-lang-ko="채팅방을 선택하세요" data-lang-en="Select a chat room">채팅방을 선택하세요</div>
+
+                <!-- 채팅 대화 영역 (숨김) -->
+                <div id="chatConversation" style="display: none;">
+                    <div class="chat-header" id="chatHeader">
+                        <div class="social-avatar" id="chatPartnerAvatar"></div>
+                        <div>
+                            <div class="chat-header-name" id="chatPartnerName"></div>
+                            <div class="chat-header-email" id="chatPartnerEmail"></div>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput"
+                               data-placeholder-ko="메시지를 입력하세요" data-placeholder-en="Type a message"
+                               placeholder="메시지를 입력하세요"
+                               onkeypress="if(event.key==='Enter') sendMessage()">
+                        <button onclick="sendMessage()" data-lang-ko="전송" data-lang-en="Send">전송</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== 페이지 변수 ====================
+    let isLoggedIn = false;
+    let friends = [];
+    let chatRooms = [];
+    let pendingRequests = [];
+    let currentTab = 'friends';
+    let currentChatRoom = null;
+    let currentChatPartner = null;
+    let chatPollingTimer = null;
+
+    // 언어 변경 콜백
+    function onLanguageChange() {
+        const toggleBtn = document.getElementById('languageToggle');
+        if (toggleBtn) toggleBtn.textContent = currentLang === 'ko' ? 'EN' : 'KO';
+        applyLanguage();
+        if (friends.length > 0) renderFriendList();
+        if (chatRooms.length > 0) renderChatRoomList();
+    }
+
+    // ==================== 탭 전환 ====================
+    function switchTab(tab) {
+        currentTab = tab;
+        document.getElementById('tabFriends').classList.toggle('active', tab === 'friends');
+        document.getElementById('tabChat').classList.toggle('active', tab === 'chat');
+        document.getElementById('friendList').style.display = tab === 'friends' ? '' : 'none';
+        document.getElementById('chatRoomList').style.display = tab === 'chat' ? '' : 'none';
+        document.getElementById('friendPanel').style.display = tab === 'friends' ? '' : 'none';
+        document.getElementById('chatPanel').style.display = tab === 'chat' ? 'flex' : 'none';
+
+        if (tab === 'chat') {
+            loadChatRooms();
+        }
+    }
+
+    // ==================== 친구 기능 ====================
+    async function loadFriends() {
+        try {
+            const res = await authFetch(`${API_BASE}/friends`);
+            if (res.ok) {
+                friends = await res.json();
+                renderFriendList();
+            }
+        } catch (e) { console.error('Load friends error:', e); }
+    }
+
+    function renderFriendList() {
+        const el = document.getElementById('friendList');
+        if (friends.length === 0) {
+            el.innerHTML = `<div class="social-empty">${t('친구가 없습니다', 'No friends yet')}</div>`;
+            return;
+        }
+        el.innerHTML = friends.map(f => `
+            <div class="social-item" onclick="openChatWithFriend('${f.friendId}', '${escapeHtml(f.friendNickname)}', '${escapeHtml(f.friendEmail || '')}', '${escapeHtml(f.friendProfileImageUrl || '')}')">
+                <div class="social-avatar">
+                    ${f.friendProfileImageUrl
+                        ? `<img src="${f.friendProfileImageUrl}" alt="">`
+                        : (f.friendNickname || '?').charAt(0).toUpperCase()}
+                </div>
+                <div class="social-item-info">
+                    <div class="social-item-name">${escapeHtml(f.friendNickname || '')}</div>
+                    <div class="social-item-sub">${escapeHtml(f.friendEmail || '')}</div>
+                </div>
+                <button class="chat-btn" title="${t('채팅', 'Chat')}">${t('채팅', 'Chat')}</button>
+            </div>
+        `).join('');
+    }
+
+    async function searchUsers() {
+        const query = document.getElementById('userSearchInput').value.trim();
+        if (!query) return;
+        try {
+            const res = await authFetch(`${API_BASE}/friends/search?q=${encodeURIComponent(query)}`);
+            if (res.ok) {
+                const users = await res.json();
+                renderSearchResults(users);
+            }
+        } catch (e) { console.error('Search error:', e); }
+    }
+
+    function renderSearchResults(users) {
+        const el = document.getElementById('searchResults');
+        if (users.length === 0) {
+            el.innerHTML = `<div class="social-empty">${t('검색 결과가 없습니다', 'No results found')}</div>`;
+            return;
+        }
+        el.innerHTML = users.map(u => {
+            let actionHtml;
+            if (u.friendshipStatus === 'ACCEPTED') {
+                actionHtml = `<span style="color:#48bb78;font-size:12px;font-weight:600;">${t('친구', 'Friend')}</span>`;
+            } else if (u.friendshipStatus === 'PENDING') {
+                actionHtml = `<span style="color:#a0aec0;font-size:12px;font-weight:600;">${t('요청됨', 'Requested')}</span>`;
+            } else {
+                actionHtml = `<button class="request-btn send" onclick="sendFriendRequest('${u.userId}')">${t('친구 요청', 'Add Friend')}</button>`;
+            }
+            return `
+                <div class="search-result-item">
+                    <div class="social-avatar">
+                        ${u.profileImageUrl
+                            ? `<img src="${u.profileImageUrl}" alt="">`
+                            : (u.nickname || '?').charAt(0).toUpperCase()}
+                    </div>
+                    <div class="social-item-info">
+                        <div class="social-item-name">${escapeHtml(u.nickname || '')}</div>
+                        <div class="social-item-sub">${escapeHtml(u.email || '')}</div>
+                    </div>
+                    ${actionHtml}
+                </div>
+            `;
+        }).join('');
+    }
+
+    async function sendFriendRequest(receiverId) {
+        try {
+            const res = await authFetch(`${API_BASE}/friends/request`, {
+                method: 'POST',
+                body: JSON.stringify({ receiverId })
+            });
+            if (res.ok) {
+                alert(t('친구 요청을 보냈습니다', 'Friend request sent'));
+                searchUsers();
+            } else {
+                const err = await res.json();
+                alert(err.message || t('요청 실패', 'Request failed'));
+            }
+        } catch (e) { console.error('Send request error:', e); }
+    }
+
+    async function loadPendingRequests() {
+        try {
+            const res = await authFetch(`${API_BASE}/friends/pending`);
+            if (res.ok) {
+                pendingRequests = await res.json();
+                renderPendingRequests();
+            }
+        } catch (e) { console.error('Load pending error:', e); }
+    }
+
+    function renderPendingRequests() {
+        const el = document.getElementById('pendingRequests');
+        if (pendingRequests.length === 0) {
+            el.innerHTML = `<div class="social-empty">${t('받은 요청이 없습니다', 'No pending requests')}</div>`;
+            return;
+        }
+        el.innerHTML = pendingRequests.map(p => `
+            <div class="pending-item">
+                <div class="social-avatar">
+                    ${p.requesterProfileImageUrl
+                        ? `<img src="${p.requesterProfileImageUrl}" alt="">`
+                        : (p.requesterNickname || '?').charAt(0).toUpperCase()}
+                </div>
+                <div class="social-item-info">
+                    <div class="social-item-name">${escapeHtml(p.requesterNickname || '')}</div>
+                    <div class="social-item-sub">${escapeHtml(p.requesterEmail || '')}</div>
+                </div>
+                <div class="pending-actions">
+                    <button class="request-btn accept" onclick="acceptRequest('${p.friendshipId}')">${t('수락', 'Accept')}</button>
+                    <button class="request-btn reject" onclick="rejectRequest('${p.friendshipId}')">${t('거절', 'Reject')}</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function acceptRequest(friendshipId) {
+        try {
+            const res = await authFetch(`${API_BASE}/friends/accept/${friendshipId}`, { method: 'POST' });
+            if (res.ok) {
+                await loadPendingRequests();
+                await loadFriends();
+            }
+        } catch (e) { console.error('Accept error:', e); }
+    }
+
+    async function rejectRequest(friendshipId) {
+        try {
+            const res = await authFetch(`${API_BASE}/friends/reject/${friendshipId}`, { method: 'POST' });
+            if (res.ok) {
+                await loadPendingRequests();
+            }
+        } catch (e) { console.error('Reject error:', e); }
+    }
+
+    // ==================== 채팅 기능 ====================
+    async function loadChatRooms() {
+        try {
+            const res = await authFetch(`${API_BASE}/chat/rooms`);
+            if (res.ok) {
+                chatRooms = await res.json();
+                renderChatRoomList();
+                updateChatBadge();
+            }
+        } catch (e) { console.error('Load chat rooms error:', e); }
+    }
+
+    function renderChatRoomList() {
+        const el = document.getElementById('chatRoomList');
+        if (chatRooms.length === 0) {
+            el.innerHTML = `<div class="social-empty">${t('채팅이 없습니다', 'No chats yet')}</div>`;
+            return;
+        }
+        el.innerHTML = chatRooms.map(room => `
+            <div class="social-item ${currentChatRoom && currentChatRoom.chatRoomId === room.chatRoomId ? 'active' : ''}"
+                 onclick="openChatRoom('${room.chatRoomId}', '${escapeHtml(room.friendNickname)}', '${escapeHtml(room.friendEmail || '')}', '${escapeHtml(room.friendProfileImageUrl || '')}', '${room.friendId}')">
+                <div class="social-avatar">
+                    ${room.friendProfileImageUrl
+                        ? `<img src="${room.friendProfileImageUrl}" alt="">`
+                        : (room.friendNickname || '?').charAt(0).toUpperCase()}
+                </div>
+                <div class="social-item-info">
+                    <div class="social-item-name">${escapeHtml(room.friendNickname || '')}</div>
+                    <div class="social-item-sub">${escapeHtml(room.lastMessage || (currentLang === 'ko' ? '새 채팅' : 'New chat'))}</div>
+                </div>
+                <div class="social-item-meta">
+                    ${room.lastMessageAt ? `<span class="social-item-time">${formatTimeAgo(room.lastMessageAt)}</span>` : ''}
+                    ${room.unreadCount > 0 ? `<span class="unread-badge">${room.unreadCount}</span>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function updateChatBadge() {
+        const total = chatRooms.reduce((sum, r) => sum + (r.unreadCount || 0), 0);
+        const badge = document.getElementById('chatBadge');
+        if (badge) {
+            badge.textContent = total;
+            badge.style.display = total > 0 ? 'inline-block' : 'none';
+        }
+    }
+
+    async function openChatWithFriend(friendId, nickname, email, profileImageUrl) {
+        // 채팅 탭으로 전환
+        switchTab('chat');
+
+        try {
+            const res = await authFetch(`${API_BASE}/chat/rooms`, {
+                method: 'POST',
+                body: JSON.stringify({ friendId })
+            });
+            if (res.ok) {
+                const room = await res.json();
+                await loadChatRooms();
+                openChatRoom(room.chatRoomId, nickname, email, profileImageUrl, friendId);
+            }
+        } catch (e) { console.error('Open chat error:', e); }
+    }
+
+    async function openChatRoom(chatRoomId, nickname, email, profileImageUrl, friendId) {
+        currentChatRoom = { chatRoomId, friendId };
+        currentChatPartner = { nickname, email, profileImageUrl };
+
+        // UI 전환
+        document.getElementById('chatPlaceholder').style.display = 'none';
+        const conv = document.getElementById('chatConversation');
+        conv.style.display = 'flex';
+
+        // 헤더 설정
+        document.getElementById('chatPartnerName').textContent = nickname;
+        document.getElementById('chatPartnerEmail').textContent = email;
+        const avatarEl = document.getElementById('chatPartnerAvatar');
+        avatarEl.innerHTML = profileImageUrl
+            ? `<img src="${profileImageUrl}" alt="">`
+            : (nickname || '?').charAt(0).toUpperCase();
+
+        // 활성 표시
+        document.querySelectorAll('#chatRoomList .social-item').forEach(item => item.classList.remove('active'));
+        // 채팅방 목록에서 해당 아이템 활성화는 리렌더링으로 처리
+
+        // 메시지 로드
+        await loadMessages(chatRoomId);
+
+        // 읽음 처리
+        await authFetch(`${API_BASE}/chat/rooms/${chatRoomId}/read`, { method: 'POST' });
+        await loadChatRooms();
+
+        // 폴링 시작 (SSE 보완용)
+        startChatPolling(chatRoomId);
+    }
+
+    async function loadMessages(chatRoomId) {
+        try {
+            const res = await authFetch(`${API_BASE}/chat/rooms/${chatRoomId}/messages?page=0&size=100`);
+            if (res.ok) {
+                const messages = await res.json();
+                renderMessages(messages.reverse());
+            }
+        } catch (e) { console.error('Load messages error:', e); }
+    }
+
+    function renderMessages(messages) {
+        const el = document.getElementById('chatMessages');
+        if (messages.length === 0) {
+            el.innerHTML = `<div class="social-empty" style="flex:1;display:flex;align-items:center;justify-content:center;">${t('대화를 시작해보세요', 'Start a conversation')}</div>`;
+            return;
+        }
+
+        const userId = currentUser?.id || currentUser?.userId;
+        let html = '';
+        let lastDate = '';
+
+        messages.forEach(msg => {
+            const msgDate = new Date(msg.createdAt).toLocaleDateString();
+            if (msgDate !== lastDate) {
+                lastDate = msgDate;
+                html += `<div class="chat-date-separator">${msgDate}</div>`;
+            }
+
+            const isMine = msg.senderId === userId;
+            const time = new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            html += `
+                <div class="chat-message ${isMine ? 'mine' : 'other'}">
+                    <div>${escapeHtml(msg.content)}</div>
+                    <div class="chat-message-time">${time}</div>
+                </div>
+            `;
+        });
+
+        el.innerHTML = html;
+        el.scrollTop = el.scrollHeight;
+    }
+
+    async function sendMessage() {
+        if (!currentChatRoom) return;
+        const input = document.getElementById('chatInput');
+        const content = input.value.trim();
+        if (!content) return;
+
+        input.value = '';
+
+        try {
+            const res = await authFetch(`${API_BASE}/chat/rooms/${currentChatRoom.chatRoomId}/messages`, {
+                method: 'POST',
+                body: JSON.stringify({ content })
+            });
+            if (res.ok) {
+                await loadMessages(currentChatRoom.chatRoomId);
+                await loadChatRooms();
+            }
+        } catch (e) { console.error('Send message error:', e); }
+    }
+
+    function startChatPolling(chatRoomId) {
+        stopChatPolling();
+        chatPollingTimer = setInterval(async () => {
+            if (currentChatRoom && currentChatRoom.chatRoomId === chatRoomId) {
+                await loadMessages(chatRoomId);
+                await authFetch(`${API_BASE}/chat/rooms/${chatRoomId}/read`, { method: 'POST' });
+            }
+        }, 5000);
+    }
+
+    function stopChatPolling() {
+        if (chatPollingTimer) {
+            clearInterval(chatPollingTimer);
+            chatPollingTimer = null;
+        }
+    }
+
+    // ==================== SSE 오버라이드 ====================
+    function connectSSE() {
+        if (!accessToken) return;
+        if (eventSource) eventSource.close();
+
+        const EventSourceClass = window.EventSourcePolyfill || window.EventSource;
+        eventSource = new EventSourceClass(`${API_BASE}/sse/subscribe`, {
+            headers: { 'Authorization': `Bearer ${accessToken}` },
+            withCredentials: true,
+            lastEventId: lastEventId
+        });
+
+        eventSource.onopen = () => { sseReconnectAttempts = 0; };
+
+        eventSource.onmessage = (event) => {
+            if (event.lastEventId) {
+                lastEventId = event.lastEventId;
+                localStorage.setItem('lastEventId', lastEventId);
+            }
+            try {
+                const notification = JSON.parse(event.data);
+                if (notification.type === 'ping') return;
+
+                notifications.unshift(notification);
+                unreadCount++;
+                updateNotificationBadge();
+                showToast(notification);
+
+                // 소셜 페이지 특화 처리
+                const type = (notification.type || '').toUpperCase();
+                if (type === 'FRIEND_REQUEST' || type === 'FRIEND_ACCEPT') {
+                    loadFriends();
+                    loadPendingRequests();
+                }
+                if (type === 'CHAT_MESSAGE') {
+                    loadChatRooms();
+                    if (currentChatRoom && notification.data && notification.data.chatRoomId === currentChatRoom.chatRoomId) {
+                        loadMessages(currentChatRoom.chatRoomId);
+                        authFetch(`${API_BASE}/chat/rooms/${currentChatRoom.chatRoomId}/read`, { method: 'POST' });
+                    }
+                }
+            } catch (e) {}
+        };
+
+        eventSource.onerror = () => {
+            eventSource.close();
+            if (!isPageUnloading && sseReconnectAttempts < MAX_SSE_RECONNECT_ATTEMPTS) {
+                sseReconnectAttempts++;
+                const delay = Math.min(1000 * Math.pow(2, sseReconnectAttempts), 30000);
+                reconnectTimer = setTimeout(connectSSE, delay);
+            }
+        };
+    }
+
+    // 알림 모달 외부 클릭 시 닫기
+    document.getElementById('notificationModal').addEventListener('click', (e) => {
+        if (e.target.id === 'notificationModal') {
+            toggleNotificationModal();
+        }
+    });
+
+    // ==================== UI 헬퍼 ====================
+    function showMainSection() {
+        document.getElementById('mainSection').style.display = '';
+        document.getElementById('loginSection').style.display = 'none';
+    }
+
+    // ==================== 페이지 초기화 ====================
+    document.addEventListener('DOMContentLoaded', async () => {
+        console.log('[SOCIAL] Page loaded - Starting initialization');
+
+        await initCsrfToken();
+        const refreshed = await refreshAccessToken();
+
+        if (refreshed && accessToken) {
+            isLoggedIn = true;
+
+            try {
+                const userRes = await authFetch(`${API_BASE}/user`);
+                if (userRes.ok) {
+                    currentUser = await userRes.json();
+
+                    const greeting = document.getElementById('userGreeting');
+                    if (greeting) greeting.textContent = `Hi, ${currentUser.nickname || currentUser.username || ''}`;
+
+                    const desc = document.getElementById('userDesc');
+                    if (desc) desc.textContent = currentUser.description || '';
+
+                    if (currentUser.profileImageUrl) {
+                        const wrapper = document.getElementById('userProfileImageWrapper');
+                        const img = document.getElementById('userProfileImage');
+                        if (wrapper && img) {
+                            img.src = currentUser.profileImageUrl;
+                            wrapper.style.display = '';
+                        }
+                    }
+                }
+            } catch (e) { console.error('User info error:', e); }
+
+            showMainSection();
+
+            await loadFriends();
+            await loadPendingRequests();
+            await loadNotifications();
+            await connectSSE();
+
+        } else {
+            document.getElementById('loginSection').style.display = '';
+            document.getElementById('mainSection').style.display = 'none';
+        }
+
+        applyLanguage();
+
+        // 이벤트
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) logoutBtn.addEventListener('click', logout);
+
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) loginForm.addEventListener('submit', login);
+
+        const searchInput = document.getElementById('userSearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchUsers();
+            });
+        }
+    });
+
+    // 로그아웃
+    async function logout() {
+        try {
+            await authFetch(`${API_BASE}/auth/sign-out`, { method: 'POST' });
+        } catch (e) {}
+        disconnectSSE();
+        stopChatPolling();
+        accessToken = null;
+        currentUser = null;
+        location.reload();
+    }
+
+    // 로그인
+    async function login(e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        try {
+            if (!csrfToken) csrfToken = getCsrfToken();
+            const formData = new URLSearchParams();
+            formData.append('username', email);
+            formData.append('password', password);
+            const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+            if (csrfToken) headers['X-XSRF-TOKEN'] = csrfToken;
+
+            const res = await fetch(`${API_BASE}/auth/sign-in`, {
+                method: 'POST', headers, credentials: 'include', body: formData
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setAccessToken(data.accessToken || data.access_token || data.token);
+                location.reload();
+            } else {
+                document.getElementById('loginError').textContent =
+                    currentLang === 'ko' ? '이메일 또는 비밀번호가 올바르지 않습니다' : 'Invalid email or password';
+            }
+        } catch (e) {
+            document.getElementById('loginError').textContent =
+                currentLang === 'ko' ? '로그인 중 오류가 발생했습니다' : 'Login error occurred';
+        }
+    }
+
+    // 페이지 나갈 때 정리
+    window.addEventListener('beforeunload', () => {
+        isPageUnloading = true;
+        disconnectSSE();
+        stopChatPolling();
+    });
+
+    // 탭 전환 시 SSE 관리
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            disconnectSSE();
+            stopChatPolling();
+        } else if (isLoggedIn) {
+            connectSSE();
+            if (currentChatRoom) startChatPolling(currentChatRoom.chatRoomId);
+        }
+    });
+</script>
+</body>
+</html>
