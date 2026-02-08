@@ -2,7 +2,6 @@ package com.life.jeonggiju.security.authentication.jwt.filter;
 
 import java.io.IOException;
 
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@Order(3)
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -49,6 +47,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String path = request.getRequestURI();
 		String method = request.getMethod();
 		DispatcherType dispatcherType = request.getDispatcherType();
+
+		if ("OPTIONS".equalsIgnoreCase(method)) {
+			return true;
+		}
 
 		if (dispatcherType == DispatcherType.ASYNC) {
 			return false;
