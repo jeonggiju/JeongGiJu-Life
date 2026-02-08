@@ -1,7 +1,7 @@
 /* ==================== COMMON JS - Keep4Life ==================== */
 
 // ==================== Global Variables ====================
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = '/api';
 let csrfToken = null;
 let accessToken = null;
 let currentUser = null;
