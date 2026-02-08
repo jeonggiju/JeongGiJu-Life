@@ -1,7 +1,10 @@
 package com.life.jeonggiju.security.api.controller;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +22,9 @@ import com.life.jeonggiju.security.authentication.jwt.provider.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -35,17 +40,29 @@ public class AuthController {
 	}
 
 	@PostMapping("/refresh")
-	public ResponseEntity<JwtDto> refresh(
-		@CookieValue("REFRESH_TOKEN") String refreshToken,
+	public ResponseEntity<?> refresh(
+		@CookieValue(value = "REFRESH_TOKEN", required = false) String refreshToken,
 		HttpServletResponse response
 	) {
-		JwtInformation jwtInformation = authService.refreshToken(refreshToken);
-		Cookie refreshCookie = jwtTokenProvider.generateRefreshTokenCookie(jwtInformation.getRefreshToken());
+		if (refreshToken == null || refreshToken.isBlank()) {
+			log.warn("Refresh token cookie is missing");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+				.body(Map.of("status", 401, "error", "Unauthorized", "message", "Refresh token is missing"));
+		}
 
-		response.addCookie(refreshCookie);
-		JwtDto body = new JwtDto(jwtInformation.getPrincipal(), jwtInformation.getAccessToken());
+		try {
+			JwtInformation jwtInformation = authService.refreshToken(refreshToken);
+			Cookie refreshCookie = jwtTokenProvider.generateRefreshTokenCookie(jwtInformation.getRefreshToken());
 
-		return ResponseEntity.status(HttpStatus.OK).body(body);
+			response.addCookie(refreshCookie);
+			JwtDto body = new JwtDto(jwtInformation.getPrincipal(), jwtInformation.getAccessToken());
+
+			return ResponseEntity.status(HttpStatus.OK).body(body);
+		} catch (AuthenticationException e) {
+			log.warn("Refresh token validation failed: {}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+				.body(Map.of("status", 401, "error", "Unauthorized", "message", "Refresh token is invalid or expired"));
+		}
 	}
 
 	@PostMapping("/reset-password")

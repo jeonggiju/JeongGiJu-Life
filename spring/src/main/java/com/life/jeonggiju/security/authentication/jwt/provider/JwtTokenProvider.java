@@ -4,7 +4,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -87,7 +86,8 @@ public class JwtTokenProvider {
 				.claim("type", tokenType.getValue())
 				.claim("authority", userDetails.getAuthorities().stream()
 					.map(GrantedAuthority::getAuthority)
-					.collect(Collectors.toList()))
+					.findFirst()
+					.orElse(null))
 				.issueTime(now)
 				.expirationTime(expiryDate)
 				.build();

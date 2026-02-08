@@ -88,18 +88,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String authHeader = request.getHeader(AUTHORIZATION_HEADER);
 
 		if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
+			log.warn("Missing or invalid Authorization header for path: {}", request.getRequestURI());
 			throw new InValidAccessTokenException("Authorization 헤더가 없거나 유효하지 않습니다.");
 		}
 
 		String accessToken = authHeader.substring(BEARER_PREFIX_LENGTH);
 
 		if (!tokenProvider.validateAccessToken(accessToken)) {
+			log.warn("Invalid or expired access token for path: {}", request.getRequestURI());
 			throw new InValidAccessTokenException("액세스 토큰이 유효하지 않습니다.");
 		}
 
 		boolean hasToken = jwtRegistry.hasActiveJwtInformationByAccessToken(accessToken);
 
 		if (!hasToken) {
+			log.warn("Access token not found in registry for path: {}", request.getRequestURI());
 			throw new InValidAccessTokenException("토큰이 레지스트리에 없습니다.");
 		}
 

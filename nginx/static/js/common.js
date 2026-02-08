@@ -1,7 +1,7 @@
 /* ==================== COMMON JS - Keep4Life ==================== */
 
 // ==================== Global Variables ====================
-const API_BASE = '/api';
+const API_BASE = 'http://localhost:8080/api';
 let csrfToken = null;
 let accessToken = null;
 let currentUser = null;
@@ -49,7 +49,23 @@ function getAccessToken() {
     return accessToken;
 }
 
+let _refreshPromise = null;
+
 async function refreshAccessToken() {
+    // 이미 refresh 중이면 기존 Promise를 재사용 (race condition 방지)
+    if (_refreshPromise) {
+        return _refreshPromise;
+    }
+
+    _refreshPromise = _doRefreshAccessToken();
+    try {
+        return await _refreshPromise;
+    } finally {
+        _refreshPromise = null;
+    }
+}
+
+async function _doRefreshAccessToken() {
     try {
         if (!csrfToken) {
             csrfToken = getCsrfToken();
