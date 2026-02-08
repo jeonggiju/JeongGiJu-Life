@@ -11044,10 +11044,7 @@
                     <label>${currentLang === 'ko' ? '이미지' : 'Images'}</label>
                     <div class="custom-file-input">
                         <input type="file" id="addImages" multiple accept="image/*" onchange="updateAddFileLabel(this)">
-                        <label for="addImages" class="custom-file-label">
-                            <span class="custom-file-label-icon">📷</span>
-                            <span>${currentLang === 'ko' ? '이미지 추가' : 'Add Images'}</span>
-                        </label>
+                        <label for="addImages" class="btn">${currentLang === 'ko' ? '이미지 추가' : 'Add Images'}</label>
                         <div class="custom-file-selected" id="addImagesSelected"></div>
                     </div>
                     <div id="addImagePreview" class="image-preview-container"></div>
