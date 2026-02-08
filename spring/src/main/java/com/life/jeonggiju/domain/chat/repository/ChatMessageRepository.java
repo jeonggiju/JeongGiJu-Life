@@ -22,16 +22,16 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, UUID> 
 	List<ChatMessage> findByChatRoomIdOrderByCreatedAtAsc(@Param("chatRoomId") UUID chatRoomId);
 
 	@Modifying
-	@Query("UPDATE ChatMessage cm SET cm.isRead = true WHERE cm.chatRoom.id = :chatRoomId " +
-		"AND cm.sender.id != :userId AND cm.isRead = false")
+	@Query("UPDATE ChatMessage cm SET cm.read = true WHERE cm.chatRoom.id = :chatRoomId " +
+		"AND cm.sender.id != :userId AND cm.read = false")
 	int markAsReadByChatRoomIdAndUserId(@Param("chatRoomId") UUID chatRoomId, @Param("userId") UUID userId);
 
 	@Query("SELECT COUNT(cm) FROM ChatMessage cm WHERE cm.chatRoom.id = :chatRoomId " +
-		"AND cm.sender.id != :userId AND cm.isRead = false")
+		"AND cm.sender.id != :userId AND cm.read = false")
 	int countUnreadMessages(@Param("chatRoomId") UUID chatRoomId, @Param("userId") UUID userId);
 
 	@Query("SELECT COUNT(cm) FROM ChatMessage cm WHERE cm.chatRoom.id IN " +
 		"(SELECT cr.id FROM ChatRoom cr WHERE cr.user1.id = :userId OR cr.user2.id = :userId) " +
-		"AND cm.sender.id != :userId AND cm.isRead = false")
+		"AND cm.sender.id != :userId AND cm.read = false")
 	int countTotalUnreadMessages(@Param("userId") UUID userId);
 }

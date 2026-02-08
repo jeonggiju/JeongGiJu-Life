@@ -84,4 +84,11 @@ public class Friendship {
 		this.status = FriendshipStatus.BLOCKED;
 		this.updatedAt = LocalDateTime.now();
 	}
+
+	public void resetToPending(User requester, User receiver) {
+		this.requester = requester;
+		this.receiver = receiver;
+		this.status = FriendshipStatus.PENDING;
+		this.updatedAt = LocalDateTime.now();
+	}
 }

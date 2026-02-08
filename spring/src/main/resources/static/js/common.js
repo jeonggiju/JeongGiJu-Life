@@ -149,6 +149,18 @@ async function authFetch(url, options = {}) {
     }
 
     if (response.status === 403) {
+        // 애플리케이션 레벨 403인지 확인 (커스텀 에러 포맷에 code 필드가 있음)
+        try {
+            const cloned = response.clone();
+            const body = await cloned.json();
+            if (body.code) {
+                // 애플리케이션 에러 (ForbiddenException 등) - CSRF 재시도 불필요
+                return response;
+            }
+        } catch (e) {
+            // JSON 파싱 실패 - CSRF 에러로 간주
+        }
+        // CSRF 토큰 만료로 인한 403 - 토큰 갱신 후 재시도
         await initCsrfToken();
         if (csrfToken) {
             finalOptions.headers['X-XSRF-TOKEN'] = csrfToken;
@@ -249,7 +261,10 @@ function showToast(notification) {
     const typeLabels = {
         'comment': currentLang === 'ko' ? '새 댓글' : 'New Comment',
         'reply': currentLang === 'ko' ? '새 답글' : 'New Reply',
-        'like': currentLang === 'ko' ? '새 좋아요' : 'New Like'
+        'like': currentLang === 'ko' ? '새 좋아요' : 'New Like',
+        'friend_request': currentLang === 'ko' ? '친구 요청' : 'Friend Request',
+        'friend_accept': currentLang === 'ko' ? '친구 수락' : 'Friend Accepted',
+        'chat_message': currentLang === 'ko' ? '새 메시지' : 'New Message'
     };
 
     // Support both notification.data structure (from SSE) and flat structure
@@ -265,6 +280,12 @@ function showToast(notification) {
             message = `${categoryPrefix}${notification.data.senderEmail}: ${notification.data.comment}`;
         } else if (type === 'reply') {
             message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 답글을 남겼습니다' : ' replied'}`;
+        } else if (type === 'friend_request') {
+            message = `${notification.data.senderNickname || notification.data.senderEmail || ''}${currentLang === 'ko' ? '님이 친구 요청을 보냈습니다' : ' sent you a friend request'}`;
+        } else if (type === 'friend_accept') {
+            message = `${notification.data.senderNickname || notification.data.senderEmail || ''}${currentLang === 'ko' ? '님이 친구 요청을 수락했습니다' : ' accepted your friend request'}`;
+        } else if (type === 'chat_message') {
+            message = `${notification.data.senderNickname || ''}${currentLang === 'ko' ? ': ' : ': '}${notification.data.messagePreview || ''}`;
         } else {
             message = `${categoryPrefix}${notification.data.senderEmail}${currentLang === 'ko' ? '님이 좋아요를 눌렀습니다' : ' liked your category'}`;
         }
@@ -363,7 +384,10 @@ function renderNotificationList() {
         const typeLabels = {
             'comment': currentLang === 'ko' ? '댓글' : 'Comment',
             'reply': currentLang === 'ko' ? '답글' : 'Reply',
-            'like': currentLang === 'ko' ? '좋아요' : 'Like'
+            'like': currentLang === 'ko' ? '좋아요' : 'Like',
+            'friend_request': currentLang === 'ko' ? '친구 요청' : 'Friend Request',
+            'friend_accept': currentLang === 'ko' ? '친구 수락' : 'Friend Accepted',
+            'chat_message': currentLang === 'ko' ? '메시지' : 'Message'
         };
 
         return `

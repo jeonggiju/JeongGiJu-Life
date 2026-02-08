@@ -43,6 +43,11 @@ public class FriendshipService {
 			throw new SelfFriendshipRequestException();
 		}
 
+		User requester = userRepository.findById(requesterId)
+			.orElseThrow(() -> UserNotFoundException.withUserId(requesterId));
+		User receiver = userRepository.findById(receiverId)
+			.orElseThrow(() -> UserNotFoundException.withUserId(receiverId));
+
 		Optional<Friendship> existing = friendshipRepository.findByUsers(requesterId, receiverId);
 		if (existing.isPresent()) {
 			Friendship friendship = existing.get();
@@ -52,14 +57,12 @@ public class FriendshipService {
 			if (friendship.getStatus() == FriendshipStatus.PENDING) {
 				throw new DuplicateFriendshipRequestException();
 			}
+
+			friendship.resetToPending(requester, receiver);
+			friendshipRepository.save(friendship);
+		} else {
+			friendshipRepository.save(Friendship.of(requester, receiver));
 		}
-
-		User requester = userRepository.findById(requesterId)
-			.orElseThrow(() -> UserNotFoundException.withUserId(requesterId));
-		User receiver = userRepository.findById(receiverId)
-			.orElseThrow(() -> UserNotFoundException.withUserId(receiverId));
-
-		friendshipRepository.save(Friendship.of(requester, receiver));
 
 		NotificationCreatedDto dto = NotificationCreatedDto.builder()
 			.receiverId(receiverId)

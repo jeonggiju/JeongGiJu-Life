@@ -47,9 +47,9 @@ public class ChatMessage {
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String content;
 
-	@Column(nullable = false)
+	@Column(name = "is_read", nullable = false)
 	@Builder.Default
-	private boolean isRead = false;
+	private boolean read = false;
 
 	@CreatedDate
 	@Column(nullable = false, updatable = false)
@@ -64,6 +64,6 @@ public class ChatMessage {
 	}
 
 	public void markAsRead() {
-		this.isRead = true;
+		this.read = true;
 	}
 }

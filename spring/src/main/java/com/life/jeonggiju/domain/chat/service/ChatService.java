@@ -122,7 +122,6 @@ public class ChatService {
 		chatMessageRepository.save(message);
 
 		chatRoom.updateLastMessageAt();
-		chatRoomRepository.save(chatRoom);
 
 		User receiver = chatRoom.getOtherUser(sender);
 		NotificationCreatedDto dto = NotificationCreatedDto.builder()
