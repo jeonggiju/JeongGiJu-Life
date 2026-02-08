@@ -465,6 +465,19 @@
             font-size: 14px;
         }
 
+        /* ========== 상단 액션 버튼 ========== */
+        .top-actions .btn {
+            min-width: 110px !important;
+        }
+
+        .top-actions .language-toggle {
+            min-width: 65px !important;
+        }
+
+        .top-actions .notification-bell {
+            min-width: 110px !important;
+        }
+
         /* ========== 반응형 ========== */
         @media (max-width: 768px) {
             body { padding: 12px; }
@@ -488,14 +501,6 @@
             .social-right { min-height: 400px; }
         }
 
-        /* Layout fix heights */
-        .top-actions .btn,
-        .top-actions .language-toggle,
-        .top-actions .notification-bell {
-            display: inline-flex !important;
-            height: 32px !important;
-            align-items: center !important;
-        }
     </style>
 </head>
 <body>
@@ -505,11 +510,20 @@
 
 <!-- 알림 모달 -->
 <div class="notification-modal" id="notificationModal">
-    <div class="notification-modal-header">
-        <span data-lang-en="Notifications" data-lang-ko="알림">알림</span>
-        <button class="notification-close-btn" onclick="toggleNotificationModal()">&times;</button>
+    <div class="notification-modal-content">
+        <div class="notification-modal-header">
+            <div class="notification-modal-title" data-lang-en="Notifications" data-lang-ko="알림">알림</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="mark-all-read-btn" data-lang-en="Mark all as read" data-lang-ko="모두 읽음"
+                        onclick="markAllAsRead()">모두 읽음
+                </button>
+                <button class="notification-modal-close" onclick="toggleNotificationModal()">×</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <div class="notification-empty" data-lang-en="No notifications" data-lang-ko="알림이 없습니다">알림이 없습니다</div>
+        </div>
     </div>
-    <div class="notification-list" id="notificationList"></div>
 </div>
 
 <!-- 로그인 섹션 -->
@@ -669,7 +683,7 @@
     // 언어 변경 콜백
     function onLanguageChange() {
         const toggleBtn = document.getElementById('languageToggle');
-        if (toggleBtn) toggleBtn.textContent = currentLang === 'ko' ? 'EN' : '한';
+        if (toggleBtn) toggleBtn.textContent = currentLang === 'ko' ? 'EN' : 'KO';
         applyLanguage();
         if (friends.length > 0) renderFriendList();
         if (chatRooms.length > 0) renderChatRoomList();
@@ -718,7 +732,7 @@
                     <div class="social-item-name">${escapeHtml(f.friendNickname || '')}</div>
                     <div class="social-item-sub">${escapeHtml(f.friendEmail || '')}</div>
                 </div>
-                <button class="chat-btn" title="${t('채팅', 'Chat')}">&#128172;</button>
+                <button class="chat-btn" title="${t('채팅', 'Chat')}">${t('채팅', 'Chat')}</button>
             </div>
         `).join('');
     }
@@ -742,7 +756,14 @@
             return;
         }
         el.innerHTML = users.map(u => {
-            const isFriend = friends.some(f => f.friendId === u.userId);
+            let actionHtml;
+            if (u.friendshipStatus === 'ACCEPTED') {
+                actionHtml = `<span style="color:#48bb78;font-size:12px;font-weight:600;">${t('친구', 'Friend')}</span>`;
+            } else if (u.friendshipStatus === 'PENDING') {
+                actionHtml = `<span style="color:#a0aec0;font-size:12px;font-weight:600;">${t('요청됨', 'Requested')}</span>`;
+            } else {
+                actionHtml = `<button class="request-btn send" onclick="sendFriendRequest('${u.userId}')">${t('친구 요청', 'Add Friend')}</button>`;
+            }
             return `
                 <div class="search-result-item">
                     <div class="social-avatar">
@@ -754,10 +775,7 @@
                         <div class="social-item-name">${escapeHtml(u.nickname || '')}</div>
                         <div class="social-item-sub">${escapeHtml(u.email || '')}</div>
                     </div>
-                    ${isFriend
-                        ? `<span style="color:#48bb78;font-size:12px;font-weight:600;">${t('친구', 'Friend')}</span>`
-                        : `<button class="request-btn send" onclick="sendFriendRequest('${u.userId}')">${t('친구 요청', 'Add Friend')}</button>`
-                    }
+                    ${actionHtml}
                 </div>
             `;
         }).join('');
@@ -1063,29 +1081,12 @@
         };
     }
 
-    // ==================== 알림 오버라이드 ====================
-    function updateNotificationBadge() {
-        const badge = document.getElementById('notificationBadge');
-        if (badge) {
-            if (unreadCount > 0) {
-                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-                badge.style.display = 'block';
-            } else {
-                badge.style.display = 'none';
-            }
+    // 알림 모달 외부 클릭 시 닫기
+    document.getElementById('notificationModal').addEventListener('click', (e) => {
+        if (e.target.id === 'notificationModal') {
+            toggleNotificationModal();
         }
-    }
-
-    async function loadUnreadNotifications() {
-        try {
-            const res = await authFetch(`${API_BASE}/notification/unread`);
-            if (res.ok) {
-                notifications = await res.json();
-                unreadCount = notifications.filter(n => !n.read).length;
-                updateNotificationBadge();
-            }
-        } catch (e) { console.error('Load notifications error:', e); }
-    }
+    });
 
     // ==================== UI 헬퍼 ====================
     function showMainSection() {
@@ -1129,7 +1130,7 @@
 
             await loadFriends();
             await loadPendingRequests();
-            await loadUnreadNotifications();
+            await loadNotifications();
             await connectSSE();
 
         } else {

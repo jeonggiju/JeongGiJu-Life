@@ -190,11 +190,19 @@ public class FriendshipService {
 			if (user.getId().equals(currentUserId)) {
 				continue;
 			}
+
+			String friendshipStatus = null;
+			Optional<Friendship> friendship = friendshipRepository.findByUsers(currentUserId, user.getId());
+			if (friendship.isPresent()) {
+				friendshipStatus = friendship.get().getStatus().name();
+			}
+
 			result.add(UserSearchResponse.builder()
 				.userId(user.getId())
 				.email(user.getEmail())
 				.nickname(user.getNickname())
 				.profileImageUrl(user.getProfileImageUrl())
+				.friendshipStatus(friendshipStatus)
 				.build());
 		}
 

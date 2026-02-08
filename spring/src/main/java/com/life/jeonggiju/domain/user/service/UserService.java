@@ -51,6 +51,7 @@ public class UserService {
 			.orElseThrow(() -> UserNotFoundException.withUserId(id));
 
 		return UserFindResponse.builder()
+			.id(user.getId())
 			.username(user.getUsername())
 			.email(user.getEmail())
 			.title(user.getTitle())

@@ -236,7 +236,7 @@ function toggleLanguage() {
     localStorage.setItem('language', currentLang);
     const toggleBtn = document.getElementById('languageToggle');
     if (toggleBtn) {
-        toggleBtn.textContent = currentLang === 'ko' ? 'EN' : '한';
+        toggleBtn.textContent = currentLang === 'ko' ? 'EN' : 'KO';
     }
     applyLanguage();
 
@@ -363,7 +363,15 @@ function toggleNotificationModal() {
         modal.classList.toggle('active');
         if (modal.classList.contains('active')) {
             renderNotificationList();
+            updateMarkAllReadButton();
         }
+    }
+}
+
+function updateMarkAllReadButton() {
+    const btn = document.querySelector('.mark-all-read-btn');
+    if (btn) {
+        btn.disabled = notifications.length === 0;
     }
 }
 
@@ -377,6 +385,7 @@ function renderNotificationList() {
                 ${currentLang === 'ko' ? '알림이 없습니다' : 'No notifications'}
             </div>
         `;
+        updateMarkAllReadButton();
         return;
     }
 
@@ -444,6 +453,7 @@ async function markAllAsRead() {
             unreadCount = 0;
             updateNotificationBadge();
             renderNotificationList();
+            updateMarkAllReadButton();
         }
     } catch (error) {
         console.error('Error marking all as read:', error);
