@@ -55,10 +55,10 @@ public class Notification {
 	private NotificationType type;
 
 	@JdbcTypeCode(SqlTypes.JSON)
-	@Column(columnDefinition = "jsonb")
+	@Column(columnDefinition = "json")
 	private Map<String, Object> data;
 
-	@Column(nullable = false)
+	@Column(name = "`read`", nullable = false)
 	private boolean read;
 
 	@CreatedDate

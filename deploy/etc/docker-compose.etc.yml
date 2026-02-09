@@ -9,32 +9,34 @@ services:
       - /home/ubuntu/certbot/www:/var/www/certbot
 
   db:
-    image: postgres:16
-    container_name: postgres-db
+    image: mysql:8.0
+    container_name: mysql-db
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     env_file:
       - .env
     environment:
-      POSTGRES_DB: app
-      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
-      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      MYSQL_DATABASE: app
+      MYSQL_USER: ${SPRING_DATASOURCE_USERNAME}
+      MYSQL_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+      - mysqldata:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
     networks:
       - app-network
     restart: unless-stopped
 
-  postgres-exporter:
-    image: prometheuscommunity/postgres-exporter
-    container_name: postgres-exporter
+  mysql-exporter:
+    image: prom/mysqld-exporter
+    container_name: mysql-exporter
     env_file:
       - .env
     environment:
-      DATA_SOURCE_NAME: "postgresql://${SPRING_DATASOURCE_USERNAME}:${SPRING_DATASOURCE_PASSWORD}@postgres-db:5432/app?sslmode=disable"
+      DATA_SOURCE_NAME: "${SPRING_DATASOURCE_USERNAME}:${SPRING_DATASOURCE_PASSWORD}@(mysql-db:3306)/app"
     ports:
-      - "9187:9187"
+      - "9104:9104"
     networks:
       - app-network
     restart: unless-stopped
@@ -51,9 +53,9 @@ services:
     restart: unless-stopped
 
 volumes:
-  pgdata:
+  mysqldata:
     external:
-      name: jeonggiju-life_pgdata
+      name: jeonggiju-life_mysqldata
 
 networks:
   app-network:
