@@ -28,6 +28,7 @@ jobs:
           SPRING_DATASOURCE_URL=${{secrets.SPRING_DATASOURCE_URL}}
           SPRING_DATASOURCE_USERNAME=${{secrets.SPRING_DATASOURCE_USERNAME}}
           SPRING_DATASOURCE_PASSWORD=${{secrets.SPRING_DATASOURCE_PASSWORD}}
+          MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_ROOT_PASSWORD}}
   
           EOF
 
@@ -36,11 +37,13 @@ jobs:
           cp deploy/etc/appspec.yml ./appspec.yml
           rm -rf ./scripts && cp -r deploy/etc/scripts ./scripts
           cp deploy/etc/docker-compose.etc.yml ./docker-compose.etc.yml
+          rm -rf ./mysql && cp -r deploy/etc/mysql ./mysql
           tar -czvf $GITHUB_SHA.tar.gz \
             appspec.yml \
             .env \
             scripts \
-            docker-compose.etc.yml
+            docker-compose.etc.yml \
+            mysql
 
       - name: S3에 프로젝트 폴더 업로드하기
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.tar.gz s3://jeongiju-life/etc/$GITHUB_SHA.tar.gz
