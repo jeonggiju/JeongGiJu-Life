@@ -24,12 +24,22 @@ jobs:
       - name: .env 파일 생성
         run: |
           cat > .env << EOF
-          
+
           SPRING_DATASOURCE_URL=${{secrets.SPRING_DATASOURCE_URL}}
           SPRING_DATASOURCE_USERNAME=${{secrets.SPRING_DATASOURCE_USERNAME}}
           SPRING_DATASOURCE_PASSWORD=${{secrets.SPRING_DATASOURCE_PASSWORD}}
           MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_ROOT_PASSWORD}}
-  
+
+          EOF
+
+      - name: .my.cnf 파일 생성 (MySQL Exporter용)
+        run: |
+          cat > .my.cnf << EOF
+          [client]
+          host=mysql-db
+          port=3306
+          user=${{secrets.SPRING_DATASOURCE_USERNAME}}
+          password=${{secrets.SPRING_DATASOURCE_PASSWORD}}
           EOF
 
       - name: 압축하기
@@ -41,6 +51,7 @@ jobs:
           tar -czvf $GITHUB_SHA.tar.gz \
             appspec.yml \
             .env \
+            .my.cnf \
             scripts \
             docker-compose.etc.yml \
             mysql

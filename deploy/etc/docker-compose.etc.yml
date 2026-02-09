@@ -29,10 +29,10 @@ services:
   mysql-exporter:
     image: prom/mysqld-exporter
     container_name: mysql-exporter
-    env_file:
-      - .env
-    environment:
-      DATA_SOURCE_NAME: "${SPRING_DATASOURCE_USERNAME}:${SPRING_DATASOURCE_PASSWORD}@(mysql-db:3306)/app"
+    command:
+      - '--config.my-cnf=/etc/.my.cnf'
+    volumes:
+      - ./.my.cnf:/etc/.my.cnf:ro
     ports:
       - "9104:9104"
     networks:
