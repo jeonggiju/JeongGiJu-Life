@@ -52,8 +52,6 @@ services:
 
 volumes:
   mysqldata:
-    name: jeonggiju-life_mysqldata
-    external: true
 
 networks:
   app-network:
