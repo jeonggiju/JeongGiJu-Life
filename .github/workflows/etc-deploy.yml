@@ -13,7 +13,6 @@ jobs:
     steps:
       - name: GitHub Repository 파일 불러오기
         uses: actions/checkout@v4
-
       - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
         uses: aws-actions/configure-aws-credentials@v4
         with:
