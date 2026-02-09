@@ -89,3 +89,9 @@ jobs:
           --deployment-group-name keep-for-life-spring-group
           --s3-location bucket=jeongiju-life,bundleType=tgz,key=spring/$GITHUB_SHA.tar.gz
 
+      - name: Code Deploy를 활용해 Test EC2에 프로젝트 코드 배포
+        run: aws deploy create-deployment
+          --application-name Keep4Life-Spring
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --deployment-group-name keep-for-life-spring-group-test
+          --s3-location bucket=jeongiju-life,bundleType=tgz,key=spring/$GITHUB_SHA.tar.gz
