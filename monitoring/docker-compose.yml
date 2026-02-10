@@ -14,8 +14,6 @@ services:
   grafana:
     image: grafana/grafana
     container_name: grafana
-    env_file:
-      - .env
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning

@@ -43,11 +43,9 @@ services:
     image: nginx/nginx-prometheus-exporter
     container_name: nginx-exporter
     command:
-      - '-nginx.scrape-uri=http://nginx-server:80/stub_status'
-    ports:
-      - "9113:9113"
-    networks:
-      - app-network
+      - '--nginx.scrape-uri=http://127.0.0.1/stub_status'
+    network_mode: host
+    # host 네트워크를 사용하므로 별도의 포트 매핑/도커 네트워크가 필요 없습니다.
     restart: unless-stopped
 
 volumes:
