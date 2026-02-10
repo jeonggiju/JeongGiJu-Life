@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Keep4Life Load Test">
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="BASE_URL" elementType="Argument">
+            <stringProp name="Argument.name">BASE_URL</stringProp>
+            <stringProp name="Argument.value">your-ec2-domain.com</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="USERS" elementType="Argument">
+            <stringProp name="Argument.name">USERS</stringProp>
+            <stringProp name="Argument.value">5</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="RAMPUP" elementType="Argument">
+            <stringProp name="Argument.name">RAMPUP</stringProp>
+            <stringProp name="Argument.value">5</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="DURATION" elementType="Argument">
+            <stringProp name="Argument.name">DURATION</stringProp>
+            <stringProp name="Argument.value">180</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="User CSV Data">
+        <stringProp name="filename">users.csv</stringProp>
+        <stringProp name="fileEncoding">UTF-8</stringProp>
+        <stringProp name="variableNames">email,password</stringProp>
+        <boolProp name="ignoreFirstLine">true</boolProp>
+        <stringProp name="delimiter">,</stringProp>
+        <boolProp name="quotedData">false</boolProp>
+        <boolProp name="recycle">true</boolProp>
+        <boolProp name="stopThread">false</boolProp>
+        <stringProp name="shareMode">shareMode.all</stringProp>
+      </CSVDataSet>
+      <hashTree/>
+      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager">
+        <collectionProp name="CookieManager.cookies"/>
+        <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+        <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
+      </CookieManager>
+      <hashTree/>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
+        <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+        <stringProp name="HTTPSampler.port">443</stringProp>
+        <stringProp name="HTTPSampler.protocol">https</stringProp>
+        <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.implementation"></stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Main Scenarios (S1-S5, S7)">
+        <stringProp name="ThreadGroup.num_threads">${USERS}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${RAMPUP}</stringProp>
+        <stringProp name="ThreadGroup.duration">${DURATION}</stringProp>
+        <longProp name="ThreadGroup.delay">0</longProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
+          <intProp name="LoopController.loops">-1</intProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Auth Headers">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Authorization</stringProp>
+              <stringProp name="Header.value">Bearer ${accessToken}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">X-XSRF-TOKEN</stringProp>
+              <stringProp name="Header.value">${csrfToken}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Authentication Flow"/>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/auth/csrf-token">
+            <stringProp name="HTTPSampler.path">/api/auth/csrf-token</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract CSRF Token" enabled="true">
+              <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+              <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+              <stringProp name="RegexExtractor.regex">X-CSRF-TOKEN: (.+?)$</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NOT_FOUND</stringProp>
+              <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <boolProp name="RegexExtractor.default_empty_value">false</boolProp>
+            </RegexExtractor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/auth/sign-in">
+            <stringProp name="HTTPSampler.path">/api/auth/sign-in</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="username" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">${email}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">username</stringProp>
+                </elementProp>
+                <elementProp name="password" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">${password}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">password</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Login Headers" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">X-XSRF-TOKEN</stringProp>
+                  <stringProp name="Header.value">${csrfToken}</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Content-Type</stringProp>
+                  <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Access Token" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">accessToken</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.accessToken</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="S1. 공개 피드 조회 (25%)">
+          <intProp name="ThroughputController.style">1</intProp>
+          <boolProp name="ThroughputController.perThread">false</boolProp>
+          <intProp name="ThroughputController.maxThroughput">1</intProp>
+          <FloatProperty>
+            <name>ThroughputController.percentThroughput</name>
+            <value>25.0</value>
+            <savedValue>0.0</savedValue>
+          </FloatProperty>
+        </ThroughputController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/category/public/summary/no-token">
+            <stringProp name="HTTPSampler.path">/api/category/public/summary/no-token</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="size" elementType="HTTPArgument">
+                  <stringProp name="Argument.name">size</stringProp>
+                  <stringProp name="Argument.value">20</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Category ID" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">publicCategoryId</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.content[0].categoryId</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think Time 2-5s">
+            <stringProp name="ConstantTimer.delay">2000</stringProp>
+            <stringProp name="RandomTimer.range">3000</stringProp>
+          </UniformRandomTimer>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/category/comment/no-token/{categoryId}">
+            <stringProp name="HTTPSampler.path">/api/category/comment/no-token/${publicCategoryId}</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+        </hashTree>
+        <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="S2. 카테고리+기록 조회 (25%)">
+          <intProp name="ThroughputController.style">1</intProp>
+          <boolProp name="ThroughputController.perThread">true</boolProp>
+          <intProp name="ThroughputController.maxThroughput">1</intProp>
+          <FloatProperty>
+            <name>ThroughputController.percentThroughput</name>
+            <value>25.0</value>
+            <savedValue>0.0</savedValue>
+          </FloatProperty>
+        </ThroughputController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/category/all" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/category/all</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract My Category ID" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">myCategoryId</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$[0].id</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think Time 1-3s" enabled="true">
+            <stringProp name="ConstantTimer.delay">1000</stringProp>
+            <stringProp name="RandomTimer.range">2000</stringProp>
+          </UniformRandomTimer>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/check/all" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/check/all</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="categoryId" elementType="HTTPArgument">
+                  <stringProp name="Argument.name">categoryId</stringProp>
+                  <stringProp name="Argument.value">${myCategoryId}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+        </hashTree>
+        <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="S3. 기록 생성 (10%)">
+          <intProp name="ThroughputController.style">1</intProp>
+          <boolProp name="ThroughputController.perThread">true</boolProp>
+          <intProp name="ThroughputController.maxThroughput">1</intProp>
+          <FloatProperty>
+            <name>ThroughputController.percentThroughput</name>
+            <value>10.0</value>
+            <savedValue>0.0</savedValue>
+          </FloatProperty>
+        </ThroughputController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/check">
+            <stringProp name="HTTPSampler.path">/api/check</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&quot;categoryId&quot;:&quot;${myCategoryId}&quot;,&quot;success&quot;:true,&quot;date&quot;:&quot;${__time(yyyy-MM-dd)}&quot;}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+        </hashTree>
+        <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="S4. 좋아요 토글 (10%)">
+          <intProp name="ThroughputController.style">1</intProp>
+          <boolProp name="ThroughputController.perThread">true</boolProp>
+          <intProp name="ThroughputController.maxThroughput">1</intProp>
+          <FloatProperty>
+            <name>ThroughputController.percentThroughput</name>
+            <value>10.0</value>
+            <savedValue>0.0</savedValue>
+          </FloatProperty>
+        </ThroughputController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/category/public/summary" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/category/public/summary</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="size" elementType="HTTPArgument">
+                  <stringProp name="Argument.name">size</stringProp>
+                  <stringProp name="Argument.value">10</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Like Target" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">likeCategoryId</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.content[0].categoryId</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/categories/likes" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/categories/likes</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&quot;categoryId&quot;:&quot;${likeCategoryId}&quot;}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DELETE /api/categories/likes" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/categories/likes</stringProp>
+            <stringProp name="HTTPSampler.method">DELETE</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&quot;categoryId&quot;:&quot;${likeCategoryId}&quot;}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+        </hashTree>
+        <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="S5. 댓글 작성+조회 (10%)">
+          <intProp name="ThroughputController.style">1</intProp>
+          <boolProp name="ThroughputController.perThread">true</boolProp>
+          <intProp name="ThroughputController.maxThroughput">1</intProp>
+          <FloatProperty>
+            <name>ThroughputController.percentThroughput</name>
+            <value>10.0</value>
+            <savedValue>0.0</savedValue>
+          </FloatProperty>
+        </ThroughputController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/category/comment" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/category/comment</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&quot;categoryId&quot;:&quot;${publicCategoryId}&quot;,&quot;comment&quot;:&quot;부하테스트 댓글 ${__time()}&quot;}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/category/comment/{categoryId}" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/category/comment/${publicCategoryId}</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+        </hashTree>
+        <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="S7. 채팅 메시지 전송 (5%)" enabled="true">
+          <intProp name="ThroughputController.style">1</intProp>
+          <boolProp name="ThroughputController.perThread">true</boolProp>
+          <intProp name="ThroughputController.maxThroughput">1</intProp>
+          <FloatProperty>
+            <name>ThroughputController.percentThroughput</name>
+            <value>5.0</value>
+            <savedValue>0.0</savedValue>
+          </FloatProperty>
+        </ThroughputController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/friendship/all">
+            <stringProp name="HTTPSampler.path">/api/friendship/all</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Friend ID">
+              <stringProp name="JSONPostProcessor.referenceNames">friendId</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$[0].friendId</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/chat/rooms" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/chat/rooms</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&quot;friendId&quot;:&quot;${friendId}&quot;}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Chat Room ID" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">chatRoomId</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.id</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/chat/rooms/{roomId}/messages" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/chat/rooms/${chatRoomId}/messages</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&quot;content&quot;:&quot;부하테스트 메시지 ${__time()}&quot;}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S6. SSE Connection (15%)">
+        <stringProp name="ThreadGroup.num_threads">${__jexl3(${USERS} * 0.15)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${RAMPUP}</stringProp>
+        <stringProp name="ThreadGroup.duration">${DURATION}</stringProp>
+        <longProp name="ThreadGroup.delay">5</longProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
+          <stringProp name="LoopController.loops">1</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="SSE Auth Headers" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Authorization</stringProp>
+              <stringProp name="Header.value">Bearer ${accessToken}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">text/event-stream</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="SSE Authentication" enabled="true"/>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/auth/csrf-token" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/auth/csrf-token</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract CSRF" enabled="true">
+              <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+              <stringProp name="RegexExtractor.refname">csrfToken</stringProp>
+              <stringProp name="RegexExtractor.regex">X-CSRF-TOKEN: (.+?)$</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default">NOT_FOUND</stringProp>
+              <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <boolProp name="RegexExtractor.default_empty_value">false</boolProp>
+            </RegexExtractor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/auth/sign-in" enabled="true">
+            <stringProp name="HTTPSampler.path">/api/auth/sign-in</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="username" elementType="HTTPArgument">
+                  <stringProp name="Argument.name">username</stringProp>
+                  <stringProp name="Argument.value">${email}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="password" elementType="HTTPArgument">
+                  <stringProp name="Argument.name">password</stringProp>
+                  <stringProp name="Argument.value">${password}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Login Header" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">X-XSRF-TOKEN</stringProp>
+                  <stringProp name="Header.value">${csrfToken}</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Content-Type</stringProp>
+                  <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Token" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">accessToken</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.accessToken</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/sse/subscribe" enabled="true">
+          <intProp name="HTTPSampler.response_timeout">300000</intProp>
+          <stringProp name="HTTPSampler.path">/api/sse/subscribe</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
