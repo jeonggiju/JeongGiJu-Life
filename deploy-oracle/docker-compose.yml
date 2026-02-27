@@ -83,8 +83,10 @@ services:
   mysql-exporter:
     image: prom/mysqld-exporter
     container_name: mysql-exporter
-    environment:
-      DATA_SOURCE_NAME: "app:app1234@tcp(mysql-db:3306)/"
+    command:
+      - '--config.my-cnf=/etc/mysql-exporter.cnf'
+    volumes:
+      - ./mysql-exporter.cnf:/etc/mysql-exporter.cnf:ro
     ports:
       - "9104:9104"
     networks:
