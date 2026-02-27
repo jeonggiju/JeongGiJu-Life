@@ -18,9 +18,11 @@ error() {
 
 # 이전 실행에서 남은 충돌 컨테이너 정리
 log "Cleaning up stale containers..."
-docker compose -f "$PROJECT_ROOT/deploy-oracle/docker-compose.yml" down --remove-orphans 2>/dev/null || true
-# network_mode: host 컨테이너는 compose down에 포함 안 되므로 개별 제거
-docker rm -f nginx-exporter 2>/dev/null || true
+docker rm -f \
+  mysql-db mysql-exporter nginx-exporter \
+  jeonggiju-life-server nginx-server \
+  prometheus grafana \
+  2>/dev/null || true
 
 log "Building and starting all containers..."
 docker compose -f "$PROJECT_ROOT/deploy-oracle/docker-compose.yml" up --build -d
