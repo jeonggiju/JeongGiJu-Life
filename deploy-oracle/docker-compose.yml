@@ -1,0 +1,115 @@
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app1234
+      MYSQL_ROOT_PASSWORD: app1234root
+    volumes:
+      - mysqldata:/var/lib/mysql
+      - ../deploy/etc/mysql/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+
+  app:
+    build:
+      context: ..
+      dockerfile: deploy-oracle/Dockerfile.spring
+    container_name: jeonggiju-life-server
+    env_file:
+      - ../deploy/spring/.env
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    networks:
+      - app-network
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ..
+      dockerfile: nginx/Dockerfile-nginx
+    container_name: nginx-server
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /home/ubuntu/certbot/conf:/etc/letsencrypt:ro
+      - /home/ubuntu/certbot/www:/var/www/certbot:ro
+    networks:
+      - app-network
+    depends_on:
+      - app
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ../monitoring/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  mysql-exporter:
+    image: prom/mysqld-exporter
+    container_name: mysql-exporter
+    environment:
+      DATA_SOURCE_NAME: "app:app1234@(mysql-db:3306)/"
+    ports:
+      - "9104:9104"
+    networks:
+      - app-network
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter
+    container_name: nginx-exporter
+    command:
+      - '--nginx.scrape-uri=http://127.0.0.1/stub_status'
+    network_mode: host
+    restart: unless-stopped
+
+volumes:
+  mysqldata:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  app-network:
+    driver: bridge

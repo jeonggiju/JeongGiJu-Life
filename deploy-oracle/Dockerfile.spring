@@ -1,0 +1,15 @@
+# Stage 1: Build
+FROM gradle:8.12-jdk17-alpine AS builder
+WORKDIR /build
+COPY gradlew .
+COPY gradle/ gradle/
+COPY settings.gradle .
+COPY spring/build.gradle spring/build.gradle
+COPY spring/src/ spring/src/
+RUN ./gradlew :spring:bootJar --no-daemon
+
+# Stage 2: Run
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=builder /build/spring/build/libs/*SNAPSHOT.jar project.jar
+ENTRYPOINT ["java", "-jar", "project.jar"]
