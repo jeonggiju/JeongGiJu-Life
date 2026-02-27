@@ -41,16 +41,13 @@ services:
     restart: unless-stopped
 
   nginx:
-    build:
-      context: ..
-      dockerfile: nginx/Dockerfile-nginx
+    image: nginx:alpine
     container_name: nginx-server
     ports:
       - "80:80"
-      - "443:443"
     volumes:
-      - /home/ubuntu/certbot/conf:/etc/letsencrypt:ro
-      - /home/ubuntu/certbot/www:/var/www/certbot:ro
+      - ../nginx/conf/default.oracle.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../nginx/static:/usr/share/nginx/static:ro
     networks:
       - app-network
     depends_on:
@@ -87,7 +84,7 @@ services:
     image: prom/mysqld-exporter
     container_name: mysql-exporter
     environment:
-      DATA_SOURCE_NAME: "app:app1234@(mysql-db:3306)/"
+      DATA_SOURCE_NAME: "app:app1234@tcp(mysql-db:3306)/"
     ports:
       - "9104:9104"
     networks:
