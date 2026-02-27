@@ -45,9 +45,12 @@ services:
     container_name: nginx-server
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ../nginx/conf/default.oracle.conf:/etc/nginx/conf.d/default.conf:ro
       - ../nginx/static:/usr/share/nginx/static:ro
+      - /home/ubuntu/certbot/www:/var/www/certbot:ro
+      - /home/ubuntu/certbot/conf:/etc/letsencrypt:ro
     networks:
       - app-network
     depends_on:
