@@ -5,12 +5,12 @@ scrape_configs:
   - job_name: "spring-app"
     metrics_path: "/actuator/prometheus"
     static_configs:
-      - targets: ["keep4.life:8081"]
+      - targets: ["43.203.67.229:8081"]
 
   - job_name: "nginx"
     static_configs:
-      - targets: ["keep4.life:9113"]
+      - targets: ["43.203.67.229:9113"]
 
   - job_name: "mysql"
     static_configs:
-      - targets: ["keep4.life:9104"]
+      - targets: ["43.203.67.229:9104"]
