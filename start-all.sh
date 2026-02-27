@@ -8,6 +8,15 @@ log() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
 }
 
+error() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: $1" >&2
+  exit 1
+}
+
+# 필수 .env 파일 존재 여부 확인
+log "Checking required files..."
+[[ -f "$PROJECT_ROOT/deploy/spring/.env" ]] || error "Missing: deploy/spring/.env"
+
 # app-network 생성 (이미 있으면 무시)
 log "Checking app-network..."
 docker network inspect app-network > /dev/null 2>&1 || {

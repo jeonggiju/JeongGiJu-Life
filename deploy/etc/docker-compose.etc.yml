@@ -10,13 +10,11 @@ services:
     image: mysql:8.0
     container_name: mysql-db
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    env_file:
-      - .env
     environment:
       MYSQL_DATABASE: app
-      MYSQL_USER: ${SPRING_DATASOURCE_USERNAME}
-      MYSQL_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app1234
+      MYSQL_ROOT_PASSWORD: app1234root
     ports:
       - "3306:3306"
     volumes:
@@ -29,10 +27,8 @@ services:
   mysql-exporter:
     image: prom/mysqld-exporter
     container_name: mysql-exporter
-    command:
-      - '--config.my-cnf=/etc/.my.cnf'
-    volumes:
-      - ./.my.cnf:/etc/.my.cnf:ro
+    environment:
+      DATA_SOURCE_NAME: "app:app1234@(mysql-db:3306)/"
     ports:
       - "9104:9104"
     networks:
