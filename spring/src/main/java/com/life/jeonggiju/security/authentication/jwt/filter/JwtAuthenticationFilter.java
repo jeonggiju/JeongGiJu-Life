@@ -1,7 +1,9 @@
 package com.life.jeonggiju.security.authentication.jwt.filter;
 
 import java.io.IOException;
+import java.util.Map;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.life.jeonggiju.security.authentication.jwt.exception.InValidAccessTokenException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.life.jeonggiju.security.authentication.jwt.provider.JwtTokenProvider;
 import com.life.jeonggiju.security.authentication.jwt.registry.JwtRegistry;
 import com.life.jeonggiju.security.core.config.SecurityPaths;
@@ -36,6 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtTokenProvider tokenProvider;
 	private final JwtRegistry jwtRegistry;
 	private final UserDetailsService userDetailsService;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	protected boolean shouldNotFilterAsyncDispatch() {
@@ -91,21 +94,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
 			log.warn("Missing or invalid Authorization header for path: {}", request.getRequestURI());
-			throw new InValidAccessTokenException("Authorization 헤더가 없거나 유효하지 않습니다.");
+			sendUnauthorized(response, "Authorization 헤더가 없거나 유효하지 않습니다.");
+			return;
 		}
 
 		String accessToken = authHeader.substring(BEARER_PREFIX_LENGTH);
 
 		if (!tokenProvider.validateAccessToken(accessToken)) {
 			log.warn("Invalid or expired access token for path: {}", request.getRequestURI());
-			throw new InValidAccessTokenException("액세스 토큰이 유효하지 않습니다.");
+			sendUnauthorized(response, "액세스 토큰이 유효하지 않습니다.");
+			return;
 		}
 
 		boolean hasToken = jwtRegistry.hasActiveJwtInformationByAccessToken(accessToken);
 
 		if (!hasToken) {
 			log.warn("Access token not found in registry for path: {}", request.getRequestURI());
-			throw new InValidAccessTokenException("토큰이 레지스트리에 없습니다.");
+			sendUnauthorized(response, "토큰이 레지스트리에 없습니다.");
+			return;
 		}
 
 		String email = tokenProvider.getSubject(accessToken);
@@ -118,5 +124,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		filterChain.doFilter(request, response);
+	}
+
+	private void sendUnauthorized(HttpServletResponse response, String message) throws IOException {
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		response.setCharacterEncoding("UTF-8");
+		Map<String, Object> body = Map.of("status", 401, "error", "Unauthorized", "message", message);
+		response.getWriter().write(objectMapper.writeValueAsString(body));
 	}
 }
